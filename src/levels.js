@@ -104,7 +104,27 @@ const LEVELS = [
       ['레이저 공유', '고출력 레이저 하나를 여러 레인이 나눠 쓰면 부품 수는 줄지만, 분기 손실과 출력에 따른 WPE 저하를 함께 고려해야 합니다.']
     ],
     role: 'CW 광원 · 링크 마진' },
-  { id: '3A', stage: 3, locked: true, name: '1.6T 2×FR4', dev: '8×200G PAM4 transceiver', role: '캡스톤' },
-  { id: '3A+', stage: 3, locked: true, name: '1.6T DR8 / CPO', dev: 'Parallel optics · co-packaged engine', role: '캡스톤 확장' }
+  { id: '3A', stage: 3, kind: 'xcvr', arch: 'fr4', name: '1.6T 2×FR4', dev: '8×200G PAM4 transceiver · OSFP',
+    band: (pf) => `CWDM ${pf.ch.map(nm).join('/')} nm × 2 그룹 · 케이스 0–70 °C`,
+    preface: '<b>Stage 3 · System 캡스톤.</b> 지금까지 만든 부품 카드로 1.6T 모듈 하나를 조립합니다. 이제 손잡이는 소자 치수가 아니라 아키텍처입니다 — 레이저 개수와 출력, 레이저 냉각, Mux/Demux 열 대응, DSP. 목표는 8레인 × 4채널 × 온도 코너(0·70 °C) 모두에서 링크가 닫히면서 모듈 전력 예산을 지키는 것입니다. 카드 사용을 켜면 당신의 설계가 그대로 들어갑니다.',
+    brief: '1.6T 2×FR4: 800G FR4 두 그룹(각 CWDM 4파장 × 200G, 2 km SMF). 송신은 레이저 → 분기 → MZM → Mux → SSC, 수신은 SSC → Demux → Ge PD + TIA → DSP입니다. 가장 나쁜 레인·채널·온도에서도 마진 ≥ 0, 그리고 모듈 전력 예산 이하를 동시에 만족시키세요.',
+    concepts: [
+      ['2×FR4 구조', '800G FR4 = 4파장(CWDM, 20 nm 간격) × 200G를 한 광섬유에 묶은 것. 1.6T는 이 그룹 두 개입니다. 두 그룹이 같은 4파장을 쓰므로 파장당 레이저 하나를 두 그룹이 나눠 쓸 수 있습니다(1:2). 그 이상 공유는 파장이 달라 불가능합니다.'],
+      ['온도 코너', '비냉각 DFB는 뜨거워지면 출력과 효율이 떨어집니다. Demux는 dn<sub>eff</sub>/dT 때문에 통과대역이 움직입니다(Si ≈ 60 pm/K, SiN ≈ 15 pm/K). 2-1 히터로 추적하면 이동을 지울 수 있지만 전력이 듭니다.'],
+      ['모듈 전력', 'DSP가 가장 큰 소비처이고, 그다음이 드라이버·레이저입니다. 레이저는 출력을 올릴수록 WPE가 떨어지고, TEC는 레이저 발열을 퍼내느라 그 이상을 씁니다.'],
+      ['★★★ = 양산 + 환경', '다이마다 다른 Demux 공정 오차를 2-1 히터 예산 안에서 트리밍하고, 레이저 노화·결합 오차·감도 산포까지 겹친 상태에서 모든 코너를 통과해야 양품입니다.']
+    ],
+    role: '캡스톤' },
+  { id: '3A+', stage: 3, kind: 'xcvr', arch: 'dr8', name: '1.6T DR8 / CPO', dev: 'Parallel optics · LPO · co-packaged engine',
+    band: (pf) => `${nm(pf.lam)} nm × 8 병렬 광섬유 · 500 m`,
+    preface: '<b>Stage 3 확장.</b> 같은 부품으로 이번에는 병렬 광학(DR8)을 만듭니다. Mux가 사라지고 8레인이 한 파장을 쓰므로 레이저 공유가 자유로워집니다. 그리고 DSP를 없애는 LPO, 광엔진을 스위치 ASIC 옆으로 가져가는 CPO까지 — 비트당 에너지를 얼마나 줄일 수 있는지가 이 레벨의 질문입니다.',
+    brief: '1.6T DR8: 8개의 광섬유에 200G씩, 한 파장, 500 m. 레이저 공유(1:1–1:8), 레이저 냉각, 패키징(플러거블 + DSP / LPO / CPO)을 골라 최악 레인 마진과 모듈(광엔진) 전력을 맞추세요. ★★는 DSP를 가진 플러거블로는 닿지 않는 에너지 예산입니다.',
+    concepts: [
+      ['DR8 vs FR4', 'DR8은 파장이 하나라 Mux/Demux가 없고(손실·온도 문제 없음) 레이저를 여러 레인이 나눠 쓸 수 있지만, 광섬유가 8쌍 필요합니다.'],
+      ['LPO', 'Linear-drive Pluggable Optics: 모듈 안의 DSP를 빼고 호스트 SerDes가 등화를 맡습니다. 전력은 크게 줄지만, 호스트 기판 채널과 리타이밍 부재로 신호 품질 여유가 줄어듭니다.'],
+      ['CPO', '광엔진을 스위치 패키지 옆에 붙여 전기 경로를 mm 수준으로 줄입니다. 드라이버 전력과 전기 페널티가 줄지만, 광섬유 부착(FAU)·커넥터 손실이 늘고 레이저는 열을 피해 외부 광원(ELS)으로 뺍니다.'],
+      ['pJ/bit', '모듈 전력 ÷ 1.6 Tb/s. DSP 플러거블은 ~10 pJ/bit 대, CPO는 수 pJ/bit 대를 목표로 합니다(이 게임의 광엔진 범위 기준).']
+    ],
+    role: '캡스톤 확장' }
 ];
 const STAGES = { 1: 'Stage 1 · Passive', 2: 'Stage 2 · Active', 3: 'Stage 3 · System (Track A)' };

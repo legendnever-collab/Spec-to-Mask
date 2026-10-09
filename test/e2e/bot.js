@@ -18,7 +18,7 @@ async function play(id){
  let last='';
  for(let i=0;i<60;i++){
   await sleep(250); const t=coach(), sm=symMap(); let m, act='';
-  if(m=t.match(/권장: ([^(]+)\(/)){ for(const part of m[1].split('·')){ const q=part.trim().match(/^(\S+) = ([\-\d.]+)/); if(q&&sm[q[1]]){set(sm[q[1]],q[2]);act+='rec '+q[1]+' ';} } }
+  if(m=t.match(/권장: (.+?) \(기준/)){ for(const part of m[1].split('·')){ const q=part.trim().match(/^(\S+) = ([\-\d.]+)/); if(q&&sm[q[1]]){set(sm[q[1]],q[2]);act+='rec '+q[1]+' ';} } }
   else if(m=t.match(/열 격리 = (\d)/)){set('iso',m[1]);act='iso';}
   else if(m=t.match(/ h ≥ ([\d.]+) µm/)){set('h',m[1]);act='h>=';}
   else if(m=t.match(/ h ≈ ([\d.]+) µm/)){set('h',m[1]);act='h~';}

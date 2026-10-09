@@ -261,7 +261,7 @@ function renderObjectives() {
       <ul>${o.items.map((x) => `<li class="${x.na ? 'na' : x.ok ? 'ok' : 'no'}${x.crit ? ' crit' : ''}"><span class="k">${x.k}</span><span class="v">${x.v}</span></li>`).join('')}</ul></div>`).join('');
 }
 function renderCards() {
-  const slots = LEVELS.filter((l) => l.stage <= 2);
+  const slots = LEVELS.slice();
   $('#cardgrid').innerHTML = slots.map((l) => {
     const c = PP().cards[l.id];
     if (!c) return `<div class="pcard empty"><div class="h"><span class="id">${l.id}</span><span class="sc">${l.locked ? '준비 중' : '미획득'}</span></div><div class="nm">${l.name}</div><div class="role">${l.role}</div></div>`;

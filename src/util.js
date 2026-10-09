@@ -107,7 +107,8 @@ function lineBest(K, l, d, k, q, n) {
   return best.q < q0 * 0.99 ? { ...best, q0, p } : null;
 }
 const lineBestOf = (K, l, d, ks, q, n) => ks.map((k) => lineBest(K, l, d, k, q, n)).filter(Boolean).sort((a, b) => a.q - b.q)[0] || null;
-const recText = (b, t, d) => (!b ? '' : t >= 2 ? ` 권장: ${b.p.sym} = ${(+b.v).toFixed(b.p.dec)}${b.p.unit ? ' ' + b.p.unit : ''} (기준 대비 ${Math.round(b.q0 * 100)}% → ${Math.round(b.q * 100)}%).` : ` 추천: ${b.p.label}(${b.p.sym})를 ${b.v > d[b.p.k] ? '키우세요' : '줄이세요'}.`);
+const recVal = (p, v) => `${(+v).toFixed(p.dec)}${p.unit ? ' ' + p.unit : ''}${p.labels ? ` (${p.labels[v | 0]})` : ''}`;
+const recText = (b, t, d) => (!b ? '' : t >= 2 ? ` 권장: ${b.p.sym} = ${recVal(b.p, b.v)} (기준 대비 ${Math.round(b.q0 * 100)}% → ${Math.round(b.q * 100)}%).` : ` 추천: ${b.p.label}(${b.p.sym})를 ${b.v > d[b.p.k] ? '키우세요' : '줄이세요'}.`);
 if (typeof module !== 'undefined') Object.assign(module.exports, { lineBest, lineBestOf, recText });
 // two-parameter coarse grid (for coupled constraints a single-knob scan cannot escape)
 function pairBest(K, l, d, ks, q, n) {
@@ -118,5 +119,5 @@ function pairBest(K, l, d, ks, q, n) {
   }
   return best.q < q0 * 0.99 ? { ...best, q0, ps } : null;
 }
-const recText2 = (b, t) => (!b ? '' : t >= 2 ? ` 권장: ${b.ps.map((p, i) => `${p.sym} = ${(+b.v[i]).toFixed(p.dec)}${p.unit ? ' ' + p.unit : ''}`).join(' · ')} (기준 대비 ${Math.round(b.q0 * 100)}% → ${Math.round(b.q * 100)}%).` : ` 추천: ${b.ps.map((p) => p.label).join('와 ')}을 함께 바꿔 보세요.`);
+const recText2 = (b, t) => (!b ? '' : t >= 2 ? ` 권장: ${b.ps.map((p, i) => `${p.sym} = ${recVal(p, b.v[i])}`).join(' · ')} (기준 대비 ${Math.round(b.q0 * 100)}% → ${Math.round(b.q * 100)}%).` : ` 추천: ${b.ps.map((p) => p.label).join('와 ')}을 함께 바꿔 보세요.`);
 if (typeof module !== 'undefined') Object.assign(module.exports, { pairBest, recText2 });

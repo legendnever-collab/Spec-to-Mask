@@ -58,7 +58,7 @@ KINDS.cwdm = (() => {
   }
   function response(l, d, proc, lam, rnd) {
     const spec = LAT[d.ord | 0] || LAT[1], dw = proc ? proc.dw : 0, dt = proc ? proc.dt : 0;
-    const ne = neffAt(d.wa + dw, T0 + dt, lam), k0 = 2 * Math.PI / lam;
+    const ne = neffAt(d.wa + dw, T0 + dt, lam) + (proc && proc.dn ? proc.dn : 0), k0 = 2 * Math.PI / lam;   // proc.dn: uniform index offset (temperature)
     const useCard = d.useCard ? cardCoupler(lam) : null, aIdeal = Math.sqrt(Math.pow(10, -0.005));
     const mk = (fi) => spec.ks.map((k, j) => {
       let kk = k, a = aIdeal;
@@ -232,7 +232,7 @@ KINDS.cwdm = (() => {
       });
       return out;
     },
-    _x: { neffAt, ngAt, dndw, optTrim, LAT, response }
+    _x: { neffAt, ngAt, dndw, optTrim, LAT, response, analyse: (l, d, proc) => { use(l); return analyse(l, d, proc); } }
   };
   return K;
 })();

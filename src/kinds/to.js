@@ -56,10 +56,10 @@ KINDS.to = (() => {
     return { Ppi: Ppi * 1e3, tau: th.tau * 1e6, dTh2pi, V2pi, R, metal, xt, dndT: o.dndT, th, size: d.L * d.pitch };
   }
   // per-die trimming of the 1-7 CWDM demux with heaters on both arms (trim range ±π on each delay unit)
-  function trimDie(l, d, proc, r) {
+  function trimDie(l, d, proc, r, baseOverride) {
     const l7 = typeof GAME_LEV !== 'undefined' ? GAME_LEV('1-7') : null; if (!l7) return null;
     const cards = (typeof window !== 'undefined' ? window.GAME_CARDS : global.GAME_CARDS) || {};
-    const base = cards['1-7'] && cards['1-7'].d ? { ...cards['1-7'].d } : { ...l7.ref };
+    const base = baseOverride ? { ...baseOverride } : cards['1-7'] && cards['1-7'].d ? { ...cards['1-7'].d } : { ...l7.ref };
     const C = KINDS.cwdm, sm = C._x.LAT[base.ord | 0].mult.reduce((a, b) => a + b, 0);
     const q = (x) => Math.max(x.il / l7.fab.il, (x.xt - l7.xt0) / (l7.fab.xt - l7.xt0));
     const ck = [proc.seed, proc.dw, proc.dt, l7.fab.il, l7.fab.xt, JSON.stringify(base)].join('|');
@@ -165,7 +165,12 @@ KINDS.to = (() => {
         if (r.xt > l.s2.xt) { let pm = d.pitch; for (let p = d.pitch; p <= 60; p += 0.5) { if (xtAt(r.th, p) <= l.s2.xt * 0.9) { pm = p; break; } } return { h: '★★: 이웃 도파로가 같이 데워집니다', b: '열 크로스토크는 옆 회로의 위상을 흔듭니다. 간격을 넓히거나 트렌치로 막으세요.' + (t >= 2 ? ` 간격 p ≥ ${n(pm, 1)} µm.` : '') }; }
         if (r.size > l.s2.size) return { h: '★★: 면적이 큽니다', b: '히터 길이와 간격을 조건이 허락하는 만큼 줄이세요.' + (t >= 2 ? ` 길이 하한 ≈ ${Lmin} µm.` : '') };
       }
-      if (c.ob2 && c.fab && c.fab.yield < l.fab.y) return { h: '보정 전력 예산이 모자랍니다', b: '두께 변동으로 밀린 CWDM 채널을 다시 맞추려면 다이마다 위상을 최대 ±π까지 돌려야 합니다. P<sub>π</sub>가 작을수록 같은 예산으로 더 많은 다이를 살립니다.' };
+      if (c.ob1 && c.fab && c.fab.yield < l.fab.y) {
+        const cd = ((typeof window !== 'undefined' ? window.GAME_CARDS : global.GAME_CARDS) || {})['1-7'];
+        return { h: '보정 전력 예산이 모자랍니다', b: '두께 변동으로 밀린 CWDM 채널을 다시 맞추려면 다이마다 위상을 최대 ±π까지 돌려야 합니다. P<sub>π</sub>가 작을수록 같은 예산으로 더 많은 다이를 살립니다.'
+          + ((d.iso | 0) < 2 ? ` 가장 강력한 수단은 언더컷입니다 — 응답이 느려 ★★ 조건(τ)은 놓치지만 ★★★ 판정에는 τ가 없습니다.${t >= 2 ? ' 열 격리 = 2.' : ''}` : '')
+          + (cd && cd.d ? ' 트리밍 대상은 당신의 1-7 카드입니다. 1-7을 더 여유 있게 다듬으면 필요한 위상 자체가 줄어듭니다.' : '') };
+      }
       return null;
     },
     card(l, r) { return { kind: 'to', lines: [`P<sub>π</sub> ${f2(r.Ppi, 1)} mW · τ ${f2(r.tau, 1)} µs`, `열 크로스토크 ${(r.xt * 100).toFixed(1)}%`], model: { Ppi: +r.Ppi.toFixed(3), tau: +r.tau.toFixed(2), xt: +r.xt.toFixed(4) } }; },

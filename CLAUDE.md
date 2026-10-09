@@ -6,7 +6,7 @@ SPEC-to-MASK Quest — Photonic IC 설계 학습 게임. 사용자는 광소자 
 ## 작업 규칙
 - 소스는 `src/`의 모듈 파일만 수정하고 `npm run build`로 `dist/index.html`을 다시 만듭니다. `dist/index.html`을 직접 고치지 않습니다.
 - `src/data/tables.js`, `src/data/pspec.js`는 생성물입니다. JSON을 바꾼 뒤 `npm run tables`.
-- 레벨 스펙(목표값·출발점·수율 목표)은 손으로 넣지 말고 `tools/calibrate.js`로 같은 엔진에서 계산합니다. Si 1310의 MMI 세 레벨만 검증된 수기 값을 유지합니다.
+- 레벨 스펙(목표값·출발점·수율 목표)은 손으로 넣지 말고 `tools/calibrate.js`로 같은 엔진에서 계산합니다 (`node tools/calibrate.js <플랫폼|all> <1,2,3>` — Stage별 블록은 calibrate_s2/s3.js, 뒤 Stage는 앞 Stage의 ref를 부품으로 씁니다). Si 1310의 MMI 세 레벨만 검증된 수기 값을 유지합니다.
 - 새 kind의 코치 문구는 숫자 목표를 tier ≥ 2에서만 보여줍니다. 코치가 제안하는 이동은 실제로 개선되는지 계산한 뒤에만 제안합니다.
 - 변경 후 확인: `npm run test:smoke` (오류 0), 관련 레벨에 `node test/e2e/bot.js std 2 <ids> <platform>` — 봇이 표준 난이도·수치 힌트로 ★★ 이상에 도달해야 합니다.
 - 진행 기록 localStorage 키는 `smq3-*`. 구조를 바꾸면 `shell.js`의 마이그레이션도 함께 갱신합니다.
