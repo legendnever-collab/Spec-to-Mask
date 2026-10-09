@@ -7,7 +7,7 @@
     "tables": "python3 tools/build_data.py",
     "calibrate": "node tools/calibrate.js",
     "test:smoke": "node test/e2e/smoke.js si1310",
-    "test:bot": "node test/e2e/bot.js std 2 1-1,1-2,1-3,1-4,1-5,1-6,1-7,2-1,2-2,2-3,2-4,2-5,3A,3A+ si1310",
+    "test:bot": "node test/e2e/bot.js std 2 1-1,1-2,1-3,1-4,1-5,1-6,1-7,2-1,2-2,2-3,2-4,2-5,3A,3A+,D-1,D-2 si1310",
     "test:migrate": "node test/e2e/migrate.js"
   },
   "devDependencies": {

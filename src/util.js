@@ -119,5 +119,5 @@ function pairBest(K, l, d, ks, q, n) {
   }
   return best.q < q0 * 0.99 ? { ...best, q0, ps } : null;
 }
-const recText2 = (b, t) => (!b ? '' : t >= 2 ? ` 권장: ${b.ps.map((p, i) => `${p.sym} = ${recVal(p, b.v[i])}`).join(' · ')} (기준 대비 ${Math.round(b.q0 * 100)}% → ${Math.round(b.q * 100)}%).` : ` 추천: ${b.ps.map((p) => p.label).join('와 ')}을 함께 바꿔 보세요.`);
+const recText2 = (b, t) => (!b ? '' : t >= 2 ? ` 권장: ${b.ps.map((p, i) => `${p.sym} = ${recVal(p, b.v[i])}`).join(' · ')} (기준 대비 ${Math.round(b.q0 * 100)}% → ${Math.round(b.q * 100)}%).` : ` 추천: 두 손잡이(${b.ps.map((p) => p.label).join(' · ')})를 함께 바꿔 보세요.`);
 if (typeof module !== 'undefined') Object.assign(module.exports, { pairBest, recText2 });

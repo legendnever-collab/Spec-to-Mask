@@ -126,5 +126,27 @@ const LEVELS = [
       ['pJ/bit', '모듈 전력 ÷ 1.6 Tb/s. DSP 플러거블은 ~10 pJ/bit 대, CPO는 수 pJ/bit 대를 목표로 합니다(이 게임의 광엔진 범위 기준).']
     ],
     role: '캡스톤 확장' }
+,
+  { id: 'D-1', stage: 4, kind: 'spiral', tau: 2, name: '빛을 2 ns 붙잡기', dev: 'Low-loss delay spiral (broadened Archimedean + Euler S-bend)',
+    band: (pf) => `${nm(pf.lam)} nm · ${MATS[pf.mat].full} · 지연 2 ns`,
+    preface: '<b>Track B 준비 · 긴 지연선.</b> FMCW LiDAR의 기준 간섭계와 OPA 실시간 지연(true-time delay) 빔포밍에는 수 cm–수십 cm 길이의 칩 위 지연선이 필요합니다. 여기서는 Hong et al., Photonics Research 10, 1 (2022)의 넓힌 아르키메데스 나선과 Xie et al., Opto-Electron. Adv. 6, 220030 (2023)의 프로그래머블 지연선 칩을 따라 Si와 SiN에서 같은 지연을 만들어 비교합니다.',
+    brief: '2 ns 지연 = Si는 약 16 cm, SiN은 약 29 cm의 도파로입니다(군굴절률이 다르므로). 나선 폭, 이웃 회전 간격, 안쪽 반경, 중앙 S-bend의 형태와 폭을 정해 손실과 면적을 줄이세요. 아래 차트는 같은 지연을 다른 코어 물질로 만들었을 때를 함께 보여줍니다.',
+    concepts: [
+      ['왜 넓히나', 'Si 220 nm 도파로의 손실은 대부분 측벽 거칠기 산란이고, 산란은 측벽에 걸린 전계(∝ ∂n<sub>eff</sub>/∂w)에 비례합니다. Hong 2022는 폭을 0.45 → 2 µm로 넓혀 5.5 → 0.28 dB/cm(측정)로 줄였습니다. 넓으면 상하면 산란(σ ≈ 0.4 nm)이 남습니다.'],
+      ['멀티모드인데 괜찮은가', '2 µm Si는 멀티모드지만, 반경이 서서히 변하는 아르키메데스 나선에서는 기본모드가 단열적으로 유지됩니다. 문제는 곡률이 뒤집히는 중앙 S-bend — 원호 S-bend는 TE1으로 −2.3 dB가 넘어가고, 곡률을 서서히 바꾸며 이음매만 0.6 µm로 좁힌 테이퍼 Euler S-bend는 −26 dB 이하입니다(논문 FDTD).'],
+      ['간격', '이웃 회전 사이 결합 길이 L<sub>c</sub> = λ/(2Δn<sub>슈퍼모드</sub>)가 나선 길이보다 훨씬 길어야 합니다. Si 2 µm, 간격 1.5 µm에서 논문은 L<sub>c</sub> ≈ 2400 m를 얻었습니다.'],
+      ['Si vs SiN', 'SiN은 굴절률 대비가 작아 산란이 작고(재료 흡수가 남음) 위상 오차에 둔감하지만, 군굴절률이 약 2로 Si(약 3.8)의 절반이라 같은 지연에 두 배 길이가 필요하고, 굽힘 반경·간격이 커서 면적이 커집니다. Si는 작고 열광학 튜닝이 강하지만 손실이 큽니다.']
+    ],
+    role: 'FMCW 기준 간섭계 · TTD 나선' },
+  { id: 'D-2', stage: 4, kind: 'ttd', name: '디지털 가변 지연선', dev: 'N-bit switched true-time delay (MZ switches + binary spirals)',
+    band: (pf) => `${nm(pf.lam)} nm · 0–5 ns · 10 ps 분해능`,
+    brief: 'D-1의 나선을 2진 길이(Δτ, 2Δτ, 4Δτ…)로 여러 개 만들고 2×2 열광학 MZ 스위치로 골라 지연을 디지털로 바꿉니다. Hong 2022의 10-bit 칩(10 ps 분해능, 5.12 ns, 2.2 × 5.9 mm²)이 목표 수준입니다. 비트 수, 최소 지연 단위, 스위치 위상기 암 폭으로 범위·손실·에코·히터 전력을 맞추세요.',
+    concepts: [
+      ['2진 지연', 'N개 단의 나선 길이를 1:2:4:…로 두면 2<sup>N</sup>개의 지연을 Δτ 간격으로 만들 수 있습니다. 가장 긴 나선 하나가 전체 길이의 절반을 차지합니다.'],
+      ['상태 간 손실 변동', '지연을 바꾸면 빛이 지나는 나선 길이가 달라져 손실도 달라집니다. 빔포밍에서는 이것이 채널 간 진폭 오차가 됩니다 — 그래서 dB/cm가 핵심입니다. Xie 2023의 5-bit 채널은 최단 → 최장 경로 손실이 3.0 → 3.4 dB였습니다.'],
+      ['넓은 암의 MZ 스위치', '단일모드 0.45 µm 암은 폭 요동에 위상이 민감해 칩마다 보정 전력이 필요하고 잔차가 누설로 남습니다. Xie 2023은 암을 2 µm로 넓혀 보정 전력을 P<sub>π</sub>의 5% 이하로 줄였습니다(P<sub>π</sub> ≈ 21 mW, 스위치 손실 < 0.4 dB, 소광비 > 20 dB).'],
+      ['Track B로', 'FMCW LiDAR에서는 이런 지연선이 기준 간섭계(처프 선형성 측정)와 광 위상배열의 실시간 지연 빔포밍에 쓰입니다.']
+    ],
+    role: 'OPA 빔포밍 · 가변 지연' }
 ];
-const STAGES = { 1: 'Stage 1 · Passive', 2: 'Stage 2 · Active', 3: 'Stage 3 · System (Track A)' };
+const STAGES = { 1: 'Stage 1 · Passive', 2: 'Stage 2 · Active', 3: 'Stage 3 · System (Track A)', 4: 'Track B 준비 · 긴 지연선' };

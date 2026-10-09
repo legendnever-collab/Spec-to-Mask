@@ -78,7 +78,7 @@ KINDS.pd = (() => {
       return { html, legend: legendHTML([['var(--cyan)', `PD (전이 ${Math.round(r.ft)} · RC ${Math.round(r.fRC)} GHz)`], ['var(--rose)', `× TIA ${FTIA} GHz`], ['rgba(231,236,243,.55)', 'Nyquist 56 GHz']]) };
     },
     coach(l, r, c) {
-      const t = c.tier, d = r.d, q1 = (x) => r1(l, x), q2s = (x) => Math.max(r2(l, x), x.size / l.s2.size);
+      const t = c.tier, d = r.d, q1 = (x) => r1(l, x), q2s = (x) => Math.max(r1(l, x), r2(l, x), x.size / l.s2.size);
       if (!c.ob1) {
         if (r.resp < l.s1.resp) { const b = lineBestOf(K, l, d, ['L', 'w'], q1); if (b) return { h: '빛을 다 흡수하지 못합니다', b: `Ge가 짧거나 좁아 ${Math.round((1 - r.abs) * 100)}%의 빛이 그대로 빠져나갑니다.${l.pf.lam > 1.4 ? ' C-band 장파장 쪽은 Ge 흡수가 급격히 약해지므로(밴드 끝) 더 긴 Ge가 필요합니다.' : ''}` + recText(b, t, d) }; }
         if (r.bw < l.s1.bw) { const slow = r.ft < r.fRC; const b = lineBestOf(K, l, d, slow ? ['V', 'di'] : ['L', 'w', 'di'], q1); if (b) return { h: slow ? '캐리어 이동 시간이 대역을 제한합니다' : 'RC가 대역을 제한합니다', b: (slow ? '진성층이 두껍거나 전기장이 약해 캐리어가 늦게 도착합니다. 바이어스를 올리거나 d<sub>i</sub>를 줄이세요.' : `접합 C ${f2(r.Cj, 1)} fF + 패드 + TIA 입력이 큽니다. Ge 면적을 줄이거나 d<sub>i</sub>를 키우세요.`) + recText(b, t, d) }; }

@@ -114,7 +114,7 @@ KINDS.mzm = (() => {
       return { html, legend: legendHTML([['var(--cyan)', 'EO S21 (정규화)'], ['var(--rose)', `× 드라이버 ${FDRV} GHz`], ['rgba(231,236,243,.55)', 'Nyquist 56 GHz'], ['var(--amber)', `EO −3 dB ${f2(r.bw, 1)} GHz`]]) };
     },
     coach(l, r, c) {
-      const t = c.tier, d = r.d, q1 = (x) => r1(l, x), q2s = (x) => Math.max(r2(l, x), x.size / l.s2.size);
+      const t = c.tier, d = r.d, q1 = (x) => r1(l, x), q2s = (x) => Math.max(r1(l, x), r2(l, x), x.size / l.s2.size);
       if (!c.ob1) {
         if (r.bw < l.s1.bw) {
           if (Math.abs(r.nmw - NG) > 0.35) { const b = lineBestOf(K, l, d, ['eta', 'g'], q1); if (b) return { h: '속도 부정합: 전기 신호와 빛이 같이 달리지 않습니다', b: `RF 위상속도 지수 n<sub>µ</sub> ${f2(r.nmw, 2)} vs 광 군굴절률 ${NG}. ${r.nmw > NG ? '접합 부하(C)가 RF를 너무 느리게 만듭니다 — 채움 비율 η를 낮추세요.' : 'RF가 빛보다 빠릅니다 — 접합 부하(η)를 늘리거나 간격 g를 넓혀 부하 효과를 키우면 n<sub>µ</sub>가 올라갑니다. 단, 부하가 늘면 RC·손실도 늘어 최적점이 있습니다.'}` + recText(b, t, d) }; }

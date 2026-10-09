@@ -236,7 +236,7 @@ function objectives() {
   const drcOK = !(r.drc && r.drc.length);
   const ms = missionsOf(state.id), mi = K.missions ? K.missions(l).map((m) => ({ k: '미션 · ' + m.label, v: ms[m.id] ? '완료' : '미완료', ok: !!ms[m.id] })) : [];
   const t1 = (hasDrc ? [{ k: 'DRC', v: drcOK ? '통과' : r.drc.length + '건 위반', ok: drcOK }] : []).concat(mi, o.t1.map((x) => ({ ...x, ok: drcOK && x.ok })));
-  const t2 = o.t2.map((x) => ({ ...x, ok: drcOK && x.ok })).concat(K.noSize ? [] : [{ k: `${K.sizeLabel} ≤ ${l.s2.size} ${K.sizeUnit}`, v: `${r.size < 100 ? r.size.toFixed(1) : Math.round(r.size)} ${K.sizeUnit}`, ok: drcOK && r.size <= l.s2.size }]);
+  const t2 = o.t2.map((x) => ({ ...x, ok: drcOK && x.ok })).concat(K.noSize ? [] : [{ k: `${K.sizeLabel} ≤ ${K.sizeFmt ? K.sizeFmt(l.s2.size) : l.s2.size} ${K.sizeUnit}`, v: `${K.sizeFmt ? K.sizeFmt(r.size) : r.size < 100 ? r.size.toFixed(1) : Math.round(r.size)} ${K.sizeUnit}`, ok: drcOK && r.size <= l.s2.size }]);
   const y = c.fabHere ? c.fabHere.yield : null;
   const t3 = [{ k: `Fab 수율 ≥ ${Math.round(l.fab.y * 100)}%`, v: y == null ? '미실시' : Math.round(y * 100) + '%', ok: y != null && drcOK && y >= l.fab.y, na: y == null }, { k: '판정', v: K.fabCrit(l), ok: null, na: true, crit: true }];
   const p1 = t1.every((x) => x.ok), p2 = p1 && t2.every((x) => x.ok), p3 = p1 && t3[0].ok;
@@ -329,15 +329,15 @@ function coachMsg() {
     return { h: '★ 스펙까지 조금 남았습니다', b: '한 칸 이동으로는 개선되지 않습니다. 큰 파라미터(구조)를 바꿔 다른 해를 찾아보세요.' + (t < 3 ? ' 지형도 힌트가 도움이 됩니다.' : '') };
   }
   if (!ob[1].pass) {
-    if (!K.noSize && r.size > l.s2.size) return { h: `★★ ${K.sizeLabel} ${l.s2.size} ${K.sizeUnit} 초과`, b: `성능을 유지하면서 ${K.sizeLabel}을 줄이는 구조를 찾으세요.` };
-    const mv = bestMove((x) => K.q2(l, x), true);
-    if (mv && mv.v < q2 - 0.005) return { h: '★★ 성능 여유가 부족합니다', b: '목표선에 가까워졌습니다.' + moveText(mv, t, q2, '★★') };
+    if (!K.noSize && r.size > l.s2.size) return { h: `★★ ${K.sizeLabel} ${K.sizeFmt ? K.sizeFmt(l.s2.size) : l.s2.size} ${K.sizeUnit} 초과`, b: `성능을 유지하면서 ${K.sizeLabel}을 줄이는 구조를 찾으세요.` };
+    const qq = Math.max(q1, q2), mv = bestMove((x) => Math.max(K.q1(l, x), K.q2(l, x)), true);
+    if (mv && mv.v < qq - 0.005) return { h: '★★ 성능 여유가 부족합니다', b: '목표선에 가까워졌습니다.' + moveText(mv, t, qq, '★★') };
     return { h: '★★ 성능 여유가 부족합니다', b: '한 칸 이동으로는 더 좋아지지 않습니다. 다른 구조(폭·차수 등)를 시도하세요.' };
   }
-  const f = c.fabHere, margin = 1 - q2;
-  if (!f && margin < 0.25) { const mv = bestMove((x) => K.q2(l, x), true); if (mv && mv.v < q2 - 0.03) return { h: '★★ 달성! Tape-out 전에 여유를 키우세요', b: `공칭 여유가 ${Math.round(margin * 100)}%뿐이라 공정 변동에서 탈락 다이가 나올 수 있습니다.` + moveText(mv, t, q2, '★★') }; }
+  const q12 = Math.max(q1, q2), f = c.fabHere, margin = 1 - q12, both = (x) => Math.max(K.q1(l, x), K.q2(l, x));   // margin moves must not break ★
+  if (!f && margin < 0.25) { const mv = bestMove(both, true); if (mv && mv.v < q12 - 0.03) return { h: '★★ 달성! Tape-out 전에 여유를 키우세요', b: `공칭 여유가 ${Math.round(margin * 100)}%뿐이라 공정 변동에서 탈락 다이가 나올 수 있습니다.` + moveText(mv, t, q12, '★★') }; }
   if (!f) return { h: '★★ 달성! 이제 Tape-out 해보세요', b: 'Fab Run에서 공정 변동 속에서도 판정선을 지키는지 확인합니다.' + (t >= 2 ? ` 현재 ★★ 기준 대비 공칭 여유 ${Math.round(margin * 100)}%.` : '') };
-  if (f.yield < l.fab.y) { const mv = bestMove((x) => K.q2(l, x), false); return { h: '공정 변동에 약한 설계입니다', b: `수율 ${Math.round(f.yield * 100)}%. 공칭 여유(${Math.round(margin * 100)}%)를 키우면 변동을 견딥니다.` + (mv && mv.v < q2 - 0.03 ? moveText(mv, t, q2, '★★') : '') }; }
+  if (f.yield < l.fab.y) { const mv = bestMove(both, false); return { h: '공정 변동에 약한 설계입니다', b: `수율 ${Math.round(f.yield * 100)}%. 공칭 여유(${Math.round(margin * 100)}%)를 키우면 변동을 견딥니다.` + (mv && mv.v < q12 - 0.03 ? moveText(mv, t, q12, '★★') : '') }; }
   return { h: got === 7 ? '세 별 모두 달성' : '이 설계로 목표를 모두 넘었습니다', b: '카드가 인벤토리에 저장되었습니다. AI 라이벌보다 높은 설계 점수에 도전하거나 다음 레벨로 가세요.' };
 }
 function renderCoach() {

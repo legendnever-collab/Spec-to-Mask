@@ -10,6 +10,7 @@ Photonic IC 설계를 게임으로 배우는 단계별 학습 프로그램입니
 | Stage 1 · Passive | 1-1 도파로(TE/TM, 단일/멀티모드) → 1-2 방향성 결합기 → 1-3~1-5 MMI(1×2, 광대역, 2×2) → 1-6 Spot-Size Converter → 1-7 CWDM Demux (Stage 1 피날레 · Active 맛보기) |
 | Stage 2 · Active | 2-1 TO 위상기(★★★ = 1-7 CWDM 다이별 히터 트리밍) → 2-2 PN 공핍 위상기 → 2-3 224G TW-MZM(112 GBd PAM4 눈) → 2-4 Ge PD + TIA → 2-5 외부 광원과 링크 버짓(Stage 2 피날레, 부품 카드로 링크 구성) |
 | Stage 3 · System | 3A 1.6T 2×FR4(8×200G, CWDM4 × 2 그룹, 0–70 °C 코너, ★★★ = 다이별 Demux 트리밍 + 산포 수율) → 3A+ 1.6T DR8 / LPO / CPO(비트당 에너지). 손잡이는 아키텍처: 레이저 수·출력·냉각, Mux 열 추적, DSP·패키징. Stage 1·2 부품 카드(또는 각 레벨 기준 설계)로 조립 |
+| Track B 준비 · 긴 지연선 | D-1 저손실 지연 나선(2 ns; 넓힌 아르키메데스 나선 + 테이퍼 Euler S-bend, Hong et al., Photon. Res. 10, 1 (2022)) → D-2 N-bit 스위치형 실시간 지연선(0–5 ns, 10 ps; Hong 2022의 10-bit 칩, Xie et al., Opto-Electron. Adv. 6, 220030 (2023)의 2 µm 암 MZ 스위치). 같은 지연을 Si와 SiN에서 비교 |
 
 각 레벨은 ★ 기본 스펙 / ★★ 고성능+크기 / ★★★ Fab Run 수율의 세 목표, 코치 힌트 4단계(끄기·방향·수치·지형도), 난이도 3단계(입문·표준·도전), AI 라이벌(Nelder–Mead), Design DB(사람·AI 탐색 기록, CSV 복사)를 가집니다.
 
@@ -30,7 +31,7 @@ src/
   ui_util.js         캔버스·SVG 차트 헬퍼
   engine_mmi.js      MMI 엔진: 유효굴절률법 + 유한차분 고유모드 전개 (Si/SiN)
   platforms.js       Stage 0 플랫폼 정의 (λ × 물질, DRC 규칙, CWDM 채널) + 선택 화면 설명
-  kinds/             레벨 종류별 물리·시각화·코치: wg, dc, mmi, ssc, cwdm (Stage 1) · to, pn, mzm, pd, els (Stage 2) · xcvr (Stage 3)
+  kinds/             레벨 종류별 물리·시각화·코치: wg, dc, mmi, ssc, cwdm (Stage 1) · to, pn, mzm, pd, els (Stage 2) · xcvr (Stage 3) · spiral, ttd (긴 지연선)
   levels.js          캠페인 텍스트·개념 노트 (수치 스펙은 data/pspec.js)
   shell.js           범용 게임 셸: 플랫폼, 점수, 목표·미션, 코치, Fab Run, AI 라이벌, Design DB, 부품 카드
   data/
@@ -47,6 +48,7 @@ tools/
   lattice.py         CWDM lattice 커플러 값 최적화
   calibrate.js       플랫폼별 레벨 스펙·출발점·난이도별 수율 목표 자동 보정 (node tools/calibrate.js [플랫폼|all] [1,2])
   calibrate_s2.js    Stage 2 스펙 블록 (도전 난이도에서도 ★★ 도달 가능하도록 자동 완화)
+  calibrate_s4.js    긴 지연선 스펙 블록 (D-1, D-2)
   calibrate_s3.js    Stage 3 스펙 블록 (기준 부품으로 아키텍처 전수 탐색 → 전력 예산·마진 목표)
   gen_thermal.py     히터 단면 2D 유한체적 열해석 (Si/SiN × 간격 × 격리)
   build_data.py      data/*.json → tables.js, pspec.js
@@ -69,6 +71,7 @@ npm run tables && npm run calibrate && npm run build
 npm run test:smoke && npm run test:bot
 node test/e2e/bot.js std 2 2-1,2-2,2-3,2-4,2-5 sin1550   # Stage 2 회귀
 node test/e2e/bot.js std 2 3A,3A+ si1310                  # Stage 3 회귀
+node test/e2e/bot.js std 2 D-1,D-2 sin1550                # 긴 지연선 회귀
 ```
 
 ## Kind 인터페이스
