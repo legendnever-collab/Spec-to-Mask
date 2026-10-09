@@ -239,6 +239,83 @@ footer b{color:var(--fg-2);font-weight:500}
 .valid .vt td:first-child,.valid .vt th:first-child{text-align:left;font-family:inherit;white-space:normal}
 .valid .vt .bad{color:var(--rose)}
 .valid .scroll{overflow-x:auto}
+/* guided learning steps */
+.mode-r{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn.guide{border-color:rgba(100,201,223,.6);color:var(--cyan);padding:6px 11px;font-size:12.5px}
+.guided{margin:8px 0 10px;border:1px solid rgba(100,201,223,.45);border-radius:10px;background:rgba(100,201,223,.05);padding:9px 11px}
+.guided-h{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.stepper{list-style:none;margin:0 0 8px;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:6px}
+.stp{width:100%;display:flex;align-items:center;gap:6px;border:1px solid var(--line-2);border-radius:8px;background:var(--panel-2);padding:6px 8px;cursor:pointer;text-align:left;font-size:12px;color:var(--fg-2);line-height:1.3}
+.stp .num{flex:0 0 auto;width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--display);font-size:12px;background:var(--line);color:var(--fg)}
+.stp.done .num{background:rgba(93,209,147,.25);color:var(--pass)}
+.stp[aria-current="step"]{border-color:var(--cyan);color:var(--fg)}
+.stp[aria-current="step"] .num{background:var(--cyan);color:#06222a}
+.stepnote{font-size:13px;color:var(--fg-2);line-height:1.6}
+.stepnote .sn-h{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;margin-bottom:2px}
+.stepnote .sn-h b{color:var(--cyan)}
+.stepnote .ok{color:var(--pass);font-size:12px}
+.stepnote .row-btns{margin-top:8px}
+.obj.goals{grid-column:1/-1}
+/* learning guide (modal) */
+.gdlg-back{position:fixed;inset:0;z-index:50;background:rgba(5,9,15,.72);display:flex;align-items:center;justify-content:center;padding:16px}
+.gdlg-back[hidden]{display:none}
+.gdlg{width:min(1120px,100%);height:min(92vh,980px);display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line-2);border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.5);min-width:0}
+.gdlg-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px 16px;flex-wrap:wrap;padding:14px 16px 10px;border-bottom:1px solid var(--line)}
+.gdlg-h h2{font-family:var(--display);font-weight:700;font-size:22px;margin:2px 0 2px;line-height:1.2;text-wrap:balance}
+.gdlg-h .gsub{margin:0;color:var(--fg-2);font-size:12.5px;max-width:70ch}
+.gdlg-ctl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.gdlg-h,.gdlg-toc{flex:0 0 auto}
+.gdlg-toc{display:flex;gap:6px;overflow-x:auto;padding:8px 16px;border-bottom:1px solid var(--line);scrollbar-width:thin}
+.gdlg-toc a{flex:0 0 auto;font-size:12px;color:var(--fg-2);text-decoration:none;border:1px solid var(--line-2);border-radius:999px;padding:4px 10px;white-space:nowrap}
+.gdlg-toc a:hover,.gdlg-toc a:focus-visible{border-color:var(--cyan);color:var(--fg)}
+.gdlg-body{flex:1 1 auto;overflow:auto;padding:4px 16px 24px;overscroll-behavior:contain}
+.gsec{padding:14px 0 6px;border-bottom:1px dashed var(--line)}
+.gsec:last-child{border-bottom:0}
+.gsec h3{font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:.03em;margin:0 0 8px;color:var(--fg)}
+.gsec h3 .n{color:var(--cyan);margin-right:8px}
+.gsec h4{font-size:13.5px;margin:12px 0 4px;color:var(--fg)}
+.gsec p,.gsec li{font-size:13.5px;line-height:1.7;color:var(--fg-2);max-width:82ch}
+.gsec ul{padding-left:18px;margin:4px 0}
+.gsec b{color:var(--fg);font-weight:600}
+.gsec code,.gsec .f{font-family:var(--mono);font-size:12.5px;color:var(--fg);background:rgba(120,150,190,.08);border-radius:4px;padding:0 4px}
+.gdlg[data-depth="basic"] .deep{display:none}
+.gdlg[data-depth="deep"] .basic-only{display:none}
+.deep{border-left:3px solid rgba(100,201,223,.55);padding-left:10px;margin:8px 0}
+.deep::before{content:"Engineering Deep Dive";display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);margin-bottom:2px}
+.gfig{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;margin:8px 0}
+.gfig figure{margin:0;flex:1 1 300px;min-width:0;background:#0b1220;border:1px solid var(--line);border-radius:8px;padding:8px}
+.gfig figure svg,.gfig figure img{display:block;width:100%;height:auto}
+.gfig figcaption{font-size:11.5px;color:var(--fg-3);margin-top:4px;line-height:1.5}
+.gtbl{overflow-x:auto;margin:6px 0}
+.gtbl table{border-collapse:collapse;width:100%;min-width:640px;font-size:12.5px}
+.gtbl th,.gtbl td{border-bottom:1px solid var(--line);padding:6px 6px;text-align:left;vertical-align:top;color:var(--fg-2);line-height:1.55}
+.gtbl th{color:var(--fg);font-weight:600;font-size:12px;background:var(--panel-2);position:sticky;top:0}
+.gtbl td.sym{font-family:var(--mono);color:var(--fg);white-space:nowrap}
+.gtbl tr.miss td{color:var(--rose)}
+.badge2{display:inline-block;font-family:var(--mono);font-size:10.5px;border-radius:4px;padding:1px 6px;white-space:nowrap;border:1px solid}
+.b-an{color:#5dd193;border-color:rgba(93,209,147,.5)} .b-semi{color:#64c9df;border-color:rgba(100,201,223,.5)} .b-pre{color:#b48cff;border-color:rgba(180,140,255,.5)}
+.b-emp{color:#f2b04a;border-color:rgba(242,176,74,.5)} .b-asm{color:#9eabbd;border-color:rgba(158,171,189,.5)} .b-fw{color:#ff8d9c;border-color:rgba(255,141,156,.5)}
+.gix{border:1px solid var(--line);border-radius:10px;background:var(--panel-2);padding:10px 12px;margin:8px 0}
+.gix .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.gix label{font-size:12.5px;color:var(--fg-2)}
+.gix select{background:var(--panel);color:var(--fg);border:1px solid var(--line-2);border-radius:6px;padding:4px 6px;font:inherit;font-size:12.5px}
+.gix input[type=range]{flex:1 1 220px}
+.gix output{font-family:var(--mono);font-size:13px;color:var(--fg);min-width:90px}
+.gix .tiles2{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px;margin:6px 0}
+.gix .tiles2 > div{border:1px solid var(--line);border-radius:6px;padding:5px 8px}
+.gix .tiles2 .l{font-size:11px;color:var(--fg-3)} .gix .tiles2 .v{font-family:var(--mono);font-size:14px;color:var(--fg)}
+.gix .tiles2 .v small{font-size:10.5px;color:var(--fg-3);margin-left:2px}
+.gix .charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px}
+.gix .note{margin:4px 0 0}
+.gmis li.ok::marker{color:var(--pass)} .gmis li.no::marker{color:var(--fail)}
+.gmis li .st{font-family:var(--mono);font-size:12px;margin-left:4px}
+.gmis li.ok .st{color:var(--pass)} .gmis li.no .st{color:var(--fail)}
+.grefs li{margin-bottom:4px}
+.grefs a{color:var(--cyan)}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:6px;margin:6px 0 2px}
+.roles div{border:1px solid var(--line);border-radius:8px;padding:6px 9px;font-size:12px;color:var(--fg-2)}
+.roles div b{display:block;color:var(--fg);font-size:12.5px}
+@media (max-width:600px){.gdlg-back{padding:0}.gdlg{height:100vh;height:100dvh;border-radius:0;border:0}.gdlg-h h2{font-size:19px}}
 @media (prefers-reduced-motion:reduce){.bar > i{transition:none}}
 </style>
 
@@ -268,7 +345,12 @@ footer b{color:var(--fg-2);font-weight:500}
     <section class="card" id="mission" aria-live="polite">
       <div class="mode-row">
         <div class="eyebrow" id="m-eyebrow"></div>
-        <div class="seg" id="mode-seg" role="radiogroup" aria-label="난이도"></div>
+        <div class="mode-r"><button class="btn guide" id="btn-guide" aria-haspopup="dialog" aria-controls="guide-dlg">원리 배우기 · Learning Guide</button><div class="seg" id="mode-seg" role="radiogroup" aria-label="난이도"></div></div>
+      </div>
+      <div class="guided" id="m-guided" hidden>
+        <div class="guided-h"><span class="eyebrow">학습 경로</span><div class="seg" id="gmode-seg" role="radiogroup" aria-label="학습 모드"></div></div>
+        <ol class="stepper" id="m-steps" aria-label="학습 단계"></ol>
+        <div class="stepnote" id="m-stepnote" aria-live="polite"></div>
       </div>
       <div class="preface" id="m-preface" hidden></div>
       <div class="name" id="m-name"></div>
@@ -367,7 +449,21 @@ footer b{color:var(--fg-2);font-weight:500}
   </main>
 
   </div>
+  <div class="gdlg-back" id="guide-dlg" hidden>
+    <div class="gdlg" role="dialog" aria-modal="true" aria-labelledby="guide-title" aria-describedby="guide-sub" data-depth="basic">
+      <div class="gdlg-h">
+        <div><div class="eyebrow" id="guide-eyebrow">Learning Guide · 원리 배우기</div><h2 id="guide-title"></h2><p class="gsub" id="guide-sub"></p></div>
+        <div class="gdlg-ctl">
+          <div class="seg" id="guide-depth" role="radiogroup" aria-label="설명 수준"><button role="radio" data-depth="basic" aria-checked="true">Beginner</button><button role="radio" data-depth="deep" aria-checked="false">Engineering Deep Dive</button></div>
+          <button class="btn" id="guide-pop" title="정적 사본을 새 창으로 엽니다 (조작 예제 제외)">새 창으로</button>
+          <button class="btn pri" id="guide-close">닫고 설계로 돌아가기</button>
+        </div>
+      </div>
+      <nav class="gdlg-toc" id="guide-toc" aria-label="학습 가이드 목차"></nav>
+      <div class="gdlg-body" id="guide-body" tabindex="-1"></div>
+    </div>
+  </div>
   <footer>
-    <b>모델 범위.</b> 플랫폼 4종(Si 220 nm / SiN 400 nm × 1310 / 1550 nm, SiO₂ 클래딩)의 모드는 semi-vectorial 2D 유한차분 솔버(quasi-TE Ex, quasi-TM Ey)로 사전계산한 테이블입니다: 도파로 TE/TM 모드와 n<sub>eff</sub>(폭·두께·파장), 방향성 결합기의 짝/홀 슈퍼모드, SSC 팁 모드와 광섬유 overlap. MMI는 2D 유효굴절률법 + 고유모드 전개, CWDM은 같은 n<sub>eff</sub>·n<sub>g</sub> 테이블로 만든 회로 S-matrix입니다. 측벽 산란 손실은 (∂n<sub>eff</sub>/∂w)²에 비례하는 근사, 기판 누설은 BOX 터널링 근사. 반사, 3D 방사, 벤드 구간 결합, 편광 혼합은 포함하지 않아 FDTD·벡터 솔버보다 낙관적입니다 (500×220 nm Si @1550 TE0 n<sub>eff</sub> 2.49 vs 벡터 해 ≈ 2.44). <b>Stage 2.</b> TO: 히터 단면 2D 유한체적 열해석 테이블(트렌치·언더컷; 언더컷은 2D에서 볼 수 없는 팔 끝·테더 누설 0.5 W/m·K를 더함) + EIM dn<sub>eff</sub>/dT, τ는 국소 적층 에너지법. PN: 리브 EIM + 1D 모드, 계단 접합 공핍 근사, Soref–Bennett(1.31/1.55 µm), Caughey–Thomas 이동도. TW-MZM: CPW 등각사상(Hilberg) + 접합 부하 전신방정식, 양끝 반사, 광 진행 좌표계 적분, 112 GBd PAM4 눈은 5-tap FFE 기준 수신기(TDECQ 방식 근사, 잡음 증폭 √Σc²). Ge PD: 흡수 1−e<sup>−ΓαL</sup>, 전이(0.45v/d)×RC 1차 극, TIA 잡음은 입력 C에 비례하는 근사. 링크: 부품 카드의 대표값을 dB로 더한 버짓, 광 궤환은 파셋 Fresnel × 가우시안 overlap과 RIN 페널티 로지스틱 근사. <b>Stage 3.</b> 모듈 = 부품 카드(또는 기준 설계)의 대표값을 dB·W로 조립. 레인 마진은 4채널 × 케이스 0/70 °C 코너의 최솟값이며, Demux는 1-7 lattice를 dn<sub>eff</sub>/dT만큼 굴절률을 옮겨 다시 계산(밴드 ±6.5 nm 최악). 비냉각 DFB: −0.02 dB/K(25 °C 이상), WPE −0.5%/K. TEC: 0.3 W + 레이저 발열/COP 0.6. 크로스토크 페널티 −10log(1−3·XT). 전력 상수(1.6T DSP 10 W, MLSE +1.5 W, 드라이버 0.35/0.15 W·레인, TIA 0.12 W·레인, DC-DC 90%)와 LPO/CPO 페널티(전기 +1.5/+0.5 dB, 감도 +0.5/+0.3 dB, CPO FAU +1 dB)는 학습용 대표값입니다. <b>긴 지연선.</b> 단면은 EIM, 산란 손실은 σ²·(n₁²−n₂²)·∂n<sub>eff</sub>/∂w(측벽)와 ∂n<sub>eff</sub>/∂t(상하면)에 비례하는 근사로, 상수는 Hong 2022의 Si 측정값(0.45/1.6/2 µm: 5.5/0.38/0.28 dB/cm, σ 4.6/0.42 nm)에 한 번 맞춘 뒤 SiN(σ 5/0.4 nm 가정, 재료 흡수 0.06 dB/cm @1550, 0.02 @1310)에 그대로 적용합니다. 굽힘 방사는 EIM 횡방향 슬랩의 Marcuse 식이라 SiN 임계 반경을 실제보다 작게 예측하는 경향이 있습니다. S-bend 모드 변환은 n²w³/(λ²R) 스케일을 논문의 원호 −2.3 dB에 맞춘 근사, 이웃 회전 결합은 결합 슬랩 κ(동방향 가정, 보수적)입니다. MZ 스위치 위상 오차는 국소 폭 요동 2 nm·√(L·3 µm) 가정, 보정 후 잔차는 초기 오차의 15%로 둡니다. <b>Track B.</b> 처프: 분해능 c/2B, 비트 f<sub>b</sub> = 2Rγ/c ≤ ADC 500 MHz, 코히어런스 손실 exp(−2πΔν·2R/c), 잔류 처프 오차 √(지터² + Δν/(2πτ<sub>ref</sub>M) + 측정²)로 비트 위상 오차 2π(2R/c)e → exp(−σφ²); 레이저 선폭·튜닝 범위·지터와 예왜곡 평균 M = 1000은 대표값 가정. 거리 눈금 오차 = R·(1/n<sub>g</sub>)dn<sub>g</sub>/dT·ΔT. 스캐너: 가우시안 방출 모드 → 렌즈 뒤 w<sub>b</sub> = λf/(πw<sub>e</sub>), 퍼짐 w<sub>e</sub>/f(FWHM 1.18배), 수차는 NA·시야각에 대한 경험식, 스위치 손실·소광비는 대표값(열광학 0.3 dB/−27 dB, PIN 0.9 dB/−19 dB). 시스템: 모노스태틱 코히어런트, 람베르트 ρ = 0.1, P<sub>rx</sub> = P<sub>out</sub>ρD²/(4R²)·η<sub>het</sub>(0.4, 스펙클), 왕복 칩 손실, 균형 검출 SNR = ℜP<sub>rx</sub>T<sub>int</sub>/q × 샷잡음 비율(TIA 10 pA/√Hz), 처프 N<sub>av</sub>개 비코히어런트 적산 √N<sub>av</sub>, 임계 13 dB; Si는 TPA/FCA 손실 0.6·(P/100 mW)² dB 근사. 도플러·다중 반사·눈 안전은 다루지 않습니다. 공정 변동: 웨이퍼 CD 오프셋 + 두께 bowl + 다이 랜덤(CD σ ≈ 8 nm, 두께 σ ≈ Si 3 nm / SiN 5 nm). <b>게임 밖 검증.</b> 설계 내보내기(smq-design/1) → tools/smq2gds가 GDS(gdsfactory)와 솔버 입력을 만듭니다. MMI는 GDS를 그대로 자른 3D EME(국소 Tidy3D FDE 모드, 테이퍼 포함), 지연 나선은 같은 단면의 벡터 모드 해석(직선: 두 격자 Richardson, 굽힘: PML·등각 변환)과 곡률 반전 모드 겹침으로 검사하고, 참조 설계의 결과를 "오프라인 솔버 검증" 패널에 게임 예측과 나란히 보여 줍니다. 각 보스의 최종 검증은 3D FDTD(MEEP 스크립트 생성, Tidy3D)·Ansys(CHARGE/HEAT/INTERCONNECT)로 넘기는 것을 전제로 합니다.
+    <b>모델 범위.</b> 플랫폼 4종(Si 220 nm / SiN 400 nm × 1310 / 1550 nm, SiO₂ 클래딩)의 모드는 semi-vectorial 2D 유한차분 솔버(quasi-TE Ex, quasi-TM Ey)로 사전계산한 테이블입니다: 도파로 TE/TM 모드와 n<sub>eff</sub>(폭·두께·파장), 방향성 결합기의 짝/홀 슈퍼모드, SSC 팁 모드와 광섬유 overlap. MMI는 2D 유효굴절률법 + 고유모드 전개, CWDM은 같은 n<sub>eff</sub>·n<sub>g</sub> 테이블로 만든 회로 S-matrix입니다. 측벽 산란 손실은 (∂n<sub>eff</sub>/∂w)²에 비례하는 근사, 기판 누설은 BOX 터널링 근사. 반사, 3D 방사, 벤드 구간 결합, 편광 혼합은 포함하지 않아 FDTD·벡터 솔버보다 낙관적입니다 (500×220 nm Si @1550 TE0 n<sub>eff</sub> 2.49 vs 벡터 해 ≈ 2.44). <b>Stage 2.</b> TO: 히터 단면 2D 유한체적 열해석 테이블(트렌치·언더컷; 언더컷은 2D에서 볼 수 없는 팔 끝·테더 누설 0.5 W/m·K를 더함) + EIM dn<sub>eff</sub>/dT, τ는 국소 적층 에너지법. PN: 리브 EIM + 1D 모드, 계단 접합 공핍 근사, Soref–Bennett(1.31/1.55 µm), Caughey–Thomas 이동도. TW-MZM: CPW 등각사상(Hilberg) + 접합 부하 전신방정식, 양끝 반사, 광 진행 좌표계 적분, 112 GBd PAM4 눈은 5-tap FFE 기준 수신기(TDECQ 방식 근사, 잡음 증폭 √Σc²). Ge PD: 흡수 1−e<sup>−ΓαL</sup>, 전이(0.45v/d)×RC 1차 극, TIA 잡음은 입력 C에 비례하는 근사. 링크: 부품 카드의 대표값을 dB로 더한 버짓, 광 궤환은 파셋 Fresnel × 가우시안 overlap과 RIN 페널티 로지스틱 근사. <b>Stage 3.</b> 모듈 = 부품 카드(또는 기준 설계)의 대표값을 dB·W로 조립. 레인 마진은 4채널 × 케이스 0/70 °C 코너의 최솟값이며, Demux는 1-7 lattice를 dn<sub>eff</sub>/dT만큼 굴절률을 옮겨 다시 계산(밴드 ±6.5 nm 최악). 비냉각 DFB: −0.02 dB/K(25 °C 이상), WPE −0.5%/K. TEC: 0.3 W + 레이저 발열/COP 0.6. 크로스토크 페널티 −10log(1−3·XT). 전력 상수(1.6T DSP 10 W, MLSE +1.5 W, 드라이버 0.35/0.15 W·레인, TIA 0.12 W·레인, DC-DC 90%)와 LPO/CPO 페널티(전기 +1.5/+0.5 dB, 감도 +0.5/+0.3 dB, CPO FAU +1 dB)는 학습용 대표값입니다. <b>긴 지연선.</b> 단면은 EIM, 산란 손실은 σ²·(n₁²−n₂²)·∂n<sub>eff</sub>/∂w(측벽)와 ∂n<sub>eff</sub>/∂t(상하면)에 비례하는 근사로, 상수는 Hong 2022의 Si 측정값(0.45/1.6/2 µm: 5.5/0.38/0.28 dB/cm, σ 4.6/0.42 nm)에 한 번 맞춘 뒤 SiN(σ 5/0.4 nm 가정, 재료 흡수 0.06 dB/cm @1550, 0.02 @1310)에 그대로 적용합니다. 굽힘 방사는 EIM 횡방향 슬랩의 Marcuse 식이라 SiN 임계 반경을 실제보다 작게 예측하는 경향이 있습니다. S-bend 모드 변환은 n²w³/(λ²R) 스케일을 논문의 원호 −2.3 dB에 맞춘 근사, 이웃 회전 결합은 결합 슬랩 κ(동방향 가정, 보수적)입니다. MZ 스위치 위상 오차는 국소 폭 요동 2 nm·√(L·3 µm) 가정, 보정 후 잔차는 초기 오차의 15%로 둡니다. 직사각형 나선은 경계 안에 생성한 실제 형상(직선·원호/Euler 코너·중앙 S-bend)의 길이와 국소 반경으로 손실·지연을 계산하며, 원호 코너의 곡률 점프 모드 변환은 접합마다 가우시안 이동을 비간섭으로 더한 공학적 추정입니다. 1-7 Guided 단계의 MZI는 같은 n<sub>eff</sub>·n<sub>g</sub> 테이블과 커플러 과잉손실 0.05 dB를 쓰며, 단계 3의 "출력 전력의 95%"는 과잉손실을 뺀 포트 분배 비율입니다. <b>Track B.</b> 처프: 분해능 c/2B, 비트 f<sub>b</sub> = 2Rγ/c ≤ ADC 500 MHz, 코히어런스 손실 exp(−2πΔν·2R/c), 잔류 처프 오차 √(지터² + Δν/(2πτ<sub>ref</sub>M) + 측정²)로 비트 위상 오차 2π(2R/c)e → exp(−σφ²); 레이저 선폭·튜닝 범위·지터와 예왜곡 평균 M = 1000은 대표값 가정. 거리 눈금 오차 = R·(1/n<sub>g</sub>)dn<sub>g</sub>/dT·ΔT. 스캐너: 가우시안 방출 모드 → 렌즈 뒤 w<sub>b</sub> = λf/(πw<sub>e</sub>), 퍼짐 w<sub>e</sub>/f(FWHM 1.18배), 수차는 NA·시야각에 대한 경험식, 스위치 손실·소광비는 대표값(열광학 0.3 dB/−27 dB, PIN 0.9 dB/−19 dB). 시스템: 모노스태틱 코히어런트, 람베르트 ρ = 0.1, P<sub>rx</sub> = P<sub>out</sub>ρD²/(4R²)·η<sub>het</sub>(0.4, 스펙클), 왕복 칩 손실, 균형 검출 SNR = ℜP<sub>rx</sub>T<sub>int</sub>/q × 샷잡음 비율(TIA 10 pA/√Hz), 처프 N<sub>av</sub>개 비코히어런트 적산 √N<sub>av</sub>, 임계 13 dB; Si는 TPA/FCA 손실 0.6·(P/100 mW)² dB 근사. 도플러·다중 반사·눈 안전은 다루지 않습니다. 공정 변동: 웨이퍼 CD 오프셋 + 두께 bowl + 다이 랜덤(CD σ ≈ 8 nm, 두께 σ ≈ Si 3 nm / SiN 5 nm). <b>게임 밖 검증.</b> 설계 내보내기(smq-design/1) → tools/smq2gds가 GDS(gdsfactory)와 솔버 입력을 만듭니다. MMI는 GDS를 그대로 자른 3D EME(국소 Tidy3D FDE 모드, 테이퍼 포함), 지연 나선은 같은 단면의 벡터 모드 해석(직선: 두 격자 Richardson, 굽힘: PML·등각 변환)과 곡률 반전 모드 겹침으로 검사하고, 참조 설계의 결과를 "오프라인 솔버 검증" 패널에 게임 예측과 나란히 보여 줍니다. 각 보스의 최종 검증은 3D FDTD(MEEP 스크립트 생성, Tidy3D)·Ansys(CHARGE/HEAT/INTERCONNECT)로 넘기는 것을 전제로 합니다.
   </footer>
 </div>

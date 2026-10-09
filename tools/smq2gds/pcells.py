@@ -5,6 +5,9 @@ spiral  — double Archimedean delay spiral, r = r_in + (p/π)θ per arm (arms i
           centre S-bend either two circular arcs or two clothoid ("Euler") halves with a w → W_s width taper,
           and straight w → w0 tapers at both outer ends. Arm length is solved so that the drawn path length
           (arms + S-bend) equals geometry.length_um from the game.
+spiral_rect — boundary-aware rectangular double spiral (game layout modes 1/2): the game exports arm A as straight lines and
+          90° corners (arc, or Euler clothoid pair, offset outward by d), arm B = −A, the centre S-bend is re-derived here from
+          H_t (two semicircles, or two Euler 180° U-turns), and the whole path is mapped into the chip boundary (0,0)–(W,H).
 """
 from __future__ import annotations
 
@@ -200,6 +203,123 @@ def spiral(g: dict, layer, label_layer=None) -> tuple[gf.Component, dict]:
     return c, info
 
 
+# ---------------------------------------------------------------- rectangular (boundary-aware) double spiral
+def _turn_unit(total: float, n: int):
+    """Symmetric clothoid pair with κmax = 1 (R_min = 1), left turn by `total` from the origin heading +x.
+    Integrated here independently of the game (cumulative trapezoid on a fine grid)."""
+    L = 2 * total
+    s = np.linspace(0.0, L, n + 1)
+    th = np.where(s <= L / 2, s * s / L, total - (L - s) ** 2 / L)
+    kap = np.where(s <= L / 2, 2 * s / L, 2 * (L - s) / L)
+    x = cumulative_trapezoid(np.cos(th), s, initial=0)
+    y = cumulative_trapezoid(np.sin(th), s, initial=0)
+    return s, x, y, th, kap
+
+
+_U90 = _turn_unit(math.pi / 2, 200000)
+_U180 = _turn_unit(math.pi, 400000)
+EU90_A0 = float(_U90[1][-1])  # tangent length of the Euler 90° corner per unit R_min (≈ 1.8701)
+EU180_D = float(_U180[2][-1])  # end-point separation of the Euler U-turn per unit R_min (≈ 2.7537)
+
+
+def _resample(u, n):
+    idx = np.unique(np.linspace(0, len(u[0]) - 1, n).round().astype(int))
+    return [a[idx] for a in u]
+
+
+def _corner_local(shape: str, R: float, a0: float, d: float) -> np.ndarray:
+    """Left-turn corner with its tangent-line vertex at the origin, incoming along +x, offset outward by d (sagitta ≤ ~1 nm)."""
+    if shape == "arc":
+        a = a0 + d
+        n = max(8, int(math.ceil((math.pi / 2) / math.sqrt(8e-3 / a))))
+        t = np.linspace(-math.pi / 2, 0.0, n + 1)
+        return np.stack([-a + a * np.cos(t), a + a * np.sin(t)], axis=1)
+    n = int(np.clip(math.pi * math.sqrt((R + d) / 8e-3) * 1.5, 120, 6000))
+    _, x, y, th, _ = _resample(_U90, n)
+    return np.stack([-a0 + R * x + d * np.sin(th) - d, R * y - d * np.cos(th) + d], axis=1)
+
+
+def _place(pts: np.ndarray, V, h_deg: float, turn: int) -> np.ndarray:
+    h = math.radians(h_deg)
+    cs, sn = math.cos(h), math.sin(h)
+    x, y = pts[:, 0], turn * pts[:, 1]
+    return np.stack([V[0] + x * cs - y * sn, V[1] + x * sn + y * cs], axis=1)
+
+
+def _s_half(kind: str, Ht: float):
+    """Arm-A half of the centre S-bend: origin → (0, H_t) arriving heading +x. Returns points, fraction along it, R_min."""
+    if kind == "arc":
+        rr = Ht / 2
+        n = max(16, int(math.ceil(math.pi / math.sqrt(8e-3 / rr))))
+        f = np.linspace(-math.pi / 2, -1.5 * math.pi, n + 1)
+        return np.stack([rr * np.cos(f), rr + rr * np.sin(f)], axis=1), np.linspace(0, 1, n + 1), rr
+    sc = Ht / EU180_D
+    n = int(np.clip(2 * math.pi * math.sqrt(sc / 8e-3) * 1.5, 200, 20000))
+    s, x, y, _, _ = _resample(_U180, n)
+    return np.stack([-x * sc, y * sc], axis=1), s / s[-1], sc
+
+
+def spiral_rect(g: dict, layer, label_layer=None) -> tuple[gf.Component, dict]:
+    """Boundary-aware rectangular double spiral, drawn from the primitives the game exported (arm A: lines + corners,
+    arm B = −A, centre S-bend re-derived here from H_t). Output is in chip coordinates with the boundary at (0,0)–(W,H)."""
+    w, w0, Lt = g["w_um"], g["w_io_um"], g["taper_len_um"]
+    shape, R, a0 = g["corner"], g["R_um"], g["a0_um"]
+    a0_py = EU90_A0 * R if shape == "euler" else R
+    if abs(a0_py - a0) > 1e-3 * max(a0, 1):
+        raise ValueError(f"corner tangent length mismatch: game {a0} vs smq2gds {a0_py}")
+    pts, wid = [np.array([[0.0, g["Ht_um"]]])], [np.array([w])]
+    for s in g["armA"]:
+        if s["t"] == "L":
+            a, b = np.array(s["a"], float), np.array(s["b"], float)
+            if s.get("port"):
+                u = (b - a) / np.linalg.norm(b - a)
+                L = float(np.linalg.norm(b - a))
+                q = [a, b - u * min(Lt, L), b]
+                pts.append(np.array(q)), wid.append(np.array([w, w, w0]))
+            else:
+                pts.append(np.array([a, b])), wid.append(np.array([w, w]))
+        else:
+            q = _place(_corner_local(shape, R, a0, s["d"]), s["V"], s["h_deg"], s["turn"])
+            pts.append(q), wid.append(np.full(len(q), w))
+    armA = np.vstack(pts)
+    wA = np.concatenate(wid)
+    keep = np.concatenate([[True], np.hypot(*np.diff(armA, axis=0).T) > 1e-3])  # pieces meet within export rounding (< 1 nm)
+    armA, wA = armA[keep], wA[keep]
+    half, frac, Rs = _s_half("arc" if g["sbend"] == "arc" else "euler", g["Ht_um"])
+    w_h = np.full(len(half), w) if g["sbend"] == "arc" else g["ws_um"] + (w - g["ws_um"]) * frac
+    # arm A starts at (0, H_t) = the S-bend's end point, so both arms drop their first point at the junction
+    cl = np.vstack([-armA[1:][::-1], -half[::-1], half[1:], armA[1:]])
+    wl = np.concatenate([wA[1:][::-1], w_h[::-1], w_h[1:], wA[1:]])
+    keep = np.concatenate([[True], np.hypot(*np.diff(cl, axis=0).T) > 1e-3])
+    cl, wl = cl[keep], wl[keep]
+    B = g["boundary"]
+    W, H = B["W_um"], B["H_um"]
+    if g["transform"]["rot90"]:
+        cl = np.stack([W / 2 - cl[:, 1], H / 2 + cl[:, 0]], axis=1)
+    else:
+        cl = cl + np.array([W / 2, H / 2])
+    h = hashlib.sha1(json.dumps(g, sort_keys=True).encode()).hexdigest()[:6]
+    c = gf.Component(f"smq_spiral_rect_{g['topology']}_w{w:g}_p{g['pitch_um']:g}_R{R:g}_{h}".replace(".", "p"))
+    _ribbon(c, cl, wl, layer)
+    for name, i, j in (("o1", 0, 1), ("o2", -1, -2)):
+        v = cl[i] - cl[j]
+        c.add_port(name, center=tuple(cl[i]), width=w0, orientation=math.degrees(math.atan2(v[1], v[0])) % 360, layer=tuple(layer))
+    seg = np.hypot(*np.diff(cl, axis=0).T)
+    # discrete curvature on the sampled centre line (circumradius of consecutive triples) — independent bend-radius check
+    p0, p1, p2 = cl[:-2], cl[1:-1], cl[2:]
+    a_, b_, c_ = np.hypot(*(p1 - p0).T), np.hypot(*(p2 - p1).T), np.hypot(*(p2 - p0).T)
+    cross = np.abs((p1 - p0)[:, 0] * (p2 - p0)[:, 1] - (p1 - p0)[:, 1] * (p2 - p0)[:, 0])
+    ok = (cross > 1e-12) & (a_ < 50) & (b_ < 50)
+    rad = (a_ * b_ * c_)[ok] / (2 * cross[ok]) if ok.any() else np.array([np.inf])
+    info = {"path_um": float(seg.sum()), "target_um": g["length_um"], "bbox_um": [float(v) for v in (c.dbbox().left, c.dbbox().bottom, c.dbbox().right, c.dbbox().top)],   # drawn polygons (µm)
+            "sbend": {"type": g["sbend"], "Rmin_um": float(Rs if g["sbend"] == "arc" else g["Ht_um"] / EU180_D), "Rmin_game_um": g["Rmin_sbend_um"]},
+            "min_radius_um": float(rad.min()), "corners": 2 * sum(1 for s in g["armA"] if s["t"] == "C"), "centreline_points": int(len(cl)),
+            "ports": {p.name: [float(p.center[0]), float(p.center[1]), float(p.orientation)] for p in c.ports}}
+    if label_layer:
+        _label(c, f"SMQ spiral_rect {g['topology']} tau={g['tau_ns']}ns w={w} p={g['pitch_um']} R={R} L={info['path_um']:.0f}um", (W / 2, -20), label_layer)
+    return c, info
+
+
 def build(d: dict, lay: dict) -> tuple[gf.Component, dict]:
     g, mat = d["geometry"], d["platform"]["mat"]
     core, lab = lay["core"][mat], lay.get("label")
@@ -207,6 +327,8 @@ def build(d: dict, lay: dict) -> tuple[gf.Component, dict]:
         c, info = mmi(g, core, lab), {}
     elif g["pcell"] == "spiral":
         c, info = spiral(g, core, lab)
+    elif g["pcell"] == "spiral_rect":
+        c, info = spiral_rect(g, core, lab)
     else:
         raise ValueError(f"no PCell for {g['pcell']!r}")
     h = hashlib.sha1(json.dumps(g, sort_keys=True).encode()).hexdigest()[:6]  # unique per geometry (several builds per process)
@@ -217,6 +339,10 @@ def build(d: dict, lay: dict) -> tuple[gf.Component, dict]:
         bb = top.bbox()
         top.add_label(f"smq-design/1 {d['platform']['id']} {d['level']['id']} {d['level']['device']}", position=(bb.left, bb.top + 2), layer=tuple(lab))
     if lay.get("floorplan"):
-        bb = top.bbox()
-        top.add_polygon([(bb.left, bb.bottom), (bb.right, bb.bottom), (bb.right, bb.top), (bb.left, bb.top)], layer=tuple(lay["floorplan"]))
+        if g["pcell"] == "spiral_rect":  # the user's usable rectangle, not the device bbox
+            W, H = g["boundary"]["W_um"], g["boundary"]["H_um"]
+            top.add_polygon([(0, 0), (W, 0), (W, H), (0, H)], layer=tuple(lay["floorplan"]))
+        else:
+            bb = top.bbox()
+            top.add_polygon([(bb.left, bb.bottom), (bb.right, bb.bottom), (bb.right, bb.top), (bb.left, bb.top)], layer=tuple(lay["floorplan"]))
     return top, info

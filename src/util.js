@@ -102,7 +102,7 @@ const cx = { add: (a, b) => [a[0] + b[0], a[1] + b[1]], sub: (a, b) => [a[0] - b
 if (typeof module !== 'undefined') module.exports.cx = cx;
 // coach helper: 1-D scan of one parameter; returns the best value only if it really improves q
 function lineBest(K, l, d, k, q, n) {
-  const p = K.params(l).find((x) => x.k === k), q0 = q(K.evaluate(l, d)); let best = { v: d[k], q: q0 }; n = n || 24;
+  const p = K.params(l, d).find((x) => x.k === k), q0 = q(K.evaluate(l, d)); let best = { v: d[k], q: q0 }; n = n || 24;
   for (let i = 0; i <= n; i++) { const v = snapP(p, p.min + (p.max - p.min) * i / n); if (v === d[k]) continue; const qq = q(K.evaluate(l, { ...d, [k]: v })); if (qq < best.q - 1e-9) best = { v, q: qq }; }
   return best.q < q0 * 0.99 ? { ...best, q0, p } : null;
 }
@@ -112,7 +112,7 @@ const recText = (b, t, d) => (!b ? '' : t >= 2 ? ` 권장: ${b.p.sym} = ${recVal
 if (typeof module !== 'undefined') Object.assign(module.exports, { lineBest, lineBestOf, recText });
 // two-parameter coarse grid (for coupled constraints a single-knob scan cannot escape)
 function pairBest(K, l, d, ks, q, n) {
-  const ps = ks.map((k) => K.params(l).find((x) => x.k === k)), q0 = q(K.evaluate(l, d)); let best = { v: ks.map((k) => d[k]), q: q0 }; n = n || 10;
+  const ps = ks.map((k) => K.params(l, d).find((x) => x.k === k)), q0 = q(K.evaluate(l, d)); let best = { v: ks.map((k) => d[k]), q: q0 }; n = n || 10;
   for (let i = 0; i <= n; i++) for (let j = 0; j <= n; j++) {
     const v = [snapP(ps[0], ps[0].min + (ps[0].max - ps[0].min) * i / n), snapP(ps[1], ps[1].min + (ps[1].max - ps[1].min) * j / n)];
     const qq = q(K.evaluate(l, { ...d, [ks[0]]: v[0], [ks[1]]: v[1] })); if (qq < best.q - 1e-9) best = { v, q: qq };
@@ -125,14 +125,14 @@ if (typeof module !== 'undefined') Object.assign(module.exports, { pairBest, rec
 const keepStar = (q1v, q2v) => (q1v > 1 + 1e-9 ? 100 + q1v : q2v);
 // multi-parameter recommendation in the pairBest format (ps, v, q0, q) from an explicit candidate list
 function bestOfCands(K, l, d, keys, cands, q) {
-  const ps = keys.map((k) => K.params(l).find((x) => x.k === k)), q0 = q(K.evaluate(l, d)); let best = null;
+  const ps = keys.map((k) => K.params(l, d).find((x) => x.k === k)), q0 = q(K.evaluate(l, d)); let best = null;
   for (const c of cands) { const nd = { ...d }; keys.forEach((k, i) => { nd[k] = snapP(ps[i], c[i]); }); const qq = q(K.evaluate(l, nd)); if (!best || qq < best.q) best = { v: keys.map((k) => nd[k]), q: qq }; }
   return best && best.q < q0 * 0.99 ? { ...best, q0, ps } : null;
 }
 if (typeof module !== 'undefined') Object.assign(module.exports, { keepStar, bestOfCands });
 // last-resort coach search: deterministic random designs over several knobs (coupled constraints)
 function randomBest(K, l, d, keys, q, n) {
-  const ps = keys.map((k) => K.params(l).find((x) => x.k === k)), r = mulberry(97), c = [];
+  const ps = keys.map((k) => K.params(l, d).find((x) => x.k === k)), r = mulberry(97), c = [];
   for (let i = 0; i < (n || 300); i++) c.push(ps.map((p) => p.min + (p.max - p.min) * r()));
   return bestOfCands(K, l, d, keys, c, q);
 }
