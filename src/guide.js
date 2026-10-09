@@ -388,7 +388,7 @@
       return `<tr data-k="${p.k}"><td>${p.label}</td><td class="sym">${p.sym}</td><td>${p.unit || (p.labels ? '선택' : '무차원')}</td><td>${fn(g.m, c)}</td><td>↑ ${fn(g.up, c)}<br>↓ ${fn(g.dn, c)}</td><td>${fn(g.tr, c)}</td><td>${fn(g.f, c)}</td><td>${fn(g.rg, c) || '—'}</td><td>${rng}</td></tr>`;
     }).join('');
     const tog = c.K.toggles && !c.step ? c.K.toggles(c.l) : [];
-    return `<p>지금 화면의 설계 변수 ${c.params.length}개입니다 (게임의 실제 파라미터 정의에서 바로 만든 표).</p><div class="gtbl"><table><tr><th>이름</th><th>기호</th><th>단위</th><th>물리적 의미</th><th>키우면 / 줄이면</th><th>핵심 Trade-off</th><th>관련 식</th><th>전형 범위 · 주의</th><th>게임 범위</th></tr>${rows}</table></div>`
+    return `<p>지금 화면의 설계 변수 ${c.params.length}개입니다 (게임의 실제 파라미터 정의에서 바로 만든 표).</p><div class="gtbl wide" tabindex="0" role="region" aria-label="설계 변수 표 (가로 스크롤)"><table><tr><th>이름</th><th>기호</th><th>단위</th><th>물리적 의미</th><th>키우면 / 줄이면</th><th>핵심 Trade-off</th><th>관련 식</th><th>전형 범위 · 주의</th><th>게임 범위</th></tr>${rows}</table></div>`
       + (tog.length ? `<p class="note">토글: ${tog.map((t) => `${t.label} (${t.needs} 카드 필요)`).join(' · ')} — 앞 레벨에서 만든 부품 카드의 실제 값을 이 레벨 계산에 씁니다.</p>` : '');
   }
   function secD(c, G) {

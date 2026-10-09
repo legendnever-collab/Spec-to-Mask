@@ -167,6 +167,8 @@ KINDS.spiral = (() => {
       return { err: 'long' };
     };
     out.len = len;
+    // shortest layout this boundary allows (one loop, smallest core, full port leads) — sets the lower end of Mode A / the floor of Mode B
+    out.Lmin = Nfit ? (() => { const c = core(1, 1e12); return len(1, c.cx, c.cy); })() : 0;
     return out;
   }
   // arm A primitives (canonical, µm). Lines {t:'L', a, b}, corners {t:'C', V, h, turn, d}; the last line is the port line.
@@ -240,8 +242,14 @@ KINDS.spiral = (() => {
       const why = geo.s.err;
       if (why === 'box') fail(`Infeasible: 경계 ${d.bw}×${d.bh} mm, 여유 ${d.ec} µm, 점유 ${Math.round(d.env * 100)}%에는 한 바퀴도 들어가지 않습니다 (코너 a₀ ${f2(G.a0, 0)} µm, S-bend 최소 높이 ${f2(G.htMin, 0)} µm)`);
       else if (why === 'long') fail(`Infeasible: 목표 ${d.tau} ns(${f2(Lt / 1e4, 1)} cm)가 이 영역의 최대 ${f2(tau0(G.Lgeo), 2)} ns(${f2(G.Lgeo / 1e4, 1)} cm)보다 깁니다`);
-      else if (why === 'short') fail('Infeasible: 목표 지연이 너무 짧아 가장 작은 코어로도 정확히 맞출 수 없습니다');
+      else if (why === 'short' && !modeB) fail(`Infeasible: 목표 ${d.tau} ns(${f2(Lt / 1e4, 2)} cm)가 이 경계에서 만들 수 있는 가장 짧은 배치 ${f2(tau0(G.Lmin), 2)} ns(${f2(G.Lmin / 1e4, 2)} cm — 포트까지의 직선 포함)보다 짧습니다`);
+      else if (modeB && G.Lmin) fail(`Infeasible: 손실 예산 ${d.ilb} dB로는 이 경계의 가장 짧은 배치(${f2(G.Lmin / 1e4, 2)} cm, 전파 손실만 ≈ ${f2(x.alpha * G.Lmin * 1e-4, 1)} dB — 포트까지의 직선 포함)도 만들 수 없습니다`);
       else fail(`Infeasible: 손실 예산 ${d.ilb} dB가 고정 손실(코너·S-bend·테이퍼)보다 작습니다`);
+      if (why === 'short' || why === 'budget') {
+        if (modeB) { alts.push(`손실 예산 IL<sub>max</sub>를 늘리세요 (지금 ${d.ilb} dB)`); alts.push(`폭 W<sub>m</sub>을 넓혀 측벽 산란 dB/cm를 낮추세요 (지금 α ${f2(x.alpha, 2)} dB/cm)`); }
+        else alts.push('목표 지연 τ를 늘리거나 Mode B로 이 경계의 지연 범위를 확인하세요');
+        alts.push(G.pm === 'short' ? '긴 변 쪽 포트(E–W/S–N)나 더 작은 경계를 쓰면 포트까지의 직선이 짧아집니다' : '더 작은 경계를 쓰면 포트까지의 직선이 짧아집니다');
+      }
       if (why === 'long' || why === 'box') {
         if (d.env < 1) alts.push(`점유 상한 f를 키우세요 (지금 ${Math.round(d.env * 100)}%)`);
         alts.push(`간격 W<sub>gap</sub> 또는 폭 W<sub>m</sub>을 줄이면 피치 p(${f2(G.p, 2)} µm)가 작아져 같은 면적에 더 감깁니다`);

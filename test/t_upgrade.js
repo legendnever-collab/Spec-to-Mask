@@ -100,6 +100,8 @@ for (const pid of Object.keys(G.PLATFORMS)) {
   const B = K.evaluate(l, mk({ dm: 1, ilb: 10 })); ok(!B.drc.length && B.IL <= 10 + 0.05 && (B.limit === 'loss' || B.limit === 'area'), `${pid}: Mode B IL ${B.IL.toFixed(2)} ≤ 10 dB, limit ${B.limit}, τ ${B.tauP.toFixed(2)} ns`);
   // infeasible: a reason and alternatives, never a silent layout
   const bad = K.evaluate(l, mk({ env: 0.02, tau: 20 })); ok(bad.drc.length && /Infeasible/.test(bad.drc[0]) && bad.alts.length >= 2, `${pid}: infeasible target reported with alternatives`);
+  const a0 = K.evaluate(l, mk({ dm: 1 })), badB = K.evaluate(l, mk({ dm: 1, ilb: +(0.5 * a0.x.alpha * a0.G.Lmin * 1e-4).toFixed(3) })); ok(badB.drc.length && /Infeasible: 손실 예산/.test(badB.drc[0]) && badB.alts.length >= 2, `${pid}: Mode B budget below the shortest layout is Infeasible with alternatives (${(badB.drc[0] || '').slice(0, 40)})`);
+  const shortA = K.evaluate(l, mk({ tau: 0.05, port: 0 })); ok(shortA.drc.length ? /가장 짧은 배치/.test(shortA.drc[0]) && shortA.alts.length >= 2 : near(shortA.tauP, 0.05, 1e-6), `${pid}: very short target either fits exactly or names the shortest layout`);
   const rule = K.evaluate(l, mk({ gap: pf.rules.gap / 2 })); ok(rule.drc.some((m) => /DRC 최소 간격/.test(m)), `${pid}: gap below the DRC rule is flagged`);
   // legacy cards stay usable by D-2 / B-1 (they rebuild a circular spiral from the card design)
   const leg = K._x.build(pf, mk({}), 2); ok(Number.isFinite(leg.IL), `${pid}: a rectangular-mode design keeps valid legacy keys for D-2 / B-1`);
