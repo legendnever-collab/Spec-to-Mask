@@ -3935,16 +3935,25 @@ function designJSON() {
     next: geom ? 'python -m smq2gds design.json -o out.gds  (tools/smq2gds, README 참조)' : `이 소자(${LMAP[state.id].kind})의 PCell은 아직 없습니다. 파라미터·예측값만 기록합니다.`
   };
 }
-$('#btn-export').addEventListener('click', () => {
+// inside the claude.ai viewer a page may only offer files through the `downloads` capability; elsewhere a plain blob link works
+const dlCap = (typeof window !== 'undefined' && window.claude && typeof window.claude.use === 'function') ? window.claude.use('downloads').catch(() => null) : Promise.resolve(null);
+$('#btn-export').addEventListener('click', async () => {
   const j = designJSON(); if (!j) return;
   const txt = JSON.stringify(j, null, 2), name = `smq_${state.plat}_${state.id}.json`, note = $('#export-note'), ta = $('#jsonOut');
-  let dl = false;
-  try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([txt], { type: 'application/json' })); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000); dl = true; } catch (e) { dl = false; }
   ta.hidden = false; ta.value = txt;
   try { navigator.clipboard.writeText(txt).catch(() => {}); } catch (e) { /* clipboard unavailable */ }
-  note.hidden = false;
-  note.innerHTML = `${dl ? `<b>${name}</b> 내려받기를 시도했고, ` : ''}아래에 같은 JSON이 있습니다 (클립보드에도 복사 시도). `
-    + (j.geometry ? `<code>python -m smq2gds ${name} -o ${name.replace('.json', '.gds')}</code> 로 GDS를 만들고, <code>--sim eme</code>로 같은 형상을 EME로 검증합니다.` : '이 소자는 아직 GDS PCell이 없어 파라미터와 예측값만 담깁니다 (현재 MMI·지연 나선 지원).');
+  const tail = j.geometry ? `<code>python -m smq2gds ${name} -o ${name.replace('.json', '.gds')}</code> 로 GDS를 만들고, <code>--sim ${j.geometry.pcell === 'mmi' ? 'eme' : 'mode'}</code>로 같은 형상을 솔버로 검증합니다.` : '이 소자는 아직 GDS PCell이 없어 파라미터와 예측값만 담깁니다 (현재 MMI·지연 나선 지원).';
+  const body = (lead) => { note.hidden = false; note.innerHTML = lead + '아래에 같은 JSON이 있습니다 (클립보드에도 복사 시도). ' + tail; };
+  body('');
+  const dl = await dlCap;
+  if (dl) {
+    try { await dl.save({ filename: name, data: txt }); body(`<b>${name}</b>을 저장했습니다. `); }
+    catch (e) { body(e && e.code === 'declined' ? '저장을 취소했습니다. ' : '이 화면에서는 파일 저장을 쓸 수 없습니다. '); }
+    return;
+  }
+  let ok = false;
+  try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([txt], { type: 'application/json' })); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000); ok = true; } catch (e) { ok = false; }
+  body(ok ? `<b>${name}</b> 내려받기를 시도했고, ` : '');
 });
 $('#jsonOut').addEventListener('focus', (e) => e.target.select());
 
