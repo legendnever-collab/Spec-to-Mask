@@ -3,3 +3,7 @@ __pycache__/
 *.pyc
 tools/*.log
 .DS_Store
+tools/smq2gds/**/*.gds
+tools/smq2gds/**/*.png
+tools/smq2gds/examples/*.check.json
+.pytest_cache/

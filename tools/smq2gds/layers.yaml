@@ -1,0 +1,11 @@
+# GDS layer map for smq2gds. Swap this file for a foundry PDK / IPKISS technology map.
+# The game knows two core materials; each gets a core layer. Extra layers are annotations only.
+core:
+  si: [1, 0]      # gdsfactory generic WG
+  sin: [34, 0]    # gdsfactory generic WGN
+label: [66, 0]    # TEXT: design summary
+floorplan: [64, 0] # FLOORPLAN: bounding box of the device
+# vertical stack used by the EME / mode-solver checks (µm, z = 0 at BOX top)
+stack:
+  box_um: 2.0
+  clad_um: 2.0

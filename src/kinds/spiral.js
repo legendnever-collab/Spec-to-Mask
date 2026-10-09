@@ -4,10 +4,14 @@
 // Scattering: perturbation (Payne–Lacey-type) α_sw ∝ σ_sw²·(n₁²−n₂²)·∂n_eff/∂w, α_surf ∝ σ_s²·(n₁²−n₂²)·∂n_eff/∂t,
 //   constants fitted once to the Si 2.0/1.6/0.45-µm cut-back data of Hong 2022 (0.28 / 0.38 / 5.5 dB/cm, σ 4.6 / 0.42 nm).
 // Bends: Marcuse slab radiation loss C₁·exp(−U·R) on the EIM lateral slab, integrated along the spiral.
-// S-bend: mode conversion at the curvature reversal a ∝ n²w³/(λ²R) — arc (width w, R = r_in/2) vs Euler (width W_s, R = r_in).
+// S-bend: mode conversion at the curvature reversal, conv = sin²a, a = K_C·n_s²·w³/(λ²R) (Gaussian-shift picture), evaluated
+//   where the curvature flips: arc (width w, R = r_in/2) vs Euler (width W_s, R = R_min = r_in/2.65, the clothoid that tools/smq2gds
+//   draws). K and the mode-width term are fitted to a local mode-solver sweep of 1 − |⟨E₊R|E₋R⟩|² (tools/smq2gds/fit_sbend.py → tools/fit_sbend_conv.js).
 // Adjacent turns: coupled-slab κ (Marcuse) → coupling length L_c = π/(2κ); footprint from the double-spiral packing.
 KINDS.spiral = (() => {
-  const C_CM_NS = 29.9792, A_SW = 0.0147, B_S = 0.034, K_C = 0.377;
+  const C_CM_NS = 29.9792, A_SW = 0.0147, B_S = 0.034, RMIN_F = 2.65;
+  // reversal conversion: a = K·n_s²·(w + c·2/γ)³/(λ²R), fitted per core material to the mode-solver sweep (rms error Si 0.5 dB, SiN 0.24 dB)
+  const KC = { si: { K: 0.80, c: 0 }, sin: { K: 0.633, c: 1.05 } };
   const ROUGH = { si: { sw: 4.6, s: 0.42 }, sin: { sw: 5.0, s: 0.40 } };
   const matLoss = (pf) => (pf.mat === 'si' ? 0 : pf.lam > 1.4 ? 0.06 : 0.02);   // dB/cm, residual N–H / Si–H absorption in annealed LPCVD SiN
   function slab(n1, n0, t, lam, tm) {
@@ -38,7 +42,7 @@ KINDS.spiral = (() => {
   }
   const bendDBcm = (x, R) => Math.min(1e4, 4.343 * x.C1 * Math.exp(-x.U * R) * 1e4);   // dB/cm at radius R (µm)
   const kappa = (x, w, gap) => 2 * x.h * x.h * x.g * Math.exp(-x.g * gap) / (x.b * (w + 2 / x.g) * (x.h * x.h + x.g * x.g));   // 1/µm
-  const convA = (x, w, R) => K_C * x.ns * x.ns * w * w * w / (x.lam * x.lam * R);
+  const convA = (pf, x, w, R) => { const k = KC[pf.mat], wm = w + k.c * 2 / x.g; return k.K * x.ns * x.ns * wm * wm * wm / (x.lam * x.lam * R); };
   // full spiral for a target delay τ (ns). d = { w, gap, rin, ws, sb }
   function build(pf, d, tau, proc) {
     const g = (k) => (proc && proc.seed != null ? gaussR(mulberry(proc.seed * 29 + k * 601)) : 0);
@@ -49,11 +53,11 @@ KINDS.spiral = (() => {
     let bend = 0; const nS = 60;
     for (let i = 0; i < nS; i++) { const r0 = rin + (rout - rin) * Math.pow(i / nS, 2), r1 = rin + (rout - rin) * Math.pow((i + 1) / nS, 2), rm = 0.5 * (r0 + r1); bend += bendDBcm(x, rm) * (2 * Math.PI * rm * (r1 - r0) / p) * 1e-4; }
     // S-bend in the centre
-    const euler = (d.sb | 0) === 1, Ls = 2 * Math.PI * rin * 0.7, Rmin = rin / 2.5;
-    const xj = euler ? xs(pf, Math.max(0.2, d.ws + dw), sig) : x, wj = euler ? d.ws + dw : w, Rj = euler ? rin : rin / 2;
+    const euler = (d.sb | 0) === 1, Ls = 2 * Math.PI * rin * 0.7, Rmin = rin / RMIN_F;
+    const xj = euler ? xs(pf, Math.max(0.2, d.ws + dw), sig) : x, wj = euler ? d.ws + dw : w, Rj = euler ? Rmin : rin / 2;
     const sRad = euler ? bendDBcm(xj, Rmin) * 0.4 * Ls * 1e-4 + bendDBcm(xj, rin) * 0.6 * Ls * 1e-4 : bendDBcm(x, rin / 2) * Ls * 1e-4;
     const sScat = (euler ? xj.alpha : x.alpha) * Ls * 1e-4;
-    const a = convA(xj, wj, Rj), conv = Math.pow(Math.sin(Math.min(a, Math.PI / 2)), 2), xtMode = 10 * Math.log10(Math.max(conv, 1e-9));
+    const a = convA(pf, xj, wj, Rj), conv = Math.pow(Math.sin(Math.min(a, Math.PI / 2)), 2), xtMode = 10 * Math.log10(Math.max(conv, 1e-9));
     const convLoss = -10 * Math.log10(Math.max(1 - conv, 1e-6));
     const taper = 2 * (0.02 + x.alpha * 0.01);   // two bent tapers to the single-mode I/O
     const prop = x.alpha * Lcm, IL = prop + bend + sRad + sScat + convLoss + taper;
@@ -169,6 +173,19 @@ KINDS.spiral = (() => {
       }
       if (!c.ob2) { const b = pick(q2s, ['w', 'gap', 'rin', 'ws']); if (b) return { h: r.size > l.s2.size ? '★★: 나선이 너무 큽니다' : '★★: 손실을 더 줄여야 합니다', b: (r.size > l.s2.size ? '면적은 (폭 + 간격) × 길이로 정해집니다. 결합이 허락하는 만큼 간격을 줄이고, 안쪽 반경을 줄이세요.' : '폭, 반경, 간격의 균형을 다듬으세요.') + txt(b) }; }
       return null;
+    },
+    // layout intent for tools/smq2gds: double Archimedean spiral r = r_in + (p/π)θ per arm (arms interleaved → pitch p),
+    // centre S-bend (arc R = r_in/2, or Euler with R_max = r_in at the junction, R_min ≈ r_in/2.65 at the centre, width tapered to W_s), tapers to w0 at both ends
+    exportGeom(l, r) {
+      const d = r.d, pf = l.pf, euler = (d.sb | 0) === 1;
+      return { pcell: 'spiral', w_um: d.w, gap_um: d.gap, pitch_um: +(d.w + d.gap).toFixed(4), rin_um: d.rin, sbend: euler ? 'euler' : 'arc', ws_um: euler ? d.ws : d.w,
+        Rmin_um: euler ? +r.Rmin.toFixed(3) : +(d.rin / 2).toFixed(3), tau_ns: l.tau, ng_model: +r.x.ng.toFixed(5), neff_model: +r.x.neff.toFixed(5),
+        length_um: Math.round(r.Lcm * 1e4), rout_um: +r.rout.toFixed(2), w_io_um: pf.w0, taper_len_um: pf.mat === 'si' ? 60 : 150,
+        model: { neff: +r.x.neff.toFixed(5), ng: +r.x.ng.toFixed(5), dneff_dw_per_um: +r.x.dndw.toFixed(5), dneff_dt_per_um: +r.x.dndt.toFixed(5), multimode: r.x.multi,
+          alpha_sw_dBcm: +r.x.asw.toFixed(4), alpha_surf_dBcm: +r.x.as.toFixed(4), alpha_mat_dBcm: +r.x.am.toFixed(4),
+          sbend_R_um: +r.Rj.toFixed(3), sbend_w_um: +r.wj.toFixed(3), bend_centre: { R_um: +(euler ? r.Rmin : d.rin / 2).toFixed(3), w_um: +r.wj.toFixed(3), dB_cm: +bendDBcm(r.xj, euler ? r.Rmin : d.rin / 2).toPrecision(4) },
+          bend_rin: { R_um: d.rin, w_um: d.w, dB_cm: +bendDBcm(r.x, d.rin).toPrecision(4) }, conv_power: +r.conv.toPrecision(4) },
+        predicted: { alpha_dBcm: +r.x.alpha.toFixed(4), IL_dB: +r.IL.toFixed(3), parts_dB: Object.fromEntries(Object.entries(r.parts).map(([k, v]) => [k, +v.toFixed(4)])), xtMode_dB: +r.xtMode.toFixed(2), xtGap_dB: +r.xtGap.toFixed(2), area_um2: Math.round(r.area) } };
     },
     card(l, r) { return { kind: 'spiral', lines: [`${f2(r.x.alpha, 3)} dB/cm · W ${f2(r.d.w, 2)} µm`, `${l.tau} ns: ${f2(r.IL, 2)} dB · ${mm2(r.area)} mm²`], model: { alpha: +r.x.alpha.toFixed(4), ng: +r.x.ng.toFixed(3), IL: +r.IL.toFixed(3), area: Math.round(r.area) } }; },
     aiStarts: (l) => [l.start, { ...l.start, w: l.pf.mat === 'si' ? 2 : 2.4, sb: 1 }],

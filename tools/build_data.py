@@ -15,7 +15,8 @@ th=json.load(open(D+'thermal.json'))
 for m in th.values():
     for rows in m['iso'].values():
         for r in rows: r['prof']=[round(v,4) for v in r['prof']]
-open(D+'tables.js','w').write(f'const WGP = {j(wg)};\nconst DCP = {j(dc)};\nconst SSCP = {j(ssc)};\nconst THERMAL = {j(th)};\n')
+va=json.load(open(D+'validation.json')) if os.path.exists(D+'validation.json') else {'by':{}}
+open(D+'tables.js','w').write(f'const WGP = {j(wg)};\nconst DCP = {j(dc)};\nconst SSCP = {j(ssc)};\nconst THERMAL = {j(th)};\nconst VALID = {j(va)};\n')
 ps=json.load(open(D+'pspec.json')) if os.path.exists(D+'pspec.json') else {}
 open(D+'pspec.js','w').write(f'const PSPEC = {j(ps)};\n')
 print('tables.js', os.path.getsize(D+'tables.js')//1024,'KB; ssc platforms', list(ssc))

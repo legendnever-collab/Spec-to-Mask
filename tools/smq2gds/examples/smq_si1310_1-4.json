@@ -1,0 +1,179 @@
+{
+  "schema": "smq-design/1",
+  "generator": "SPEC-to-MASK Quest",
+  "exported": "2026-10-09T13:01:00.154Z",
+  "platform": {
+    "id": "si1310",
+    "mat": "si",
+    "lam_um": 1.31,
+    "core_t_um": 0.22,
+    "w0_um": 0.36,
+    "clad": "SiO2",
+    "box": "SiO2",
+    "rules_um": {
+      "gap": 0.18,
+      "wmin": 0.4,
+      "edge": 0.05
+    }
+  },
+  "level": {
+    "id": "1-4",
+    "kind": "mmi",
+    "name": "광대역 컴팩트",
+    "device": "1×2 MMI Splitter",
+    "mode": "std",
+    "stars": 0
+  },
+  "params": {
+    "W": {
+      "value": 1.7,
+      "unit": "µm",
+      "label": "MMI 폭"
+    },
+    "L": {
+      "value": 3.7,
+      "unit": "µm",
+      "label": "MMI 길이"
+    },
+    "wt": {
+      "value": 0.7,
+      "unit": "µm",
+      "label": "테이퍼 끝 폭"
+    },
+    "s": {
+      "value": 0.9,
+      "unit": "µm",
+      "label": "포트 피치"
+    }
+  },
+  "geometry": {
+    "pcell": "mmi",
+    "type": "1x2",
+    "W_um": 1.7,
+    "L_um": 3.7,
+    "wt_um": 0.7,
+    "s_um": 0.9,
+    "gap_mmi_um": 0.2,
+    "w_io_um": 0.36,
+    "taper_len_um": 10,
+    "lc_um": 1.31,
+    "lams_um": [
+      1.26,
+      1.285,
+      1.31,
+      1.335,
+      1.36
+    ],
+    "predicted_per_lam": [
+      {
+        "lam_um": 1.26,
+        "P_out": [
+          0.49572,
+          0.49572
+        ],
+        "el_dB": 0.0374,
+        "imb_dB": 0
+      },
+      {
+        "lam_um": 1.285,
+        "P_out": [
+          0.49889,
+          0.49889
+        ],
+        "el_dB": 0.0097,
+        "imb_dB": 0
+      },
+      {
+        "lam_um": 1.31,
+        "P_out": [
+          0.50017,
+          0.50017
+        ],
+        "el_dB": 0,
+        "imb_dB": 0
+      },
+      {
+        "lam_um": 1.335,
+        "P_out": [
+          0.49967,
+          0.49967
+        ],
+        "el_dB": 0.0029,
+        "imb_dB": 0
+      },
+      {
+        "lam_um": 1.36,
+        "P_out": [
+          0.49752,
+          0.49752
+        ],
+        "el_dB": 0.0216,
+        "imb_dB": 0
+      }
+    ]
+  },
+  "predicted": {
+    "model": "game surrogate (see README · 모델 범위)",
+    "primary": {
+      "label": "최악 EL dB",
+      "value": 0.0373786
+    },
+    "size": {
+      "value": 6.29,
+      "unit": "µm²"
+    },
+    "card": {
+      "type": "1x2",
+      "lams": [
+        1.26,
+        1.285,
+        1.31,
+        1.335,
+        1.36
+      ],
+      "el": [
+        0.0374,
+        0.0097,
+        0,
+        0.0029,
+        0.0216
+      ],
+      "imb": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "score": 753,
+    "objectives": [
+      {
+        "tier": 1,
+        "spec": "DRC",
+        "value": "통과",
+        "ok": true
+      },
+      {
+        "tier": 1,
+        "spec": "대역 최악 EL ≤ 0.2",
+        "value": "0.037 dB",
+        "ok": true
+      },
+      {
+        "tier": 2,
+        "spec": "대역 최악 EL ≤ 0.08",
+        "value": "0.037 dB",
+        "ok": true
+      },
+      {
+        "tier": 2,
+        "spec": "면적 ≤ 8 µm²",
+        "value": "6.3 µm²",
+        "ok": true
+      }
+    ],
+    "fab_criterion": "EL ≤ 0.08 dB"
+  },
+  "next": "python -m smq2gds design.json -o out.gds  (tools/smq2gds, README 참조)"
+}

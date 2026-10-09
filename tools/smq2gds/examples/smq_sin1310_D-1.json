@@ -1,0 +1,162 @@
+{
+  "schema": "smq-design/1",
+  "generator": "SPEC-to-MASK Quest",
+  "exported": "2026-10-09T13:01:06.982Z",
+  "platform": {
+    "id": "sin1310",
+    "mat": "sin",
+    "lam_um": 1.31,
+    "core_t_um": 0.4,
+    "w0_um": 0.78,
+    "clad": "SiO2",
+    "box": "SiO2",
+    "rules_um": {
+      "gap": 0.4,
+      "wmin": 0.8,
+      "edge": 0.1
+    }
+  },
+  "level": {
+    "id": "D-1",
+    "kind": "spiral",
+    "name": "빛을 2 ns 붙잡기",
+    "device": "Low-loss delay spiral (broadened Archimedean + Euler S-bend)",
+    "mode": "std",
+    "stars": 0
+  },
+  "params": {
+    "w": {
+      "value": 2.55,
+      "unit": "µm",
+      "label": "나선 도파로 폭"
+    },
+    "gap": {
+      "value": 2.6,
+      "unit": "µm",
+      "label": "이웃 회전 간격"
+    },
+    "rin": {
+      "value": 155,
+      "unit": "µm",
+      "label": "나선 안쪽 반경 (S-bend R_max)"
+    },
+    "ws": {
+      "value": 0.9,
+      "unit": "µm",
+      "label": "S-bend 중앙 폭"
+    },
+    "sb": {
+      "value": 1,
+      "unit": "",
+      "label": "중앙 S-bend",
+      "option": "테이퍼 Euler (Ws)"
+    }
+  },
+  "geometry": {
+    "pcell": "spiral",
+    "w_um": 2.55,
+    "gap_um": 2.6,
+    "pitch_um": 5.15,
+    "rin_um": 155,
+    "sbend": "euler",
+    "ws_um": 0.9,
+    "Rmin_um": 58.491,
+    "tau_ns": 2,
+    "ng_model": 2.06666,
+    "neff_model": 1.77426,
+    "length_um": 290123,
+    "rout_um": 706.84,
+    "w_io_um": 0.78,
+    "taper_len_um": 150,
+    "model": {
+      "neff": 1.77426,
+      "ng": 2.06666,
+      "dneff_dw_per_um": 0.01082,
+      "dneff_dt_per_um": 0.5693,
+      "multimode": true,
+      "alpha_sw_dBcm": 0.009,
+      "alpha_surf_dBcm": 0.007,
+      "alpha_mat_dBcm": 0.02,
+      "sbend_R_um": 58.491,
+      "sbend_w_um": 0.9,
+      "bend_centre": {
+        "R_um": 58.491,
+        "w_um": 0.9,
+        "dB_cm": 3.416e-16
+      },
+      "bend_rin": {
+        "R_um": 155,
+        "w_um": 2.55,
+        "dB_cm": 4.359e-68
+      },
+      "conv_power": 0.002912
+    },
+    "predicted": {
+      "alpha_dBcm": 0.0361,
+      "IL_dB": 1.11,
+      "parts_dB": {
+        "sw": 0.262,
+        "surf": 0.204,
+        "mat": 0.5802,
+        "bend": 0,
+        "sb": 0.0225,
+        "taper": 0.0407
+      },
+      "xtMode_dB": -25.36,
+      "xtGap_dB": -36.35,
+      "area_um2": 2055436
+    }
+  },
+  "predicted": {
+    "model": "game surrogate (see README · 모델 범위)",
+    "primary": {
+      "label": "삽입 손실 dB",
+      "value": 1.10953
+    },
+    "size": {
+      "value": 2055440,
+      "unit": "mm²"
+    },
+    "card": {
+      "alpha": 0.0361,
+      "ng": 2.067,
+      "IL": 1.11,
+      "area": 2055436
+    },
+    "score": 665,
+    "objectives": [
+      {
+        "tier": 1,
+        "spec": "2 ns 지연 삽입 손실 ≤ 3.92 dB",
+        "value": "1.11 dB",
+        "ok": true
+      },
+      {
+        "tier": 1,
+        "spec": "S-bend 고차모드 변환 ≤ -20 dB",
+        "value": "-25.4 dB",
+        "ok": true
+      },
+      {
+        "tier": 1,
+        "spec": "이웃 회전 결합 ≤ -30 dB",
+        "value": "-36.4 dB",
+        "ok": true
+      },
+      {
+        "tier": 2,
+        "spec": "삽입 손실 ≤ 1.36 dB",
+        "value": "1.11 dB",
+        "ok": true
+      },
+      {
+        "tier": 2,
+        "spec": "점유 면적 ≤ 2.53 mm²",
+        "value": "2.06 mm²",
+        "ok": true
+      }
+    ],
+    "fab_criterion": "삽입 손실 ≤ 1.5 dB · 모드 변환·이웃 결합 ★ 기준 (측벽 거칠기 웨이퍼 간 ±20%, CD 산포)"
+  },
+  "next": "python -m smq2gds design.json -o out.gds  (tools/smq2gds, README 참조)"
+}

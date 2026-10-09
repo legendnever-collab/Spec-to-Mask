@@ -201,6 +201,13 @@ KINDS.mmi = (() => {
       return { kind: 'mmi', lines: [`EL ${f2(r.el, 3)} dB`, l.type === '2x2' ? `불균형 ${f2(r.imb)} dB` : `면적 ${f2(r.size, 1)} µm²`],
         model: { type: l.type, lams: l.lams, el: r.m.rows.map((x) => +x.el.toFixed(4)), imb: r.m.rows.map((x) => +x.imb.toFixed(4)) } };
     },
+    // layout intent for tools/smq2gds (the surrogate treats the w0 → wₜ taper as adiabatic; the GDS draws it)
+    exportGeom(l, r) {
+      const d = r.d, pf = l.pf;
+      return { pcell: 'mmi', type: l.type, W_um: d.W, L_um: d.L, wt_um: d.wt, s_um: d.s, gap_mmi_um: +(d.s - d.wt).toFixed(4), w_io_um: pf.w0,
+        taper_len_um: pf.mat === 'si' ? 10 : 30, lc_um: l.lc, lams_um: l.lams,
+        predicted_per_lam: r.m.rows.map((x) => ({ lam_um: x.l, P_out: x.P.map((v) => +v.toFixed(5)), el_dB: +x.el.toFixed(4), imb_dB: +x.imb.toFixed(4) })) };
+    },
     aiStarts(l) {
       const S0 = l.start, { We, Lpi } = lpiInfo(S0.W, l.lc);
       const phys = l.type === '1x2' ? { ...S0, L: 3 * Lpi / 8, s: We / 2 } : { ...S0, L: Lpi / 2, s: We / 3, wt: 0.8 };

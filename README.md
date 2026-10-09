@@ -15,6 +15,16 @@ Photonic IC 설계를 게임으로 배우는 단계별 학습 프로그램입니
 
 각 레벨은 ★ 기본 스펙 / ★★ 고성능+크기 / ★★★ Fab Run 수율의 세 목표, 코치 힌트 4단계(끄기·방향·수치·지형도), 난이도 3단계(입문·표준·도전), AI 라이벌(Nelder–Mead), Design DB(사람·AI 탐색 기록, CSV 복사)를 가집니다.
 
+## 게임 밖으로: 설계 → GDS → 솔버
+
+모든 레벨의 **설계 내보내기 (JSON)** 버튼이 `smq-design/1` 파일을 줍니다.
+- 파일 내용: 플랫폼, 파라미터, 게임 예측값, 목표 달성 여부, (MMI·지연 나선은) 레이아웃 형상.
+- `tools/smq2gds`가 이 파일을 다음으로 바꿉니다 (자세한 내용은 [tools/smq2gds/README.md](tools/smq2gds/README.md)).
+  - GDS (gdsfactory, 레이어 맵 교체 가능)
+  - 로컬 모드 솔버·3D EME 검사
+  - MEEP FDTD 스크립트
+- 각 레벨 참조 설계의 검증 결과(`src/data/validation.json`)는 게임의 "오프라인 솔버 검증" 패널에 게임 예측과 나란히 표시됩니다.
+
 ## 빠른 시작
 
 ```sh
@@ -55,12 +65,15 @@ tools/
   gen_thermal.py     히터 단면 2D 유한체적 열해석 (Si/SiN × 간격 × 격리)
   build_data.py      data/*.json → tables.js, pspec.js
   build.sh           단일 HTML 빌드
+  smq2gds/           설계 JSON → GDS(gdsfactory PCell) · 모드/EME 검사 · MEEP 스크립트 · 참조 설계 검증 (python -m smq2gds)
 test/
   load.js            node VM에서 엔진·kind 로드
   t_*.js             레벨 난이도·수율 탐색 스크립트
   e2e/smoke.js       jsdom: 플랫폼 선택 → Stage 1·2 전 레벨 렌더 확인 (node test/e2e/smoke.js <플랫폼> [레벨들])
   e2e/bot.js         jsdom: 코치 문장만 따라가 각 레벨을 클리어하는 봇 (회귀 테스트)
   e2e/migrate.js     이전 버전 진행 기록 이전 확인
+  e2e/export.js      jsdom: 참조 설계로 "설계 내보내기" → tools/smq2gds/examples/*.json
+  py/test_smq2gds.py 예제 전부 GDS 생성 + 연결성·폭·간격 DRC·길이·포트 위치 (솔버 없이)
 ```
 
 ## 데이터 재생성 순서
@@ -70,6 +83,8 @@ python3 tools/gen_wg.py si1310        # 플랫폼별 (si1310 si1550 sin1310 sin1
 python3 tools/gen_dc.py si1310 0.36   # 두 번째 인자 = 표준 단일모드 폭 (tools/w0.json)
 python3 tools/gen_ssc2.py si1550 0.46
 npm run tables && npm run calibrate && npm run build
+node test/e2e/export.js all                               # 참조 설계 JSON (calibrate 뒤)
+(cd tools && python -m smq2gds.validate) && npm run build # 오프라인 검증 → 게임 패널 (수십 분)
 npm run test:smoke && npm run test:bot
 node test/e2e/bot.js std 2 2-1,2-2,2-3,2-4,2-5 sin1550   # Stage 2 회귀
 node test/e2e/bot.js std 2 3A,3A+ si1310                  # Stage 3 회귀

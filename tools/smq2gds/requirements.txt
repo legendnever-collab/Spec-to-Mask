@@ -1,0 +1,8 @@
+gdsfactory>=9.5,<10
+klayout>=0.30
+tidy3d>=2.10,<3     # local FDE mode solver only (no account needed)
+numpy
+scipy
+pyyaml
+matplotlib
+pytest

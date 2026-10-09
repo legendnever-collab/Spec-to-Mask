@@ -1,0 +1,127 @@
+{
+  "schema": "smq-design/1",
+  "generator": "SPEC-to-MASK Quest",
+  "exported": "2026-10-09T13:01:05.547Z",
+  "platform": {
+    "id": "sin1310",
+    "mat": "sin",
+    "lam_um": 1.31,
+    "core_t_um": 0.4,
+    "w0_um": 0.78,
+    "clad": "SiO2",
+    "box": "SiO2",
+    "rules_um": {
+      "gap": 0.4,
+      "wmin": 0.8,
+      "edge": 0.1
+    }
+  },
+  "level": {
+    "id": "1-3",
+    "kind": "mmi",
+    "name": "첫 번째 분기",
+    "device": "1×2 MMI Splitter",
+    "mode": "std",
+    "stars": 0
+  },
+  "params": {
+    "W": {
+      "value": 4.2,
+      "unit": "µm",
+      "label": "MMI 폭"
+    },
+    "L": {
+      "value": 14,
+      "unit": "µm",
+      "label": "MMI 길이"
+    },
+    "wt": {
+      "value": 1.6,
+      "unit": "µm",
+      "label": "테이퍼 끝 폭"
+    },
+    "s": {
+      "value": 2.25,
+      "unit": "µm",
+      "label": "포트 피치"
+    }
+  },
+  "geometry": {
+    "pcell": "mmi",
+    "type": "1x2",
+    "W_um": 4.2,
+    "L_um": 14,
+    "wt_um": 1.6,
+    "s_um": 2.25,
+    "gap_mmi_um": 0.65,
+    "w_io_um": 0.78,
+    "taper_len_um": 30,
+    "lc_um": 1.31,
+    "lams_um": [
+      1.31
+    ],
+    "predicted_per_lam": [
+      {
+        "lam_um": 1.31,
+        "P_out": [
+          0.50062,
+          0.50054
+        ],
+        "el_dB": 0,
+        "imb_dB": 0.0008
+      }
+    ]
+  },
+  "predicted": {
+    "model": "game surrogate (see README · 모델 범위)",
+    "primary": {
+      "label": "최악 EL dB",
+      "value": 0
+    },
+    "size": {
+      "value": 58.8,
+      "unit": "µm²"
+    },
+    "card": {
+      "type": "1x2",
+      "lams": [
+        1.31
+      ],
+      "el": [
+        0
+      ],
+      "imb": [
+        0.0008
+      ]
+    },
+    "score": 800,
+    "objectives": [
+      {
+        "tier": 1,
+        "spec": "DRC",
+        "value": "통과",
+        "ok": true
+      },
+      {
+        "tier": 1,
+        "spec": "EL @ 1310 nm ≤ 0.3",
+        "value": "0.000 dB",
+        "ok": true
+      },
+      {
+        "tier": 2,
+        "spec": "EL @ 1310 nm ≤ 0.05",
+        "value": "0.000 dB",
+        "ok": true
+      },
+      {
+        "tier": 2,
+        "spec": "면적 ≤ 110 µm²",
+        "value": "58.8 µm²",
+        "ok": true
+      }
+    ],
+    "fab_criterion": "EL ≤ 0.05 dB"
+  },
+  "next": "python -m smq2gds design.json -o out.gds  (tools/smq2gds, README 참조)"
+}

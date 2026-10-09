@@ -482,6 +482,70 @@ $('#btn-reset').addEventListener('click', () => {
   persist(); setupLevel();
 });
 
+/* ---------- design-intent export (smq-design/1 → tools/smq2gds) ---------- */
+const plainTxt = (h) => String(h).replace(/<sub>(.*?)<\/sub>/g, '_$1').replace(/<sup>(.*?)<\/sup>/g, '^$1').replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+function designJSON() {
+  const c = state.cur; if (!c) return null;
+  const l = lev(), K = kind(), pf = PLATFORMS[state.plat], r = c.res, card = K.card ? K.card(l, r) : null, ob = objectives();
+  const num = (v) => (typeof v === 'number' && isFinite(v) ? +v.toPrecision(6) : v);
+  const geom = K.exportGeom ? K.exportGeom(l, r) : null;
+  return {
+    schema: 'smq-design/1', generator: 'SPEC-to-MASK Quest', exported: new Date().toISOString(),
+    platform: { id: pf.id, mat: pf.mat, lam_um: pf.lam, core_t_um: pf.t, w0_um: pf.w0, clad: 'SiO2', box: 'SiO2', rules_um: { ...pf.rules } },
+    level: { id: l.id, kind: LMAP[state.id].kind, name: l.name, device: plainTxt(l.dev || ''), mode: state.mode, stars: starsOf(l.id) },
+    params: Object.fromEntries(params().map((p) => [p.k, { value: num(c.d[p.k]), unit: p.unit || '', label: plainTxt(p.label), ...(p.labels ? { option: p.labels[c.d[p.k] | 0] } : {}) }])),
+    geometry: geom,
+    predicted: {
+      model: 'game surrogate (see README · 모델 범위)', primary: { label: K.primaryLabel, value: num(r.primary) }, size: { value: num(r.size), unit: K.sizeUnit },
+      card: card ? card.model : null, score: Math.round(c.sc.total),
+      objectives: ob.flatMap((g) => g.items.filter((o) => !o.na && !o.crit).map((o) => ({ tier: g.t, spec: plainTxt(o.k), value: plainTxt(o.v), ok: !!o.ok }))),
+      fab_criterion: plainTxt(K.fabCrit(l))
+    },
+    next: geom ? 'python -m smq2gds design.json -o out.gds  (tools/smq2gds, README 참조)' : `이 소자(${LMAP[state.id].kind})의 PCell은 아직 없습니다. 파라미터·예측값만 기록합니다.`
+  };
+}
+$('#btn-export').addEventListener('click', () => {
+  const j = designJSON(); if (!j) return;
+  const txt = JSON.stringify(j, null, 2), name = `smq_${state.plat}_${state.id}.json`, note = $('#export-note'), ta = $('#jsonOut');
+  let dl = false;
+  try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([txt], { type: 'application/json' })); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000); dl = true; } catch (e) { dl = false; }
+  ta.hidden = false; ta.value = txt;
+  try { navigator.clipboard.writeText(txt).catch(() => {}); } catch (e) { /* clipboard unavailable */ }
+  note.hidden = false;
+  note.innerHTML = `${dl ? `<b>${name}</b> 내려받기를 시도했고, ` : ''}아래에 같은 JSON이 있습니다 (클립보드에도 복사 시도). `
+    + (j.geometry ? `<code>python -m smq2gds ${name} -o ${name.replace('.json', '.gds')}</code> 로 GDS를 만들고, <code>--sim eme</code>로 같은 형상을 EME로 검증합니다.` : '이 소자는 아직 GDS PCell이 없어 파라미터와 예측값만 담깁니다 (현재 MMI·지연 나선 지원).');
+});
+$('#jsonOut').addEventListener('focus', (e) => e.target.select());
+
+/* ---------- offline solver validation of the reference design (src/data/validation.json ← tools/smq2gds/validate.py) ---------- */
+function renderValidation() {
+  const box = $('#valid'), v = typeof VALID !== 'undefined' && VALID.by && (VALID.by[state.plat] || {})[state.id];
+  box.hidden = !v; if (!v) return;
+  const num = (x, d) => (x == null ? '—' : typeof x === 'string' ? x : d == null && Math.abs(x) > 0 && (Math.abs(x) < 1e-3 || Math.abs(x) >= 1e4) ? (+x).toExponential(1) : (+x).toFixed(d == null ? 3 : d).replace(/^-(0\.0+)$/, '$1'));
+  const ds = Object.entries(v.design || {}).map(([k, x]) => `${k} ${x}`).join(' · ');
+  let h = `<p style="margin:2px 0 6px">게임이 보정한 참조 설계(${ds})를 같은 굴절률로 오프라인 솔버에 다시 넣은 결과입니다. 지금 화면의 설계가 아니라 이 레벨의 기준점에 대한 검증이며, 내 설계는 <b>설계 내보내기</b> → <code>python -m smq2gds 파일.json --sim ${v.eme ? 'eme' : 'mode'}</code>로 같은 검사를 돌립니다.</p>`;
+  if (v.eme) {
+    const g = v.game, e = v.eme, dL = (e.L_best_um / g.L_um - 1) * 100;
+    h += `<div class="scroll"><table class="vt"><tr><th>λ ${Math.round(v.lam_um * 1000)} nm</th><th>게임 (2D EIM)</th><th>3D EME</th></tr>`
+      + `<tr><td>EL, 설계 L ${g.L_um} µm</td><td>${num(g.el_dB)} dB</td><td class="${e.el_dB - g.el_dB > 0.2 ? 'bad' : ''}">${num(e.el_dB)} dB</td></tr>`
+      + `<tr><td>불균형</td><td>${num(g.imb_dB, 2)} dB</td><td>${num(e.imb_dB, 2)} dB</td></tr>`
+      + `<tr><td>EL이 최소인 L</td><td>${g.L_um} µm</td><td>${num(e.L_best_um, 2)} µm (${dL >= 0 ? '+' : ''}${dL.toFixed(0)}%)</td></tr>`
+      + `<tr><td>그 L에서 EL</td><td>—</td><td>${num(e.el_best_dB)} dB</td></tr></table></div>`
+      + `<p style="margin:4px 0 0">게임의 MMI는 2D 유효굴절률법이라 고대비 단면에서 모드 간 위상차(L<sub>π</sub>)가 3D와 달라 결상 위치가 어긋납니다. 3D EME에는 게임이 단열로 가정한 w<sub>0</sub>→w<sub>t</sub> 테이퍼 손실도 들어 있습니다. 셀·모드 수를 늘려 보면 설계 L에서의 EL과 최적 L은 약 1% 안에서 수렴하고, 최소 EL 값은 ±0.15 dB 정도 움직입니다. 대칭 1×2에서 보이는 0.2 dB 이하의 불균형은 격자 비대칭에서 오는 수치 오차입니다. 실제 마스크 전에는 이렇게 3D 솔버로 L을 다시 맞춥니다.</p>`;
+  } else if (v.rows) {
+    const KO = [[/^n_eff \(arm TE0\)/, 'n<sub>eff</sub> (나선 팔 TE0)'], [/^n_g \(arm TE0\)/, 'n<sub>g</sub> (나선 팔 TE0)'], [/^guided TE modes \(arm\)/, '팔의 TE 가이드 모드 수'],
+      [/^α scattering\+material/, 'α 산란+재료'], [/^bend loss/, '굽힘 손실'], [/^S-bend reversal conversion/, 'S-bend 곡률 반전 모드 변환'], [/^insertion loss/, '삽입 손실'],
+      [/FDE, Richardson dl→0/, 'FDE, Richardson 외삽'], [/material dispersion included/, '재료 분산 포함'], [/same Payne–Lacey constants, solver ∂n_eff/, '같은 Payne–Lacey 상수, ∂n_eff만 솔버 값'],
+      [/S-bend centre/, 'S-bend 중앙'], [/innermost turn/, '가장 안쪽 회전'], [/upper bound \(caustic beyond the PML\)/, '상한값 (caustic이 PML 밖)'], [/upper bound/, '상한값'], [/arm bend radiation kept from the game/, '팔 굽힘 방사는 게임 값 사용']];
+    const ko = (t) => KO.reduce((a, [re, k]) => a.replace(re, k), String(t || ''));
+    h += '<div class="scroll"><table class="vt"><tr><th></th><th>게임</th><th>솔버</th></tr>'
+      + v.rows.map((r) => { const bad = typeof r.game === 'number' && typeof r.solver === 'number' && /conversion/.test(r.quantity) && r.solver - r.game > 6, sv = /bend loss/.test(r.quantity) && typeof r.solver === 'number' && Math.abs(r.solver) < 0.05 ? '≈ 0' : num(r.solver); const sv2 = typeof r.solver === 'number' && Number.isInteger(r.solver) ? String(r.solver) : sv; return `<tr><td>${ko(r.quantity)}${r.note ? `<br><span style="color:var(--fg-3)">${ko(r.note)}</span>` : ''}</td><td>${num(r.game)}</td><td class="${bad ? 'bad' : ''}">${sv2}</td></tr>`; }).join('')
+      + '</table></div>'
+      + `<p style="margin:4px 0 0">그린 경로 길이로 지연 ${num(v.tau_drawn_ns, 4)} ns (솔버 n<sub>g</sub>), 정확한 τ에 필요한 길이 ${Math.round(v.length_for_target_um)} µm. 직선 단면은 두 격자 + Richardson 외삽, 굽힘은 PML과 등각 변환을 쓴 국소 모드 솔버입니다(|손실| < 0.05 dB/cm는 수치 잡음 수준이라 ≈ 0). S-bend 변환 모델은 이 솔버의 스윕(곡률 반전 모드 겹침)으로 다시 맞춘 것이라, 예전 게임 값(논문 원호 결과 하나로 맞춘 상수)보다 Si에서 약 15 dB 비관적입니다.</p>`;
+  }
+  $('#valid-body').innerHTML = h + (v.note ? `<p style="margin:6px 0 0">${v.note}</p>` : '');
+}
+
 /* ---------- Stage 0: platform setup ---------- */
 const pick = { lam: null, mat: null };
 const pidOf = (lam, mat) => mat + (lam === 1.31 ? '1310' : '1550');
@@ -525,6 +589,7 @@ $('#plat-chip').addEventListener('click', () => { if (state.fabRunning || state.
 /* ---------- level setup ---------- */
 function setupLevel() {
   const l = lev();
+  $('#jsonOut').hidden = true; $('#export-note').hidden = true; renderValidation();
   $('#m-eyebrow').textContent = `${l.id} · ${l.dev} · ${l.bandLabel}`; $('#m-name').textContent = l.name; $('#m-brief').innerHTML = l.brief;
   const pre = $('#m-preface'); pre.hidden = !l.preface; pre.innerHTML = l.preface || '';
   const cc = $('#m-concepts'); cc.hidden = !l.concepts;

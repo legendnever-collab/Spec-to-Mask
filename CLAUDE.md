@@ -10,4 +10,6 @@ SPEC-to-MASK Quest — Photonic IC 설계 학습 게임. 사용자는 광소자 
 - 새 kind의 코치 문구는 숫자 목표를 tier ≥ 2에서만 보여줍니다. 코치가 제안하는 이동은 실제로 개선되는지 계산한 뒤에만 제안합니다.
 - 변경 후 확인: `npm run test:smoke` (오류 0), 관련 레벨에 `node test/e2e/bot.js std 2 <ids> <platform>` — 봇이 표준 난이도·수치 힌트로 ★★ 이상에 도달해야 합니다.
 - 진행 기록 localStorage 키는 `smq3-*`. 구조를 바꾸면 `shell.js`의 마이그레이션도 함께 갱신합니다.
+- 설계 내보내기 형식은 `smq-design/1` (shell.js `designJSON`, kind의 `exportGeom`). 필드를 바꾸면 `tools/smq2gds`와 `test/e2e/export.js`도 함께 고치고, calibrate 뒤에는 `node test/e2e/export.js all`로 예제를 다시 만든 다음 `npm run test:py`.
+- `src/data/validation.json`은 `python -m smq2gds.validate`(tools/에서) 생성물입니다. 손으로 고치지 않습니다.
 - 페이지는 단일 파일, 외부 스크립트 없음, 폰트만 Google Fonts. 모바일 폭(≈400px)에서 동작해야 합니다.
