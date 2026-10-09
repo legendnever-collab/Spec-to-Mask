@@ -1,5 +1,8 @@
 """Layout checks for tools/smq2gds (no solvers): every example builds, spirals hit the target length,
 are one connected waveguide and pass width/space DRC, MMI ports sit where the game puts them.
+Rectangular (boundary-aware) spirals additionally: the GDS polygons stay inside the boundary minus the edge clearance,
+the ports sit exactly where the game shows them, the centre S-bend radius re-derived here matches the game, and the
+smallest radius measured on the drawn centre line is not below the design's minimum bend radius.
 
     cd tools && python -m pytest ../test/py -q      (or: python ../test/py/test_smq2gds.py)
 """
@@ -39,7 +42,9 @@ def check_all():
             gg = dd["geometry"]
             r = _region(comp, lay["core"][mat])
             assert r.count() == 1, f"{f.name}: waveguide not one piece ({r.count()})"
-            if gg["pcell"] == "spiral":
+            if gg["pcell"] == "spiral_rect":
+                check_rect(f, gg, info, r, comp)
+            elif gg["pcell"] == "spiral":
                 assert abs(info["path_um"] - gg["length_um"]) < 1e-3 * gg["length_um"], f"{f.name}: length {info['path_um']} vs {gg['length_um']}"
                 assert abs(info["rout_um"] - gg["rout_um"]) < 0.01 * gg["rout_um"], f"{f.name}: r_out {info['rout_um']} vs game {gg['rout_um']}"
                 wmin = min(gg["ws_um"], gg["w_io_um"], gg["w_um"])
@@ -50,6 +55,29 @@ def check_all():
                 s = gg["s_um"]
                 assert ys == [round(-s / 2, 3), round(s / 2, 3)], f"{f.name}: output ports {ys} vs ±s/2"
             print(f"ok {f.name} {gg['pcell']} {gg.get('sbend', '')}")
+
+
+def check_rect(f, g, info, r, comp):
+    L = g["length_um"]
+    assert abs(info["path_um"] - L) < 1e-4 * L, f"{f.name}: drawn path {info['path_um']:.3f} vs game {L:.3f} µm"
+    bb, B, e = r.bbox(), g["boundary"], g["boundary"]["clearance_um"]
+    dbu = comp.kcl.dbu
+    box = [bb.left * dbu, bb.bottom * dbu, bb.right * dbu, bb.top * dbu]
+    tol = 2e-3
+    assert box[0] >= e - tol and box[1] >= e - tol and box[2] <= B["W_um"] - e + tol and box[3] <= B["H_um"] - e + tol, f"{f.name}: GDS bbox {box} leaves the boundary {B['W_um']}x{B['H_um']} - {e}"
+    gb = g["bbox_um"]
+    assert max(abs(a - b) for a, b in zip(box, gb)) < 0.02, f"{f.name}: GDS bbox {box} vs game {gb}"
+    for q in g["ports_um"]:
+        x, y, ang = info["ports"][q["name"]]
+        assert abs(x - q["xy"][0]) < 1e-3 and abs(y - q["xy"][1]) < 1e-3, f"{f.name}: port {q['name']} at ({x:.4f},{y:.4f}) vs game {q['xy']}"
+        assert abs(((ang - q["angle_deg"]) + 180) % 360 - 180) < 1e-3, f"{f.name}: port {q['name']} angle {ang} vs {q['angle_deg']}"
+    sb = info["sbend"]
+    assert abs(sb["Rmin_um"] - sb["Rmin_game_um"]) < 1e-3 * sb["Rmin_game_um"], f"{f.name}: S-bend R_min {sb['Rmin_um']} vs game {sb['Rmin_game_um']}"
+    rmin = min(g["R_um"], g["Rmin_sbend_um"])
+    assert info["min_radius_um"] >= 0.995 * rmin, f"{f.name}: drawn radius {info['min_radius_um']:.3f} < design minimum {rmin}"
+    wmin = min(g["ws_um"], g["w_io_um"], g["w_um"])
+    assert r.space_check(int(g["gap_um"] * 980)).count() == 0, f"{f.name}: spacing < gap"
+    assert r.width_check(int(wmin * 980)).count() == 0, f"{f.name}: width < {wmin}"
 
 
 def test_layouts():

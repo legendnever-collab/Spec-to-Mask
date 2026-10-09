@@ -1,0 +1,556 @@
+{
+  "schema": "smq-design/1",
+  "generator": "SPEC-to-MASK Quest",
+  "exported": "2026-10-09T22:09:22.194Z",
+  "platform": {
+    "id": "si1550",
+    "mat": "si",
+    "lam_um": 1.55,
+    "core_t_um": 0.22,
+    "w0_um": 0.46,
+    "clad": "SiO2",
+    "box": "SiO2",
+    "rules_um": {
+      "gap": 0.18,
+      "wmin": 0.4,
+      "edge": 0.05
+    }
+  },
+  "level": {
+    "id": "D-1",
+    "kind": "spiral",
+    "name": "빛을 2 ns 붙잡기",
+    "device": "Low-loss delay spiral (broadened Archimedean + Euler S-bend)",
+    "mode": "std",
+    "stars": 0
+  },
+  "params": {
+    "lay": {
+      "value": 1,
+      "unit": "",
+      "label": "레이아웃 방식 (Topology)",
+      "option": "직사각형 나선 · 원호 코너"
+    },
+    "bp": {
+      "value": 3,
+      "unit": "",
+      "label": "사용 가능 영역 (Boundary)",
+      "option": "직접 입력 (Custom)"
+    },
+    "bw": {
+      "value": 5,
+      "unit": "mm",
+      "label": "경계 폭 W (가로, x)"
+    },
+    "bh": {
+      "value": 15,
+      "unit": "mm",
+      "label": "경계 높이 H (세로, y)"
+    },
+    "ec": {
+      "value": 100,
+      "unit": "µm",
+      "label": "가장자리 여유 (Edge clearance)"
+    },
+    "port": {
+      "value": 1,
+      "unit": "",
+      "label": "입출력 포트 위치",
+      "option": "동/서 변 (E–W)"
+    },
+    "dm": {
+      "value": 0,
+      "unit": "",
+      "label": "설계 모드",
+      "option": "A · 목표 지연을 경계 안에"
+    },
+    "tau": {
+      "value": 2,
+      "unit": "ns",
+      "label": "목표 지연 (Target delay)"
+    },
+    "env": {
+      "value": 0.8,
+      "unit": "",
+      "label": "점유 상한 f (경계 대비 Footprint)"
+    },
+    "w": {
+      "value": 2.3,
+      "unit": "µm",
+      "label": "나선 도파로 폭"
+    },
+    "gap": {
+      "value": 1.2,
+      "unit": "µm",
+      "label": "이웃 회전 간격"
+    },
+    "rc": {
+      "value": 200,
+      "unit": "µm",
+      "label": "코너 반경 R (최소 굽힘 반경)"
+    },
+    "sb": {
+      "value": 0,
+      "unit": "",
+      "label": "중앙 S-bend",
+      "option": "원호 (반원 2개, 곡률 반전)"
+    },
+    "ws": {
+      "value": 0.55,
+      "unit": "µm",
+      "label": "S-bend 중앙 폭 (Euler에서 테이퍼)"
+    },
+    "tl": {
+      "value": 60,
+      "unit": "µm",
+      "label": "입출력 테이퍼 길이 (Wm → w₀)"
+    }
+  },
+  "geometry": {
+    "pcell": "spiral_rect",
+    "topology": "rect-arc",
+    "corner": "arc",
+    "R_um": 200,
+    "a0_um": 200,
+    "corner_len0_um": 314.15927,
+    "w_um": 2.3,
+    "gap_um": 1.2,
+    "pitch_um": 3.5,
+    "sbend": "arc",
+    "ws_um": 2.3,
+    "Ht_um": 1061.05015,
+    "Rmin_sbend_um": 530.52508,
+    "boundary": {
+      "W_um": 5000,
+      "H_um": 15000,
+      "clearance_um": 100,
+      "preset": "custom",
+      "port_edges": "E-W",
+      "port_mode": "long"
+    },
+    "transform": {
+      "rot90": true,
+      "offset_um": [
+        2500,
+        7500
+      ],
+      "note": "chip = rot90 ? (W/2 − y, H/2 + x) : (W/2 + x, H/2 + y); arm B = −(arm A); path = reverse(B) + S-bend + A"
+    },
+    "mode": "A",
+    "tau_target_ns": 2,
+    "il_budget_dB": null,
+    "envelope": 0.8,
+    "loops_per_arm": 3,
+    "core_um": [
+      4864.55015,
+      861.05015
+    ],
+    "w_io_um": 0.46,
+    "taper_len_um": 60,
+    "armA": [
+      {
+        "t": "L",
+        "a": [
+          0,
+          1061.05015
+        ],
+        "b": [
+          4864.55015,
+          1061.05015
+        ]
+      },
+      {
+        "t": "C",
+        "V": [
+          5064.55015,
+          1061.05015
+        ],
+        "h_deg": 0,
+        "turn": -1,
+        "d": 0
+      },
+      {
+        "t": "L",
+        "a": [
+          5064.55015,
+          861.05015
+        ],
+        "b": [
+          5064.55015,
+          -862.80015
+        ]
+      },
+      {
+        "t": "C",
+        "V": [
+          5064.55015,
+          -1064.55015
+        ],
+        "h_deg": -90,
+        "turn": -1,
+        "d": 1.75
+      },
+      {
+        "t": "L",
+        "a": [
+          4862.80015,
+          -1064.55015
+        ],
+        "b": [
+          -4864.55015,
+          -1064.55015
+        ]
+      },
+      {
+        "t": "C",
+        "V": [
+          -5068.05015,
+          -1064.55015
+        ],
+        "h_deg": 180,
+        "turn": -1,
+        "d": 3.5
+      },
+      {
+        "t": "L",
+        "a": [
+          -5068.05015,
+          -861.05015
+        ],
+        "b": [
+          -5068.05015,
+          862.80015
+        ]
+      },
+      {
+        "t": "C",
+        "V": [
+          -5068.05015,
+          1068.05015
+        ],
+        "h_deg": 90,
+        "turn": -1,
+        "d": 5.25
+      },
+      {
+        "t": "L",
+        "a": [
+          -4862.80015,
+          1068.05015
+        ],
+        "b": [
+          4864.55015,
+          1068.05015
+        ]
+      },
+      {
+        "t": "C",
+        "V": [
+          5071.55015,
+          1068.05015
+        ],
+        "h_deg": 0,
+        "turn": -1,
+        "d": 7
+      },
+      {
+        "t": "L",
+        "a": [
+          5071.55015,
+          861.05015
+        ],
+        "b": [
+          5071.55015,
+          -862.80015
+        ]
+      },
+      {
+        "t": "C",
+        "V": [
+          5071.55015,
+          -1071.55015
+        ],
+        "h_deg": -90,
+        "turn": -1,
+        "d": 8.75
+      },
+      {
+        "t": "L",
+        "a": [
+          4862.80015,
+          -1071.55015
+        ],
+        "b": [
+          -4864.55015,
+          -1071.55015
+        ]
+      },
+      {
+        "t": "C",
+        "V": [
+          -5075.05015,
+          -1071.55015
+        ],
+        "h_deg": 180,
+        "turn": -1,
+        "d": 10.5
+      },
+      {
+        "t": "L",
+        "a": [
+          -5075.05015,
+          -861.05015
+        ],
+        "b": [
+          -5075.05015,
+          862.80015
+        ]
+      },
+      {
+        "t": "C",
+        "V": [
+          -5075.05015,
+          1075.05015
+        ],
+        "h_deg": 90,
+        "turn": -1,
+        "d": 12.25
+      },
+      {
+        "t": "L",
+        "a": [
+          -4862.80015,
+          1075.05015
+        ],
+        "b": [
+          4864.55015,
+          1075.05015
+        ]
+      },
+      {
+        "t": "C",
+        "V": [
+          5078.55015,
+          1075.05015
+        ],
+        "h_deg": 0,
+        "turn": -1,
+        "d": 14
+      },
+      {
+        "t": "L",
+        "a": [
+          5078.55015,
+          861.05015
+        ],
+        "b": [
+          5078.55015,
+          -862.80015
+        ]
+      },
+      {
+        "t": "C",
+        "V": [
+          5078.55015,
+          -1078.55015
+        ],
+        "h_deg": -90,
+        "turn": -1,
+        "d": 15.75
+      },
+      {
+        "t": "L",
+        "a": [
+          4862.80015,
+          -1078.55015
+        ],
+        "b": [
+          -4864.55015,
+          -1078.55015
+        ]
+      },
+      {
+        "t": "C",
+        "V": [
+          -5082.05015,
+          -1078.55015
+        ],
+        "h_deg": 180,
+        "turn": -1,
+        "d": 17.5
+      },
+      {
+        "t": "L",
+        "a": [
+          -5082.05015,
+          -861.05015
+        ],
+        "b": [
+          -5082.05015,
+          862.80015
+        ]
+      },
+      {
+        "t": "C",
+        "V": [
+          -5082.05015,
+          1082.05015
+        ],
+        "h_deg": 90,
+        "turn": -1,
+        "d": 19.25
+      },
+      {
+        "t": "L",
+        "a": [
+          -4862.80015,
+          1082.05015
+        ],
+        "b": [
+          4864.55015,
+          1082.05015
+        ]
+      },
+      {
+        "t": "C",
+        "V": [
+          5064.55015,
+          1082.05015
+        ],
+        "h_deg": 0,
+        "turn": 1,
+        "d": 0
+      },
+      {
+        "t": "L",
+        "a": [
+          5064.55015,
+          1282.05015
+        ],
+        "b": [
+          5064.55015,
+          2400
+        ],
+        "port": true
+      }
+    ],
+    "length_um": 161243.78962,
+    "tau_ns": 2,
+    "ng_model": 3.71849,
+    "neff_model": 2.82907,
+    "ports_um": [
+      {
+        "name": "o1",
+        "xy": [
+          4900,
+          2435.44985
+        ],
+        "angle_deg": 0
+      },
+      {
+        "name": "o2",
+        "xy": [
+          100,
+          12564.55015
+        ],
+        "angle_deg": 180
+      }
+    ],
+    "bbox_um": [
+      100,
+      2416.79985,
+      4900,
+      12583.20015
+    ],
+    "model": {
+      "neff": 2.82907,
+      "ng": 3.71849,
+      "dneff_dw_per_um": 0.01631,
+      "alpha_sw_dBcm": 0.05073,
+      "alpha_surf_dBcm": 0.19993,
+      "alpha_mat_dBcm": 0,
+      "multimode": true,
+      "corner_junctions": 52,
+      "corner_conv_power": 0.3221,
+      "sbend_conv_power": 0.005751,
+      "corner_bend_dB_cm": 0,
+      "sbend_apex_dB_cm": 0,
+      "approximation": "junction conversion: Gaussian-shift a = convA/2 per curvature jump, summed incoherently (engineering estimate)"
+    },
+    "predicted": {
+      "alpha_dBcm": 0.25066,
+      "IL_dB": 5.81184,
+      "parts_dB": {
+        "sw": 0.8011,
+        "surf": 3.15714,
+        "mat": 0,
+        "bend": 0,
+        "sb": 1.80858,
+        "taper": 0.04501
+      },
+      "xtMode_dB": -4.84389,
+      "xtGap_dB": -36.78657,
+      "bbox_area_um2": 22024493,
+      "boundary_util": 0.00494
+    }
+  },
+  "predicted": {
+    "model": "game surrogate (see README · 모델 범위)",
+    "primary": {
+      "label": "삽입 손실 dB",
+      "value": 5.81184
+    },
+    "size": {
+      "value": 22024500,
+      "unit": "mm²"
+    },
+    "card": {
+      "alpha": 0.2507,
+      "ng": 3.718,
+      "IL": 5.812,
+      "area": 22024493,
+      "layout": "rect-arc"
+    },
+    "score": 283,
+    "objectives": [
+      {
+        "tier": 1,
+        "spec": "경계 안 배치 · DRC (간격·반경·클리어런스)",
+        "value": "통과",
+        "ok": true
+      },
+      {
+        "tier": 1,
+        "spec": "2 ns 지연 삽입 손실 ≤ 7.76 dB",
+        "value": "5.81 dB",
+        "ok": true
+      },
+      {
+        "tier": 1,
+        "spec": "고차모드 변환 (S-bend + 코너 이음매) ≤ -20 dB",
+        "value": "-4.8 dB",
+        "ok": false
+      },
+      {
+        "tier": 1,
+        "spec": "이웃 회전 결합 ≤ -30 dB",
+        "value": "-36.8 dB",
+        "ok": true
+      },
+      {
+        "tier": 2,
+        "spec": "삽입 손실 ≤ 5.06 dB",
+        "value": "5.81 dB",
+        "ok": false
+      },
+      {
+        "tier": 2,
+        "spec": "점유 면적 ≤ 0.93 mm²",
+        "value": "22.02 mm²",
+        "ok": false
+      }
+    ],
+    "fab_criterion": "삽입 손실 ≤ 5.57 dB · 모드 변환·이웃 결합 ★ 기준 (측벽 거칠기 웨이퍼 간 ±20%, CD 산포)"
+  },
+  "next": "python -m smq2gds design.json -o out.gds  (tools/smq2gds, README 참조)"
+}

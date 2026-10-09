@@ -6,6 +6,8 @@ const mkCtx=()=>{const g=()=>({addColorStop(){}});return new Proxy({},{get:(t,k)
 w.HTMLCanvasElement.prototype.getContext=mkCtx;w.atob=(x)=>Buffer.from(x,'base64').toString('binary');w.ResizeObserver=class{observe(){}};
 Object.defineProperty(w.HTMLElement.prototype,'clientWidth',{get(){return 700}});
 const errs=[];w.addEventListener('error',e=>errs.push(e.message));
+// optional preset designs: DES='{"D-1":{...}}' plays those levels from the given design (e.g. a layout mode)
+if(process.env.DES){const pl=process.argv[5]||'si1310';w.localStorage.setItem('smq3-designs',JSON.stringify({[pl]:JSON.parse(process.env.DES)}));w.localStorage.setItem('smq3-progress',JSON.stringify({plat:null,by:{}}));}
 w.eval(html.split('<script>')[1].split('</script>')[0]);
 const $=s=>w.document.querySelector(s);const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const coach=()=>$('#coach').hidden?'':$('#coach').textContent.replace(/\s+/g,' ').trim();
@@ -16,7 +18,7 @@ async function play(id){
  $(`.node[data-id="${id}"]`).click(); await sleep(300);
  $(`#hint-seg button[data-h="${tier}"]`).click(); await sleep(300);
  let last='';
- for(let i=0;i<60;i++){
+ for(let i=0;i<(+process.env.MAXIT||90);i++){
   await sleep(250); const t=coach(), sm=symMap(); let m, act='';
   if(m=t.match(/권장: (.+?) \(기준/)){ for(const part of m[1].split('·')){ const q=part.trim().match(/^(\S+) = ([\-\d.]+)/); if(q&&sm[q[1]]){set(sm[q[1]],q[2]);act+='rec '+q[1]+' ';} } }
   else if(m=t.match(/열 격리 = (\d)/)){set('iso',m[1]);act='iso';}
@@ -55,6 +57,7 @@ async function play(id){
   else if(m=t.match(/최악 코너.*최적 팁 ≈ ([\d.]+)/)){set('tw',m[1]);act='twR';}
   else if(m=t.match(/광섬유와 크기가 맞는 팁은 ≈ ([\d.]+)/)){set('tw',m[1]);act='tw2';}
   else if(/Tape-out 해보세요/.test(t)){ $('#btn-fab').click(); await sleep(3500); act='fab';}
+  else if(/단계 완료/.test(t)&&$('#step-next')){ $('#step-next').click(); await sleep(300); act='next '+$('#score-brk').textContent.slice(0,20);}
   if(process.env.V) console.log('   ',i,act,t.slice(0,150));
   if(!act || (act===last && t===coach())) { if(!act) break; }
   last=act;
