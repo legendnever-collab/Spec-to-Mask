@@ -153,8 +153,8 @@ KINDS.spiral = (() => {
       return { html, legend: legendHTML([[l.pf.mat === 'si' ? 'var(--amber)' : 'var(--cyan)', `${l.pf.mat === 'si' ? 'Si' : 'SiN'} (지금 설계, 폭만 변경)`], [l.pf.mat === 'si' ? 'var(--cyan)' : 'var(--amber)', `${op.mat === 'si' ? 'Si' : 'SiN'} (그 플랫폼의 기준 나선)`]]) };
     },
     coach(l, r, c) {
-      const t = c.tier, d = r.d, q1 = (x) => r1(l, x), q2s = (x) => Math.max(r1(l, x), r2(l, x), x.size / l.s2.size), P = r.parts;
-      const pick = (q, ks) => lineBestOf(K, l, d, ks, q, 24) || [['w', 'gap'], ['rin', 'ws'], ['w', 'rin']].map((k2) => pairBest(K, l, d, k2, q, 10)).filter(Boolean).sort((a, b) => a.q - b.q)[0] || null;
+      const t = c.tier, d = r.d, q1 = (x) => r1(l, x), q2s = (x) => keepStar(r1(l, x), Math.max(r2(l, x), x.size / l.s2.size)), P = r.parts;
+      const pick = (q, ks) => lineBestOf(K, l, d, ks, q, 24) || [['w', 'gap'], ['rin', 'ws'], ['w', 'rin']].map((k2) => pairBest(K, l, d, k2, q, 10)).filter(Boolean).sort((a, b) => a.q - b.q)[0] || randomBest(K, l, d, ['w', 'gap', 'rin', 'ws', 'sb'], q, 300);
       const txt = (b) => (!b ? '' : b.ps ? recText2(b, t) : recText(b, t, d));
       if (!c.ob1) {
         if (r.xtMode > l.s1.xtm) { const b = pick(q1, ['sb', 'ws', 'rin']); if (b) return { h: '중앙 S-bend에서 고차모드가 생깁니다', b: `넓은 멀티모드 도파로를 원호로 꺾으면 곡률이 뒤집히는 이음매에서 기본모드가 TE1로 바뀝니다(지금 ${f2(r.xtMode, 1)} dB). 곡률을 서서히 바꾸고 이음매만 좁히는 테이퍼 Euler S-bend가 해법입니다 — Hong 2022는 R<sub>max</sub> 25 µm, W<sub>s</sub> 0.6 µm로 −30 dB 이하를 얻었습니다.` + txt(b) }; }

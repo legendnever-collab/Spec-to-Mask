@@ -121,3 +121,19 @@ function pairBest(K, l, d, ks, q, n) {
 }
 const recText2 = (b, t) => (!b ? '' : t >= 2 ? ` 권장: ${b.ps.map((p, i) => `${p.sym} = ${recVal(p, b.v[i])}`).join(' · ')} (기준 대비 ${Math.round(b.q0 * 100)}% → ${Math.round(b.q * 100)}%).` : ` 추천: 두 손잡이(${b.ps.map((p) => p.label).join(' · ')})를 함께 바꿔 보세요.`);
 if (typeof module !== 'undefined') Object.assign(module.exports, { pairBest, recText2 });
+// ★★ coaching must never trade away ★: any move that breaks ★ ranks behind every move that keeps it
+const keepStar = (q1v, q2v) => (q1v > 1 + 1e-9 ? 100 + q1v : q2v);
+// multi-parameter recommendation in the pairBest format (ps, v, q0, q) from an explicit candidate list
+function bestOfCands(K, l, d, keys, cands, q) {
+  const ps = keys.map((k) => K.params(l).find((x) => x.k === k)), q0 = q(K.evaluate(l, d)); let best = null;
+  for (const c of cands) { const nd = { ...d }; keys.forEach((k, i) => { nd[k] = snapP(ps[i], c[i]); }); const qq = q(K.evaluate(l, nd)); if (!best || qq < best.q) best = { v: keys.map((k) => nd[k]), q: qq }; }
+  return best && best.q < q0 * 0.99 ? { ...best, q0, ps } : null;
+}
+if (typeof module !== 'undefined') Object.assign(module.exports, { keepStar, bestOfCands });
+// last-resort coach search: deterministic random designs over several knobs (coupled constraints)
+function randomBest(K, l, d, keys, q, n) {
+  const ps = keys.map((k) => K.params(l).find((x) => x.k === k)), r = mulberry(97), c = [];
+  for (let i = 0; i < (n || 300); i++) c.push(ps.map((p) => p.min + (p.max - p.min) * r()));
+  return bestOfCands(K, l, d, keys, c, q);
+}
+if (typeof module !== 'undefined') module.exports.randomBest = randomBest;

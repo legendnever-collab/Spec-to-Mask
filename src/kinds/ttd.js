@@ -100,8 +100,8 @@ KINDS.ttd = (() => {
       return { html, legend: legendHTML([[l.pf.mat === 'si' ? 'var(--amber)' : 'var(--cyan)', `${l.pf.mat === 'si' ? 'Si' : 'SiN'} (지금)`], [l.pf.mat === 'si' ? 'var(--cyan)' : 'var(--amber)', `${op.mat === 'si' ? 'Si' : 'SiN'} 기준 나선, 같은 N·Δτ`]]) };
     },
     coach(l, r, c) {
-      const t = c.tier, d = r.d, q1 = (x) => r1(l, x), q2s = (x) => Math.max(r1(l, x), r2(l, x), x.size / l.s2.size);
-      const pick = (q, ks) => lineBestOf(K, l, d, ks, q, 24) || pairBest(K, l, d, ['N', 'dt'], q, 12) || pairBest(K, l, d, ['dt', 'wa'], q, 10);
+      const t = c.tier, d = r.d, q1 = (x) => r1(l, x), q2s = (x) => keepStar(r1(l, x), Math.max(r2(l, x), x.size / l.s2.size));
+      const pick = (q, ks) => lineBestOf(K, l, d, ks, q, 24) || pairBest(K, l, d, ['N', 'dt'], q, 12) || pairBest(K, l, d, ['dt', 'wa'], q, 10) || randomBest(K, l, d, ['N', 'dt', 'wa'], q, 200);
       const txt = (b) => (!b ? '' : b.ps ? recText2(b, t) : recText(b, t, d));
       if (!c.ob1) {
         if (r.step > l.s1.step || r.range < l.s1.range) { const b = pairBest(K, l, d, ['N', 'dt'], q1, 16) || pick(q1, ['N', 'dt']); if (b) return { h: '지연 범위와 분해능을 함께 맞추세요', b: `가장 짧은 나선이 분해능 Δτ, 비트 수 N이 범위 (2<sup>N</sup>−1)·Δτ를 정합니다. 비트를 하나 늘릴 때마다 가장 긴 나선이 두 배가 되므로 손실·면적도 거의 두 배가 됩니다.` + txt(b) }; }

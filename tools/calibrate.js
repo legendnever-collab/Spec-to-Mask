@@ -1,10 +1,10 @@
 // Derive per-platform level specs (start designs, thresholds, reference designs, yield targets)
 // from the same physics the game runs. Output: src/data/pspec.js
 const fs = require('fs');
-const G = require('../test/load')(['util.js', 'ui_util.js', 'engine_mmi.js', 'data/tables.js', 'platforms.js', 'kinds/wg.js', 'kinds/dc.js', 'kinds/mmi.js', 'kinds/ssc.js', 'kinds/cwdm.js', 'kinds/to.js', 'kinds/pn.js', 'kinds/mzm.js', 'kinds/pd.js', 'kinds/els.js', 'kinds/xcvr.js', 'kinds/spiral.js', 'kinds/ttd.js', 'levels.js']);
+const G = require('../test/load')(['util.js', 'ui_util.js', 'engine_mmi.js', 'data/tables.js', 'platforms.js', 'kinds/wg.js', 'kinds/dc.js', 'kinds/mmi.js', 'kinds/ssc.js', 'kinds/cwdm.js', 'kinds/to.js', 'kinds/pn.js', 'kinds/mzm.js', 'kinds/pd.js', 'kinds/els.js', 'kinds/xcvr.js', 'kinds/spiral.js', 'kinds/ttd.js', 'kinds/chirp.js', 'kinds/fpsa.js', 'kinds/lidar.js', 'levels.js']);
 const { PLATFORMS, KINDS, PQ, makeWafer, snapP, nelderMead, clamp, band } = G;
 const only = process.argv[2] && process.argv[2] !== 'all' ? process.argv[2].split(',') : Object.keys(PLATFORMS);
-const stages = (process.argv[3] || '1,2,3,4').split(','), doS1 = stages.includes('1'), doS2 = stages.includes('2'), doS3 = stages.includes('3'), doS4 = stages.includes('4');
+const stages = (process.argv[3] || '1,2,3,4,5').split(','), doS1 = stages.includes('1'), doS2 = stages.includes('2'), doS3 = stages.includes('3'), doS4 = stages.includes('4'), doS5 = stages.includes('5');
 let PREV = {}; try { PREV = JSON.parse(fs.readFileSync(__dirname + '/../src/data/pspec.json', 'utf8')); } catch (e) {}
 const r2 = (v, k = 3) => +v.toFixed(k);
 const MODES = { easy: { th: 1.5, area: 1.3, sig: 0.6 }, std: { th: 1, area: 1, sig: 1 }, hard: { th: 0.8, area: 0.85, sig: 1.25 } };
@@ -132,6 +132,7 @@ for (const pid of only) {
   if (doS2) require('./calibrate_s2')(G, pf, S, { r2, MODES, scaleLev, yieldOf, yTargets });
   if (doS3) require('./calibrate_s3')(G, pf, S, { r2, MODES, scaleLev, yieldOf });
   if (doS4) require('./calibrate_s4')(G, pf, S, { r2, MODES, scaleLev, yieldOf });
+  if (doS5) require('./calibrate_s5')(G, pf, S, { r2, MODES, scaleLev, yieldOf });
 }
 const prev = PREV; Object.assign(prev, SPEC);
 fs.writeFileSync(__dirname + '/../src/data/pspec.json', JSON.stringify(prev));
