@@ -72,6 +72,7 @@ const fs = require('fs'), vm = require('vm'), path = require('path');
 let base = null;
 try { const src = require('child_process').execSync('git show HEAD~0:src/kinds/spiral.js', { cwd: path.join(__dirname, '..'), stdio: ['ignore', 'pipe', 'ignore'] }).toString(); if (!/rectGeom/.test(src)) base = src; } catch (e) { base = null; }
 try { if (!base) base = require('child_process').execSync('git show origin/main:src/kinds/spiral.js', { cwd: path.join(__dirname, '..'), stdio: ['ignore', 'pipe', 'ignore'] }).toString(); } catch (e) { base = null; }
+if (!base) console.log("  note: main spiral.js not found — legacy identity check skipped");
 let G0 = null; if (base) { G0 = load(); vm.runInContext(base.replace(/^const (\w+) =/gm, 'var $1 ='), G0); }
 for (const pid of Object.keys(G.PLATFORMS)) {
   const K = G.KINDS.spiral, l = LV('D-1', pid), pf = l.pf, S = G.PSPEC[pid]['D-1'];
