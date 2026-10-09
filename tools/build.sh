@@ -8,7 +8,7 @@ OUT=${1:-dist/index.html}
   cat src/head.html
   echo '<script>'
   echo 'const KINDS = {};'
-  for f in src/util.js src/ui_util.js src/engine_mmi.js src/data/tables.js src/platforms.js src/kinds/wg.js src/kinds/dc.js src/kinds/mmi.js src/kinds/ssc.js src/kinds/cwdm.js src/kinds/to.js src/kinds/pn.js src/kinds/mzm.js src/kinds/pd.js src/kinds/els.js src/kinds/xcvr.js src/kinds/spiral.js src/kinds/ttd.js src/kinds/chirp.js src/kinds/fpsa.js src/kinds/lidar.js src/data/pspec.js src/levels.js src/shell.js; do
+  for f in src/util.js src/ui_util.js src/engine_mmi.js src/data/tables.js src/platforms.js src/kinds/wg.js src/kinds/dc.js src/kinds/mmi.js src/kinds/ssc.js src/kinds/cwdm.js src/kinds/to.js src/kinds/pn.js src/kinds/mzm.js src/kinds/pd.js src/kinds/els.js src/kinds/xcvr.js src/kinds/spiral.js src/kinds/ttd.js src/kinds/chirp.js src/kinds/fpsa.js src/kinds/lidar.js src/data/pspec.js src/levels.js src/shell.js src/guide.js; do
     sed "/^if (typeof module !== 'undefined')/d" "$f"; echo
   done
   echo '</script>'

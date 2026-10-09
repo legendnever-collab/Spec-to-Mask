@@ -20,7 +20,8 @@ def _polys(comp):
 def png(comp, d: dict, path: str) -> None:
     polys = _polys(comp)
     g = d["geometry"]
-    spiral = g["pcell"] == "spiral"
+    rect = g["pcell"] == "spiral_rect"
+    spiral = g["pcell"] == "spiral" or rect
     fig, axs = plt.subplots(1, 2 if spiral else 1, figsize=(11 if spiral else 8, 5.2), squeeze=False)
     colors = {(1, 0): "#2b6cb0", (34, 0): "#c05621", (64, 0): "none"}
     for k, ax in enumerate(axs[0]):
@@ -32,9 +33,18 @@ def png(comp, d: dict, path: str) -> None:
                 ax.add_collection(PolyCollection(ps, facecolors=fc, edgecolors=fc, linewidths=0.2))
         bb = comp.bbox()
         dbu = 1.0
-        if k == 0:
+        if k == 0 and rect:  # the whole usable rectangle (floorplan layer) at true aspect
+            B = g["boundary"]
+            ax.set_xlim(-0.02 * B["W_um"], 1.02 * B["W_um"])
+            ax.set_ylim(-0.02 * B["H_um"], 1.02 * B["H_um"])
+        elif k == 0:
             ax.set_xlim(bb.left * dbu - 2, bb.right * dbu + 2)
             ax.set_ylim(bb.bottom * dbu - 2, bb.top * dbu + 2)
+        elif rect:  # zoom on the centre S-bend and the first loops
+            B = g["boundary"]
+            z = 2.6 * g["Ht_um"] + 4 * g["pitch_um"]
+            ax.set_xlim(B["W_um"] / 2 - z, B["W_um"] / 2 + z)
+            ax.set_ylim(B["H_um"] / 2 - z, B["H_um"] / 2 + z)
         else:  # zoom on the S-bend
             z = 3.2 * g["rin_um"]
             ax.set_xlim(-z, z)
@@ -48,7 +58,11 @@ def png(comp, d: dict, path: str) -> None:
         ax.set_ylabel("y (µm)")
         ax.grid(alpha=0.2)
     t = f"{d['platform']['id']} · {d['level']['id']} · {d['level']['device']}"
-    if spiral:
+    if rect:
+        B = g["boundary"]
+        t += f"\n{g['topology']} in {B['W_um'] / 1000:g} × {B['H_um'] / 1000:g} mm (clearance {B['clearance_um']} µm, ports {B['port_edges']}) · τ {g['tau_ns']:.3f} ns, W {g['w_um']} µm, pitch {g['pitch_um']} µm, R {g['R_um']} µm, {g['loops_per_arm']} loops/arm"
+        axs[0][1].set_title("centre S-bend + first loops (zoom)", fontsize=9)
+    elif spiral:
         t += f"\nτ {g['tau_ns']} ns, W {g['w_um']} µm, pitch {g['pitch_um']} µm, r_in {g['rin_um']} µm, S-bend {g['sbend']}"
         axs[0][1].set_title("centre S-bend (zoom)", fontsize=9)
     else:

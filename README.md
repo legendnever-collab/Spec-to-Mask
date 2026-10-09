@@ -15,6 +15,47 @@ Photonic IC 설계를 게임으로 배우는 단계별 학습 프로그램입니
 
 각 레벨은 ★ 기본 스펙 / ★★ 고성능+크기 / ★★★ Fab Run 수율의 세 목표, 코치 힌트 4단계(끄기·방향·수치·지형도), 난이도 3단계(입문·표준·도전), AI 라이벌(Nelder–Mead), Design DB(사람·AI 탐색 기록, CSV 복사)를 가집니다.
 
+### 학습 가이드 (모든 레벨)
+
+미션 패널의 **원리 배우기 · Learning Guide** 버튼이 레벨별 모달을 엽니다 (오프라인, 키보드·스크린리더, 모바일 전체 화면). 기본/심화(Deep Dive) 두 깊이.
+
+| 절 | 내용 |
+|---|---|
+| A 학습 목표 | 레벨에서 익힐 것 |
+| B 동작 원리 | 소자 개략도(SVG)와 핵심 식 |
+| C 파라미터 표 | 지금 화면의 **실제 파라미터 목록**에서 만든 표 — 이름·기호·단위·의미·↑/↓ 효과·Trade-off·관련 식·범위 |
+| D 상호작용 예제 | 게임 엔진 그대로: 변수 하나를 움직이면 같은 kind의 `evaluate`로 타일과 25점 스윕 곡선 (CWDM·MMI·나선은 전용 예제). 현재 설계와 점수는 바뀌지 않음 |
+| E 미션 연결 | 이 레벨의 목표가 어떤 물리량과 이어지는지 (정답 값은 주지 않음) |
+| F 모델 한계 | 해석식 / 반경험식 / 사전계산 테이블 / 경험식 / 가정 / 게임 밖 솔버 필요 6분류 배지 |
+| G 참고 문헌 | 출처 링크 (DOI·제조사 문서·교재) |
+
+코치(지금 무엇을 바꿀지)·힌트(수치 제안)와 달리 가이드는 "왜 그런가"를 설명하고 설계를 건드리지 않습니다.
+
+### 1-7 CWDM Guided 학습
+
+1-7은 **Guided 학습 / Full Design** 두 모드를 가집니다. 처음 오는 플레이어는 Guided, 이미 별이나 카드가 있는 플레이어는 Full Design에서 시작하며 언제든 바꾸거나 단계 번호로 건너뛸 수 있습니다.
+
+| 단계 | 다루는 변수 | 완료 조건 (엔진 계산) |
+|---|---|---|
+| 1 단일 2×2 MZI | ΔL, 위상 φ (연습용, 설계에 쓰지 않음) | FSR 40 ± 2 nm, λ_A → Bar ≥ 95 %, λ_B → Cross ≥ 95 % |
+| 2 F1 인터리버 | ΔL₁, φ₁ (1차 고정) | FSR 40 nm, CH1+CH3 / CH2+CH4 분리 ≥ 95 % |
+| 3 F2A / F2B | ΔL₂, φ₂ₐ, φ₂ᵦ | FSR 80 nm, 네 채널 → 네 포트, 출력 전력의 ≥ 95 % |
+| 4 고차 Lattice | 차수 1/2/3, 트림 | 세 차수 응답을 모두 비교 + ★ XT·IL |
+| 5 Full Design | 전체 | 원래 1-7 (★·★★·★★★ Fab Run) |
+
+2–4단계의 값은 실제 1-7 설계에 기록됩니다. 단계 중에는 별·카드·AI·Tape-out이 없습니다. 스펙트럼 축은 플랫폼 밴드(O/C)를 따르며, 각 단계 화면은 MZI 개략도·팔 위상·Bar/Cross 막대·FSR 표시·공정 코너(CD +8 nm, 두께 +Δt/2) 점선을 보여 줍니다. 위상 트림 φ는 설계 단계의 이상적 위상 오프셋이고, 실제 칩에서는 2-1의 TO 히터가 다이별로 이를 맞춥니다.
+
+### D-1 직사각형 나선
+
+D-1 `레이아웃` 파라미터: 원형 이중 나선(Legacy, 기존과 같은 결과) / 직사각형 나선 · 원호 코너 / 직사각형 나선 · Euler 코너.
+
+- 경계 먼저: 프리셋 5×5, 5×15, 10×30 mm 또는 사용자 W×H, 경계 여유, 포트 변(짧은 변 / E–W / S–N). 10×30과 30×10(짧은 변 포트)은 회전만 다른 같은 레이아웃입니다.
+- 목표: **Mode A** 목표 지연 τ → 경로 길이 L = cτ/n_g를 정확히 맞추는 가장 적은 회전 수(가장 큰 반경); **Mode B** 손실 예산 IL<sub>max</sub> 안에서 경계가 담을 수 있는 최대 지연(손실·면적 중 먼저 걸리는 쪽 표시). Mode B와 목표 τ를 바꾼 Mode A는 별·카드·AI 없는 탐색 모드입니다.
+- 생성기: 직선은 경계 변과 평행, 두 팔은 점대칭으로 피치 p = W<sub>m</sub> + W<sub>gap</sub>로 맞물리고, 중앙은 원호 S-bend(곡률 반전) 또는 Euler U-turn 두 개(곡률 연속)입니다. 들어가지 않으면 **Infeasible**과 이유·대안을 보여 주고 배치를 그리지 않습니다.
+- 물리는 형상에서: 직선·코너·S-bend 길이, 국소 반경의 굽힘 방사, 곡률 점프마다 접합 모드 변환(원호 코너), 이웃 간격 결합, 테이퍼.
+- 뷰어: 경계·여유선·경로·포트·bbox·mm 눈금, 확대/맞춤/이동(버튼, Ctrl+휠, 드래그), 길이·지연·점유율·IL·최소 간격·최소 반경·DRC 타일.
+- 내보내기: `geometry.pcell = "spiral_rect"`(armA 프리미티브, 경계, 변환, 포트) → `tools/smq2gds`가 같은 프리미티브로 GDS를 다시 그리고 테스트가 길이·bbox·포트·S-bend R<sub>min</sub>·DRC를 게임 예측과 대조합니다.
+
 ## 게임 밖으로: 설계 → GDS → 솔버
 
 모든 레벨의 **설계 내보내기 (JSON)** 버튼이 `smq-design/1` 파일을 줍니다.
@@ -44,7 +85,8 @@ src/
   platforms.js       Stage 0 플랫폼 정의 (λ × 물질, DRC 규칙, CWDM 채널) + 선택 화면 설명
   kinds/             레벨 종류별 물리·시각화·코치: wg, dc, mmi, ssc, cwdm (Stage 1) · to, pn, mzm, pd, els (Stage 2) · xcvr (Stage 3) · spiral, ttd (긴 지연선) · chirp, fpsa, lidar (Track B)
   levels.js          캠페인 텍스트·개념 노트 (수치 스펙은 data/pspec.js)
-  shell.js           범용 게임 셸: 플랫폼, 점수, 목표·미션, 코치, Fab Run, AI 라이벌, Design DB, 부품 카드
+  shell.js           범용 게임 셸: 플랫폼, 점수, 목표·미션, 코치, Fab Run, AI 라이벌, Design DB, 부품 카드, Guided 단계·연습 모드
+  guide.js           레벨별 학습 가이드 모달 (A–G, 상호작용 예제는 kind 엔진 사용)
   data/
     wg_*.json        도파로 TE/TM 모드 테이블 (폭·두께·파장)
     dc_*.json        방향성 결합기 짝/홀 슈퍼모드 테이블 (갭·폭·두께·파장)
@@ -73,7 +115,10 @@ test/
   e2e/bot.js         jsdom: 코치 문장만 따라가 각 레벨을 클리어하는 봇 (회귀 테스트)
   e2e/migrate.js     이전 버전 진행 기록 이전 확인
   e2e/export.js      jsdom: 참조 설계로 "설계 내보내기" → tools/smq2gds/examples/*.json
-  py/test_smq2gds.py 예제 전부 GDS 생성 + 연결성·폭·간격 DRC·길이·포트 위치 (솔버 없이)
+  e2e/guide.js       jsdom: 모든 레벨 학습 가이드 (절 A–G, 파라미터 행, 예제, 포커스 복원, 설계·점수 불변)
+  e2e/flow.js        jsdom: 1-7 Guided 흐름(단계·건너뛰기·값 기록·별 없음·밴드 축) + D-1 직사각형(프리셋·Infeasible·spiral_rect 내보내기)
+  t_upgrade.js       엔진: MZI 식·FSR·위상 이동·단계 완료·Lattice 차수 / 직사각형 나선 길이 = cτ/n_g·경계·회전·Mode B·Legacy 동일성
+  py/test_smq2gds.py 예제 전부 GDS 생성 + 연결성·폭·간격 DRC·길이·포트 위치 (솔버 없이; spiral_rect는 bbox ⊂ 경계−여유, 포트, S-bend R<sub>min</sub>)
 ```
 
 ## 데이터 재생성 순서
@@ -86,6 +131,8 @@ npm run tables && npm run calibrate && npm run build
 node test/e2e/export.js all                               # 참조 설계 JSON (calibrate 뒤)
 (cd tools && python -m smq2gds.validate) && npm run build # 오프라인 검증 → 게임 패널 (수십 분)
 npm run test:smoke && npm run test:bot
+npm run test:upgrade && npm run test:flow && npm run test:guide
+DES='{"D-1":{"lay":2,"sb":1}}' node test/e2e/bot.js std 2 D-1 si1310   # 직사각형 나선 봇
 node test/e2e/bot.js std 2 2-1,2-2,2-3,2-4,2-5 sin1550   # Stage 2 회귀
 node test/e2e/bot.js std 2 3A,3A+ si1310                  # Stage 3 회귀
 node test/e2e/bot.js std 2 D-1,D-2 sin1550                # 긴 지연선 회귀
@@ -95,7 +142,7 @@ node test/e2e/bot.js std 2 B-1,B-2,B-3 si1550             # Track B 회귀
 ## Kind 인터페이스
 
 필수: `params, evaluate(l, d, proc, opt), perf, q1, q2, objectives, fabPass, fabCrit, draw, chart, chartTitle, tiles, meta, hint, coach, card, aiStarts, violation`
-선택: `missions/missionDone`(관찰 미션), `noSize/comp`(크기 대신 다른 보너스), `params[].labels`(이산 선택지 표시), `landKeys/land/landDeps`(지형도), `moveKeys/moveCandidates`(코치의 한 수 탐색), `toggles`(카드 사용 등), `cheap`, `aspect`.
+선택: `missions/missionDone`(관찰 미션), `noSize/comp`(크기 대신 다른 보너스), `params[].labels`(이산 선택지 표시), `landKeys/land/landDeps`(지형도), `moveKeys/moveCandidates`(코치의 한 수 탐색), `toggles`(카드 사용 등), `cheap`, `aspect`, `fill(l, d)`(설계 기본값 채우기), `onParam`(값 변경 연동; `relayout` 파라미터는 목록을 다시 그림), `steps(l)`(Guided 단계: `params/evaluate/goals/done/coach/draw/chart`, 마지막은 `{full: true}`), `practice(l, d)`(별·카드·AI 없는 탐색 모드), `params[].noAI`(AI·코치 한 수가 건드리지 않는 목표·레이아웃 변수).
 
 새 레벨 = `src/kinds/`에 kind 하나 + `levels.js` 항목 하나 + `calibrate.js`(또는 `calibrate_s2.js`) 스펙 블록 하나. 셸은 kind 내부를 모른 채 동작합니다.
 
@@ -103,4 +150,4 @@ node test/e2e/bot.js std 2 B-1,B-2,B-3 si1550             # Track B 회귀
 
 ## 모델 범위
 
-모든 수치는 학습용 surrogate입니다. 반사, 3D 방사, 벤드 구간 결합, 편광 혼합은 포함하지 않아 FDTD·벡터 솔버보다 낙관적입니다 (예: 500×220 nm Si @1550 TE0 n<sub>eff</sub> 2.49 vs 벡터 해 ≈ 2.44). 각 보스 레벨의 최종 검증은 Tidy3D FDTD, Ansys(CHARGE/HEAT/INTERCONNECT)로 넘기는 것을 전제로 합니다.
+모든 수치는 학습용 surrogate입니다. 직사각형 나선의 원호 코너 접합 모드 변환은 곡률 점프마다 가우시안 이동 a = convA/2를 비간섭으로 더한 공학적 추정이며, Euler 코너·U-turn은 곡률이 연속이라 접합 변환을 0으로 둡니다(방사 손실은 국소 반경으로 적분). 반사, 3D 방사, 벤드 구간 결합, 편광 혼합은 포함하지 않아 FDTD·벡터 솔버보다 낙관적입니다 (예: 500×220 nm Si @1550 TE0 n<sub>eff</sub> 2.49 vs 벡터 해 ≈ 2.44). 각 보스 레벨의 최종 검증은 Tidy3D FDTD, Ansys(CHARGE/HEAT/INTERCONNECT)로 넘기는 것을 전제로 합니다.

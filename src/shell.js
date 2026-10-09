@@ -65,15 +65,51 @@ function lev() {
   return effCache[k];
 }
 window.GAME_LEV = (id) => { if (!LMAP[id] || !state.plat) return null; const sv = state.id; state.id = id; const e = lev(); state.id = sv; return e; };
+// read-only snapshot for the Learning Guide (src/guide.js): it explains and explores, it never writes to the design or the score
+window.GAME_CTX = () => {
+  if (!state.plat || !state.cur) return null;
+  const c = state.cur, K = kind(), S = c.S;
+  let ob = null; if (!S && !c.pr) { try { ob = objectives(); } catch (e) { ob = null; } }
+  return { id: state.id, plat: state.plat, pf: PLATFORMS[state.plat], mode: state.mode, l: c.l, lvl: LMAP[state.id], K, kindId: LMAP[state.id].kind,
+    params: params().map((p) => ({ ...p })), d: { ...c.d }, res: c.res, stars: starsOf(state.id), levels: LEVELS, hasCard: (id) => !!PP().cards[id],
+    ev: (d, full) => (S ? S.evaluate(c.l, d) : K.evaluate(c.l, d, null, full ? { full: true } : undefined)), tiles: (r) => (S ? (S.tiles ? S.tiles(c.l, r) : []) : K.tiles(c.l, r)),
+    step: S ? { id: S.id, title: S.title, idx: stepIdx(), n: stepsOf().length, goals: S.goals(c.l, c.res, stepMem(S)) } : null,
+    practice: c.pr ? { title: c.pr.title, note: c.pr.note, goals: c.pr.goals(c.l, c.res) } : null, ob,
+    valid: (typeof VALID !== 'undefined' && VALID.by && (VALID.by[state.plat] || {})[state.id]) || null, canvas: $('#field') };
+};
 const kind = () => KINDS[LMAP[state.id].kind];
-const params = () => kind().params(lev());
 const credits0 = () => MODES[state.mode].credits;
 function des() {
-  const st = lev().start, D = DESP();
+  const l = lev(), st = l.start, D = DESP();
   if (!D[state.id]) D[state.id] = { ...st };
   const d = D[state.id]; Object.keys(st).forEach((k) => { if (d[k] == null) d[k] = st[k]; });
+  if (kind().fill) kind().fill(l, d);   // kind-specific defaults for optional design keys (e.g. layout-mode parameters)
   return d;
 }
+
+/* ---------- guided learning steps (kind.steps) and practice states (kind.practice) ----------
+   A level whose kind defines steps(l) can be played as a sequence of guided steps before the full design.
+   Step state lives in PP().guide[id] = { mode: 'guided' | 'full', cur, done: {stepId: t}, loc: {stepId: {k: v}}, mem: {stepId: {}} }.
+   Shared keys (step params that are also level params) write into the level design; keys listed in step.local stay with the step.
+   Steps never award stars, cards, AI scores or DB records — those belong to the full design. */
+const guideNS = (id) => { const g = (PP().guide = PP().guide || {}); return (g[id] = g[id] || { mode: null, cur: 0, done: {}, loc: {}, mem: {} }); };
+function stepMode(id) {
+  const K = KINDS[LMAP[id].kind]; if (!K.steps) return null;
+  const G = guideNS(id);
+  // players who already cleared the level (stars in any difficulty or a card) start in Full Design and can skip the steps
+  if (!G.mode) G.mode = Object.values(PP().stars).some((o) => o[id]) || PP().cards[id] ? 'full' : 'guided';
+  return G.mode;
+}
+const stepsOf = () => (kind().steps ? kind().steps(lev()) : []);
+function stepIdx() { const G = guideNS(state.id), n = stepsOf().length; return clamp(G.cur | 0, 0, Math.max(0, n - 1)); }
+function curStep() { if (stepMode(state.id) !== 'guided') return null; const S = stepsOf()[stepIdx()]; return S && !S.full ? S : null; }
+function stepLoc(S) { const G = guideNS(state.id); if (!G.loc[S.id]) G.loc[S.id] = S.init ? S.init(lev(), des()) : {}; return G.loc[S.id]; }
+const stepMem = (S) => { const G = guideNS(state.id); return (G.mem[S.id] = G.mem[S.id] || {}); };
+// current values seen by the controls: level design, step-local values, and keys a step pins (e.g. lattice order 1)
+function dv() { const S = curStep(); return S ? { ...des(), ...stepLoc(S), ...(S.fixed || {}) } : des(); }
+function putV(k, v) { const S = curStep(); if (S && S.local && S.local.includes(k)) stepLoc(S)[k] = v; else des()[k] = v; }
+const params = () => { const S = curStep(); return S ? S.params(lev(), dv()) : kind().params(lev(), des()); };
+const practiceOf = () => (!curStep() && kind().practice ? kind().practice(lev(), des()) : null);   // { note, goals(l, r) } → evaluation only
 const keyOf = (d) => Object.keys(d).sort().map((k) => k + '=' + (+d[k]).toFixed(4)).join('|');
 const pFmt = (p, v) => (p.labels ? `${v | 0} · ${p.labels[v | 0]}` : p.unit === 'π' ? `${(+v).toFixed(p.dec)}π` : p.unit === '차' ? `${v | 0}차` : `${(+v).toFixed(p.dec)}${p.unit ? ' ' + p.unit : ''}`);
 const credits = () => (state.credits[state.id] != null ? state.credits[state.id] : (state.credits[state.id] = credits0()));
@@ -98,29 +134,35 @@ $('#map').addEventListener('click', (e) => {
 
 /* ---------- params ---------- */
 function renderParams() {
-  const l = lev(), K = kind(), lk = K.landKeys ? K.landKeys(l) : [];
+  const l = lev(), K = kind(), S = curStep(), lk = !S && K.landKeys ? K.landKeys(l, des()) : [];
   let h = params().map((p) => `<div class="prm"><div class="prm-h"><label for="p-${p.k}">${p.label}<i>${p.sym}</i></label><output id="o-${p.k}" for="p-${p.k}"></output></div>
       <div class="prm-r"><button class="nudge" data-k="${p.k}" data-d="-1" aria-label="${p.label} 감소">−</button>
       <input type="range" id="p-${p.k}" data-k="${p.k}" min="${p.min}" max="${p.max}" step="${p.step}">
       <button class="nudge" data-k="${p.k}" data-d="1" aria-label="${p.label} 증가">+</button></div>${lk.includes(p.k) ? `<div class="land" id="land-${p.k}" data-k="${p.k}" hidden></div>` : ''}</div>`).join('');
-  (K.toggles ? K.toggles(l) : []).forEach((t) => {
+  (K.toggles && !S ? K.toggles(l) : []).forEach((t) => {
     const ok = !t.needs || PP().cards[t.needs];
     h += `<label class="toggle"><input type="checkbox" id="tg-${t.k}" data-k="${t.k}" ${ok ? '' : 'disabled'}><span>${t.label}${ok ? '' : ` <span style="color:var(--fg-3)">(${t.needs} 카드 필요)</span>`}</span></label>`;
   });
   $('#prm-list').innerHTML = h;
 }
 function syncParamUI() {
-  const d = des();
+  const d = dv(), dd = des();
   params().forEach((p) => { $('#p-' + p.k).value = d[p.k]; $('#o-' + p.k).textContent = pFmt(p, d[p.k]); });
-  (kind().toggles ? kind().toggles(lev()) : []).forEach((t) => { const el = $('#tg-' + t.k); if (el) el.checked = !!d[t.k] && !el.disabled; if (el && el.disabled) d[t.k] = 0; });
+  (kind().toggles && !curStep() ? kind().toggles(lev()) : []).forEach((t) => { const el = $('#tg-' + t.k); if (el) el.checked = !!dd[t.k] && !el.disabled; if (el && el.disabled) dd[t.k] = 0; });
 }
 function setParam(k, v, fromBtn) {
   const p = params().find((x) => x.k === k); if (!p) return;
   const nv = snapP(p, v);
-  if (nv === des()[k] && !fromBtn) return;
-  des()[k] = nv; state.fromAI[state.id] = false;
-  if (fromBtn) $('#p-' + k).value = nv;
-  $('#o-' + k).textContent = pFmt(p, nv);
+  if (nv === dv()[k] && !fromBtn) return;
+  putV(k, nv); state.fromAI[state.id] = false;
+  const K = kind();
+  if (!curStep() && K.onParam) K.onParam(lev(), des(), k);   // e.g. a boundary preset writes W and H
+  if (p.relayout) {   // a discrete choice that changes the parameter list
+    const had = document.activeElement && document.activeElement.dataset ? document.activeElement : null, hk = had && had.dataset.k, hd = had && had.dataset.d;
+    renderParams(); syncParamUI();
+    const back = hk ? document.querySelector(hd ? `.nudge[data-k="${hk}"][data-d="${hd}"]` : `#p-${hk}`) : null; if (back) back.focus();
+  }
+  else { if (fromBtn) $('#p-' + k).value = nv; $('#o-' + k).textContent = pFmt(p, nv); }
   requestEval(); scheduleCommit();
 }
 {
@@ -131,11 +173,11 @@ function setParam(k, v, fromBtn) {
   list.addEventListener('pointerdown', (e) => {
     const b = e.target.closest('.nudge'); if (!b) return; e.preventDefault();
     const k = b.dataset.k, dir = +b.dataset.d, p = params().find((x) => x.k === k);
-    const step = () => setParam(k, des()[k] + dir * p.step, true);
+    const step = () => setParam(k, dv()[k] + dir * p.step, true);
     step(); stop(); holdT = setTimeout(() => { holdI = setInterval(step, 70); }, 380);
   });
   ['pointerup', 'pointerleave', 'pointercancel'].forEach((ev) => list.addEventListener(ev, stop));
-  list.addEventListener('keydown', (e) => { const b = e.target.closest('.nudge'); if (!b || (e.key !== 'Enter' && e.key !== ' ')) return; e.preventDefault(); const p = params().find((x) => x.k === b.dataset.k); setParam(p.k, des()[p.k] + (+b.dataset.d) * p.step, true); });
+  list.addEventListener('keydown', (e) => { const b = e.target.closest('.nudge'); if (!b || (e.key !== 'Enter' && e.key !== ' ')) return; e.preventDefault(); const p = params().find((x) => x.k === b.dataset.k); setParam(p.k, dv()[p.k] + (+b.dataset.d) * p.step, true); });
   list.addEventListener('click', (e) => {
     const box = e.target.closest('.land'); if (!box) return;
     const p = params().find((x) => x.k === box.dataset.k), rc = box.getBoundingClientRect();
@@ -154,13 +196,27 @@ function scoreOf(l, res, K) {
   return { perf, comp, total: perf + comp };
 }
 function evaluate() {
-  const l = lev(), K = kind(), d = { ...des() };
+  const l = lev(), K = kind(), S = curStep(), d = { ...dv() };
+  if (S) {   // guided step: the step's own physics view; completion is decided by the same engine results
+    const res = S.evaluate(l, d), mem = stepMem(S), G = guideNS(state.id);
+    let ch = S.observe ? S.observe(l, res, mem) : false;
+    if (!G.done[S.id] && S.done(l, res, mem)) { G.done[S.id] = Date.now(); ch = true; }
+    state.cur = { l, d, res, sc: { perf: 0, comp: 0, total: 0 }, key: keyOf(d), robust: 0, fabHere: null, S, pr: null };
+    if (ch) { persist(); renderGuided(); }
+    drawView(); renderHUD(); renderObjectives(); renderFabPanel(); renderHint(); scheduleIdle();
+    return;
+  }
   const res = K.evaluate(l, d, null, { full: true });
   if (K.missions && !state.fromAI[state.id]) { const ms = missionsOf(state.id); let nw = false; K.missions(l).forEach((m) => { if (!ms[m.id] && K.missionDone(l, res, m.id)) { ms[m.id] = Date.now(); nw = true; } }); if (nw) { persist(); setTimeout(() => { awardStars(); renderMap(); }, 0); } }
   const sc = scoreOf(l, res), key = keyOf(d), fab = state.fab[state.id], fabHere = fab && fab.key === key ? fab : null;
   const robust = fabHere && !(res.drc && res.drc.length) ? 200 * fabHere.yield : 0;
-  state.cur = { l, d, res, sc, key, robust, fabHere };
-  if (K.landKeys && K.landKeys(l).includes('L') && K.land && !K.cheap) landFor('L');   // MMI coach needs the L sweep
+  const pr = practiceOf();
+  state.cur = { l, d, res, sc: pr ? { perf: 0, comp: 0, total: 0 } : sc, key, robust: pr ? 0 : robust, fabHere: pr ? null : fabHere, S: null, pr };
+  {   // a full-design guided step (e.g. CWDM step 5) completes from the level's real objectives / Fab run
+    const st = stepMode(state.id) === 'guided' ? stepsOf()[stepIdx()] : null, G = guideNS(state.id);
+    if (st && st.full && st.fullDone && !pr && !G.done[st.id] && st.fullDone(l, res, { fab: fabHere, ob: objectives() })) { G.done[st.id] = Date.now(); persist(); renderGuided(); }
+  }
+  if (K.landKeys && K.landKeys(l, d).includes('L') && K.land && !K.cheap) landFor('L');   // MMI coach needs the L sweep
   drawView(); renderHUD(); renderObjectives(); renderFabPanel(); renderHint(); drawStrips(false); scheduleIdle();
 }
 let idleT = null;
@@ -170,7 +226,7 @@ function scheduleCommit() { clearTimeout(commitT); commitT = setTimeout(commit, 
 function commit() {
   const c = state.cur; if (!c) return;
   persist();
-  if ((c.res.drc && c.res.drc.length) || state.fromAI[state.id]) return;
+  if (c.S || c.pr || (c.res.drc && c.res.drc.length) || state.fromAI[state.id]) return;
   if (c.key !== state.lastLogged) { state.lastLogged = c.key; DB.push(rec(state.id, 'H', c.d, c.res)); persistDB(); }
   awardStars(); maybeCard();
   if (c.sc.total > (PP().best[state.id] || 0)) PP().best[state.id] = Math.round(c.sc.total);
@@ -196,13 +252,13 @@ function landFor(k) {
 }
 function landData() { const o = {}; Object.keys(state.land).forEach((k) => { o[k] = state.land[k].data; }); return o; }
 function drawStrips(heavy) {
-  const K = kind(), l = lev(), keys = K.landKeys ? K.landKeys(l) : [];
+  const K = kind(), l = lev(), keys = K.landKeys && !curStep() ? K.landKeys(l, des()) : [];
   keys.forEach((k) => {
     const box = $('#land-' + k); if (!box) return;
     box.hidden = state.hintTier < 3; if (box.hidden || !state.cur) return;
     const deps = K.landDeps ? K.landDeps(k, state.cur.d) : null;
     const cached = state.land[k] && state.land[k].sig === state.id + state.mode + k + JSON.stringify(deps || Object.keys(state.cur.d).filter((x) => x !== k).map((x) => state.cur.d[x]));
-    if (!cached && !heavy && !(K.landKeys(l).includes(k) && k === 'L' && !K.cheap)) { moveMarker(box, k); return; }
+    if (!cached && !heavy && !(k === 'L' && !K.cheap)) { moveMarker(box, k); return; }
     const data = landFor(k), p = params().find((x) => x.k === k);
     const W = 320, H = 50, top = 4, bot = H - 14, X = (v) => 4 + (v - p.min) / (p.max - p.min) * (W - 8), Y = (q) => top + Math.min(q, 2) / 2 * (bot - top);
     let base = '', g1 = '', g2 = '', p0 = false, p1 = false, p2 = false;
@@ -213,7 +269,7 @@ function drawStrips(heavy) {
       if (q <= 1) { g1 += (p1 ? 'L' : 'M') + px + ',' + py; p1 = true; } else p1 = false;
       if (q2 <= 1) { g2 += (p2 ? 'L' : 'M') + px + ',' + py; p2 = true; } else p2 = false;
     });
-    const cur = X(des()[k]);
+    const cur = X(dv()[k]);
     box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${p.label} 지형도: 위로 갈수록 좋은 설계">
       <line x1="4" x2="${W - 4}" y1="${Y(1)}" y2="${Y(1)}" stroke="var(--fg-3)" stroke-dasharray="2 3"/>
       <path d="${base}" fill="none" stroke="var(--line-2)" stroke-width="1.4"/>
@@ -227,7 +283,7 @@ function drawStrips(heavy) {
 }
 function moveMarker(box, k) {
   const ln = box.querySelector('line.cur'), p = params().find((x) => x.k === k); if (!ln) return;
-  const x = 4 + (des()[k] - p.min) / (p.max - p.min) * 312; ln.setAttribute('x1', x); ln.setAttribute('x2', x);
+  const x = 4 + (dv()[k] - p.min) / (p.max - p.min) * 312; ln.setAttribute('x1', x); ln.setAttribute('x2', x);
 }
 
 /* ---------- objectives / stars / cards ---------- */
@@ -243,18 +299,26 @@ function objectives() {
   return [{ t: 1, items: t1, pass: p1, tag: '기본 스펙' }, { t: 2, items: t2, pass: p2, tag: '고성능 + 컴팩트' }, { t: 3, items: t3, pass: p3, tag: '양산 수율' }];
 }
 function awardStars() {
-  if (state.fromAI[state.id]) return;
+  if (state.fromAI[state.id] || !state.cur || state.cur.S || state.cur.pr) return;
   let m = starsOf(state.id); objectives().forEach((o, i) => { if (o.pass) m |= (1 << i); });
   PP().stars[state.mode][state.id] = m;
 }
 function maybeCard() {
-  const c = state.cur, ob = objectives(); if (!ob[0].pass || state.fromAI[state.id]) return;
+  const c = state.cur; if (!c || c.S || c.pr) return;
+  const ob = objectives(); if (!ob[0].pass || state.fromAI[state.id]) return;
   const old = PP().cards[state.id], score = Math.round(c.sc.total + c.robust);
   if (old && old.score > score) return;
   const l = lev(), card = kind().card(l, c.res);
   PP().cards[state.id] = { id: state.id, name: l.name, dev: l.dev, role: l.role, mode: state.mode, score, stars: popcount(starsOf(state.id)), lines: card.lines, model: card.model, d: { ...c.d }, yield: c.fabHere ? c.fabHere.yield : null, t: Date.now() };
 }
 function renderObjectives() {
+  const c = state.cur;
+  if (c && (c.S || c.pr)) {   // guided step / practice: goals computed from the same engine, no stars
+    const g = c.S ? c.S.goals(c.l, c.res, stepMem(c.S)) : c.pr.goals(c.l, c.res), done = c.S && guideNS(state.id).done[c.S.id];
+    $('#objs').innerHTML = `<div class="obj goals ${done ? 'got live' : g.every((x) => x.ok) ? 'live' : ''}"><div class="obj-h"><span class="st">${c.S ? `STEP ${stepIdx() + 1} 목표` : '연습 모드'}</span><span class="tag">${c.S ? (done ? '단계 완료 ✓' : '물리 엔진 결과로 판정') : '별·카드·AI 없음'}</span></div>
+      <ul>${g.map((x) => `<li class="${x.na ? 'na' : x.ok ? 'ok' : 'no'}"><span class="k">${x.k}</span><span class="v">${x.v}</span></li>`).join('')}</ul></div>`;
+    return;
+  }
   const ob = objectives(), got = starsOf(state.id);
   $('#objs').innerHTML = ob.map((o, i) => `<div class="obj ${got & (1 << i) ? 'got' : ''} ${o.pass ? 'live' : ''}">
       <div class="obj-h"><span class="st">${'★'.repeat(o.t) + '☆'.repeat(3 - o.t)}</span><span class="tag">${o.pass ? '현재 설계 달성' : o.tag}</span></div>
@@ -272,14 +336,21 @@ function renderCards() {
 
 /* ---------- HUD, view, chart ---------- */
 function sizeCanvas() {
-  const cv = $('#field'), w = $('#cwrap').clientWidth, K = kind();
-  const h = Math.max(180, Math.min(400, Math.round(w * (K.aspect || 0.44))));
+  const cv = $('#field'), w = $('#cwrap').clientWidth, K = kind(), S = curStep();
+  const h = Math.max(180, Math.min(400, Math.round(w * ((S && S.aspect) || K.aspect || 0.44))));
   cv.width = Math.round(w * DPR); cv.height = Math.round(h * DPR); cv.style.height = h + 'px';
   if (state.cur) drawView();
 }
-function drawView() { if (!state.cur || state.cur.l.id !== state.id) return; kind().draw($('#field'), state.cur.l, state.cur.res, { hintTier: state.hintTier }); }
+function drawView() { const c = state.cur; if (!c || c.l.id !== state.id) return; ((c.S && c.S.draw) || kind().draw)($('#field'), c.l, c.res, { hintTier: state.hintTier, redraw: drawView }); }
 function renderHUD() {
   const c = state.cur, K = kind();
+  if (c.S) {
+    const n = stepsOf().length;
+    $('#score-big').innerHTML = `STEP ${stepIdx() + 1}<small>/${n}</small>`; $('#score-brk').textContent = c.S.title;
+    $('#hud-meta').innerHTML = c.S.meta ? c.S.meta(c.l, c.res) : K.meta(c.l, c.res); $('#drcbar').hidden = true;
+    $('#tiles').innerHTML = (c.S.tiles ? c.S.tiles(c.l, c.res) : []).map(([l, v]) => `<div class="tile"><div class="l">${l}</div><div class="v">${v}</div></div>`).join('');
+    return;
+  }
   $('#score-big').innerHTML = `${Math.round(c.sc.total + c.robust)}<small>/1000</small>`;
   $('#score-brk').textContent = `성능 ${Math.round(c.sc.perf)} · ${K.sizeLabel} ${Math.round(c.sc.comp)} · 수율 ${c.fabHere ? Math.round(c.robust) : '—'}`;
   $('#hud-meta').innerHTML = K.meta(c.l, c.res) + (state.fromAI[state.id] ? ' · <b style="color:var(--cyan)">AI 설계 표시 중</b>' : '');
@@ -287,12 +358,12 @@ function renderHUD() {
   $('#tiles').innerHTML = K.tiles(c.l, c.res).map(([l, v]) => `<div class="tile"><div class="l">${l}</div><div class="v">${v}</div></div>`).join('');
 }
 function computeChart() {
-  const c = state.cur, out = kind().chart(c.l, c.res);
-  $('#chart').innerHTML = out.html; $('#legend').innerHTML = out.legend; $('#chart-title').textContent = kind().chartTitle(c.l);
+  const c = state.cur, src = c.S && c.S.chart ? c.S : kind(), out = src.chart(c.l, c.res);
+  $('#chart').innerHTML = out.html; $('#legend').innerHTML = out.legend; $('#chart-title').textContent = src.chartTitle(c.l, c.res);
 }
 function renderHint() {
-  const h = $('#hint'); h.hidden = state.hintTier < 2 || !state.cur || state.cur.l.id !== state.id;
-  if (!h.hidden) { const t = kind().hint(state.cur.l, state.cur.res); h.hidden = !t; if (t) h.innerHTML = t; }
+  const h = $('#hint'), c = state.cur; h.hidden = state.hintTier < 2 || !c || c.l.id !== state.id;
+  if (!h.hidden) { const f = c.S ? c.S.hint : kind().hint, t = f ? f(c.l, c.res) : null; h.hidden = !t; if (t) h.innerHTML = t; }
 }
 
 /* ---------- coach ---------- */
@@ -300,7 +371,7 @@ function bestMove(obj, keepSize) {
   const l = lev(), K = kind(), c = state.cur, d = c.d; let best = null;
   const consider = (k, to, r) => { if (!r || (r.drc && r.drc.length)) return; if (keepSize && !K.noSize && r.size > l.s2.size) return; const v = obj(r); if (!best || v < best.v) best = { k, to, v }; };
   if (K.moveCandidates) K.moveCandidates(l, c.res, landData()).forEach((m) => consider(m.k, m.to, m.r));
-  const keys = K.moveKeys ? K.moveKeys(l) : params().map((p) => p.k);
+  const keys = K.moveKeys ? K.moveKeys(l) : params().filter((p) => !p.noAI).map((p) => p.k);   // layout/target choices (noAI) are the player's, not a design move
   const steps = K.cheap ? [-10, -3, -1, 1, 3, 10] : [-3, -1, 1, 3];
   keys.forEach((k) => {
     const p = params().find((x) => x.k === k);
@@ -319,7 +390,13 @@ function moveText(mv, t, cur, star) {
 }
 function coachMsg() {
   const t = state.hintTier; if (!t || !state.cur) return null;
-  const l = lev(), K = kind(), c = state.cur, r = c.res, ob = objectives(), got = starsOf(state.id);
+  const l = lev(), K = kind(), c = state.cur, r = c.res;
+  if (c.S) {
+    if (guideNS(state.id).done[c.S.id]) return { h: '단계 완료 — 다음 단계로 가세요', b: (c.S.doneText || '이 단계의 목표를 물리 엔진 결과로 확인했습니다.') + ' 위의 <b>다음 단계 →</b> 버튼으로 넘어갑니다.' };
+    return c.S.coach(l, r, { tier: t, mem: stepMem(c.S) });
+  }
+  if (c.pr) return K.coach(l, r, { tier: t, practice: c.pr, land: landData() }) || { h: c.pr.title || '연습 모드', b: c.pr.note };
+  const ob = objectives(), got = starsOf(state.id);
   const m = K.coach(l, r, { tier: t, ob1: ob[0].pass, ob2: ob[1].pass, land: landData(), fab: c.fabHere, missions: missionsOf(state.id) }); if (m) return m;
   if (r.drc && r.drc.length) return { h: 'DRC 위반', b: r.drc.join(' · ') };
   const q1 = K.q1(l, r), q2 = K.q2(l, r);
@@ -355,6 +432,11 @@ function drawWafer(dies, done) {
 }
 function renderFabPanel() {
   const l = lev(), c = state.cur, cr = credits(), btn = $('#btn-fab'), drcBad = c.res.drc && c.res.drc.length;
+  if (c.S || c.pr) {
+    btn.disabled = true; btn.textContent = 'Tape-out'; $('#yield').textContent = '—'; $('#yield').className = 'yield na'; $('#fab-kv').innerHTML = '';
+    $('#fab-note').textContent = c.S ? 'Guided 단계에서는 공정 런이 없습니다. 마지막 단계(Full Design)에서 같은 설계로 Tape-out 합니다.' : c.pr.note;
+    return;
+  }
   btn.disabled = state.fabRunning || cr <= 0 || drcBad;
   btn.textContent = state.fabRunning ? '공정 진행 중…' : `Tape-out · 크레딧 ${cr}/${credits0()}`;
   const f = state.fab[state.id], y = $('#yield');
@@ -367,7 +449,7 @@ function renderFabPanel() {
 }
 function tapeOut() {
   const c = state.cur, id = state.id, l = lev(), K = kind();
-  if (state.fabRunning || (c.res.drc && c.res.drc.length) || credits() <= 0) return;
+  if (state.fabRunning || c.S || c.pr || (c.res.drc && c.res.drc.length) || credits() <= 0) return;
   state.credits[id] = credits() - 1; state.fabRunning = true;
   const dies = makeWafer((Date.now() ^ (Math.random() * 1e9)) & 0x7fffffff, MODES[state.mode].sig), d = { ...c.d }, key = c.key;
   let k = 0, pass = 0; $('#yield').textContent = '…'; $('#yield').className = 'yield na'; renderFabPanel();
@@ -386,8 +468,11 @@ $('#btn-fab').addEventListener('click', tapeOut);
 /* ---------- AI rival ---------- */
 function* aiRun(id) {
   const lb = LMAP[id], l = (() => { const sv = state.id; state.id = id; const e = lev(); state.id = sv; return e; })();
-  const K = KINDS[lb.kind], ps = K.params(l); let best = null, evals = 0; const logs = [];
-  const toDes = (u) => { const d = { ...l.start }; ps.forEach((p, i) => { d[p.k] = snapP(p, p.min + (p.max - p.min) * clamp(u[i], 0, 1)); }); return d; };
+  const K = KINDS[lb.kind]; let best = null, evals = 0; const logs = [];
+  // the AI tunes design parameters only; layout-mode / boundary choices (noAI) are taken from the player's current design
+  const cur = { ...l.start, ...(DESP()[id] || {}) }, all = K.params(l, cur), ps = all.filter((p) => !p.noAI), base = { ...l.start };
+  all.filter((p) => p.noAI).forEach((p) => { base[p.k] = cur[p.k]; }); if (K.fill) K.fill(l, base);
+  const toDes = (u) => { const d = { ...base }; ps.forEach((p, i) => { d[p.k] = snapP(p, p.min + (p.max - p.min) * clamp(u[i], 0, 1)); }); return d; };
   const toU = (d) => ps.map((p) => (d[p.k] - p.min) / (p.max - p.min));
   const f = (u) => {
     evals++; const d = toDes(u), gv = K.violation(l, d); if (gv > 0) return 500 + 2000 * gv;
@@ -397,11 +482,11 @@ function* aiRun(id) {
   const rnd = mulberry(7 + id.charCodeAt(0) + id.charCodeAt(2)), starts = K.aiStarts(l).slice();
   starts.push(Object.fromEntries(ps.map((p) => [p.k, p.min + (p.max - p.min) * (0.2 + 0.6 * rnd())])));
   const maxE = K.cheap ? 160 : 90;
-  for (const s0 of starts) { const g = nelderMead(f, toU({ ...l.start, ...s0 }), 0.06, maxE); for (const _ of g) yield { evals, best }; }
+  for (const s0 of starts) { const g = nelderMead(f, toU({ ...base, ...s0 }), 0.06, maxE); for (const _ of g) yield { evals, best }; }
   return { evals, best, logs };
 }
 function summonAI() {
-  if (state.aiRunning != null) return;
+  if (state.aiRunning != null || (state.cur && (state.cur.S || state.cur.pr))) return;
   const id = state.id, it = aiRun(id); state.aiRunning = id;
   const btn = $('#btn-ai'); btn.disabled = true; btn.textContent = 'AI 탐색 중…'; let last = null;
   const step = () => {
@@ -418,17 +503,22 @@ function summonAI() {
   requestAnimationFrame(step);
 }
 function renderAI() {
-  const id = state.id, a = PP().ai[id], you = PP().best[id] || 0;
-  $('#you-best').textContent = you || '—'; $('#ai-best').textContent = a ? a.score : '—'; $('#btn-ai-load').disabled = !a;
+  const id = state.id, a = PP().ai[id], you = PP().best[id] || 0, c = state.cur;
+  $('#you-best').textContent = you || '—'; $('#ai-best').textContent = a ? a.score : '—'; $('#btn-ai-load').disabled = !a || !!(c && (c.S || c.pr));
+  if (c && (c.S || c.pr) && state.aiRunning == null) {
+    $('#btn-ai').disabled = true; $('#btn-ai').textContent = 'AI 라이벌 소환';
+    $('#verdict').textContent = c.S ? 'Guided 단계는 원리를 익히는 시간입니다. AI 라이벌은 Full Design에서 같은 점수로 겨룹니다.' : 'AI 라이벌은 별 점수가 있는 설계 모드에서만 겨룹니다.'; $('#ai-bar').style.width = '0%';
+    return;
+  }
   if (state.aiRunning == null) { $('#btn-ai').disabled = false; $('#btn-ai').textContent = a ? 'AI 라이벌 다시 소환' : 'AI 라이벌 소환'; }
   else if (state.aiRunning !== id) { $('#btn-ai').disabled = true; $('#btn-ai').textContent = `${state.aiRunning} AI 탐색 중…`; }
   if (!a) { $('#verdict').textContent = state.aiRunning === id ? '' : 'AI를 소환하면 같은 surrogate로 최적화를 돌려 점수를 남깁니다.'; $('#ai-bar').style.width = '0%'; return; }
   $('#ai-bar').style.width = '100%';
   const ps = params(), v = you > a.score ? `<b style="color:var(--pass)">당신이 앞섭니다 (+${you - a.score})</b>` : you === a.score ? '<b>동점</b>' : `<b style="color:var(--cyan)">AI가 앞섭니다 (${you ? '−' + (a.score - you) : '도전 전'})</b>`;
-  $('#verdict').innerHTML = `${v}<br><span style="font-family:var(--mono);font-size:11.5px;color:var(--fg-3)">AI 설계 ${ps.map((p) => `${p.sym} ${pFmt(p, a.d[p.k])}`).join(' · ')} · 평가 ${a.evals}회</span>`;
+  $('#verdict').innerHTML = `${v}<br><span style="font-family:var(--mono);font-size:11.5px;color:var(--fg-3)">AI 설계 ${ps.filter((p) => a.d[p.k] != null && !p.noAI).map((p) => `${p.sym} ${pFmt(p, a.d[p.k])}`).join(' · ')} · 평가 ${a.evals}회</span>`;
 }
 $('#btn-ai').addEventListener('click', summonAI);
-$('#btn-ai-load').addEventListener('click', () => { const a = PP().ai[state.id]; if (!a) return; Object.assign(des(), a.d); state.fromAI[state.id] = true; syncParamUI(); evaluate(); persist(); });
+$('#btn-ai-load').addEventListener('click', () => { const a = PP().ai[state.id]; if (!a || curStep()) return; Object.assign(des(), a.d); state.fromAI[state.id] = true; renderParams(); syncParamUI(); evaluate(); persist(); });
 
 /* ---------- Design DB ---------- */
 function renderDB() {
@@ -444,7 +534,7 @@ function renderDB() {
   const show = rows.slice(-1200);
   show.filter((r) => r.src === 'A').forEach((r) => { s += `<circle cx="${X(r.a).toFixed(1)}" cy="${Y(r.y).toFixed(1)}" r="2.4" fill="var(--cyan)" fill-opacity=".45"/>`; });
   show.filter((r) => r.src === 'H').forEach((r) => { s += `<circle cx="${X(r.a).toFixed(1)}" cy="${Y(r.y).toFixed(1)}" r="2.8" fill="var(--amber)" fill-opacity=".85"/>`; });
-  if (state.cur && !(state.cur.res.drc && state.cur.res.drc.length)) s += `<circle cx="${X(state.cur.res.size).toFixed(1)}" cy="${Y(state.cur.res.primary).toFixed(1)}" r="7" fill="none" stroke="var(--fg)" stroke-width="1.5"/>`;
+  if (state.cur && !state.cur.S && !(state.cur.res.drc && state.cur.res.drc.length) && Number.isFinite(state.cur.res.size) && Number.isFinite(state.cur.res.primary)) s += `<circle cx="${X(state.cur.res.size).toFixed(1)}" cy="${Y(state.cur.res.primary).toFixed(1)}" r="7" fill="none" stroke="var(--fg)" stroke-width="1.5"/>`;
   $('#db-chart').innerHTML = s + '</svg>';
 }
 $('#btn-csv').addEventListener('click', () => {
@@ -486,18 +576,20 @@ $('#btn-reset').addEventListener('click', () => {
 const plainTxt = (h) => String(h).replace(/<sub>(.*?)<\/sub>/g, '_$1').replace(/<sup>(.*?)<\/sup>/g, '^$1').replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
 function designJSON() {
   const c = state.cur; if (!c) return null;
-  const l = lev(), K = kind(), pf = PLATFORMS[state.plat], r = c.res, card = K.card ? K.card(l, r) : null, ob = objectives();
+  // a guided step exports the level's full design (the step only edits part of it); practice states export with no objectives
+  const l = lev(), K = kind(), pf = PLATFORMS[state.plat], full = !c.S, d = full ? c.d : { ...des() }, r = full ? c.res : K.evaluate(l, d, null, { full: true });
+  const card = K.card ? K.card(l, r) : null, ob = full && !c.pr ? objectives() : [], sc = full ? c.sc : scoreOf(l, r, K), ps = K.params(l, d);
   const num = (v) => (typeof v === 'number' && isFinite(v) ? +v.toPrecision(6) : v);
   const geom = K.exportGeom ? K.exportGeom(l, r) : null;
   return {
     schema: 'smq-design/1', generator: 'SPEC-to-MASK Quest', exported: new Date().toISOString(),
     platform: { id: pf.id, mat: pf.mat, lam_um: pf.lam, core_t_um: pf.t, w0_um: pf.w0, clad: 'SiO2', box: 'SiO2', rules_um: { ...pf.rules } },
     level: { id: l.id, kind: LMAP[state.id].kind, name: l.name, device: plainTxt(l.dev || ''), mode: state.mode, stars: starsOf(l.id) },
-    params: Object.fromEntries(params().map((p) => [p.k, { value: num(c.d[p.k]), unit: p.unit || '', label: plainTxt(p.label), ...(p.labels ? { option: p.labels[c.d[p.k] | 0] } : {}) }])),
+    params: Object.fromEntries(ps.map((p) => [p.k, { value: num(d[p.k]), unit: p.unit || '', label: plainTxt(p.label), ...(p.labels ? { option: p.labels[d[p.k] | 0] } : {}) }])),
     geometry: geom,
     predicted: {
       model: 'game surrogate (see README · 모델 범위)', primary: { label: K.primaryLabel, value: num(r.primary) }, size: { value: num(r.size), unit: K.sizeUnit },
-      card: card ? card.model : null, score: Math.round(c.sc.total),
+      card: card ? card.model : null, score: Math.round(sc.total), ...(c.S ? { guided_step: plainTxt(c.S.title) } : {}), ...(c.pr ? { practice: plainTxt(c.pr.note) } : {}),
       objectives: ob.flatMap((g) => g.items.filter((o) => !o.na && !o.crit).map((o) => ({ tier: g.t, spec: plainTxt(o.k), value: plainTxt(o.v), ok: !!o.ok }))),
       fab_criterion: plainTxt(K.fabCrit(l))
     },
@@ -595,6 +687,30 @@ $('#btn-start').addEventListener('click', () => {
 $('#btn-cancel').addEventListener('click', () => showSetup(false));
 $('#plat-chip').addEventListener('click', () => { if (state.fabRunning || state.aiRunning != null) return; const pf = PLATFORMS[state.plat]; pick.lam = pf.lam; pick.mat = pf.mat; showSetup(true); });
 
+/* ---------- guided steps UI ---------- */
+function renderGuided() {
+  const box = $('#m-guided'), mode = stepMode(state.id);
+  box.hidden = !mode; if (!mode) return;
+  const ss = stepsOf(), G = guideNS(state.id), i = stepIdx(), S = ss[i], ndone = ss.filter((s) => G.done[s.id]).length;
+  $('#gmode-seg').innerHTML = [['guided', 'Guided 학습'], ['full', 'Full Design']].map(([k, t]) => `<button role="radio" aria-checked="${mode === k}" data-gm="${k}">${t}</button>`).join('');
+  $('#m-steps').innerHTML = ss.map((s, j) => `<li><button class="stp ${G.done[s.id] ? 'done' : ''}" data-step="${j}" aria-current="${mode === 'guided' && j === i ? 'step' : 'false'}" aria-label="${j + 1}단계 ${s.title}${G.done[s.id] ? ' (완료)' : ''}"><span class="num">${G.done[s.id] ? '✓' : j + 1}</span><span class="t">${s.short}</span></button></li>`).join('');
+  const note = $('#m-stepnote');
+  if (mode === 'full') { note.innerHTML = `<b>Full Design</b> · 모든 파라미터를 한꺼번에 다룹니다. 학습 단계 ${ndone}/${ss.length} 완료${ndone < ss.length ? ' — 단계 번호를 누르면 그 단계부터 Guided 학습을 합니다.' : '.'}`; return; }
+  const done = G.done[S.id], nx = ss[i + 1];
+  note.innerHTML = `<div class="sn-h"><b>STEP ${i + 1} · ${S.title}</b>${done ? '<span class="ok">완료 ✓</span>' : ''}</div><div class="sn-b">${S.intro}</div>`
+    + (nx ? `<div class="row-btns"><button class="btn ${done ? 'pri' : ''}" id="step-next">다음 단계 → ${nx.short}</button></div>` : '');
+}
+$('#m-guided').addEventListener('click', (e) => {
+  if (state.fabRunning || state.aiRunning != null) return;
+  const G = guideNS(state.id), gm = e.target.closest('[data-gm]'), st = e.target.closest('[data-step]'), nx = e.target.closest('#step-next');
+  if (gm) { if (G.mode === gm.dataset.gm) return; G.mode = gm.dataset.gm; }
+  else if (st) { G.mode = 'guided'; G.cur = +st.dataset.step; }
+  else if (nx) G.cur = Math.min(stepsOf().length - 1, stepIdx() + 1);
+  else return;
+  state.lastLogged = ''; persist(); setupLevel();
+  const f = $(nx ? '#m-stepnote' : st ? `.stp[data-step="${G.cur}"]` : `[data-gm="${G.mode}"]`); if (f && f.focus) { if (nx) { f.tabIndex = -1; } f.focus(); }
+});
+
 /* ---------- level setup ---------- */
 function setupLevel() {
   const l = lev();
@@ -605,7 +721,7 @@ function setupLevel() {
   if (l.concepts) { const seen = (PP().seen = PP().seen || {}); cc.innerHTML = `<summary>개념 노트 · ${l.concepts.length}개 — ${l.concepts.map((c) => c[0].replace(/<[^>]+>/g, '')).join(', ')}</summary><dl>${l.concepts.map(([t, d]) => `<dt>${t}</dt><dd>${d}</dd>`).join('')}</dl>`; cc.open = !seen[l.id]; seen[l.id] = 1; }
   const pf = PLATFORMS[state.plat]; $('#plat-chip').innerHTML = `${pf.short} · ${pf.band}<span>변경</span>`; $('#plat-chip').hidden = false;
   state.land = {}; state.cur = null;
-  renderMap(); renderParams(); syncParamUI(); renderModeSeg(); renderHintSeg(); sizeCanvas();
+  renderMap(); renderGuided(); renderParams(); syncParamUI(); renderModeSeg(); renderHintSeg(); sizeCanvas();
   const w = state.wafer[state.id]; drawWafer(w, w ? w.length : 0);
   evaluate(); renderAI(); renderDB(); renderCards();
 }

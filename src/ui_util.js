@@ -38,6 +38,7 @@ function svgChart(o) {
     s += `<path d="${d}" fill="none" stroke="${sr.color}" stroke-width="${sr.width || 2}" ${sr.dash ? `stroke-dasharray="${sr.dash}"` : ''}/>`;
   });
   (o.marks || []).forEach(({ x, y, color }) => { s += `<circle cx="${X(x)}" cy="${Y(y)}" r="4" fill="${color || 'var(--fg)'}"/>`; });
+  if (o.extra) s += o.extra(X, Y, T);   // free-form annotations in data coordinates (brackets, labels)
   return s + '</svg>';
 }
 const legendHTML = (items) => items.map(([c, t]) => `<span><i style="background:${c}"></i>${t}</span>`).join('');

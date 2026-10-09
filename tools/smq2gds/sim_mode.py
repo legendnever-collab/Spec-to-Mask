@@ -98,6 +98,8 @@ def reversal(mat, lam, w, t, R, n_guess):
 # ---------------------------------------------------------------- report
 def check(d: dict, info: dict) -> dict:
     g, pf = d["geometry"], d["platform"]
+    if g["pcell"] == "spiral_rect":
+        return _check_rect(d, info)
     if g["pcell"] != "spiral":
         return _check_mmi_ports(d)
     mat, lam, t, w = pf["mat"], pf["lam_um"], pf["core_t_um"], g["w_um"]
@@ -156,6 +158,49 @@ def check(d: dict, info: dict) -> dict:
         "bend_domains_ok": bool(rev["bend"]["outer_pml_beyond_caustic"] and bj["outer_pml_beyond_caustic"]),
         "summary": summary,
     }
+
+
+def _check_rect(d: dict, info: dict) -> dict:
+    """Boundary-aware rectangular spiral: same cross-section checks as the circular spiral, plus the bends this layout
+    actually has — the innermost corner (R, w) and the centre S-bend (arc: curvature reversal at R = H_t/2;
+    Euler U-turns: apex R_min at the mid-width (w + W_s)/2, no reversal). Corner straight↔arc junction conversion stays a game estimate."""
+    g, pf = d["geometry"], d["platform"]
+    mat, lam, t, w = pf["mat"], pf["lam_um"], pf["core_t_um"], g["w_um"]
+    M = g.get("model", {})
+    t0 = time.time()
+    ms = straight(mat, lam, w, t, 6)
+    ne = max(m[0] for m in ms if m[1] > 0.5)
+    guided_te = sum(1 for m in ms if m[1] > 0.5 and m[0] > n_ox(lam) + 1e-3)
+    dlam, h = 0.01, DL[mat][1]
+    ng = ne - lam * (te0(mat, lam + dlam, w, t, True) - te0(mat, lam - dlam, w, t, True)) / (2 * dlam)
+    dndw = (te0(mat, lam, w + 2 * h, t, True) - te0(mat, lam, w - 2 * h, t, True)) / (4 * h)
+    a_sw = M.get("alpha_sw_dBcm", 0) * dndw / M["dneff_dw_per_um"] if M.get("dneff_dw_per_um") else 0
+    alpha = a_sw + M.get("alpha_surf_dBcm", 0) + M.get("alpha_mat_dBcm", 0)
+    bc = bend(mat, lam, w, t, g["R_um"], ne)
+    rows = [
+        ("n_eff (arm TE0)", M.get("neff"), ne, "FDE, Richardson dl→0"),
+        ("n_g (arm TE0)", M.get("ng"), ng, "Δλ ±10 nm, material dispersion included"),
+        ("guided TE modes (arm)", ("≥2" if M.get("multimode") else "1"), guided_te, ""),
+        ("∂n_eff/∂w (1/µm)", M.get("dneff_dw_per_um"), dndw, ""),
+        ("α scattering+material (dB/cm)", g["predicted"]["alpha_dBcm"], alpha, "solver ∂n_eff/∂w; surface term kept from the game"),
+        (f"bend loss innermost corner R {g['R_um']} µm, w {w} µm (dB/cm)", M.get("corner_bend_dB_cm"), bc["dB_cm"], g["corner"] + (" · upper bound" if bc["upper_bound"] else "")),
+    ]
+    Rs = float(info.get("sbend", {}).get("Rmin_um", g["Rmin_sbend_um"]))
+    if g["sbend"] == "arc":
+        nc_guess = te0(mat, lam, w, t)
+        rev = reversal(mat, lam, w, t, Rs, nc_guess)
+        rows.append(("S-bend reversal conversion (dB)", 10 * math.log10(max(M.get("sbend_conv_power", 1e-12), 1e-12)), 10 * math.log10(max(rev["conv_power"], 1e-12)), "10log(1−|⟨E₊R|E₋R⟩|²)"))
+        sb = bend(mat, lam, w, t, Rs, nc_guess)
+    else:
+        wm = 0.5 * (w + g["ws_um"])
+        sb = bend(mat, lam, wm, t, Rs, te0(mat, lam, wm, t))
+    rows.append((f"bend loss S-bend apex R {Rs:.1f} µm (dB/cm)", M.get("sbend_apex_dB_cm"), sb["dB_cm"], "Euler U-turn: κ through 0 at the centre, no reversal" if g["sbend"] != "arc" else "arc S-bend"))
+    L_cm = info.get("path_um", g["length_um"]) * 1e-4
+    tau = L_cm * 1e-2 * ng / 299792458 * 1e9
+    summary = [f"rect spiral mode check ({time.time() - t0:.0f} s; Tidy3D local FDE)"] + [f"  {k:<52} game {_f(a):>10}   solver {_f(b):>10}" + (f"   {n}" if n else "") for k, a, b, n in rows]
+    summary.append(f"  drawn path {L_cm:.3f} cm → τ {tau:.4f} ns with the solver n_g (game {g['tau_ns']} ns)")
+    return {"solver": {"straight": "tidy3d local FDE, two grids + Richardson", "bend": "tidy3d local FDE, PML, conformal bend"},
+            "rows": [{"quantity": k, "game": _num(a), "solver": _num(b), "note": n} for k, a, b, n in rows], "tau_drawn_ns": tau, "summary": summary}
 
 
 def _check_mmi_ports(d):
