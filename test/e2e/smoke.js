@@ -2,7 +2,7 @@ const {JSDOM}=require('jsdom');const fs=require('fs');
 const html=fs.readFileSync(require('path').join(__dirname,'../../dist/index.html'),'utf8');
 const dom=new JSDOM('<!doctype html><html><head></head><body>'+html+'</body></html>',{runScripts:'outside-only',pretendToBeVisual:true,url:'https://s'+Date.now()+'.test/'});
 const w=dom.window;
-const mkCtx=()=>{const g=()=>({addColorStop(){}});return new Proxy({},{get:(t,k)=>{if(k==='measureText')return()=>({width:30});if(k==='createImageData')return(a,b)=>({data:new Uint8ClampedArray(a*b*4)});if(k==='createLinearGradient')return g;if(k in t)return t[k];return typeof k==='string'?(()=>{}):undefined},set:(t,k,v)=>{t[k]=v;return true}});};
+const mkCtx=()=>{const g=()=>({addColorStop(){}});return new Proxy({},{get:(t,k)=>{if(k==='measureText')return()=>({width:30});if(k==='createImageData')return(a,b)=>({data:new Uint8ClampedArray(a*b*4)});if(k==='createLinearGradient'||k==='createRadialGradient')return g;if(k in t)return t[k];return typeof k==='string'?(()=>{}):undefined},set:(t,k,v)=>{t[k]=v;return true}});};
 w.HTMLCanvasElement.prototype.getContext=mkCtx;w.ResizeObserver=class{observe(){}};
 Object.defineProperty(w.HTMLElement.prototype,'clientWidth',{get(){return 700}});
 w.atob=(s)=>Buffer.from(s,'base64').toString('binary');
@@ -18,7 +18,7 @@ const plat=process.argv[2]||'si1310';
  console.log('summary:',$('#pick-sum').textContent.slice(0,200));
  $('#btn-start').click(); await sleep(500);
  console.log('chip',$('#plat-chip').textContent,'| map',$('#map').textContent.replace(/\s+/g,' ').slice(0,160));
- for(const id of ['1-1','1-2','1-3','1-4','1-5','1-6','1-7']){
+ for(const id of (process.argv[3]||'1-1,1-2,1-3,1-4,1-5,1-6,1-7,2-1,2-2,2-3,2-4,2-5').split(',')){
   $(`.node[data-id="${id}"]`).click(); await sleep(450);
   console.log(`\n== ${id} ${$('#m-name').textContent} | ${$('#m-eyebrow').textContent} | ${$('#score-big').textContent}`);
   console.log(' pre:',$('#m-preface').hidden?'-':$('#m-preface').textContent.slice(0,60),'| concepts:',$('#m-concepts').hidden?'-':$('#m-concepts').querySelector('summary').textContent.slice(0,80));

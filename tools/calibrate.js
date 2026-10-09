@@ -1,9 +1,11 @@
 // Derive per-platform level specs (start designs, thresholds, reference designs, yield targets)
 // from the same physics the game runs. Output: src/data/pspec.js
 const fs = require('fs');
-const G = require('../test/load')(['util.js', 'ui_util.js', 'engine_mmi.js', 'data/tables.js', 'platforms.js', 'kinds/wg.js', 'kinds/dc.js', 'kinds/mmi.js', 'kinds/ssc.js', 'kinds/cwdm.js']);
+const G = require('../test/load')(['util.js', 'ui_util.js', 'engine_mmi.js', 'data/tables.js', 'platforms.js', 'kinds/wg.js', 'kinds/dc.js', 'kinds/mmi.js', 'kinds/ssc.js', 'kinds/cwdm.js', 'kinds/to.js', 'kinds/pn.js', 'kinds/mzm.js', 'kinds/pd.js', 'kinds/els.js', 'levels.js']);
 const { PLATFORMS, KINDS, PQ, makeWafer, snapP, nelderMead, clamp, band } = G;
-const only = process.argv[2] ? process.argv[2].split(',') : Object.keys(PLATFORMS);
+const only = process.argv[2] && process.argv[2] !== 'all' ? process.argv[2].split(',') : Object.keys(PLATFORMS);
+const stages = (process.argv[3] || '1,2').split(','), doS1 = stages.includes('1'), doS2 = stages.includes('2');
+let PREV = {}; try { PREV = JSON.parse(fs.readFileSync(__dirname + '/../src/data/pspec.json', 'utf8')); } catch (e) {}
 const r2 = (v, k = 3) => +v.toFixed(k);
 const MODES = { easy: { th: 1.5, area: 1.3, sig: 0.6 }, std: { th: 1, area: 1, sig: 1 }, hard: { th: 0.8, area: 0.85, sig: 1.25 } };
 const scaleLev = (l, m) => { const M = MODES[m], hb = l.hb || [], ns = l.ns || [], sc = (o) => { const r = {}; for (const k in o) { const v = o[k]; r[k] = v == null ? v : k === 'y' || k === 'yMode' || ns.includes(k) ? v : k === 'size' ? Math.round(v * M.area) : hb.includes(k) ? v / M.th : v * M.th; } return r; }; return { ...l, s1: sc(l.s1), s2: sc(l.s2), fab: sc(l.fab) }; };
@@ -19,11 +21,12 @@ function yTargets(K, l, d) {
 }
 const SPEC = {};
 for (const pid of only) {
-  const pf = PLATFORMS[pid], si = pf.mat === 'si', S = (SPEC[pid] = {});
+  const pf = PLATFORMS[pid], si = pf.mat === 'si', S = (SPEC[pid] = { ...(PREV[pid] || {}) });
   PQ.setPlatform(pf.mat, pf.t, pf.rules);
   const base = (extra) => ({ pf, ...extra });
   console.log('==', pid);
 
+  if (doS1) {
   /* 1-1 waveguide */
   {
     const K = KINDS.wg, l0 = base({ s1: {}, s2: {}, fab: {} }), X = K._x, wc = X.wcAt(l0, 0), margin = 0.016;
@@ -125,8 +128,9 @@ for (const pid of only) {
       ilCap: 2.0, xtWorst: 0, xtBest: -16, xt0: -40, aRef: size, s1: l.s1, s2: { il: 1.0, xt: -12, size }, fab: { il: 1.5, xt: -8, y: yMode.std, yMode }, hb: ['xt'], ref: d, dbY: [0, 4] };
     console.log(' 1-7 ref IL', r2(best.il), 'XT', r2(best.xt, 1), 'area', Math.round(best.size), 'size', size, 'y', JSON.stringify(yMode));
   }
+  }
+  if (doS2) require('./calibrate_s2')(G, pf, S, { r2, MODES, scaleLev, yieldOf, yTargets });
 }
-let prev = {}; try { prev = JSON.parse(fs.readFileSync(__dirname + '/../src/data/pspec.json', 'utf8')); } catch (e) {}
-Object.assign(prev, SPEC);
+const prev = PREV; Object.assign(prev, SPEC);
 fs.writeFileSync(__dirname + '/../src/data/pspec.json', JSON.stringify(prev));
 console.log('wrote pspec.json for', Object.keys(prev).join(','));

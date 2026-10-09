@@ -52,11 +52,58 @@ const LEVELS = [
     preface: '<b>Stage 1 피날레 · Active 맛보기.</b> 지금까지 익힌 패시브 소자(도파로, 커플러, 지연선)만으로 파장 필터를 만들어 봅니다. 이 레벨의 ★★★(수율)는 패시브 설계만으로는 거의 닿지 않도록 되어 있습니다 — 두께가 몇 nm만 달라도 채널 전체가 밀리기 때문입니다. 이 벽을 넘는 방법(히터로 위상을 맞추는 TO 위상기)이 Stage 2 Active의 첫 레벨입니다.',
     concepts: [['FSR', 'MZI의 투과 주기. FSR = λ²/(n<sub>g</sub>ΔL). 지연 길이가 길수록 주기가 짧아집니다.'], ['Lattice 필터', '커플러와 지연을 여러 단 쌓으면 통과대역이 평평해져(flat-top) 이웃 채널 누설이 줄어듭니다.'], ['왜 Active가 필요한가', '공정 오차로 생긴 위상 오차는 칩마다 다릅니다. 만든 뒤 히터로 위상을 보정하는 것이 현실적인 해법입니다.']],
     role: '2×FR4 Rx Demux · Tx Mux' },
-  { id: '2-1', stage: 2, locked: true, name: 'TO 위상기', dev: 'Thermo-optic phase shifter', role: 'CWDM 트리밍 · 바이어스' },
-  { id: '2-2', stage: 2, locked: true, name: 'PN 공핍 위상기', dev: 'Carrier-depletion phase shifter', role: '변조기 코어' },
-  { id: '2-3', stage: 2, locked: true, name: '224G TW-MZM', dev: 'Traveling-wave MZM', role: '200G/lane PAM4 Tx' },
-  { id: '2-4', stage: 2, locked: true, name: 'Ge PD + TIA', dev: 'Germanium photodetector', role: '200G/lane Rx' },
-  { id: '2-5', stage: 2, locked: true, name: '외부 광원', dev: 'ELS · DFB laser', role: 'CW 광원' },
+  { id: '2-1', stage: 2, kind: 'to', name: '열로 위상 돌리기', dev: 'Thermo-optic phase shifter (TiN heater)',
+    band: (pf) => `${nm(pf.lam)} nm · ${MATS[pf.mat].full}`,
+    preface: '<b>Stage 2 · Active 시작.</b> 이제 전기로 빛을 제어합니다. 첫 손잡이는 열입니다 — 1-7에서 공정 오차로 밀린 CWDM 채널을 다이마다 히터로 되돌려 놓는 것이 이 레벨의 ★★★입니다.',
+    brief: '도파로 위에 TiN 히터를 얹어 온도로 굴절률을 바꿉니다. 히터–도파로 간격, 열 격리 구조(트렌치·언더컷), 히터 길이, 이웃 도파로 간격을 정하세요. P<sub>π</sub>는 히터 길이와 무관하다는 사실이 이 레벨의 첫 번째 놀라움입니다.',
+    concepts: [
+      ['열광학 효과', 'dn/dT: Si 1.86×10⁻⁴/K, SiN 2.45×10⁻⁵/K, SiO₂ 0.95×10⁻⁵/K. Si는 SiN보다 약 8배 민감해서 같은 위상에 훨씬 적은 열이 듭니다.'],
+      ['P<sub>π</sub>가 길이와 무관한 이유', 'Δφ = (2π/λ)·(dn<sub>eff</sub>/dT)·ΔT·L, ΔT = (P/L)/G′. L이 약분되어 P<sub>π</sub> = λG′/(2·dn<sub>eff</sub>/dT). 길이는 히터 온도(짧을수록 뜨거움)와 구동 전압(길수록 저항↑) 사이의 창을 정합니다.'],
+      ['열 격리', '딥 트렌치는 옆 클래딩으로 새는 열을, 언더컷은 기판으로 새는 열을 막아 G′를 줄입니다. 대신 열이 빠지는 길도 막혀 응답 시간 τ가 길어집니다 (효율 ↔ 속도).'],
+      ['열 크로스토크', '퍼진 열은 옆 도파로의 위상도 바꿉니다. 간격을 넓히거나 트렌치로 막아야 합니다.']
+    ],
+    role: 'CWDM 트리밍 · MZM 바이어스' },
+  { id: '2-2', stage: 2, kind: 'pn', name: '캐리어로 위상 돌리기', dev: 'Carrier-depletion PN phase shifter',
+    band: (pf) => `${nm(pf.lam)} nm · Si 리브${pf.mat === 'si' ? '' : ' (이종 집적)'}`,
+    brief: 'Si 리브 도파로에 가로 PN 접합을 만들고 역바이어스로 공핍 영역을 넓혀 자유 캐리어를 빼냅니다. 플라즈마 분산으로 굴절률이 바뀌어 수십 GHz로 위상을 돌릴 수 있습니다. 도핑·접합 위치·바이어스·컨택 거리로 효율(V<sub>π</sub>L), 손실, RC 대역폭을 맞추세요.',
+    concepts: [
+      ['플라즈마 분산', 'Soref–Bennett: Δn = −(a·ΔN + b·ΔP<sup>0.8</sup>), Δα = c·ΔN + d·ΔP. 캐리어를 빼면 굴절률이 오르고 흡수는 줄어듭니다. 정공이 전자보다 굴절률 변화가 큽니다.'],
+      ['V<sub>π</sub>L과 FOM', 'V<sub>π</sub>L은 π 위상에 필요한 전압×길이. 도핑을 올리면 줄지만 흡수도 커지므로 V<sub>π</sub>L·α(V·dB)가 진짜 성능 지표입니다.'],
+      ['RC 대역폭', '접합 C와 슬랩 저항 R의 곱. 컨택을 가까이 할수록 R은 줄지만 P++/N++ 영역이 모드 꼬리에 닿아 손실이 생깁니다.'],
+      ['SiN 플랫폼이라면', 'SiN에는 플라즈마 분산이 없습니다. 실제로는 Si 층을 이종 집적하거나(또는 LN·BTO 박막) 변조기만 Si로 만듭니다. 이 레벨은 Si 활성층을 가정합니다.']
+    ],
+    role: '변조기 코어' },
+  { id: '2-3', stage: 2, kind: 'mzm', name: '224G TW-MZM', dev: 'Traveling-wave Mach–Zehnder modulator',
+    band: (pf) => `${nm(pf.lam)} nm · 112 GBd PAM4 (224 Gb/s)`,
+    brief: '2-2의 위상기를 진행파 전극(CPW)에 실어 마흐–젠더 변조기를 만듭니다. 전기 신호가 전극을 따라 달리는 동안 빛도 같이 달려야 합니다. 전극 길이, CPW 간격, 세그먼트 채움 비율, 종단 저항으로 대역폭과 변조 깊이(OMA)를 함께 맞추고 112 GBd PAM4 눈을 여세요.',
+    concepts: [
+      ['진행파 전극', '길이가 파장에 비해 긴 전극은 집중 소자가 아니라 전송선로입니다. 접합 C가 선로에 실리면(부하) 임피던스는 낮아지고 RF 속도는 느려집니다.'],
+      ['세 가지 대역 제한', '① 속도 부정합(RF n<sub>µ</sub> vs 광 n<sub>g</sub>) ② 임피던스 부정합과 반사 ③ RF 손실(도체 √f + 접합 R). 길이를 늘리면 셋 모두 나빠집니다.'],
+      ['OMA와 사인 전달함수', 'MZM 출력은 sin(πV/2V<sub>π</sub>)를 따릅니다. 깊게 변조하면 OMA는 커지지만 PAM4 바깥 눈이 눌립니다.'],
+      ['눈 페널티', '여기서는 5-tap FFE 기준 수신기(TDECQ 방식)로 등화한 뒤 남은 눈 열림과 등화 잡음 증폭으로 페널티를 계산합니다.']
+    ],
+    role: '200G/lane PAM4 Tx' },
+  { id: '2-4', stage: 2, kind: 'pd', name: '빛을 전류로', dev: 'Waveguide Ge photodetector + TIA',
+    band: (pf) => `CWDM ${pf.ch.map(nm).join('/')} nm (최악 채널 기준)`,
+    brief: 'Si 위에 성장한 Ge가 빛을 흡수해 전류를 만들고, TIA가 그것을 전압으로 바꿉니다. Ge 길이·폭, 진성층 두께, 역바이어스로 응답도, 대역폭, 감도, 암전류를 맞추세요. 크게 만들면 빛은 다 먹지만 느리고 시끄러워집니다.',
+    concepts: [
+      ['Ge 흡수', 'Ge의 직접 밴드갭(≈0.8 eV, 인장 변형으로 조금 낮아짐)이 O-band는 강하게, C-band 장파장 쪽은 약하게 흡수합니다. 1591 nm 채널은 Ge 길이가 훨씬 길어야 합니다.'],
+      ['전이 시간 vs RC', '진성층이 얇으면 캐리어가 빨리 도착하지만 C = εLw/d<sub>i</sub>가 커집니다. 두 한계의 균형이 대역폭을 정합니다.'],
+      ['감도', 'PAM4는 세 개의 눈을 가지므로 OMA의 1/6이 결정 여유입니다. TIA 잡음은 입력 C에 따라 커져, 작고 빠른 PD가 감도에도 유리합니다.'],
+      ['암전류', 'Ge/Si 격자 불일치로 생긴 전위에서 누설이 생깁니다. 면적·둘레·전기장에 비례합니다.']
+    ],
+    role: '200G/lane Rx' },
+  { id: '2-5', stage: 2, kind: 'els', finale: true, name: '빛의 예산', dev: 'External light source · per-lane link budget',
+    band: (pf) => `${nm(pf.lam)} nm · ${pf.lam > 1.4 ? 'C-band 단거리' : 'FR4 2 km'} · 200G/lane`,
+    preface: '<b>Stage 2 피날레.</b> 지금까지 만든 부품 카드(SSC, 분기 MMI, CWDM, 변조기, PD)를 하나의 링크로 잇습니다. 카드 사용을 켜면 당신의 설계가 그대로 링크 마진에 반영됩니다. Stage 3 트랜시버 조립의 예행연습입니다.',
+    brief: '실리콘 포토닉스 칩은 빛을 스스로 만들지 못해 외부 DFB 레이저(ELS)를 붙입니다. 레이저 출력, 레이저 하나가 맡는 레인 수, 아이솔레이터 유무, 결합면 경사각으로 링크 마진과 레이저 전력(pJ/bit), 반사 안정성을 동시에 만족시키세요.',
+    concepts: [
+      ['링크 버짓', '송신 OMA에서 출발해 칩 출력 SSC, 채널(광섬유·커넥터), 수신 SSC, Demux를 빼고, 페널티(변조기 눈, 반사 RIN)를 더한 값이 PD 감도보다 커야 합니다. 그 차이가 마진입니다.'],
+      ['광 궤환', '레이저로 되돌아간 빛은 공진기와 간섭해 선폭 증가·모드 도약·코히어런스 붕괴를 일으킵니다. 여기서는 약 −30 dB 근처부터 RIN 페널티가 급격히 커지도록 모델링했습니다.'],
+      ['경사 결합면', '결합면을 θ만큼 기울이면 반사된 빛이 도파로 모드와 어긋나 되돌아가는 양이 exp(−(2πnw₀θ/λ)²)로 줄어듭니다. 대신 결합 손실이 조금 늘어납니다.'],
+      ['레이저 공유', '고출력 레이저 하나를 여러 레인이 나눠 쓰면 부품 수는 줄지만, 분기 손실과 출력에 따른 WPE 저하를 함께 고려해야 합니다.']
+    ],
+    role: 'CW 광원 · 링크 마진' },
   { id: '3A', stage: 3, locked: true, name: '1.6T 2×FR4', dev: '8×200G PAM4 transceiver', role: '캡스톤' },
   { id: '3A+', stage: 3, locked: true, name: '1.6T DR8 / CPO', dev: 'Parallel optics · co-packaged engine', role: '캡스톤 확장' }
 ];

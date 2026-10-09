@@ -64,6 +64,7 @@ function lev() {
   }
   return effCache[k];
 }
+window.GAME_LEV = (id) => { if (!LMAP[id] || !state.plat) return null; const sv = state.id; state.id = id; const e = lev(); state.id = sv; return e; };
 const kind = () => KINDS[LMAP[state.id].kind];
 const params = () => kind().params(lev());
 const credits0 = () => MODES[state.mode].credits;
@@ -74,7 +75,7 @@ function des() {
   return d;
 }
 const keyOf = (d) => Object.keys(d).sort().map((k) => k + '=' + (+d[k]).toFixed(4)).join('|');
-const pFmt = (p, v) => (p.unit === 'π' ? `${(+v).toFixed(p.dec)}π` : p.unit === '차' ? `${v | 0}차` : `${(+v).toFixed(p.dec)}${p.unit ? ' ' + p.unit : ''}`);
+const pFmt = (p, v) => (p.labels ? `${v | 0} · ${p.labels[v | 0]}` : p.unit === 'π' ? `${(+v).toFixed(p.dec)}π` : p.unit === '차' ? `${v | 0}차` : `${(+v).toFixed(p.dec)}${p.unit ? ' ' + p.unit : ''}`);
 const credits = () => (state.credits[state.id] != null ? state.credits[state.id] : (state.credits[state.id] = credits0()));
 const starsOf = (id) => PP().stars[state.mode][id] | 0;
 
@@ -88,7 +89,7 @@ function renderMap() {
   }).join('')}</div></div>`).join('');
   const n = PLAY.filter((l) => PP().cards[l.id]).length;
   $('#cardcount').hidden = false;
-  $('#cardcount').innerHTML = `부품 카드 <b>${n}</b> / ${PLAY.length} · Stage 1`;
+  $('#cardcount').innerHTML = `부품 카드 <b>${n}</b> / ${PLAY.length} · Stage ${LMAP[state.id].stage}`;
 }
 $('#map').addEventListener('click', (e) => {
   const b = e.target.closest('.node'); if (!b || b.disabled || b.dataset.id === state.id) return;
@@ -237,7 +238,7 @@ function objectives() {
   const t1 = (hasDrc ? [{ k: 'DRC', v: drcOK ? '통과' : r.drc.length + '건 위반', ok: drcOK }] : []).concat(mi, o.t1.map((x) => ({ ...x, ok: drcOK && x.ok })));
   const t2 = o.t2.map((x) => ({ ...x, ok: drcOK && x.ok })).concat(K.noSize ? [] : [{ k: `${K.sizeLabel} ≤ ${l.s2.size} ${K.sizeUnit}`, v: `${r.size < 100 ? r.size.toFixed(1) : Math.round(r.size)} ${K.sizeUnit}`, ok: drcOK && r.size <= l.s2.size }]);
   const y = c.fabHere ? c.fabHere.yield : null;
-  const t3 = [{ k: `Fab 수율 ≥ ${Math.round(l.fab.y * 100)}%`, v: y == null ? '미실시' : Math.round(y * 100) + '%', ok: y != null && drcOK && y >= l.fab.y, na: y == null }, { k: '판정', v: K.fabCrit(l), ok: null, na: true }];
+  const t3 = [{ k: `Fab 수율 ≥ ${Math.round(l.fab.y * 100)}%`, v: y == null ? '미실시' : Math.round(y * 100) + '%', ok: y != null && drcOK && y >= l.fab.y, na: y == null }, { k: '판정', v: K.fabCrit(l), ok: null, na: true, crit: true }];
   const p1 = t1.every((x) => x.ok), p2 = p1 && t2.every((x) => x.ok), p3 = p1 && t3[0].ok;
   return [{ t: 1, items: t1, pass: p1, tag: '기본 스펙' }, { t: 2, items: t2, pass: p2, tag: '고성능 + 컴팩트' }, { t: 3, items: t3, pass: p3, tag: '양산 수율' }];
 }
@@ -257,7 +258,7 @@ function renderObjectives() {
   const ob = objectives(), got = starsOf(state.id);
   $('#objs').innerHTML = ob.map((o, i) => `<div class="obj ${got & (1 << i) ? 'got' : ''} ${o.pass ? 'live' : ''}">
       <div class="obj-h"><span class="st">${'★'.repeat(o.t) + '☆'.repeat(3 - o.t)}</span><span class="tag">${o.pass ? '현재 설계 달성' : o.tag}</span></div>
-      <ul>${o.items.map((x) => `<li class="${x.na ? 'na' : x.ok ? 'ok' : 'no'}"><span class="k">${x.k}</span><span class="v">${x.v}</span></li>`).join('')}</ul></div>`).join('');
+      <ul>${o.items.map((x) => `<li class="${x.na ? 'na' : x.ok ? 'ok' : 'no'}${x.crit ? ' crit' : ''}"><span class="k">${x.k}</span><span class="v">${x.v}</span></li>`).join('')}</ul></div>`).join('');
 }
 function renderCards() {
   const slots = LEVELS.filter((l) => l.stage <= 2);
@@ -524,7 +525,7 @@ $('#plat-chip').addEventListener('click', () => { if (state.fabRunning || state.
 /* ---------- level setup ---------- */
 function setupLevel() {
   const l = lev();
-  $('#m-eyebrow').textContent = `${l.id} · ${l.dev} · ${l.bandLabel}`; $('#m-name').textContent = l.name; $('#m-brief').textContent = l.brief;
+  $('#m-eyebrow').textContent = `${l.id} · ${l.dev} · ${l.bandLabel}`; $('#m-name').textContent = l.name; $('#m-brief').innerHTML = l.brief;
   const pre = $('#m-preface'); pre.hidden = !l.preface; pre.innerHTML = l.preface || '';
   const cc = $('#m-concepts'); cc.hidden = !l.concepts;
   if (l.concepts) { const seen = (PP().seen = PP().seen || {}); cc.innerHTML = `<summary>개념 노트 · ${l.concepts.length}개 — ${l.concepts.map((c) => c[0].replace(/<[^>]+>/g, '')).join(', ')}</summary><dl>${l.concepts.map(([t, d]) => `<dt>${t}</dt><dd>${d}</dd>`).join('')}</dl>`; cc.open = !seen[l.id]; seen[l.id] = 1; }

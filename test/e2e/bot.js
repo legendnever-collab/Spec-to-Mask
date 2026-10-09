@@ -2,7 +2,7 @@ const {JSDOM}=require('jsdom');const fs=require('fs');
 const html=fs.readFileSync(require('path').join(__dirname,'../../dist/index.html'),'utf8');
 const dom=new JSDOM('<!doctype html><html><head></head><body>'+html+'</body></html>',{runScripts:'outside-only',pretendToBeVisual:true,url:'https://f'+Date.now()+'.test/'});
 const w=dom.window;
-const mkCtx=()=>{const g=()=>({addColorStop(){}});return new Proxy({},{get:(t,k)=>{if(k==='measureText')return()=>({width:30});if(k==='createImageData')return(a,b)=>({data:new Uint8ClampedArray(a*b*4)});if(k==='createLinearGradient')return g;if(k in t)return t[k];return typeof k==='string'?(()=>{}):undefined},set:(t,k,v)=>{t[k]=v;return true}});};
+const mkCtx=()=>{const g=()=>({addColorStop(){}});return new Proxy({},{get:(t,k)=>{if(k==='measureText')return()=>({width:30});if(k==='createImageData')return(a,b)=>({data:new Uint8ClampedArray(a*b*4)});if(k==='createLinearGradient'||k==='createRadialGradient')return g;if(k in t)return t[k];return typeof k==='string'?(()=>{}):undefined},set:(t,k,v)=>{t[k]=v;return true}});};
 w.HTMLCanvasElement.prototype.getContext=mkCtx;w.atob=(x)=>Buffer.from(x,'base64').toString('binary');w.ResizeObserver=class{observe(){}};
 Object.defineProperty(w.HTMLElement.prototype,'clientWidth',{get(){return 700}});
 const errs=[];w.addEventListener('error',e=>errs.push(e.message));
@@ -18,14 +18,22 @@ async function play(id){
  let last='';
  for(let i=0;i<60;i++){
   await sleep(250); const t=coach(), sm=symMap(); let m, act='';
-  if(m=t.match(/TE2가 guided 되는 폭은 대략 (\d+) nm/)){set('w',(+m[1]+60)/1000);act='wmulti';}
+  if(m=t.match(/권장: ([^(]+)\(/)){ for(const part of m[1].split('·')){ const q=part.trim().match(/^(\S+) = ([\-\d.]+)/); if(q&&sm[q[1]]){set(sm[q[1]],q[2]);act+='rec '+q[1]+' ';} } }
+  else if(m=t.match(/열 격리 = (\d)/)){set('iso',m[1]);act='iso';}
+  else if(m=t.match(/ h ≥ ([\d.]+) µm/)){set('h',m[1]);act='h>=';}
+  else if(m=t.match(/ h ≈ ([\d.]+) µm/)){set('h',m[1]);act='h~';}
+  else if(m=t.match(/[^I]L ≥ (\d+) µm/)){set('L',m[1]);act='L>=';}
+  else if(m=t.match(/[^I]L ≤ (\d+) µm/)){set('L',m[1]);act='L<=';}
+  else if(m=t.match(/간격 p ≥ ([\d.]+) µm/)){set('pitch',m[1]);act='pitch';}
+  else if(m=t.match(/길이 하한 ≈ (\d+) µm/)){set('L',m[1]);act='Lmin';}
+  else if(m=t.match(/TE2가 guided 되는 폭은 대략 (\d+) nm/)){set('w',(+m[1]+60)/1000);act='wmulti';}
   else if(m=t.match(/TE1 차단 폭 ≈ (\d+) nm\./)){set('w',(+m[1]-50)/1000);act='wsingle';}
   else if(m=t.match(/목표 폭 ≈ (\d+) nm/)){set('w',+m[1]/1000);act='wpol';}
   else if(m=t.match(/최대 폭 ≈ (\d+) nm/)){set('w',(+m[1]-6)/1000);act='wmax';}
   else if(m=t.match(/창: (\d+) nm ~ (\d+) nm/)){set('w',(+m[1]+ +m[2])/2000);act='wwin';}
   else if(m=t.match(/지금 갭에서 Lπ ≈ ([\d.]+) µm/)){set('L',m[1]);act='Lpi';}
   else if(m=t.match(/예: 갭 ≈ ([\d.]+) µm, L ≈ ([\d.]+) µm/)){set('g',m[1]);set('L',m[2]);act='gL';}
-  else if(m=t.match(/추천 한 수: (\S+) ([\-\d.]+)\S* (?:µm )?→ ([\-\d.]+)/)){ if(sm[m[1]]){set(sm[m[1]],m[3]);act='mv '+m[1];} }
+  else if(m=t.match(/추천 한 수: (\S+) ([\-\d.]+).*? → ([\-\d.]+)/)){ if(sm[m[1]]){set(sm[m[1]],m[3]);act='mv '+m[1];} }
   else if(m=t.match(/최적 팁 ≈ ([\d.]+)/)){set('tw',m[1]);act='tw';}
   else if(m=t.match(/출발점: W ≈ ([\d.]+) µm, s ≈ ([\d.]+)/)){set('W',m[1]);set('s',m[2]);act='Wstart';}
   else if(m=t.match(/s ([\d.]+) · wₜ ([\d.]+) µm로/)){set('s',m[1]);set('wt',m[2]);act='swt';}
