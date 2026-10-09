@@ -1,0 +1,360 @@
+<title>SPEC-to-MASK Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* Layout: a night-shift layout editor — field viewport is the stage, controls sit like a tool palette beside it.
+   Single dark look by choice (game screen); every color set explicitly. */
+:root{
+  color-scheme: dark;
+  --bg:#0d131c; --panel:#131b26; --panel-2:#192330; --line:#253244; --line-2:#334459;
+  --fg:#e7ecf3; --fg-2:#9eabbd; --fg-3:#6c7b90;
+  --amber:#f2b04a; --amber-ink:#2a1a02; --rose:#ff8d9c; --cyan:#64c9df;
+  --pass:#5dd193; --fail:#ff6b6b;
+  --display:"Chakra Petch","Arial Narrow",system-ui,sans-serif;
+  --body:"IBM Plex Sans KR","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{height:100%}
+body{
+  background-color:var(--bg); color:var(--fg); font-family:var(--body); font-size:14px; line-height:1.55;
+  background-image:linear-gradient(rgba(120,150,190,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(120,150,190,.045) 1px,transparent 1px);
+  background-size:24px 24px;
+}
+.wrap{max-width:1140px;margin:0 auto;padding-inline:16px;padding-block:18px 48px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 18px;margin-bottom:14px}
+.brand h1{font-family:var(--display);font-weight:700;font-size:clamp(24px,5vw,32px);letter-spacing:.01em;margin:0;line-height:1.05}
+.brand h1 span{color:var(--amber)}
+.brand p{margin:4px 0 0;color:var(--fg-2);font-size:12.5px;font-family:var(--mono)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0;padding:7px 12px 8px;border-radius:8px;border:1px solid var(--line);background:var(--panel);cursor:pointer;text-align:left}
+.tab .t1{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.06em;color:var(--fg-2)}
+.tab .t2{font-size:12px;color:var(--fg-3);white-space:nowrap}
+.tab .stars{font-size:11px;letter-spacing:1px;color:var(--fg-3)}
+.tab .stars b{color:var(--amber);font-weight:400}
+.tab[aria-selected="true"]{border-color:var(--amber);background:var(--panel-2)}
+.tab[aria-selected="true"] .t1{color:var(--amber)}
+.tab[aria-selected="true"] .t2{color:var(--fg)}
+
+/* grid */
+.game{display:grid;gap:12px;grid-template-columns:minmax(0,1fr);
+  grid-template-areas:"mission" "view" "params" "spec" "fab" "ai" "db" "cards"}
+@media (min-width:920px){
+  .game{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);
+    grid-template-areas:"mission params" "view params" "spec fab" "db ai" "cards cards"}
+}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;min-width:0}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-3)}
+.card h2{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.04em;margin:0 0 10px;color:var(--fg);text-wrap:balance}
+.card h2 .n{color:var(--fg-3);font-weight:600;margin-right:6px}
+
+/* mission */
+#mission{grid-area:mission}
+#mission .name{font-family:var(--display);font-weight:700;font-size:22px;margin:2px 0 4px;line-height:1.2;text-wrap:balance}
+#mission .brief{color:var(--fg-2);margin:0 0 10px;max-width:68ch}
+.objs{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.obj{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--panel-2);min-width:0}
+.obj-h{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:4px}
+.obj-h .st{color:var(--fg-3);letter-spacing:2px;font-size:13px}
+.obj.got .obj-h .st{color:var(--amber)}
+.obj-h .tag{font-size:11px;color:var(--fg-3)}
+.obj.live .obj-h .tag{color:var(--pass)}
+.obj ul{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.obj li{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--fg-2)}
+.obj li .v{font-family:var(--mono);font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.obj li.ok .v{color:var(--pass)} .obj li.no .v{color:var(--fail)} .obj li.na .v{color:var(--fg-3)}
+.obj li .k::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:6px;vertical-align:middle;background:var(--fg-3)}
+.obj li.ok .k::before{background:var(--pass)} .obj li.no .k::before{background:var(--fail)}
+
+/* viewport */
+#view{grid-area:view;padding:0;overflow:hidden}
+.hud{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;padding:12px 14px 8px;flex-wrap:wrap}
+.hud .meta{font-family:var(--mono);font-size:11.5px;color:var(--fg-2);min-width:0}
+.hud .meta b{color:var(--fg);font-weight:500}
+.score{text-align:right}
+.score .big{font-family:var(--display);font-weight:700;font-size:34px;line-height:1;color:var(--amber);font-variant-numeric:tabular-nums}
+.score .big small{font-size:14px;color:var(--fg-3);font-weight:600;margin-left:3px}
+.score .brk{font-family:var(--mono);font-size:11px;color:var(--fg-3);margin-top:3px}
+.canvas-wrap{position:relative;background:#0b1220;border-block:1px solid var(--line)}
+#field{display:block;width:100%;height:auto}
+.drcbar{position:absolute;left:10px;top:10px;font-family:var(--mono);font-size:11.5px;background:rgba(40,8,12,.88);color:var(--fail);border:1px solid rgba(255,107,107,.5);padding:4px 8px;border-radius:6px;max-width:calc(100% - 20px)}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));}
+@media (max-width:560px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tile{padding:10px 14px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);min-width:0}
+.tile .l{font-size:11.5px;color:var(--fg-3)}
+.tile .v{font-family:var(--mono);font-size:17px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tile .v small{font-size:11px;color:var(--fg-3);margin-left:2px}
+
+/* params */
+#params{grid-area:params}
+.prm{padding:9px 0;border-bottom:1px dashed var(--line)}
+.prm:last-of-type{border-bottom:0}
+.prm-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.prm-h label{font-size:13px;color:var(--fg-2)}
+.prm-h label i{font-family:var(--mono);font-style:normal;color:var(--fg);margin-left:4px}
+.prm-h output{font-family:var(--mono);font-size:15px;font-variant-numeric:tabular-nums;color:var(--fg)}
+.prm-r{display:flex;align-items:center;gap:8px;margin-top:4px}
+.nudge{flex:0 0 auto;width:36px;height:32px;border-radius:7px;border:1px solid var(--line-2);background:var(--panel-2);cursor:pointer;font-family:var(--mono);font-size:17px;line-height:1;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.nudge:active{background:var(--line)}
+input[type=range]{flex:1 1 auto;min-width:0;-webkit-appearance:none;appearance:none;height:32px;background:transparent;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:var(--line-2)}
+input[type=range]::-moz-range-track{height:4px;border-radius:2px;background:var(--line-2)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;margin-top:-7px;border-radius:50%;background:var(--amber);border:3px solid var(--panel)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--amber);border:3px solid var(--panel)}
+.row-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{border-radius:8px;padding:8px 12px;border:1px solid var(--line-2);background:var(--panel-2);cursor:pointer;font-size:13px}
+.btn:hover{border-color:var(--fg-3)}
+.btn.pri{background:var(--amber);border-color:var(--amber);color:var(--amber-ink);font-weight:600}
+.btn.ai{border-color:rgba(100,201,223,.6);color:var(--cyan)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn[aria-pressed="true"]{border-color:var(--amber);color:var(--amber)}
+.hint{margin-top:10px;padding:9px 11px;border-radius:8px;background:rgba(242,176,74,.08);border:1px solid rgba(242,176,74,.3);font-family:var(--mono);font-size:12px;color:var(--fg-2);line-height:1.6}
+.hint b{color:var(--amber);font-weight:500}
+.note{font-size:12px;color:var(--fg-3);margin:8px 0 0}
+
+/* spectrum */
+#spec{grid-area:spec}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-family:var(--mono);font-size:11.5px;color:var(--fg-2);margin:-4px 0 6px}
+.legend i{display:inline-block;width:14px;height:2px;vertical-align:middle;margin-right:5px}
+.chart{overflow-x:auto}
+.chart svg{display:block;width:100%;height:auto;min-width:300px}
+
+/* fab */
+#fab{grid-area:fab}
+.fab-body{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+#wafer{width:190px;height:190px;max-width:100%;flex:0 0 auto}
+.fab-stats{flex:1 1 150px;min-width:0}
+.yield{font-family:var(--display);font-weight:700;font-size:34px;line-height:1;font-variant-numeric:tabular-nums}
+.yield.ok{color:var(--pass)} .yield.no{color:var(--fail)} .yield.na{color:var(--fg-3)}
+.kv{font-family:var(--mono);font-size:11.5px;color:var(--fg-2);margin-top:6px;line-height:1.7}
+.kv b{color:var(--fg);font-weight:500}
+
+/* ai */
+#ai{grid-area:ai}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:4px 0 8px}
+.vs > div{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--panel-2);min-width:0}
+.vs .l{font-size:11.5px;color:var(--fg-3)}
+.vs .v{font-family:var(--display);font-weight:700;font-size:24px;font-variant-numeric:tabular-nums}
+.vs .you .v{color:var(--amber)} .vs .bot .v{color:var(--cyan)}
+.bar{height:4px;border-radius:2px;background:var(--line);overflow:hidden;margin-top:8px}
+.bar > i{display:block;height:100%;width:0;background:var(--cyan);transition:width .2s}
+.verdict{font-size:13px;margin-top:8px;color:var(--fg-2)}
+.verdict b{color:var(--fg)}
+
+/* db */
+#db{grid-area:db}
+.db-stats{font-family:var(--mono);font-size:12px;color:var(--fg-2);margin-bottom:6px}
+.db-stats b{color:var(--fg);font-weight:500}
+#csvOut{width:100%;height:120px;margin-top:8px;background:var(--panel-2);color:var(--fg);border:1px solid var(--line-2);border-radius:8px;font-family:var(--mono);font-size:11px;padding:8px}
+footer{margin-top:16px;color:var(--fg-3);font-size:12px;line-height:1.7;max-width:90ch}
+footer b{color:var(--fg-2);font-weight:500}
+/* difficulty / hint segmented controls */
+.mode-row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line-2);border-radius:8px;overflow:hidden;background:var(--panel-2)}
+.seg button{border:0;background:transparent;padding:6px 11px;font-size:12.5px;color:var(--fg-2);cursor:pointer;border-right:1px solid var(--line-2);white-space:nowrap}
+.seg button:last-child{border-right:0}
+.seg button[aria-checked="true"]{background:var(--amber);color:var(--amber-ink);font-weight:600}
+.seg button[disabled]{opacity:.35;cursor:not-allowed}
+.hint-ctl{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:-2px 0 4px}
+/* coach */
+.coach{padding:11px 14px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,rgba(242,176,74,.10),rgba(242,176,74,0) 70%)}
+.coach-h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.coach-h b{font-weight:600;font-size:14px}
+.coach .badge{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--amber-ink);background:var(--amber);border-radius:4px;padding:1px 6px;white-space:nowrap}
+.coach p{margin:4px 0 0;color:var(--fg-2);font-size:13px;max-width:72ch}
+.land{margin-top:4px;cursor:pointer;border-radius:6px;background:rgba(11,18,32,.55);border:1px solid var(--line)}
+.land svg{display:block;width:100%;height:auto}
+/* campaign map */
+.cardcount{font-family:var(--mono);font-size:12px;color:var(--fg-2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--panel)}
+.cardcount b{color:var(--amber);font-weight:500}
+.map{display:flex;gap:14px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;scrollbar-width:thin}
+.stage{flex:0 0 auto;display:flex;flex-direction:column;gap:6px}
+.stage-h{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-3)}
+.stage-n{display:flex;gap:6px}
+.node{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:118px;padding:7px 10px 8px;border-radius:8px;border:1px solid var(--line);background:var(--panel);cursor:pointer;text-align:left}
+.node .t1{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.06em;color:var(--fg-2)}
+.node .t2{font-size:12px;color:var(--fg-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.node .stars{font-size:11px;letter-spacing:1px;color:var(--fg-3)}
+.node .stars b{color:var(--amber);font-weight:400}
+.node[aria-current="true"]{border-color:var(--amber);background:var(--panel-2)}
+.node[aria-current="true"] .t1{color:var(--amber)}
+.node[aria-current="true"] .t2{color:var(--fg)}
+.node[disabled]{cursor:not-allowed;opacity:.5;border-style:dashed}
+.node .card-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);display:inline-block;margin-left:6px;vertical-align:middle}
+/* cards */
+#cards{grid-area:cards}
+.cardgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+.pcard{border:1px solid var(--line-2);border-radius:9px;padding:9px 11px;background:linear-gradient(160deg,rgba(100,201,223,.08),rgba(100,201,223,0) 60%),var(--panel-2);min-width:0}
+.pcard.empty{background:transparent;border-style:dashed;opacity:.6}
+.pcard .h{display:flex;justify-content:space-between;align-items:baseline;gap:6px}
+.pcard .id{font-family:var(--display);font-weight:600;color:var(--cyan);font-size:13px}
+.pcard .sc{font-family:var(--mono);font-size:11px;color:var(--fg-3)}
+.pcard .nm{font-size:12.5px;margin:2px 0 4px;color:var(--fg)}
+.pcard .ln{font-family:var(--mono);font-size:11.5px;color:var(--fg-2);line-height:1.6}
+.pcard .role{font-size:11px;color:var(--fg-3);margin-top:4px}
+.toggle{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--fg-2);padding:8px 0;border-top:1px dashed var(--line);margin-top:4px}
+.toggle input{margin-top:3px;accent-color:var(--amber)}
+/* stage 0 setup */
+.hdr-r{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.platchip{font-family:var(--mono);font-size:12px;border:1px solid var(--amber);color:var(--amber);background:rgba(242,176,74,.08);border-radius:8px;padding:6px 10px;cursor:pointer}
+.platchip span{color:var(--fg-3);margin-left:6px}
+.setup{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 16px;margin-bottom:16px}
+.setup h2{font-family:var(--display);font-weight:700;font-size:24px;margin:4px 0 6px;text-wrap:balance}
+.setup-lead{color:var(--fg-2);margin:0 0 14px;max-width:70ch}
+.step{margin-top:14px}
+.step-h{font-weight:600;margin-bottom:8px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.step-h .num{font-family:var(--display);color:var(--amber-ink);background:var(--amber);border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:13px}
+.step-h .sub{font-weight:400;font-size:12px;color:var(--fg-3)}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.choice{text-align:left;border:1px solid var(--line-2);border-radius:10px;padding:12px 13px;background:var(--panel-2);cursor:pointer;min-width:0}
+.choice[aria-pressed="true"]{border-color:var(--amber);box-shadow:0 0 0 1px var(--amber) inset}
+.choice .ttl{font-family:var(--display);font-weight:700;font-size:17px}
+.choice .tag{font-size:11.5px;color:var(--cyan);margin:2px 0 6px}
+.choice ul{margin:0;padding-left:16px;font-size:12.5px;color:var(--fg-2);line-height:1.55}
+.choice li.c{color:var(--fg-3)}
+.choice .nums{font-family:var(--mono);font-size:11.5px;color:var(--fg-3);margin-top:6px}
+.summary{font-size:13px;color:var(--fg-2);border:1px dashed var(--line-2);border-radius:10px;padding:10px 12px;line-height:1.7}
+.summary b{color:var(--fg);font-weight:600}
+.summary .warn{color:var(--rose)}
+.summary .ok{color:var(--pass)}
+/* level notes */
+.preface{margin:6px 0 8px;padding:9px 11px;border-radius:8px;border:1px solid rgba(100,201,223,.45);background:rgba(100,201,223,.08);font-size:13px;color:var(--fg-2);line-height:1.6}
+.preface b{color:var(--cyan)}
+.concepts{margin:0 0 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel-2)}
+.concepts summary{cursor:pointer;padding:8px 11px;font-size:13px;color:var(--amber)}
+.concepts dl{margin:0;padding:0 12px 10px;display:grid;gap:6px}
+.concepts dt{font-weight:600;font-size:12.5px;color:var(--fg)}
+.concepts dd{margin:0;font-size:12.5px;color:var(--fg-2);line-height:1.6;max-width:72ch}
+@media (prefers-reduced-motion:reduce){.bar > i{transition:none}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>SPEC-to-MASK <span>Quest</span></h1>
+      <p>Track A · 1.6T 트랜시버 · SOI 220 nm · O-band</p>
+    </div>
+    <div class="hdr-r"><button class="platchip" id="plat-chip" hidden></button><div class="cardcount" id="cardcount"></div></div>
+  </header>
+
+  <section class="setup" id="setup" hidden aria-labelledby="setup-h">
+    <div class="eyebrow">Stage 0 · 플랫폼 정하기</div>
+    <h2 id="setup-h">무엇으로, 어떤 빛을 다룰까요?</h2>
+    <p class="setup-lead">모든 소자의 물리(모드, 결합, 손실, 공정 민감도)가 이 두 선택에서 갈라집니다. 레벨 진행과 부품 카드는 플랫폼별로 따로 저장됩니다.</p>
+    <div class="step"><div class="step-h"><span class="num">1</span>파장 대역</div><div class="choices" id="pick-lam"></div></div>
+    <div class="step"><div class="step-h"><span class="num">2</span>코어 물질 <span class="sub">클래딩은 모두 SiO₂ (아래 BOX, 위 상부 산화막)</span></div><div class="choices" id="pick-mat"></div></div>
+    <div class="step"><div class="step-h"><span class="num">3</span>확인</div><div class="summary" id="pick-sum"></div>
+      <div class="row-btns"><button class="btn pri" id="btn-start" disabled>이 플랫폼으로 시작</button><button class="btn" id="btn-cancel" hidden>돌아가기</button></div></div>
+  </section>
+
+  <div id="gamewrap">
+  <nav class="map" id="map" aria-label="캠페인 맵"></nav>
+
+  <main class="game">
+    <section class="card" id="mission" aria-live="polite">
+      <div class="mode-row">
+        <div class="eyebrow" id="m-eyebrow"></div>
+        <div class="seg" id="mode-seg" role="radiogroup" aria-label="난이도"></div>
+      </div>
+      <div class="preface" id="m-preface" hidden></div>
+      <div class="name" id="m-name"></div>
+      <p class="brief" id="m-brief"></p>
+      <details class="concepts" id="m-concepts" hidden></details>
+      <div class="locked-note" id="m-locked" hidden></div>
+      <div class="objs" id="objs"></div>
+      <p class="note" id="mode-note"></p>
+    </section>
+
+    <section class="card" id="view">
+      <div class="hud">
+        <div class="meta" id="hud-meta"></div>
+        <div class="score">
+          <div class="big" id="score-big">0<small>/1000</small></div>
+          <div class="brk" id="score-brk"></div>
+        </div>
+      </div>
+      <div class="canvas-wrap" id="cwrap">
+        <canvas id="field" aria-label="MMI 내부 광 강도 분포 |E|²"></canvas>
+        <div class="drcbar" id="drcbar" hidden></div>
+      </div>
+      <div class="coach" id="coach" aria-live="polite" hidden></div>
+      <div class="tiles" id="tiles"></div>
+    </section>
+
+    <section class="card" id="params">
+      <h2><span class="n">01</span>설계 파라미터</h2>
+      <div class="hint-ctl"><span class="eyebrow">힌트</span><div class="seg" id="hint-seg" role="radiogroup" aria-label="힌트 단계"></div></div>
+      <div id="prm-list"></div>
+      <div class="row-btns">
+        <button class="btn" id="btn-reset">레벨 재시작</button>
+      </div>
+      <div class="hint" id="hint" hidden></div>
+      <p class="note">힌트 단계: 방향 = 코치가 다음 수를 알려줌 · 수치 = 목표값과 L<sub>π</sub> 가이드선 · 지형도 = L·s를 훑은 성능 곡선(탭하면 그 값으로 이동). −/+ 버튼은 길게 누르면 연속으로 움직입니다.</p>
+    </section>
+
+    <section class="card" id="spec">
+      <h2><span class="n">02</span><span id="chart-title">스펙트럼</span></h2>
+      <div class="legend" id="legend"></div>
+      <div class="chart" id="chart"></div>
+    </section>
+
+    <section class="card" id="fab">
+      <h2><span class="n">03</span>Fab Run · 보스 스테이지</h2>
+      <div class="fab-body">
+        <canvas id="wafer" width="380" height="380" aria-label="웨이퍼 맵"></canvas>
+        <div class="fab-stats">
+          <div class="eyebrow">수율</div>
+          <div class="yield na" id="yield">—</div>
+          <div class="kv" id="fab-kv"></div>
+        </div>
+      </div>
+      <div class="row-btns">
+        <button class="btn pri" id="btn-fab">Tape-out</button>
+      </div>
+      <p class="note" id="fab-note"></p>
+    </section>
+
+    <section class="card" id="ai">
+      <h2><span class="n">04</span>Beat the AI</h2>
+      <div class="vs">
+        <div class="you"><div class="l">당신 최고 설계 점수</div><div class="v" id="you-best">—</div></div>
+        <div class="bot"><div class="l">AI 라이벌</div><div class="v" id="ai-best">—</div></div>
+      </div>
+      <div class="kv" id="ai-kv">Nelder–Mead · 시작점 여러 개 (레벨 초기값, 물리 기반 추정, 랜덤). 설계 점수(성능+크기, 800점)로 겨룹니다.</div>
+      <div class="bar" aria-hidden="true"><i id="ai-bar"></i></div>
+      <div class="verdict" id="verdict"></div>
+      <div class="row-btns">
+        <button class="btn ai" id="btn-ai">AI 라이벌 소환</button>
+        <button class="btn" id="btn-ai-load" disabled>AI 설계 불러오기</button>
+      </div>
+    </section>
+
+    <section class="card" id="cards">
+      <h2><span class="n">06</span>부품 카드 인벤토리</h2>
+      <p class="note" style="margin:-4px 0 10px">★ 이상으로 클리어한 설계는 S-파라미터·손실·수율이 담긴 카드로 저장됩니다. Stage 3에서 1.6T 트랜시버는 이 카드들만으로 조립합니다. 같은 레벨은 설계 점수가 더 높은 카드로 교체됩니다.</p>
+      <div class="cardgrid" id="cardgrid"></div>
+    </section>
+
+    <section class="card" id="db">
+      <h2><span class="n">05</span>Design DB</h2>
+      <div class="db-stats" id="db-stats"></div>
+      <div class="chart" id="db-chart"></div>
+      <div class="row-btns">
+        <button class="btn" id="btn-csv">CSV 복사</button>
+        <button class="btn" id="btn-clear">DB 비우기</button>
+      </div>
+      <textarea id="csvOut" hidden readonly aria-label="CSV"></textarea>
+      <p class="note">플레이할 때마다 (설계 파라미터) → (성능, 크기) 레코드가 레벨별로 쌓입니다. 사람이 둔 수와 AI의 탐색이 같은 DB에 들어가 다음 모델 학습 데이터가 되는 구조를 보여줍니다.</p>
+    </section>
+  </main>
+
+  </div>
+  <footer>
+    <b>모델 범위.</b> 플랫폼 4종(Si 220 nm / SiN 400 nm × 1310 / 1550 nm, SiO₂ 클래딩)의 모드는 semi-vectorial 2D 유한차분 솔버(quasi-TE Ex, quasi-TM Ey)로 사전계산한 테이블입니다: 도파로 TE/TM 모드와 n<sub>eff</sub>(폭·두께·파장), 방향성 결합기의 짝/홀 슈퍼모드, SSC 팁 모드와 광섬유 overlap. MMI는 2D 유효굴절률법 + 고유모드 전개, CWDM은 같은 n<sub>eff</sub>·n<sub>g</sub> 테이블로 만든 회로 S-matrix입니다. 측벽 산란 손실은 (∂n<sub>eff</sub>/∂w)²에 비례하는 근사, 기판 누설은 BOX 터널링 근사. 반사, 3D 방사, 벤드 구간 결합, 편광 혼합은 포함하지 않아 FDTD·벡터 솔버보다 낙관적입니다 (500×220 nm Si @1550 TE0 n<sub>eff</sub> 2.49 vs 벡터 해 ≈ 2.44). 공정 변동: 웨이퍼 CD 오프셋 + 두께 bowl + 다이 랜덤(CD σ ≈ 8 nm, 두께 σ ≈ Si 3 nm / SiN 5 nm). 각 보스의 최종 검증은 Tidy3D FDTD·Ansys(CHARGE/HEAT/INTERCONNECT)로 넘기는 것을 전제로 합니다.
+  </footer>
+</div>

@@ -1,0 +1,12 @@
+const {JSDOM}=require('jsdom');const fs=require('fs');
+const html=fs.readFileSync(require('path').join(__dirname,'../../dist/index.html'),'utf8');
+const dom=new JSDOM('<!doctype html><html><head></head><body>'+html+'</body></html>',{runScripts:'outside-only',pretendToBeVisual:true,url:'https://m'+Date.now()+'.test/'});
+const w=dom.window;w.HTMLCanvasElement.prototype.getContext=()=>new Proxy({},{get:(t,k)=>k==='measureText'?()=>({width:30}):k==='createImageData'?(a,b)=>({data:new Uint8ClampedArray(a*b*4)}):k==='createLinearGradient'?()=>({addColorStop(){}}):(k in t?t[k]:()=>{}),set:(t,k,v)=>{t[k]=v;return true}});
+w.ResizeObserver=class{observe(){}};w.atob=(x)=>Buffer.from(x,'base64').toString('binary');
+w.localStorage.setItem('smq2-progress',JSON.stringify({stars:{easy:{},std:{'1-1':7,'1-3':3},hard:{}},best:{'1-1':983},ai:{},cards:{'1-3':{id:'1-3',name:'3-dB 커플러',lines:['EL'],model:{lams:[1.271,1.301,1.331],el:[0.4,0.4,0.4],imb:[0.1,0.1,0.1]},score:891,stars:3,mode:'std'}}}));
+const errs=[];w.addEventListener('error',e=>errs.push(e.message));
+w.eval(html.split('<script>')[1].split('</script>')[0]);
+const $=s=>w.document.querySelector(s);
+setTimeout(()=>{ $('#pick-lam .choice[data-lam="1.31"]').click(); console.log('mat card:',$('#pick-mat').textContent.replace(/\s+/g,' ').slice(0,400));
+ $('#pick-mat .choice[data-mat="si"]').click(); console.log('sum:',$('#pick-sum').textContent); $('#btn-start').click();
+ setTimeout(()=>{console.log('map:',$('#map').textContent.replace(/\s+/g,' ').slice(0,200)); console.log('cards:',$('#cardgrid').textContent.replace(/\s+/g,' ').slice(0,300)); console.log('errors',errs); process.exit(0);},500);},300);
