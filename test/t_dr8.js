@@ -98,6 +98,23 @@ for (const pid of Object.keys(G.PLATFORMS)) {
     ok(pr && /MZM이 유리:<\/b> (?!—)/.test(pr.html) && /MRR이 유리:<\/b> (?!—)/.test(pr.html) && /Fab 수율/.test(pr.html) && ms < 4000, `${pid}: panel with Fab yields lists advantages on both sides (${ms} ms)`);
   }
 }
+/* ---- release review: the thermal numbers in the docs are the engine's, at the stated computation point (v1.0.1) ---- */
+{
+  const fs = require('fs'), doc = fs.readFileSync(path.join(__dirname, '../docs/arch_1p6t_dr8.md'), 'utf8'), lim = fs.readFileSync(path.join(__dirname, '../docs/release/MODEL_LIMITATIONS-v1.0.md'), 'utf8');
+  G.__pid = 'si1310'; const pf = G.PLATFORMS.si1310, l = LV('3A+', 'si1310'); G.PQ.setPlatform(pf.mat, pf.t, pf.rules);
+  const ts = X.thermalSens(l, { ...l.ref, mod: 1 }).rows;
+  const tbl = [...doc.matchAll(/^\| (모델 547|160|73) pm\/mW \| ([\d.]+) mW \| ([\d.]+) K \| ([\d.]+) W \| ([\d.]+) W \|$/gm)].map((m) => m.slice(2).map(Number));
+  ok(tbl.length === 3 && tbl.every((t, i) => Math.abs(t[0] - ts[i].heat) < 0.6 && Math.abs(t[1] - ts[i].selfK) < 0.06 && Math.abs(t[2] - ts[i].pw) < 0.006), `arch_1p6t_dr8.md §2.3 = thermalSens (self-heating ${ts.map((x) => x.selfK.toFixed(1)).join(' / ')} K, not the 2-3R 13 dBm value)`);
+  ok(!/\| 97 K \|/.test(doc) && /61\.0 K/.test(lim), 'no module table quotes the 2-3R stand-alone 97 K');
+  // the trace table: module ΔT at the 0.5 dB grid point next to P_mod(70 °C), exact P_mod, and the 2-3R stand-alone 13 dBm value
+  for (const pid of Object.keys(G.PLATFORMS)) {
+    G.__pid = pid; const pq = G.PLATFORMS[pid], l3 = LV('3A+', pid); G.PQ.setPlatform(pq.mat, pq.t, pq.rules);
+    const d = { ...l3.ref, mod: 1 }, a = X.analyse(l3, d), p = X.parts(l3, d), Pm = a.corners.find((c) => c.T === 70).Pmod, at = (P) => M.analyse(p.ring.l, p.ring.d, null, { Pin: P }).selfK;
+    const name = { si1310: 'Si 1310', si1550: 'Si 1550', sin1310: 'SiN 1310', sin1550: 'SiN 1550' }[pid], row = doc.split('\n').find((x) => x.startsWith(`| ${name} `) && /→/.test(x));
+    const v = row ? [...row.matchAll(/([\d.]+) K/g)].map((m) => +m[1]) : [];
+    ok(v.length === 3 && Math.abs(v[0] - a.ringH.selfK) < 0.06 && Math.abs(v[1] - at(Pm)) < 0.06 && Math.abs(v[2] - at(13)) < 0.06, `${pid}: trace row ${v.join(' / ')} K = module ${a.ringH.selfK.toFixed(1)} · exact P_mod ${at(Pm).toFixed(1)} · 13 dBm ${at(13).toFixed(1)}`);
+  }
+}
 ok(ID.done(), 'every MZM identity check ran');
 console.log(`${n - fail}/${n} checks passed` + (G0 ? '' : ` (${BASE} not available — identity NOT RUN)`));
 process.exit(fail ? 1 : 0);
