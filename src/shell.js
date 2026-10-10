@@ -1,10 +1,7 @@
 // ===== Game shell: campaign, scoring, objectives, coach, fab, AI rival, Design DB, cards =====
 (() => {
 const $ = (s) => document.querySelector(s);
-const store = {
-  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
-  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
-};
+const store = SMQ_STORE;   // src/persist.js: every write reports success; failures show in the header (save chip) and banner
 const MODES = {
   easy: { label: '입문', th: 1.5, area: 1.3, sig: 0.6, credits: 5, maxHint: 3, hint: 2, note: '스펙 1.5배 완화 · 공정 변동 60% · 크레딧 5' },
   std: { label: '표준', th: 1.0, area: 1.0, sig: 1.0, credits: 3, maxHint: 3, hint: 1, note: '기본 스펙 · 크레딧 3' },
@@ -180,7 +177,7 @@ function setParam(k, v, fromBtn) {
     const back = hk ? document.querySelector(hd ? `.nudge[data-k="${hk}"][data-d="${hd}"]` : `#p-${hk}`) : null; if (back) back.focus();
   }
   else { if (fromBtn) $('#p-' + k).value = nv; $('#o-' + k).textContent = pFmt(p, nv); }
-  requestEval(); scheduleCommit();
+  requestEval(); store.pending(); scheduleCommit();
 }
 {
   const list = $('#prm-list');
@@ -797,10 +794,90 @@ function setupLevel() {
 }
 const hot = window.claude && window.claude.hot;
 if (hot && hot.snapshot) hot.snapshot(() => ({ id: state.id, DES }));
+/* ---------- save state and full backup / restore (src/persist.js) ---------- */
+const progressCount = () => Object.values(P.by || {}).reduce((a, ns) => a + Object.values((ns && ns.stars) || {}).reduce((b, o) => b + Object.values(o || {}).reduce((c, m) => c + popcount(m | 0), 0), 0) + Object.keys((ns && ns.cards) || {}).length, 0);
+const kb = (n) => (n >= 1e6 ? (n / 1e6).toFixed(2) + ' MB' : (n / 1e3).toFixed(1) + ' kB');
+const tstr = (t) => { if (!t) return '—'; const d = new Date(t); return isNaN(d) ? String(t) : d.toLocaleString('ko-KR', { hour12: false }); };
+function renderSave(st) {
+  st = st || store.status();
+  const chip = $('#save-chip'), adv = st.state === 'saved' ? store.backupAdvice(progressCount()) : null;
+  const k = st.state === 'failed' ? 'failed' : st.state === 'saving' ? 'saving' : adv ? 'advice' : 'saved';
+  chip.dataset.st = k;
+  $('#save-txt').textContent = { saved: '저장됨', saving: '저장 중…', failed: '저장 실패', advice: '백업 권장' }[k];
+  chip.title = k === 'failed' ? `저장 실패: ${st.err || ''} — 누르면 전체 백업` : k === 'advice' ? `${adv} — 누르면 전체 백업` : '저장 상태 · 전체 백업 / 복원';
+  const w = $('#save-warn'); w.hidden = st.state !== 'failed';
+  if (!w.hidden) $('#save-warn-t').textContent = `${st.available ? '' : '이 브라우저가 저장소를 막았습니다(시크릿 창·정책). '}${st.err || ''} — 지금까지의 작업은 이 창에만 남아 있고, 창을 닫으면 마지막 저장 이후의 변경이 사라집니다. 전체 백업을 내려받아 보관하세요.`;
+  if (DATA.isOpen()) renderDataStatus(st, adv);
+}
+const DATA = smqModal($('#data-dlg'));
+function renderDataStatus(st, adv) {
+  st = st || store.status(); const u = store.usage(), m = st.meta || {};
+  const name = { 'smq3-progress': '진행 기록 (별·카드·학습 기록)', 'smq3-designs': '레벨 설계', 'smq3-db': 'Design DB', 'smq3-lab': 'Design Lab 프로젝트', 'smq3-ui': '화면 설정', 'smq3-meta': '백업 메타', 'smq3-undo': '복원 직전 데이터' };
+  $('#data-status').innerHTML = `<table class="ltbl"><tr><th>상태</th><td>${st.state === 'failed' ? `<b class="st-FAIL">✕ 저장 실패</b> · ${st.err || ''}${st.failed.length ? ` (${st.failed.join(', ')})` : ''}` : st.state === 'saving' ? '저장 중…' : '<b class="st-PASS">✓ 저장됨</b>'}${st.lastOk ? ` · 마지막 저장 ${tstr(st.lastOk)}` : ''}</td></tr>`
+    + `<tr><th>마지막 전체 백업</th><td>${m.lastBackup ? tstr(m.lastBackup) : '없음'}${adv ? ` · <span class="st-WARNING">${adv}</span>` : ''}</td></tr>`
+    + `<tr><th>사용량</th><td>${kb(u.total)} (브라우저 한도 보통 ≈ 5 MB)<br><span class="note">${Object.entries(u.by).map(([k2, v]) => `${name[k2] || k2} ${kb(v)}`).join(' · ')}</span></td></tr>`
+    + `<tr><th>빌드</th><td>v${BUILD.version} · ${BUILD.commit ? BUILD.commit.slice(0, 10) + ' · ' + String(BUILD.date || '').slice(0, 10) : BUILD.channel + ' build'}${BUILD.offline ? ' · 오프라인(외부 폰트 없음)' : ''}</td></tr></table>`;
+}
+function openData(focusSel) { renderDataStatus(); renderUndo(); DATA.open(focusSel || '#bk-dl'); }
+$('#save-chip').addEventListener('click', () => openData());
+$('#save-warn-b').addEventListener('click', () => openData('#bk-dl'));
+store.subscribe(renderSave);
+const bkName = () => `spec-to-mask-backup-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '')}.json`;
+$('#bk-dl').addEventListener('click', async () => {
+  persist(); persistDB();   // the backup must contain what is on screen
+  const b = store.makeBackup($('#bk-ui').checked), txt = JSON.stringify(b, null, 1), msg = $('#bk-msg');
+  const r = await smqDownload(bkName(), txt);
+  $('#bk-ta').hidden = false; $('#bk-ta').value = txt;
+  if (r.ok) { store.markBackup(); msg.innerHTML = `<b>${bkName()}</b> 저장을 시작했습니다 — 별 ${b.summary.stars} · 카드 ${b.summary.cards} · 설계 ${b.summary.designs} · DB ${b.summary.db}건 · ${kb(txt.length)}. 같은 내용이 아래에 있습니다.`; }
+  else msg.innerHTML = r.how === 'declined' ? '저장을 취소했습니다.' : '이 화면에서는 파일 저장이 막혀 있습니다 — 아래 JSON을 전부 선택해 복사(Ctrl/⌘+C)한 뒤 .json 파일로 보관하세요.';
+  renderSave();
+});
+$('#bk-copy').addEventListener('click', async () => {
+  persist(); persistDB();
+  const b = store.makeBackup($('#bk-ui').checked), txt = JSON.stringify(b), ok = await smqCopy(txt, $('#bk-ta'));
+  if (ok) store.markBackup();
+  $('#bk-msg').textContent = ok ? `클립보드에 복사했습니다 (${kb(txt.length)}). 메모장 등에 붙여 .json으로 보관하세요.` : '클립보드를 쓸 수 없습니다 — 아래 선택된 JSON을 Ctrl/⌘+C로 복사하세요 (복사 후에는 백업으로 기록되지 않으니 보관을 확인하세요).';
+  renderSave();
+});
+let RS = null;   // parsed + validated backup awaiting confirmation
+const ctxV = () => ({ platforms: PLATFORMS, levels: LMAP });
+function checkRestore(txt) {
+  const out = $('#rs-out'); RS = null; let b;
+  try { b = JSON.parse(txt); } catch (e) { out.innerHTML = '<p class="rs-err">JSON으로 읽을 수 없습니다 (파일이 잘렸거나 다른 형식).</p>'; return; }
+  const v = store.validate(b, ctxV());
+  if (!v.ok) { out.innerHTML = `<p class="rs-err"><b>복원할 수 없습니다.</b> ${v.errors.slice(0, 6).join(' ')}</p><p class="note">지금 데이터는 바뀌지 않았습니다.</p>`; return; }
+  persist(); persistDB();
+  const cur = store.makeBackup(false).summary, nb = v.summary, rowS = (lab, a, c) => `<tr><td>${lab}</td><td class="num">${a}</td><td class="num">${c}</td></tr>`;
+  RS = b;
+  out.innerHTML = `<p>백업 <b>${b.app_version ? 'v' + b.app_version : ''}</b> · ${tstr(b.created)} · ${b.schema}${b.includes_ui ? ' · 화면 설정 포함' : ''} · 체크섬 일치</p>`
+    + `<table class="ltbl"><tr><th>항목</th><th>백업</th><th>지금 이 브라우저</th></tr>${rowS('플랫폼', nb.platforms.map((x) => x.id).join(', ') || '—', cur.platforms.map((x) => x.id).join(', ') || '—')}${rowS('별', nb.stars, cur.stars)}${rowS('부품 카드', nb.cards, cur.cards)}${rowS('레벨 설계', nb.designs, cur.designs)}${rowS('Design DB 레코드', nb.db, cur.db)}${rowS('Design Lab 미션 (이전 완료 포함)', nb.labMissions, cur.labMissions)}</table>`
+    + (v.warnings.length ? `<p class="rs-warn">${v.warnings.slice(0, 5).join(' ')}</p>` : '')
+    + `<p class="note">복원하면 위 “지금” 데이터가 백업 내용으로 <b>바뀝니다</b>(합치기 아님). 복원 직전 데이터는 자동 보관되어 “복원 되돌리기”로 돌아갈 수 있습니다.</p>`
+    + '<label class="chk"><input type="checkbox" id="rs-ok"> 지금 데이터를 이 백업으로 바꾸는 것을 확인했습니다</label><label class="chk"><input type="checkbox" id="rs-had"> 지금 데이터를 이미 따로 백업했습니다 (보관 공간이 없을 때만 필요)</label>'
+    + '<div class="row-btns"><button class="btn pri" id="rs-go" disabled>이 백업으로 복원</button></div><p class="note" id="rs-msg" aria-live="polite"></p>';
+}
+$('#rs-check').addEventListener('click', () => checkRestore($('#rs-ta').value));
+$('#rs-file').addEventListener('change', (e) => { const f = e.target.files && e.target.files[0]; if (!f) return; const rd = new FileReader(); rd.onload = () => { $('#rs-ta').value = String(rd.result); checkRestore(String(rd.result)); }; rd.readAsText(f); e.target.value = ''; });
+$('#rs-out').addEventListener('change', (e) => { if (e.target.id === 'rs-ok') $('#rs-go').disabled = !e.target.checked; });
+const reloadSoon = () => setTimeout(() => { try { location.reload(); } catch (e) { /* the page keeps the old state until reopened */ } }, 900);
+$('#rs-out').addEventListener('click', (e) => {
+  if (e.target.id !== 'rs-go' || !RS || state.fabRunning || state.aiRunning != null) return;
+  const r = store.restore(RS, { ctx: ctxV(), allowNoUndo: !!($('#rs-had') && $('#rs-had').checked) }), msg = $('#rs-msg');
+  if (!r.ok) { msg.innerHTML = `<span class="rs-err">${r.err}</span> 지금 데이터는 그대로입니다.`; return; }
+  msg.innerHTML = `<b class="st-PASS">복원했습니다.</b> ${r.undoSaved ? '복원 직전 데이터를 보관했습니다. ' : ''}새 데이터로 다시 불러옵니다…`; RS = null; reloadSoon();
+});
+function renderUndo() {
+  const u = store.undoInfo(), box = $('#rs-undo');
+  box.innerHTML = u ? `<p class="note">복원 직전 데이터가 보관되어 있습니다 (${tstr(u.at)}). <button class="btn" id="rs-undo-b">복원 되돌리기</button></p>` : '';
+}
+$('#rs-undo').addEventListener('click', (e) => { if (e.target.id !== 'rs-undo-b') return; const r = store.undo(); $('#rs-undo').innerHTML = r.ok ? '<p class="note"><b class="st-PASS">되돌렸습니다.</b> 다시 불러옵니다…</p>' : `<p class="rs-err">${r.err}</p>`; if (r.ok) reloadSoon(); });
+window.GAME_DATA = { open: openData };
+
 const UI = store.get('smq3-ui', {}) || {};   // view-only preferences (which sections are open); never progress or designs
 $('#cards').open = !!UI.cards; $('#cards').addEventListener('toggle', () => { UI.cards = $('#cards').open; store.set('smq3-ui', UI); });
 $('#scope').addEventListener('toggle', () => { UI.scope = $('#scope').open; store.set('smq3-ui', UI); }); $('#scope').open = !!UI.scope;
 function start(data) {
+  renderSave();
   if (data && data.DES) { DES = data.DES; if (LMAP[data.id] && !LMAP[data.id].locked) state.id = data.id; }
   if (!state.plat) { showSetup(true); } else { applyPlatform(); showSetup(false); setupLevel(); }
   let lastW = 0; new ResizeObserver(() => { const w = $('#cwrap').clientWidth; if (w && w !== lastW) { lastW = w; sizeCanvas(); } }).observe($('#cwrap'));   // w = 0 while the Design Lab hides the game

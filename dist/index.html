@@ -399,6 +399,19 @@ details.sect[open] > summary{margin-bottom:10px}
 .roles div b{display:block;color:var(--fg);font-size:12.5px}
 @media (max-width:600px){.gdlg-back{padding:0}.gdlg{height:100vh;height:100dvh;border-radius:0;border:0}.gdlg-h h2{font-size:19px}}
 @media (prefers-reduced-motion:reduce){.bar > i{transition:none}}
+/* save state chip, failure banner, data dialog */
+.savechip{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--panel);color:var(--fg-2);cursor:pointer}
+.savechip .sv-dot{width:8px;height:8px;border-radius:50%;background:var(--pass)}
+.savechip[data-st="saving"] .sv-dot{background:var(--fg-3)}
+.savechip[data-st="failed"]{border-color:var(--fail);color:var(--fail)} .savechip[data-st="failed"] .sv-dot{background:var(--fail);border-radius:1px}
+.savechip[data-st="advice"]{border-color:var(--amber);color:var(--amber)} .savechip[data-st="advice"] .sv-dot{background:transparent;border:2px solid var(--amber)}
+.savewarn{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;margin:0 0 12px;padding:9px 12px;border-radius:8px;border:1px solid var(--fail);background:rgba(255,107,107,.08);color:var(--fg);font-size:13px}
+.savewarn b{color:var(--fail)}
+.ddlg{height:auto;max-height:min(92vh,980px)}
+.chk{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--fg-2);margin:6px 0}
+.chk input{accent-color:var(--amber);width:16px;height:16px}
+#rs-ta{height:90px}
+.rs-err{color:var(--fail)} .rs-warn{color:var(--amber)}
 /* phone width: tighter header and map (kept last so it overrides the base rules) */
 @media (max-width:600px){
   .top{margin-bottom:10px}
@@ -414,8 +427,10 @@ details.sect[open] > summary{margin-bottom:10px}
       <h1>SPEC-to-MASK <span>Quest</span></h1>
       <p id="brand-sub">Photonic IC 설계 학습 · Spec → Device → System → Layout → GDS</p>
     </div>
-    <div class="hdr-r"><button class="platchip" id="plat-chip" hidden></button><div class="cardcount" id="cardcount"></div></div>
+    <div class="hdr-r"><button class="platchip" id="plat-chip" hidden></button><div class="cardcount" id="cardcount"></div><button class="savechip" id="save-chip" aria-haspopup="dialog" aria-controls="data-dlg" title="저장 상태 · 전체 백업 / 복원"><span class="sv-dot" aria-hidden="true"></span><span id="save-txt">저장됨</span></button></div>
   </header>
+
+  <div class="savewarn" id="save-warn" role="alert" hidden><b>저장 실패</b> <span id="save-warn-t"></span> <button class="btn" id="save-warn-b">전체 백업 받기</button></div>
 
   <section class="setup" id="setup" hidden aria-labelledby="setup-h">
     <div class="eyebrow">Stage 0 · 플랫폼 정하기</div>
@@ -585,6 +600,28 @@ details.sect[open] > summary{margin-bottom:10px}
       <div class="gdlg-body" id="guide-body" tabindex="-1"></div>
     </div>
   </div>
+  <div class="gdlg-back" id="data-dlg" hidden>
+    <div class="gdlg ddlg" role="dialog" aria-modal="true" aria-labelledby="data-h">
+      <div class="gdlg-h"><div><div class="eyebrow">Data · 저장과 백업</div><h2 id="data-h">진행 기록 저장 · 전체 백업 / 복원</h2><p class="gsub">진행 기록은 이 브라우저의 localStorage에만 있습니다. 브라우저 데이터 삭제·다른 PC·시크릿 창에서는 사라지므로 전체 백업 파일을 보관하세요. 설계 하나를 내보내는 <b>설계 내보내기(smq-design/1)</b>나 Design Lab의 <b>smq-circuit/1</b>과는 다른, 모든 진행 기록의 백업입니다.</p></div>
+        <div class="gdlg-ctl"><button class="btn pri" data-close>닫기</button></div></div>
+      <div class="gdlg-body" id="data-body" tabindex="-1">
+        <section class="gsec"><h3><span class="n">1</span>저장 상태</h3><div id="data-status"></div></section>
+        <section class="gsec"><h3><span class="n">2</span>전체 백업 (smq-backup/1)</h3>
+          <p>별·부품 카드·레벨 설계·Design DB·Design Lab 프로젝트·학습 경로/리뷰 기록을 버전이 붙은 JSON 하나로 저장합니다.</p>
+          <label class="chk"><input type="checkbox" id="bk-ui"> 화면 설정(접힘 상태·가이드 깊이)도 포함</label>
+          <div class="row-btns"><button class="btn pri" id="bk-dl">백업 파일 내려받기 (.json)</button><button class="btn" id="bk-copy">백업 JSON 복사</button></div>
+          <p class="note" id="bk-msg" aria-live="polite"></p>
+          <textarea class="jsonout" id="bk-ta" hidden readonly aria-label="전체 백업 JSON"></textarea></section>
+        <section class="gsec"><h3><span class="n">3</span>복원</h3>
+          <p>백업 파일을 고르거나 JSON을 붙여 넣고 <b>검사</b>를 누르세요. 형식·체크섬·구조를 검사하고, 지금 데이터와 비교한 요약을 보여 준 뒤 확인을 받아서만 덮어씁니다. 복원 직전 데이터는 자동으로 보관되어 되돌릴 수 있습니다.</p>
+          <div class="row-btns"><label class="btn" for="rs-file">백업 파일 선택</label><input type="file" id="rs-file" accept=".json,application/json" hidden></div>
+          <textarea class="jsonout" id="rs-ta" aria-label="복원할 백업 JSON 붙여넣기" placeholder="여기에 백업 JSON을 붙여 넣기"></textarea>
+          <div class="row-btns"><button class="btn" id="rs-check">검사</button></div>
+          <div id="rs-out" aria-live="polite"></div>
+          <div id="rs-undo"></div></section>
+      </div>
+    </div>
+  </div>
   <footer>
     <details id="scope"><summary><b>모델 범위</b> — 게임이 계산하는 것, 단순화와 가정 (플랫폼·Stage 1–3·Track B·Design Lab·게임 밖 검증)</summary>
     <div class="scope">
@@ -600,6 +637,7 @@ details.sect[open] > summary{margin-bottom:10px}
   </footer>
 </div>
 <script>
+const SMQ_BUILD = { version: '1.0.0', channel: 'dev', commit: null, date: null, offline: 0 === 1 };
 const KINDS = {};
 // ===== shared math / process utilities =====
 const band = (a, b, n) => Array.from({ length: n }, (_, i) => +(a + (b - a) * i / (n - 1)).toFixed(4));
@@ -777,6 +815,176 @@ function svgChart(o) {
   return s + '</svg>';
 }
 const legendHTML = (items) => items.map(([c, t]) => `<span><i style="background:${c}"></i>${t}</span>`).join('');
+// accessible modal: focus moves in, Tab stays inside, Esc / backdrop closes, the page behind is inert, focus returns on close
+function smqModal(back, opt) {
+  opt = opt || {};
+  const box = back.querySelector('[role="dialog"]'); let last = null;
+  const bg = ['#gamewrap', '.top', 'footer', '#save-warn'];
+  function open(focusSel) {
+    last = document.activeElement; back.hidden = false; document.body.style.overflow = 'hidden';
+    bg.forEach((s) => { const e = document.querySelector(s); if (e) { e.setAttribute('aria-hidden', 'true'); e.inert = true; } });
+    const f = (focusSel && back.querySelector(focusSel)) || back.querySelector('[data-close]'); if (f && f.focus) f.focus();
+  }
+  function close() {
+    if (back.hidden) return; back.hidden = true; document.body.style.overflow = '';
+    bg.forEach((s) => { const e = document.querySelector(s); if (e) { e.removeAttribute('aria-hidden'); e.inert = false; } });
+    if (opt.onClose) opt.onClose();
+    if (last && last !== document.body && document.contains(last) && last.focus) last.focus();
+  }
+  back.addEventListener('click', (e) => { if (e.target === back || e.target.closest('[data-close]')) close(); });
+  back.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+    if (e.key !== 'Tab') return;
+    const f = [...box.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])')].filter((x) => x.offsetParent !== null || x === document.activeElement);
+    if (!f.length) return; const first = f[0], lastF = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); lastF.focus(); } else if (!e.shiftKey && document.activeElement === lastF) { e.preventDefault(); first.focus(); }
+  });
+  return { open, close, isOpen: () => !back.hidden };
+}
+// copy text: Clipboard API when allowed, otherwise select a visible textarea so Ctrl/⌘+C works (company browsers often block the API)
+function smqCopy(text, ta) {
+  const sel = () => { if (ta) { ta.hidden = false; ta.value = text; ta.focus(); ta.select(); } };
+  try { if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(text).then(() => { sel(); return true; }, () => { sel(); return false; }); } catch (e) { /* no clipboard */ }
+  sel(); return Promise.resolve(false);
+}
+// download text: the hosted viewer's downloads capability, else a blob link; returns { ok, how }
+async function smqDownload(name, text, mime) {
+  const cap = typeof window !== 'undefined' && window.claude && typeof window.claude.use === 'function' ? await window.claude.use('downloads').catch(() => null) : null;
+  if (cap) { try { await cap.save({ filename: name, data: text }); return { ok: true, how: 'viewer' }; } catch (e) { return { ok: false, how: e && e.code === 'declined' ? 'declined' : 'blocked' }; } }
+  try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: mime || 'application/json' })); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000); return { ok: true, how: 'blob' }; } catch (e) { return { ok: false, how: 'blocked' }; }
+}
+
+// ===== Persistence: one place that writes localStorage, reports save state, and makes / checks / restores full backups =====
+// Every write goes through SMQ_STORE.set, which returns false and flips the state to 'failed' when the browser refuses
+// (quota, private mode, blocked storage). Nothing is retried silently: the header shows the state and the data dialog
+// offers a full backup. The backup is one versioned JSON (smq-backup/1) of every key the game owns.
+const BUILD = (typeof SMQ_BUILD !== 'undefined' && SMQ_BUILD) || { version: '1.0.0', channel: 'dev', commit: null, date: null, offline: false };
+const SMQ_STORE = (() => {
+  const W = typeof window !== 'undefined' ? window : null;
+  const LS = () => (W ? W.localStorage : null);
+  // keys the game owns; 'ui' keys are view preferences (optional in a backup)
+  const KEYS = ['smq3-progress', 'smq3-designs', 'smq3-db', 'smq3-lab', 'smq3-id', 'smq-mode-v1', 'smq-hint-v1'];
+  const UI_KEYS = ['smq3-ui', 'smq-guide-depth'];
+  const META = 'smq3-meta', UNDO = 'smq3-undo';
+  const SCHEMA = 'smq-backup/1';
+  const S = { state: 'saved', failed: new Set(), err: null, lastOk: null, available: true };
+  const subs = [];
+  const emit = () => subs.forEach((f) => { try { f(status()); } catch (e) { /* listener error */ } });
+  try { const k = '__smq_probe__'; LS().setItem(k, '1'); LS().removeItem(k); } catch (e) { S.available = false; S.state = 'failed'; S.err = (e && e.name) || 'storage unavailable'; }
+  function get(k, d) { try { const v = LS().getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
+  function raw(k) { try { return LS().getItem(k); } catch (e) { return null; } }
+  // write one key; false (and state 'failed') when the browser refuses
+  let locked = false;   // after a restore / undo the page reloads; until then nothing in memory may overwrite the restored data
+  function set(k, v, opt) {
+    if (locked) return true;
+    try {
+      LS().setItem(k, JSON.stringify(v));
+      S.failed.delete(k); S.lastOk = Date.now();
+      if (!S.failed.size) { S.state = 'saved'; S.err = null; }
+      if (!(opt && opt.quiet) && KEYS.includes(k)) touch();
+      emit(); return true;
+    } catch (e) {
+      S.failed.add(k); S.state = 'failed'; S.err = (e && (e.name === 'QuotaExceededError' || e.code === 22)) ? '저장 공간 부족 (QuotaExceeded)' : (e && e.name) || String(e);
+      emit(); return false;
+    }
+  }
+  function pending() { if (S.state !== 'failed') { S.state = 'saving'; emit(); } }
+  function meta() { return get(META, {}) || {}; }
+  function touch() { const m = meta(); m.lastChange = Date.now(); try { LS().setItem(META, JSON.stringify(m)); } catch (e) { /* meta is advisory */ } }
+  function usage() {
+    const by = {}; let total = 0;
+    [...KEYS, ...UI_KEYS, META, UNDO].forEach((k) => { const v = raw(k); if (v != null) { by[k] = v.length * 2; total += v.length * 2; } });   // UTF-16 bytes
+    return { by, total };
+  }
+  // a backup is worth suggesting after real progress that has never been backed up, a week after the last backup, or when saving failed
+  function backupAdvice(progressCount) {
+    const m = meta(), now = Date.now();
+    if (S.state === 'failed') return '저장 실패 — 지금 전체 백업을 내려받으세요';
+    if (usage().total > 3.5e6) return '저장 공간의 70 % 이상 사용 — 백업 후 Design DB를 비우는 것을 권장';
+    if (!progressCount) return null;
+    if (!m.lastBackup) return progressCount >= 3 ? '아직 백업이 없습니다' : null;
+    if (m.lastChange && m.lastChange > m.lastBackup && now - m.lastBackup > 7 * 864e5) return '마지막 백업 후 7일이 지났습니다';
+    return null;
+  }
+  function status() { return { state: S.state, err: S.err, failed: [...S.failed], lastOk: S.lastOk, available: S.available, meta: meta() }; }
+  const fnv = (str) => { let h = 0x811c9dc5; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, '0'); };
+  // ---- full backup ----
+  function summarize(data) {
+    const P = data['smq3-progress'] || {}, by = (P && P.by) || {}, out = { platforms: [], stars: 0, cards: 0, designs: 0, db: Array.isArray(data['smq3-db']) ? data['smq3-db'].length : 0, labMissions: 0 };
+    const pc = (m) => ((m & 1) + ((m >> 1) & 1) + ((m >> 2) & 1));
+    Object.keys(by).forEach((pid) => {
+      const ns = by[pid] || {}, st = ns.stars || {};
+      const n = ['easy', 'std', 'hard'].reduce((a, md) => a + Object.values(st[md] || {}).reduce((b, m) => b + pc(m | 0), 0), 0);
+      const c = Object.keys(ns.cards || {}).length, dz = Object.keys((data['smq3-designs'] || {})[pid] || {}).length;
+      const lab = ((data['smq3-lab'] || {})[pid] || {}).done || {};
+      out.platforms.push({ id: pid, stars: n, cards: c, designs: dz, lab: Object.values(lab).filter(Boolean).length });
+      out.stars += n; out.cards += c; out.designs += dz; out.labMissions += Object.values(lab).filter(Boolean).length;
+    });
+    return out;
+  }
+  function makeBackup(withUI) {
+    const data = {};
+    KEYS.concat(withUI ? UI_KEYS : []).forEach((k) => { const v = raw(k); if (v != null) { try { data[k] = JSON.parse(v); } catch (e) { /* skip an unreadable key */ } } });
+    const body = JSON.stringify(data);
+    return { schema: SCHEMA, app: 'SPEC-to-MASK Quest', app_version: BUILD.version, build: BUILD.commit || BUILD.channel, created: new Date().toISOString(), includes_ui: !!withUI,
+      summary: summarize(data), checksum: 'fnv1a32:' + fnv(body), data };
+  }
+  function markBackup() { const m = meta(); m.lastBackup = Date.now(); try { LS().setItem(META, JSON.stringify(m)); } catch (e) { /* advisory */ } emit(); }
+  const isObj = (o) => o && typeof o === 'object' && !Array.isArray(o);
+  // structural check of a parsed backup; returns { ok, errors[], warnings[], summary }
+  function validate(b, ctx) {
+    const errors = [], warnings = [];
+    if (!isObj(b)) return { ok: false, errors: ['JSON 객체가 아닙니다.'], warnings };
+    if (b.schema !== SCHEMA) { errors.push(typeof b.schema === 'string' && /^smq-backup\//.test(b.schema) ? `지원하지 않는 백업 버전 ${b.schema} (이 프로그램은 ${SCHEMA})` : 'SPEC-to-MASK 전체 백업(smq-backup/1)이 아닙니다. 설계 내보내기(smq-design/1)나 smq-circuit/1 파일은 복원할 수 없습니다.'); return { ok: false, errors, warnings }; }
+    if (!isObj(b.data)) { errors.push('data가 없습니다.'); return { ok: false, errors, warnings }; }
+    const ck = 'fnv1a32:' + fnv(JSON.stringify(b.data));
+    if (b.checksum !== ck) errors.push('체크섬이 맞지 않습니다 — 파일이 잘렸거나 수정되었습니다 (손상된 백업).');
+    const d = b.data, plats = (ctx && ctx.platforms) || null, levels = (ctx && ctx.levels) || null;
+    Object.keys(d).forEach((k) => { if (!KEYS.includes(k) && !UI_KEYS.includes(k)) warnings.push(`알 수 없는 키 ${k}는 무시합니다.`); });
+    const P = d['smq3-progress'];
+    if (P != null) {
+      if (!isObj(P) || !isObj(P.by)) errors.push('smq3-progress 구조가 올바르지 않습니다 (by 없음).');
+      else Object.entries(P.by).forEach(([pid, ns]) => {
+        if (plats && !plats[pid]) warnings.push(`알 수 없는 플랫폼 ${pid}`);
+        if (!isObj(ns) || !isObj(ns.stars) || !['easy', 'std', 'hard'].every((m) => isObj(ns.stars[m] || {}))) errors.push(`${pid}: stars 구조가 올바르지 않습니다.`);
+        else ['easy', 'std', 'hard'].forEach((m) => Object.entries(ns.stars[m] || {}).forEach(([id, v]) => { if (!Number.isInteger(v) || v < 0 || v > 7) errors.push(`${pid}/${m}/${id}: 별 값 ${v}`); if (levels && !levels[id]) warnings.push(`알 수 없는 레벨 ${id}`); }));
+        if (ns.cards != null && !isObj(ns.cards)) errors.push(`${pid}: cards 구조가 올바르지 않습니다.`);
+      });
+    }
+    if (d['smq3-designs'] != null && !isObj(d['smq3-designs'])) errors.push('smq3-designs 구조가 올바르지 않습니다.');
+    if (d['smq3-db'] != null && (!Array.isArray(d['smq3-db']) || d['smq3-db'].some((r) => !isObj(r) || typeof r.lv !== 'string'))) errors.push('smq3-db(Design DB) 구조가 올바르지 않습니다.');
+    if (d['smq3-lab'] != null && !isObj(d['smq3-lab'])) errors.push('smq3-lab 구조가 올바르지 않습니다.');
+    if (d['smq3-id'] != null && typeof d['smq3-id'] !== 'string') errors.push('smq3-id가 문자열이 아닙니다.');
+    return { ok: !errors.length, errors, warnings, summary: summarize(d) };
+  }
+  // replace the game's keys with the backup's; on any refused write, put every key back as it was
+  function restore(b, opt) {
+    const v = validate(b, opt && opt.ctx); if (!v.ok) return { ok: false, err: v.errors.join(' ') };
+    const keys = KEYS.concat(b.includes_ui ? UI_KEYS : []), prev = {};
+    keys.forEach((k) => { prev[k] = raw(k); });
+    let undoSaved = false;
+    try { LS().setItem(UNDO, JSON.stringify({ at: new Date().toISOString(), data: prev })); undoSaved = true; } catch (e) { undoSaved = false; }
+    if (!undoSaved && !(opt && opt.allowNoUndo)) return { ok: false, err: '복원 전 현재 데이터를 보관할 공간이 없습니다. 먼저 “백업 파일 내려받기”로 현재 데이터를 저장한 뒤, “현재 데이터를 이미 백업했습니다”를 체크하고 다시 복원하세요.', needUndo: true };
+    try {
+      keys.forEach((k) => { if (b.data[k] === undefined) LS().removeItem(k); else LS().setItem(k, JSON.stringify(b.data[k])); });
+    } catch (e) {
+      keys.forEach((k) => { try { if (prev[k] == null) LS().removeItem(k); else LS().setItem(k, prev[k]); } catch (e2) { /* best effort */ } });
+      return { ok: false, err: '복원 중 저장이 거부되어 원래 데이터로 되돌렸습니다 (' + ((e && e.name) || e) + ').' };
+    }
+    const m = meta(); m.restoredAt = Date.now(); m.lastBackup = Date.now(); try { LS().setItem(META, JSON.stringify(m)); } catch (e) { /* advisory */ }
+    locked = true;
+    return { ok: true, undoSaved };
+  }
+  function undoInfo() { const u = get(UNDO, null); return u && u.at ? { at: u.at } : null; }
+  function undo() {
+    const u = get(UNDO, null); if (!u || !isObj(u.data)) return { ok: false, err: '되돌릴 데이터가 없습니다.' };
+    const now = {}; Object.keys(u.data).forEach((k) => { now[k] = raw(k); });
+    try { Object.entries(u.data).forEach(([k, v]) => { if (v == null) LS().removeItem(k); else LS().setItem(k, v); }); LS().removeItem(UNDO); locked = true; return { ok: true }; }
+    catch (e) { Object.entries(now).forEach(([k, v]) => { try { if (v == null) LS().removeItem(k); else LS().setItem(k, v); } catch (e2) { /* best effort */ } }); return { ok: false, err: String((e && e.name) || e) }; }
+  }
+  return { get, set, isLocked: () => locked, pending, status, usage, backupAdvice, makeBackup, markBackup, validate, restore, undo, undoInfo, subscribe: (f) => subs.push(f), KEYS, UI_KEYS, SCHEMA, fnv };
+})();
+if (typeof window !== 'undefined') { window.SMQ_STORE = SMQ_STORE; window.SMQ_BUILD_INFO = BUILD; }
 
 // ===== PhotonQuest physics engine =====
 // 2D effective-index (SOI strip, TE) + eigenmode expansion of the MMI section.
@@ -6378,10 +6586,7 @@ const STAGES = { 1: 'Stage 1 · Passive', 2: 'Stage 2 · Active', 3: 'Stage 3 ·
 // ===== Game shell: campaign, scoring, objectives, coach, fab, AI rival, Design DB, cards =====
 (() => {
 const $ = (s) => document.querySelector(s);
-const store = {
-  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
-  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
-};
+const store = SMQ_STORE;   // src/persist.js: every write reports success; failures show in the header (save chip) and banner
 const MODES = {
   easy: { label: '입문', th: 1.5, area: 1.3, sig: 0.6, credits: 5, maxHint: 3, hint: 2, note: '스펙 1.5배 완화 · 공정 변동 60% · 크레딧 5' },
   std: { label: '표준', th: 1.0, area: 1.0, sig: 1.0, credits: 3, maxHint: 3, hint: 1, note: '기본 스펙 · 크레딧 3' },
@@ -6557,7 +6762,7 @@ function setParam(k, v, fromBtn) {
     const back = hk ? document.querySelector(hd ? `.nudge[data-k="${hk}"][data-d="${hd}"]` : `#p-${hk}`) : null; if (back) back.focus();
   }
   else { if (fromBtn) $('#p-' + k).value = nv; $('#o-' + k).textContent = pFmt(p, nv); }
-  requestEval(); scheduleCommit();
+  requestEval(); store.pending(); scheduleCommit();
 }
 {
   const list = $('#prm-list');
@@ -7174,10 +7379,90 @@ function setupLevel() {
 }
 const hot = window.claude && window.claude.hot;
 if (hot && hot.snapshot) hot.snapshot(() => ({ id: state.id, DES }));
+/* ---------- save state and full backup / restore (src/persist.js) ---------- */
+const progressCount = () => Object.values(P.by || {}).reduce((a, ns) => a + Object.values((ns && ns.stars) || {}).reduce((b, o) => b + Object.values(o || {}).reduce((c, m) => c + popcount(m | 0), 0), 0) + Object.keys((ns && ns.cards) || {}).length, 0);
+const kb = (n) => (n >= 1e6 ? (n / 1e6).toFixed(2) + ' MB' : (n / 1e3).toFixed(1) + ' kB');
+const tstr = (t) => { if (!t) return '—'; const d = new Date(t); return isNaN(d) ? String(t) : d.toLocaleString('ko-KR', { hour12: false }); };
+function renderSave(st) {
+  st = st || store.status();
+  const chip = $('#save-chip'), adv = st.state === 'saved' ? store.backupAdvice(progressCount()) : null;
+  const k = st.state === 'failed' ? 'failed' : st.state === 'saving' ? 'saving' : adv ? 'advice' : 'saved';
+  chip.dataset.st = k;
+  $('#save-txt').textContent = { saved: '저장됨', saving: '저장 중…', failed: '저장 실패', advice: '백업 권장' }[k];
+  chip.title = k === 'failed' ? `저장 실패: ${st.err || ''} — 누르면 전체 백업` : k === 'advice' ? `${adv} — 누르면 전체 백업` : '저장 상태 · 전체 백업 / 복원';
+  const w = $('#save-warn'); w.hidden = st.state !== 'failed';
+  if (!w.hidden) $('#save-warn-t').textContent = `${st.available ? '' : '이 브라우저가 저장소를 막았습니다(시크릿 창·정책). '}${st.err || ''} — 지금까지의 작업은 이 창에만 남아 있고, 창을 닫으면 마지막 저장 이후의 변경이 사라집니다. 전체 백업을 내려받아 보관하세요.`;
+  if (DATA.isOpen()) renderDataStatus(st, adv);
+}
+const DATA = smqModal($('#data-dlg'));
+function renderDataStatus(st, adv) {
+  st = st || store.status(); const u = store.usage(), m = st.meta || {};
+  const name = { 'smq3-progress': '진행 기록 (별·카드·학습 기록)', 'smq3-designs': '레벨 설계', 'smq3-db': 'Design DB', 'smq3-lab': 'Design Lab 프로젝트', 'smq3-ui': '화면 설정', 'smq3-meta': '백업 메타', 'smq3-undo': '복원 직전 데이터' };
+  $('#data-status').innerHTML = `<table class="ltbl"><tr><th>상태</th><td>${st.state === 'failed' ? `<b class="st-FAIL">✕ 저장 실패</b> · ${st.err || ''}${st.failed.length ? ` (${st.failed.join(', ')})` : ''}` : st.state === 'saving' ? '저장 중…' : '<b class="st-PASS">✓ 저장됨</b>'}${st.lastOk ? ` · 마지막 저장 ${tstr(st.lastOk)}` : ''}</td></tr>`
+    + `<tr><th>마지막 전체 백업</th><td>${m.lastBackup ? tstr(m.lastBackup) : '없음'}${adv ? ` · <span class="st-WARNING">${adv}</span>` : ''}</td></tr>`
+    + `<tr><th>사용량</th><td>${kb(u.total)} (브라우저 한도 보통 ≈ 5 MB)<br><span class="note">${Object.entries(u.by).map(([k2, v]) => `${name[k2] || k2} ${kb(v)}`).join(' · ')}</span></td></tr>`
+    + `<tr><th>빌드</th><td>v${BUILD.version} · ${BUILD.commit ? BUILD.commit.slice(0, 10) + ' · ' + String(BUILD.date || '').slice(0, 10) : BUILD.channel + ' build'}${BUILD.offline ? ' · 오프라인(외부 폰트 없음)' : ''}</td></tr></table>`;
+}
+function openData(focusSel) { renderDataStatus(); renderUndo(); DATA.open(focusSel || '#bk-dl'); }
+$('#save-chip').addEventListener('click', () => openData());
+$('#save-warn-b').addEventListener('click', () => openData('#bk-dl'));
+store.subscribe(renderSave);
+const bkName = () => `spec-to-mask-backup-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '')}.json`;
+$('#bk-dl').addEventListener('click', async () => {
+  persist(); persistDB();   // the backup must contain what is on screen
+  const b = store.makeBackup($('#bk-ui').checked), txt = JSON.stringify(b, null, 1), msg = $('#bk-msg');
+  const r = await smqDownload(bkName(), txt);
+  $('#bk-ta').hidden = false; $('#bk-ta').value = txt;
+  if (r.ok) { store.markBackup(); msg.innerHTML = `<b>${bkName()}</b> 저장을 시작했습니다 — 별 ${b.summary.stars} · 카드 ${b.summary.cards} · 설계 ${b.summary.designs} · DB ${b.summary.db}건 · ${kb(txt.length)}. 같은 내용이 아래에 있습니다.`; }
+  else msg.innerHTML = r.how === 'declined' ? '저장을 취소했습니다.' : '이 화면에서는 파일 저장이 막혀 있습니다 — 아래 JSON을 전부 선택해 복사(Ctrl/⌘+C)한 뒤 .json 파일로 보관하세요.';
+  renderSave();
+});
+$('#bk-copy').addEventListener('click', async () => {
+  persist(); persistDB();
+  const b = store.makeBackup($('#bk-ui').checked), txt = JSON.stringify(b), ok = await smqCopy(txt, $('#bk-ta'));
+  if (ok) store.markBackup();
+  $('#bk-msg').textContent = ok ? `클립보드에 복사했습니다 (${kb(txt.length)}). 메모장 등에 붙여 .json으로 보관하세요.` : '클립보드를 쓸 수 없습니다 — 아래 선택된 JSON을 Ctrl/⌘+C로 복사하세요 (복사 후에는 백업으로 기록되지 않으니 보관을 확인하세요).';
+  renderSave();
+});
+let RS = null;   // parsed + validated backup awaiting confirmation
+const ctxV = () => ({ platforms: PLATFORMS, levels: LMAP });
+function checkRestore(txt) {
+  const out = $('#rs-out'); RS = null; let b;
+  try { b = JSON.parse(txt); } catch (e) { out.innerHTML = '<p class="rs-err">JSON으로 읽을 수 없습니다 (파일이 잘렸거나 다른 형식).</p>'; return; }
+  const v = store.validate(b, ctxV());
+  if (!v.ok) { out.innerHTML = `<p class="rs-err"><b>복원할 수 없습니다.</b> ${v.errors.slice(0, 6).join(' ')}</p><p class="note">지금 데이터는 바뀌지 않았습니다.</p>`; return; }
+  persist(); persistDB();
+  const cur = store.makeBackup(false).summary, nb = v.summary, rowS = (lab, a, c) => `<tr><td>${lab}</td><td class="num">${a}</td><td class="num">${c}</td></tr>`;
+  RS = b;
+  out.innerHTML = `<p>백업 <b>${b.app_version ? 'v' + b.app_version : ''}</b> · ${tstr(b.created)} · ${b.schema}${b.includes_ui ? ' · 화면 설정 포함' : ''} · 체크섬 일치</p>`
+    + `<table class="ltbl"><tr><th>항목</th><th>백업</th><th>지금 이 브라우저</th></tr>${rowS('플랫폼', nb.platforms.map((x) => x.id).join(', ') || '—', cur.platforms.map((x) => x.id).join(', ') || '—')}${rowS('별', nb.stars, cur.stars)}${rowS('부품 카드', nb.cards, cur.cards)}${rowS('레벨 설계', nb.designs, cur.designs)}${rowS('Design DB 레코드', nb.db, cur.db)}${rowS('Design Lab 미션 (이전 완료 포함)', nb.labMissions, cur.labMissions)}</table>`
+    + (v.warnings.length ? `<p class="rs-warn">${v.warnings.slice(0, 5).join(' ')}</p>` : '')
+    + `<p class="note">복원하면 위 “지금” 데이터가 백업 내용으로 <b>바뀝니다</b>(합치기 아님). 복원 직전 데이터는 자동 보관되어 “복원 되돌리기”로 돌아갈 수 있습니다.</p>`
+    + '<label class="chk"><input type="checkbox" id="rs-ok"> 지금 데이터를 이 백업으로 바꾸는 것을 확인했습니다</label><label class="chk"><input type="checkbox" id="rs-had"> 지금 데이터를 이미 따로 백업했습니다 (보관 공간이 없을 때만 필요)</label>'
+    + '<div class="row-btns"><button class="btn pri" id="rs-go" disabled>이 백업으로 복원</button></div><p class="note" id="rs-msg" aria-live="polite"></p>';
+}
+$('#rs-check').addEventListener('click', () => checkRestore($('#rs-ta').value));
+$('#rs-file').addEventListener('change', (e) => { const f = e.target.files && e.target.files[0]; if (!f) return; const rd = new FileReader(); rd.onload = () => { $('#rs-ta').value = String(rd.result); checkRestore(String(rd.result)); }; rd.readAsText(f); e.target.value = ''; });
+$('#rs-out').addEventListener('change', (e) => { if (e.target.id === 'rs-ok') $('#rs-go').disabled = !e.target.checked; });
+const reloadSoon = () => setTimeout(() => { try { location.reload(); } catch (e) { /* the page keeps the old state until reopened */ } }, 900);
+$('#rs-out').addEventListener('click', (e) => {
+  if (e.target.id !== 'rs-go' || !RS || state.fabRunning || state.aiRunning != null) return;
+  const r = store.restore(RS, { ctx: ctxV(), allowNoUndo: !!($('#rs-had') && $('#rs-had').checked) }), msg = $('#rs-msg');
+  if (!r.ok) { msg.innerHTML = `<span class="rs-err">${r.err}</span> 지금 데이터는 그대로입니다.`; return; }
+  msg.innerHTML = `<b class="st-PASS">복원했습니다.</b> ${r.undoSaved ? '복원 직전 데이터를 보관했습니다. ' : ''}새 데이터로 다시 불러옵니다…`; RS = null; reloadSoon();
+});
+function renderUndo() {
+  const u = store.undoInfo(), box = $('#rs-undo');
+  box.innerHTML = u ? `<p class="note">복원 직전 데이터가 보관되어 있습니다 (${tstr(u.at)}). <button class="btn" id="rs-undo-b">복원 되돌리기</button></p>` : '';
+}
+$('#rs-undo').addEventListener('click', (e) => { if (e.target.id !== 'rs-undo-b') return; const r = store.undo(); $('#rs-undo').innerHTML = r.ok ? '<p class="note"><b class="st-PASS">되돌렸습니다.</b> 다시 불러옵니다…</p>' : `<p class="rs-err">${r.err}</p>`; if (r.ok) reloadSoon(); });
+window.GAME_DATA = { open: openData };
+
 const UI = store.get('smq3-ui', {}) || {};   // view-only preferences (which sections are open); never progress or designs
 $('#cards').open = !!UI.cards; $('#cards').addEventListener('toggle', () => { UI.cards = $('#cards').open; store.set('smq3-ui', UI); });
 $('#scope').addEventListener('toggle', () => { UI.scope = $('#scope').open; store.set('smq3-ui', UI); }); $('#scope').open = !!UI.scope;
 function start(data) {
+  renderSave();
   if (data && data.DES) { DES = data.DES; if (LMAP[data.id] && !LMAP[data.id].locked) state.id = data.id; }
   if (!state.plat) { showSetup(true); } else { applyPlatform(); showSetup(false); setupLevel(); }
   let lastW = 0; new ResizeObserver(() => { const w = $('#cwrap').clientWidth; if (w && w !== lastW) { lastW = w; sizeCanvas(); } }).observe($('#cwrap'));   // w = 0 while the Design Lab hides the game
@@ -7628,7 +7913,7 @@ if (hot && hot.ready) hot.ready(start); else start(hot && hot.data ? hot.data : 
   /* ---------- UI ---------- */
   const dlg = $('#guide-dlg'), box = dlg.querySelector('.gdlg'), body = $('#guide-body');
   let lastFocus = null, ctx = null, depth = 'basic';
-  try { const v = localStorage.getItem('smq-guide-depth'); if (v === 'deep' || v === 'basic') depth = v; } catch (e) { /* storage unavailable */ }
+  try { const v = String(localStorage.getItem('smq-guide-depth') || '').replace(/"/g, ''); if (v === 'deep' || v === 'basic') depth = v; } catch (e) { /* storage unavailable */ }   // raw (v0.x) or JSON (SMQ_STORE)
   const fn = (v, c) => (typeof v === 'function' ? v(c) : v);
   const lvName = (id) => { const L = ctx && ctx.levels.find((x) => x.id === id); return L ? `${id} ${L.name}` : id; };
   const sec = (id, n, title, html) => `<section class="gsec" id="g-${id}" aria-labelledby="g-${id}-h"><h3 id="g-${id}-h" tabindex="-1"><span class="n">${n}</span>${title}</h3>${html}</section>`;
@@ -7799,7 +8084,7 @@ if (hot && hot.ready) hot.ready(start); else start(hot && hot.data ? hot.data : 
     if (!f.length) return; const first = f[0], last = f[f.length - 1];
     if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   });
-  $('#guide-depth').addEventListener('click', (e) => { const b = e.target.closest('[data-depth]'); if (!b) return; depth = b.dataset.depth; try { localStorage.setItem('smq-guide-depth', depth); } catch (er) { /* ignore */ } box.dataset.depth = depth; [...$('#guide-depth').querySelectorAll('button')].forEach((x) => x.setAttribute('aria-checked', String(x.dataset.depth === depth))); });
+  $('#guide-depth').addEventListener('click', (e) => { const b = e.target.closest('[data-depth]'); if (!b) return; depth = b.dataset.depth; SMQ_STORE.set('smq-guide-depth', depth); box.dataset.depth = depth; [...$('#guide-depth').querySelectorAll('button')].forEach((x) => x.setAttribute('aria-checked', String(x.dataset.depth === depth))); });
   $('#guide-toc').addEventListener('click', (e) => { const a = e.target.closest('[data-sec]'); if (!a) return; e.preventDefault(); const h = $(`#g-${a.dataset.sec}-h`); if (h) { h.scrollIntoView({ block: 'start', behavior: 'smooth' }); h.focus({ preventScroll: true }); } });
   $('#guide-pop').addEventListener('click', () => {   // static copy in a separate window (offline: everything inline, examples omitted)
     const css = [...document.querySelectorAll('style')].map((s) => s.textContent).join('\n'), cl = body.cloneNode(true);
@@ -7833,7 +8118,7 @@ window.LABUI = (() => {
   if (!box || typeof LAB === 'undefined') return null;
   const KEY = 'smq3-lab';
   const load = () => { try { const v = localStorage.getItem(KEY); return v ? JSON.parse(v) : {}; } catch (e) { return {}; } };
-  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(LS)); } catch (e) { /* storage unavailable */ } };
+  const save = () => SMQ_STORE.set(KEY, LS);   // a refused write shows in the header save chip (src/persist.js)
   let LS = load(), isOpen = false, C = null, CHK = null, MS = null, sel = null, cam = null, drag = null, timer = null;
   const SH = () => window.GAME_SHELL;
   const S = () => { const p = SH().plat(); LS[p] = LS[p] || {}; return LS[p]; };

@@ -7,3 +7,4 @@ tools/smq2gds/**/*.gds
 tools/smq2gds/**/*.png
 tools/smq2gds/examples/*.check.json
 .pytest_cache/
+dist/index-offline.html

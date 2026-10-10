@@ -399,6 +399,19 @@ details.sect[open] > summary{margin-bottom:10px}
 .roles div b{display:block;color:var(--fg);font-size:12.5px}
 @media (max-width:600px){.gdlg-back{padding:0}.gdlg{height:100vh;height:100dvh;border-radius:0;border:0}.gdlg-h h2{font-size:19px}}
 @media (prefers-reduced-motion:reduce){.bar > i{transition:none}}
+/* save state chip, failure banner, data dialog */
+.savechip{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--panel);color:var(--fg-2);cursor:pointer}
+.savechip .sv-dot{width:8px;height:8px;border-radius:50%;background:var(--pass)}
+.savechip[data-st="saving"] .sv-dot{background:var(--fg-3)}
+.savechip[data-st="failed"]{border-color:var(--fail);color:var(--fail)} .savechip[data-st="failed"] .sv-dot{background:var(--fail);border-radius:1px}
+.savechip[data-st="advice"]{border-color:var(--amber);color:var(--amber)} .savechip[data-st="advice"] .sv-dot{background:transparent;border:2px solid var(--amber)}
+.savewarn{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;margin:0 0 12px;padding:9px 12px;border-radius:8px;border:1px solid var(--fail);background:rgba(255,107,107,.08);color:var(--fg);font-size:13px}
+.savewarn b{color:var(--fail)}
+.ddlg{height:auto;max-height:min(92vh,980px)}
+.chk{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--fg-2);margin:6px 0}
+.chk input{accent-color:var(--amber);width:16px;height:16px}
+#rs-ta{height:90px}
+.rs-err{color:var(--fail)} .rs-warn{color:var(--amber)}
 /* phone width: tighter header and map (kept last so it overrides the base rules) */
 @media (max-width:600px){
   .top{margin-bottom:10px}
@@ -414,8 +427,10 @@ details.sect[open] > summary{margin-bottom:10px}
       <h1>SPEC-to-MASK <span>Quest</span></h1>
       <p id="brand-sub">Photonic IC 설계 학습 · Spec → Device → System → Layout → GDS</p>
     </div>
-    <div class="hdr-r"><button class="platchip" id="plat-chip" hidden></button><div class="cardcount" id="cardcount"></div></div>
+    <div class="hdr-r"><button class="platchip" id="plat-chip" hidden></button><div class="cardcount" id="cardcount"></div><button class="savechip" id="save-chip" aria-haspopup="dialog" aria-controls="data-dlg" title="저장 상태 · 전체 백업 / 복원"><span class="sv-dot" aria-hidden="true"></span><span id="save-txt">저장됨</span></button></div>
   </header>
+
+  <div class="savewarn" id="save-warn" role="alert" hidden><b>저장 실패</b> <span id="save-warn-t"></span> <button class="btn" id="save-warn-b">전체 백업 받기</button></div>
 
   <section class="setup" id="setup" hidden aria-labelledby="setup-h">
     <div class="eyebrow">Stage 0 · 플랫폼 정하기</div>
@@ -583,6 +598,28 @@ details.sect[open] > summary{margin-bottom:10px}
       </div>
       <nav class="gdlg-toc" id="guide-toc" aria-label="학습 가이드 목차"></nav>
       <div class="gdlg-body" id="guide-body" tabindex="-1"></div>
+    </div>
+  </div>
+  <div class="gdlg-back" id="data-dlg" hidden>
+    <div class="gdlg ddlg" role="dialog" aria-modal="true" aria-labelledby="data-h">
+      <div class="gdlg-h"><div><div class="eyebrow">Data · 저장과 백업</div><h2 id="data-h">진행 기록 저장 · 전체 백업 / 복원</h2><p class="gsub">진행 기록은 이 브라우저의 localStorage에만 있습니다. 브라우저 데이터 삭제·다른 PC·시크릿 창에서는 사라지므로 전체 백업 파일을 보관하세요. 설계 하나를 내보내는 <b>설계 내보내기(smq-design/1)</b>나 Design Lab의 <b>smq-circuit/1</b>과는 다른, 모든 진행 기록의 백업입니다.</p></div>
+        <div class="gdlg-ctl"><button class="btn pri" data-close>닫기</button></div></div>
+      <div class="gdlg-body" id="data-body" tabindex="-1">
+        <section class="gsec"><h3><span class="n">1</span>저장 상태</h3><div id="data-status"></div></section>
+        <section class="gsec"><h3><span class="n">2</span>전체 백업 (smq-backup/1)</h3>
+          <p>별·부품 카드·레벨 설계·Design DB·Design Lab 프로젝트·학습 경로/리뷰 기록을 버전이 붙은 JSON 하나로 저장합니다.</p>
+          <label class="chk"><input type="checkbox" id="bk-ui"> 화면 설정(접힘 상태·가이드 깊이)도 포함</label>
+          <div class="row-btns"><button class="btn pri" id="bk-dl">백업 파일 내려받기 (.json)</button><button class="btn" id="bk-copy">백업 JSON 복사</button></div>
+          <p class="note" id="bk-msg" aria-live="polite"></p>
+          <textarea class="jsonout" id="bk-ta" hidden readonly aria-label="전체 백업 JSON"></textarea></section>
+        <section class="gsec"><h3><span class="n">3</span>복원</h3>
+          <p>백업 파일을 고르거나 JSON을 붙여 넣고 <b>검사</b>를 누르세요. 형식·체크섬·구조를 검사하고, 지금 데이터와 비교한 요약을 보여 준 뒤 확인을 받아서만 덮어씁니다. 복원 직전 데이터는 자동으로 보관되어 되돌릴 수 있습니다.</p>
+          <div class="row-btns"><label class="btn" for="rs-file">백업 파일 선택</label><input type="file" id="rs-file" accept=".json,application/json" hidden></div>
+          <textarea class="jsonout" id="rs-ta" aria-label="복원할 백업 JSON 붙여넣기" placeholder="여기에 백업 JSON을 붙여 넣기"></textarea>
+          <div class="row-btns"><button class="btn" id="rs-check">검사</button></div>
+          <div id="rs-out" aria-live="polite"></div>
+          <div id="rs-undo"></div></section>
+      </div>
     </div>
   </div>
   <footer>

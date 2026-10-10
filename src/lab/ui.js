@@ -7,7 +7,7 @@ window.LABUI = (() => {
   if (!box || typeof LAB === 'undefined') return null;
   const KEY = 'smq3-lab';
   const load = () => { try { const v = localStorage.getItem(KEY); return v ? JSON.parse(v) : {}; } catch (e) { return {}; } };
-  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(LS)); } catch (e) { /* storage unavailable */ } };
+  const save = () => SMQ_STORE.set(KEY, LS);   // a refused write shows in the header save chip (src/persist.js)
   let LS = load(), isOpen = false, C = null, CHK = null, MS = null, sel = null, cam = null, drag = null, timer = null;
   const SH = () => window.GAME_SHELL;
   const S = () => { const p = SH().plat(); LS[p] = LS[p] || {}; return LS[p]; };

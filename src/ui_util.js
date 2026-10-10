@@ -42,3 +42,41 @@ function svgChart(o) {
   return s + '</svg>';
 }
 const legendHTML = (items) => items.map(([c, t]) => `<span><i style="background:${c}"></i>${t}</span>`).join('');
+// accessible modal: focus moves in, Tab stays inside, Esc / backdrop closes, the page behind is inert, focus returns on close
+function smqModal(back, opt) {
+  opt = opt || {};
+  const box = back.querySelector('[role="dialog"]'); let last = null;
+  const bg = ['#gamewrap', '.top', 'footer', '#save-warn'];
+  function open(focusSel) {
+    last = document.activeElement; back.hidden = false; document.body.style.overflow = 'hidden';
+    bg.forEach((s) => { const e = document.querySelector(s); if (e) { e.setAttribute('aria-hidden', 'true'); e.inert = true; } });
+    const f = (focusSel && back.querySelector(focusSel)) || back.querySelector('[data-close]'); if (f && f.focus) f.focus();
+  }
+  function close() {
+    if (back.hidden) return; back.hidden = true; document.body.style.overflow = '';
+    bg.forEach((s) => { const e = document.querySelector(s); if (e) { e.removeAttribute('aria-hidden'); e.inert = false; } });
+    if (opt.onClose) opt.onClose();
+    if (last && last !== document.body && document.contains(last) && last.focus) last.focus();
+  }
+  back.addEventListener('click', (e) => { if (e.target === back || e.target.closest('[data-close]')) close(); });
+  back.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+    if (e.key !== 'Tab') return;
+    const f = [...box.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])')].filter((x) => x.offsetParent !== null || x === document.activeElement);
+    if (!f.length) return; const first = f[0], lastF = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); lastF.focus(); } else if (!e.shiftKey && document.activeElement === lastF) { e.preventDefault(); first.focus(); }
+  });
+  return { open, close, isOpen: () => !back.hidden };
+}
+// copy text: Clipboard API when allowed, otherwise select a visible textarea so Ctrl/⌘+C works (company browsers often block the API)
+function smqCopy(text, ta) {
+  const sel = () => { if (ta) { ta.hidden = false; ta.value = text; ta.focus(); ta.select(); } };
+  try { if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(text).then(() => { sel(); return true; }, () => { sel(); return false; }); } catch (e) { /* no clipboard */ }
+  sel(); return Promise.resolve(false);
+}
+// download text: the hosted viewer's downloads capability, else a blob link; returns { ok, how }
+async function smqDownload(name, text, mime) {
+  const cap = typeof window !== 'undefined' && window.claude && typeof window.claude.use === 'function' ? await window.claude.use('downloads').catch(() => null) : null;
+  if (cap) { try { await cap.save({ filename: name, data: text }); return { ok: true, how: 'viewer' }; } catch (e) { return { ok: false, how: e && e.code === 'declined' ? 'declined' : 'blocked' }; } }
+  try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: mime || 'application/json' })); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000); return { ok: true, how: 'blob' }; } catch (e) { return { ok: false, how: 'blocked' }; }
+}
