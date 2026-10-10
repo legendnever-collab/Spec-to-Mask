@@ -7,7 +7,7 @@ const html = fs.readFileSync(require('path').join(__dirname, '../../dist/index.h
 let fail = 0; const okm = (c, m) => { if (!c) { fail++; console.log('  FAIL', m); } else console.log('  ok', m); };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const plat = 'si1310';
-function boot(seed) {
+function boot(seed, rawSeed) {
   const dom = new JSDOM('<!doctype html><html><head></head><body>' + html + '</body></html>', { virtualConsole: (() => { const vc = new VirtualConsole(); vc.on('jsdomError', (e) => { if (!/Not implemented: navigation/.test(e.message)) console.log('jsdom:', e.message); }); return vc; })(), runScripts: 'outside-only', pretendToBeVisual: true, url: 'https://backup' + Date.now() + Math.random().toString(36).slice(2) + '.test/' });
   const w = dom.window, errs = []; w.addEventListener('error', (e) => errs.push(e.message));
   const g = () => ({ addColorStop() {} });
@@ -16,6 +16,7 @@ function boot(seed) {
   Object.defineProperty(w.HTMLElement.prototype, 'clientWidth', { get() { return 700; } });
   w.URL.createObjectURL = () => 'blob:x'; w.URL.revokeObjectURL = () => {}; w.HTMLAnchorElement.prototype.click = function () {};
   Object.entries(seed || {}).forEach(([k, v]) => w.localStorage.setItem(k, JSON.stringify(v)));
+  Object.entries(rawSeed || {}).forEach(([k, v]) => w.localStorage.setItem(k, v));   // raw text, e.g. a truncated value
   w.eval(html.split('<script>')[1].split('</script>')[0]);
   return { w, $: (s) => w.document.querySelector(s), errs };
 }
@@ -85,6 +86,44 @@ function boot(seed) {
   const D = boot({ 'smq3-progress': { plat, by: { [plat]: { stars: { easy: {}, std: { '1-5': 1 }, hard: {} }, best: {}, ai: {}, cards: {}, missions: {} } } } }); await sleep(600);
   const pD = D.w.localStorage.getItem('smq3-progress');
   okm(D.w.SMQ_STORE.restore(bk, {}).ok && D.w.SMQ_STORE.undo().ok && D.w.localStorage.getItem('smq3-progress') === pD, 'undo returns the data from before the restore');
-  okm(![A, B, C, D].some((x) => x.errs.length), `no page errors (${[A, B, C, D].flatMap((x) => x.errs).slice(0, 2).join(' | ')})`);
+  // ---- release review finding: corrupted stored data was dropped from the backup and the backup still validated (v1.0.1) ----
+  //   before the fix: makeBackup skipped an unparsable key, the game then overwrote it with defaults, validate() → ok, no warning
+  okm(bk.complete === true && !bk.problems && !bk.unreadable && w.SMQ_STORE.validate(bk).incomplete === false, 'a clean backup is complete (no problems, no unreadable)');
+  { const old = JSON.parse(JSON.stringify(bk)); delete old.complete; const vo = w.SMQ_STORE.validate(old); okm(vo.ok && !vo.incomplete, 'a v1.0 backup without the completeness fields still validates (compatibility)'); }
+  const DB_RAW = '[{"lv":"1-1","pf":"si1310","src":"H","p":{"w":0.4},"y":1,"a":1,"t":1},{"lv":"1-3","pf":"si1', LAB_RAW = '[1,2]';
+  const E = boot({ 'smq3-progress': seed['smq3-progress'], 'smq3-designs': seed['smq3-designs'], 'smq3-id': '1-1' }, { 'smq3-db': DB_RAW, 'smq3-lab': LAB_RAW }); await sleep(600);
+  const q0 = JSON.parse(E.w.localStorage.getItem('smq3-quarantine') || '{}');
+  okm(q0['smq3-db'] && q0['smq3-db'][0].raw === DB_RAW && q0['smq3-db'][0].kind === 'parse' && q0['smq3-lab'] && q0['smq3-lab'][0].kind === 'structure', 'start-up: the unparsable Design DB and the malformed Lab state are copied verbatim to smq3-quarantine');
+  okm(/읽을 수 없는/.test(E.$('#save-chip').title) && E.$('#save-chip').dataset.st === 'advice', `save chip asks for a backup: ${E.$('#save-chip').title}`);
+  E.$('#save-chip').click(); await sleep(100);
+  okm(/읽을 수 없는 데이터/.test(E.$('#data-status').textContent) && /Design DB/.test(E.$('#data-status').textContent) && E.$('#bk-qclear'), 'data dialog lists the unreadable keys and the kept raw text');
+  E.$('#bk-copy').click(); await sleep(150);   // persist() + persistDB() run first: the game now overwrites smq3-db with its default
+  let be = null; try { be = JSON.parse(E.$('#bk-ta').value); } catch (e) { be = null; }
+  okm(E.w.localStorage.getItem('smq3-db') !== DB_RAW, 'the game has overwritten the corrupted key (the raw text survives only in quarantine)');
+  okm(be && be.complete === false && be.problems.some((p) => p.key === 'smq3-db') && be.problems.some((p) => p.key === 'smq3-lab'), `backup is marked incomplete: ${be && be.problems.map((p) => p.key + ':' + p.kind).join(', ')}`);
+  okm(be && be.unreadable['smq3-db'].some((e) => e.raw === DB_RAW) && be.unreadable['smq3-lab'].some((e) => e.raw === LAB_RAW) && /^fnv1a32:/.test(be.unreadable_checksum), 'the raw text is in the backup verbatim (unreadable) with its own checksum');
+  okm(/불완전한 백업/.test(E.$('#bk-msg').textContent), `the copy message says the backup is incomplete: ${E.$('#bk-msg').textContent.slice(0, 60)}`);
+  const ve = E.w.SMQ_STORE.validate(be);
+  okm(ve.ok && ve.incomplete === true && /불완전한 백업/.test(ve.warnings[0]) && /smq3-db/.test(ve.warnings[0]), 'validate: restorable but INCOMPLETE with a warning (not a silent PASS)');
+  { const t = JSON.parse(JSON.stringify(be)); t.unreadable['smq3-db'][0].raw = t.unreadable['smq3-db'][0].raw.slice(0, 20); okm(!E.w.SMQ_STORE.validate(t).ok && /원문의 체크섬/.test(E.w.SMQ_STORE.validate(t).errors.join()), 'edited raw text → checksum error'); }
+  { const t = JSON.parse(JSON.stringify(be)); delete t.problems; t.complete = true; okm(E.w.SMQ_STORE.validate(t).incomplete === true, 'raw text present → incomplete even if the flags are removed'); }
+  // a read the browser refuses is a problem too, never an absent key
+  { const rg = E.w.Storage.prototype.getItem; E.w.Storage.prototype.getItem = function (k) { if (k === 'smq3-designs') { const e = new Error('denied'); e.name = 'SecurityError'; throw e; } return rg.call(this, k); };
+    const br = E.w.SMQ_STORE.makeBackup(false); E.w.Storage.prototype.getItem = rg;
+    okm(br.complete === false && br.problems.some((p) => p.key === 'smq3-designs' && p.kind === 'read') && E.w.SMQ_STORE.validate(br).incomplete, 'a refused read → incomplete backup with the key listed'); }
+  // restoring the incomplete backup elsewhere: the restore screen says so, the unreadable keys are not deleted, the raw text is kept
+  const LAB_F = { [plat]: { d: null, done: { schematic: true }, v: 2 } };
+  const F = boot({ 'smq3-progress': { plat, by: { [plat]: { stars: { easy: {}, std: { '1-2': 1 }, hard: {} }, best: {}, ai: {}, cards: {}, missions: {} } } }, 'smq3-lab': LAB_F }); await sleep(600);
+  F.$('#save-chip').click(); await sleep(50);
+  F.$('#rs-ta').value = JSON.stringify(be); F.$('#rs-check').click(); await sleep(50);
+  okm(/불완전한 백업/.test(F.$('#rs-out').textContent) && F.$('#rs-go'), 'restore check shows "불완전한 백업" next to the checksum');
+  F.$('#rs-ok').checked = true; F.$('#rs-ok').dispatchEvent(new F.w.Event('change', { bubbles: true })); F.$('#rs-go').click(); await sleep(50);
+  const qF = JSON.parse(F.w.localStorage.getItem('smq3-quarantine') || '{}');
+  okm(F.w.localStorage.getItem('smq3-lab') === JSON.stringify(LAB_F) && F.w.localStorage.getItem('smq3-progress') === JSON.stringify(be.data['smq3-progress']), 'restore: the key the backup could not carry (smq3-lab) is left as it was; the rest is restored');
+  okm(qF['smq3-db'] && qF['smq3-db'].some((e) => e.raw === DB_RAW) && /손상 원문 \d+건/.test(F.$('#rs-msg').textContent), 'restore copies the raw text into this browser\'s quarantine for recovery');
+  // clearing the kept raw text needs a confirmation
+  E.w.confirm = () => false; E.$('#bk-qclear').click(); okm(E.w.localStorage.getItem('smq3-quarantine'), 'declined confirmation keeps the raw text');
+  E.w.confirm = () => true; E.$('#bk-qclear').click(); okm(!E.w.localStorage.getItem('smq3-quarantine'), 'confirmed: the kept raw text is removed');
+  okm(![A, B, C, D, E, F].some((x) => x.errs.length), `no page errors (${[A, B, C, D, E, F].flatMap((x) => x.errs).slice(0, 2).join(' | ')})`);
   console.log(fail ? `FAILED ${fail}` : 'backup checks passed'); process.exit(fail ? 1 : 0);
 })();

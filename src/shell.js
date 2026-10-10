@@ -937,6 +937,10 @@ function renderDataStatus(st, adv) {
   st = st || store.status(); const u = store.usage(), m = st.meta || {};
   const name = { 'smq3-id': '현재 레벨', 'smq-mode-v1': '난이도', 'smq-hint-v1': '힌트 단계', 'smq-guide-depth': '가이드 깊이', 'smq3-progress': '진행 기록 (별·카드·학습 기록)', 'smq3-designs': '레벨 설계', 'smq3-db': 'Design DB', 'smq3-lab': 'Design Lab 프로젝트', 'smq3-ui': '화면 설정', 'smq3-meta': '백업 메타', 'smq3-undo': '복원 직전 데이터' };
   $('#data-status').innerHTML = `<table class="ltbl"><tr><th>상태</th><td>${st.state === 'failed' ? `<b class="st-FAIL">✕ 저장 실패</b> · ${st.err || ''}${st.failed.length ? ` (${st.failed.join(', ')})` : ''}` : st.state === 'saving' ? '저장 중…' : '<b class="st-PASS">✓ 저장됨</b>'}${st.lastOk ? ` · 마지막 저장 ${tstr(st.lastOk)}` : ''}</td></tr>`
+    + (() => { const q = st.quarantine || [], c = (st.corrupt || []).filter((x) => !q.some((y) => y.key === x.key)); if (!q.length && !c.length) return '';
+      return `<tr><th>읽을 수 없는 데이터</th><td><b class="st-WARNING">⚠ ${[...q.map((x) => `${name[x.key] || x.key} — 원문 ${x.n}건 ${kb(x.bytes)} 보관`), ...c.map((x) => `${name[x.key] || x.key} — ${x.kind === 'read' ? '브라우저가 읽기를 거부' : '읽을 수 없음'}`)].join(' · ')}</b>`
+        + `<br><span class="note">게임은 이 항목을 기본값으로 시작했습니다. 손상 원문은 지우지 않고 보관했으며 전체 백업의 <code>unreadable</code>에 그대로 들어갑니다 — 백업을 내려받아 두세요.${st.quarantineKept === false ? ` <b class="st-FAIL">원문 보관 실패(${st.quarantineErr}) — 지금 바로 백업을 내려받으세요.</b>` : ''}</span>`
+        + (q.length ? ' <button class="btn" id="bk-qclear">보관한 원문 지우기</button>' : '') + '</td></tr>'; })()
     + `<tr><th>마지막 전체 백업</th><td>${m.lastBackup ? tstr(m.lastBackup) : '없음'}${adv ? ` · <span class="st-WARNING">${adv}</span>` : ''}</td></tr>`
     + `<tr><th>사용량</th><td>${kb(u.total)} (브라우저 한도 보통 ≈ 5 MB)<br><span class="note">${Object.entries(u.by).map(([k2, v]) => `${name[k2] || k2} ${kb(v)}`).join(' · ')}</span></td></tr>`
     + `<tr><th>빌드</th><td>v${BUILD.version} · ${BUILD.commit ? BUILD.commit.slice(0, 10) + ' · ' + String(BUILD.date || '').slice(0, 10) : BUILD.channel + ' build'}${BUILD.offline ? ' · 오프라인(외부 폰트 없음)' : ''}</td></tr></table>`;
@@ -946,20 +950,27 @@ $('#save-chip').addEventListener('click', () => openData());
 $('#save-warn-b').addEventListener('click', () => openData('#bk-dl'));
 store.subscribe(renderSave);
 const bkName = () => `spec-to-mask-backup-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '')}.json`;
+// an incomplete backup is never reported as a plain success
+const bkWarn = (b) => (b.complete === false ? `<b class="st-WARNING">⚠ 불완전한 백업</b> — 읽을 수 없는 항목: ${(b.problems || []).map((p) => p.key).join(', ')}. 정상 데이터로는 들어가지 않았고, 원문은 백업의 <code>unreadable</code>에 그대로 보관했습니다. ` : '');
+$('#data-status').addEventListener('click', (e) => {
+  if (e.target.id !== 'bk-qclear') return;
+  if (!confirm('보관한 손상 원문을 이 브라우저에서 지웁니다. 원문이 들어 있는 전체 백업을 이미 내려받았나요?')) return;
+  store.clearQuarantine(); renderDataStatus(); renderSave();
+});
 $('#bk-dl').addEventListener('click', async () => {
   persist(); persistDB();   // the backup must contain what is on screen
   const b = store.makeBackup($('#bk-ui').checked), txt = JSON.stringify(b, null, 1), msg = $('#bk-msg');
   const r = await smqDownload(bkName(), txt);
   $('#bk-ta').hidden = false; $('#bk-ta').value = txt;
-  if (r.ok) { store.markBackup(); msg.innerHTML = `<b>${bkName()}</b> 저장을 시작했습니다 — 별 ${b.summary.stars} · 카드 ${b.summary.cards} · 설계 ${b.summary.designs} · DB ${b.summary.db}건 · ${kb(txt.length)}. 같은 내용이 아래에 있습니다.`; }
-  else msg.innerHTML = r.how === 'declined' ? '저장을 취소했습니다.' : '이 화면에서는 파일 저장이 막혀 있습니다 — 아래 JSON을 전부 선택해 복사(Ctrl/⌘+C)한 뒤 .json 파일로 보관하세요.';
+  if (r.ok) { store.markBackup(); msg.innerHTML = `${bkWarn(b)}<b>${bkName()}</b> 저장을 시작했습니다 — 별 ${b.summary.stars} · 카드 ${b.summary.cards} · 설계 ${b.summary.designs} · DB ${b.summary.db}건 · ${kb(txt.length)}. 같은 내용이 아래에 있습니다.`; }
+  else msg.innerHTML = bkWarn(b) + (r.how === 'declined' ? '저장을 취소했습니다.' : '이 화면에서는 파일 저장이 막혀 있습니다 — 아래 JSON을 전부 선택해 복사(Ctrl/⌘+C)한 뒤 .json 파일로 보관하세요.');
   renderSave();
 });
 $('#bk-copy').addEventListener('click', async () => {
   persist(); persistDB();
   const b = store.makeBackup($('#bk-ui').checked), txt = JSON.stringify(b), ok = await smqCopy(txt, $('#bk-ta'));
   if (ok) store.markBackup();
-  $('#bk-msg').textContent = ok ? `클립보드에 복사했습니다 (${kb(txt.length)}). 메모장 등에 붙여 .json으로 보관하세요.` : '클립보드를 쓸 수 없습니다 — 아래 선택된 JSON을 Ctrl/⌘+C로 복사하세요 (복사 후에는 백업으로 기록되지 않으니 보관을 확인하세요).';
+  $('#bk-msg').innerHTML = bkWarn(b) + (ok ? `클립보드에 복사했습니다 (${kb(txt.length)}). 메모장 등에 붙여 .json으로 보관하세요.` : '클립보드를 쓸 수 없습니다 — 아래 선택된 JSON을 Ctrl/⌘+C로 복사하세요 (복사 후에는 백업으로 기록되지 않으니 보관을 확인하세요).');
   renderSave();
 });
 let RS = null;   // parsed + validated backup awaiting confirmation
@@ -972,9 +983,10 @@ function checkRestore(txt) {
   persist(); persistDB();
   const cur = store.makeBackup(false).summary, nb = v.summary, rowS = (lab, a, c) => `<tr><td>${lab}</td><td class="num">${a}</td><td class="num">${c}</td></tr>`;
   RS = b;
-  out.innerHTML = `<p>백업 <b>${b.app_version ? 'v' + b.app_version : ''}</b> · ${tstr(b.created)} · ${b.schema}${b.includes_ui ? ' · 화면 설정 포함' : ''} · 체크섬 일치</p>`
+  out.innerHTML = `<p>백업 <b>${b.app_version ? 'v' + b.app_version : ''}</b> · ${tstr(b.created)} · ${b.schema}${b.includes_ui ? ' · 화면 설정 포함' : ''} · 체크섬 일치${v.incomplete ? ' · <b class="st-WARNING">⚠ 불완전한 백업</b>' : ''}</p>`
     + `<table class="ltbl"><tr><th>항목</th><th>백업</th><th>지금 이 브라우저</th></tr>${rowS('플랫폼', nb.platforms.map((x) => x.id).join(', ') || '—', cur.platforms.map((x) => x.id).join(', ') || '—')}${rowS('별', nb.stars, cur.stars)}${rowS('부품 카드', nb.cards, cur.cards)}${rowS('레벨 설계', nb.designs, cur.designs)}${rowS('Design DB 레코드', nb.db, cur.db)}${rowS('Design Lab 미션 (이전 완료 포함)', nb.labMissions, cur.labMissions)}</table>`
     + (v.warnings.length ? `<p class="rs-warn">${v.warnings.slice(0, 5).join(' ')}</p>` : '')
+    + (v.incomplete ? '<p class="note">불완전한 백업의 손상 원문은 복원 시 이 브라우저의 보관함(smq3-quarantine)에도 복사되어 나중에 복구할 수 있습니다.</p>' : '')
     + `<p class="note">복원하면 위 “지금” 데이터가 백업 내용으로 <b>바뀝니다</b>(합치기 아님). 복원 직전 데이터는 자동 보관되어 “복원 되돌리기”로 돌아갈 수 있습니다.</p>`
     + '<label class="chk"><input type="checkbox" id="rs-ok"> 지금 데이터를 이 백업으로 바꾸는 것을 확인했습니다</label><label class="chk"><input type="checkbox" id="rs-had"> 지금 데이터를 이미 따로 백업했습니다 (보관 공간이 없을 때만 필요)</label>'
     + '<div class="row-btns"><button class="btn pri" id="rs-go" disabled>이 백업으로 복원</button></div><p class="note" id="rs-msg" aria-live="polite"></p>';
@@ -987,7 +999,7 @@ $('#rs-out').addEventListener('click', (e) => {
   if (e.target.id !== 'rs-go' || !RS || state.fabRunning || state.aiRunning != null) return;
   const r = store.restore(RS, { ctx: ctxV(), allowNoUndo: !!($('#rs-had') && $('#rs-had').checked) }), msg = $('#rs-msg');
   if (!r.ok) { msg.innerHTML = `<span class="rs-err">${r.err}</span> 지금 데이터는 그대로입니다.`; return; }
-  msg.innerHTML = `<b class="st-PASS">복원했습니다.</b> ${r.undoSaved ? '복원 직전 데이터를 보관했습니다. ' : ''}새 데이터로 다시 불러옵니다…`; RS = null; reloadSoon();
+  msg.innerHTML = `<b class="st-PASS">복원했습니다.</b> ${r.undoSaved ? '복원 직전 데이터를 보관했습니다. ' : ''}${r.rawKept > 0 ? `손상 원문 ${r.rawKept}건을 보관함에 복사했습니다. ` : r.rawKept < 0 ? '<b class="st-FAIL">손상 원문을 보관함에 복사하지 못했습니다 — 백업 파일을 지우지 마세요.</b> ' : ''}새 데이터로 다시 불러옵니다…`; RS = null; reloadSoon();
 });
 function renderUndo() {
   const u = store.undoInfo(), box = $('#rs-undo');
