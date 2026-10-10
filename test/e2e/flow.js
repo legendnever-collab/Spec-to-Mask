@@ -7,6 +7,8 @@
 //   2-3R microring: Guided by default (step 1 = radius only), step 1 solved with the FSR relation without stars, the radius is
 //        the real design value in step 2 and Full Design; a player with 2-3R stars sees the MZM-vs-MRR comparison panel, the
 //        comparison runs on request, and the export draws the resonance-aligned layout radius (not the slider value).
+//   3A+ DR8 modulator choice: MZM by default (saved designs without the key stay MZM), switching to MRR changes the transmitter
+//        block, adds the ring stability objective and the comparison panel shows both modulators; 3A has no choice.
 // node test/e2e/flow.js [platform]
 const { JSDOM } = require('jsdom'); const fs = require('fs');
 const html = fs.readFileSync(require('path').join(__dirname, '../../dist/index.html'), 'utf8');
@@ -135,6 +137,25 @@ const keys = ($$) => $$('#prm-list .prm input[id^="p-"]').map((e) => e.id.slice(
   okm(gr && gr.pcell === 'ring_allpass' && Math.abs(gr.R_um - cr.res.Rlay) < 1e-9 && gr.R_slider_um === cr.d.R, `export draws the layout radius ${gr && gr.R_um} µm (slider ${cr.d.R} µm), order m ${gr && gr.order_m}`);
   okm(gr && Math.abs(gr.gap_um - cr.d.g) < 1e-9 && gr.core_mat === 'si' && gr.heterogeneous_si === !plat.startsWith('si1'), `gap ${gr && gr.gap_um} µm on the Si layer${plat.startsWith('sin') ? ' (heterogeneous Si on SiN)' : ''}`);
 
-  okm(!A.errs.length && !B.errs.length && !C.errs.length, `no page errors (${A.errs.concat(B.errs, C.errs).slice(0, 3).join(' | ')})`);
+  /* ---------------- 3A+ DR8: MZM ×8 / MRR ×8 ---------------- */
+  const D = boot((w2) => {
+    w2.localStorage.setItem('smq3-progress', JSON.stringify({ plat, by: { [plat]: { stars: { easy: {}, std: { '3A': 1 }, hard: {} }, best: {}, ai: {}, cards: {}, missions: {} } } }));
+    w2.localStorage.setItem('smq3-designs', JSON.stringify({ [plat]: { '3A+': { P: 13, share: 0, tc: 0, pkg: 2, useCard: 0 } } }));   // a pre-Phase-B design (no mod key)
+  });
+  await sleep(300); if (!D.$('.node[data-id="3A+"]')) await D.start(); await D.go('3A+'); await sleep(300);
+  okm(D.$('#p-mod') && D.$('#p-mod').value === '0' && D.w.GAME_CTX().res.mrr === false, 'a saved 3A+ design without a modulator key opens as MZM ×8');
+  const mz = D.w.GAME_CTX().res;
+  okm(!D.$('#xpanel').hidden && /MZM ×8/.test(D.$('#xp-body').textContent) && /MRR ×8/.test(D.$('#xp-body').textContent), 'the DR8 comparison panel shows both modulators');
+  await D.set('mod', 1); await sleep(700);
+  const mr = D.w.GAME_CTX().res;
+  okm(mr.mrr && mr.ringH && mr.ringH.max > 0 && /링 열 안정/.test(D.$('#objs').textContent), `MRR ×8: ring heater ${mr.ringH && mr.ringH.max.toFixed(1)} mW/lane and the ring stability objective`);
+  okm(Math.abs(mr.worst.Pmod - mz.worst.Pmod) < 1e-9 && mr.PW.laser === mz.PW.laser, 'both modulators receive the same light (laser, split, coupling unchanged)');
+  okm((((D.store('smq3-designs') || {})[plat] || {})['3A+'] || {}).mod === 1, 'the modulator choice is stored with the 3A+ design');
+  D.$('[data-xp-run]').click(); await sleep(1500);
+  okm(/Fab 수율/.test(D.$('#xp-body').textContent) && !D.$('#xp-body [data-xp-run]') && /%/.test(D.$('#xp-body').textContent), 'Fab yields of both modulators on request');
+  await D.go('3A'); await sleep(300);
+  okm(!D.$('#p-mod') && D.$('#xpanel').hidden, '3A (2×FR4) has no modulator choice and no DR8 panel');
+
+  okm(!A.errs.length && !B.errs.length && !C.errs.length && !D.errs.length, `no page errors (${A.errs.concat(B.errs, C.errs, D.errs).slice(0, 3).join(' | ')})`);
   console.log(fail ? `FAILED ${fail}` : 'flow checks passed'); process.exit(fail ? 1 : 0);
 })();

@@ -125,8 +125,10 @@ for (const pid of Object.keys(G.PLATFORMS)) {
 }
 /* ---- existing level specs untouched ---- */
 try {
-  const old = JSON.parse(cp.execSync('git show origin/main:src/data/pspec.json', { cwd: path.join(__dirname, '..'), stdio: ['ignore', 'pipe', 'ignore'] }).toString()), now = G.PSPEC;
-  let same = true; for (const p of Object.keys(old)) for (const id of Object.keys(old[p])) if (JSON.stringify(old[p][id]) !== JSON.stringify(now[p][id])) { same = false; console.log('  changed', p, id); }
-  ok(same, 'existing level specs identical to main (only 2-3R added)');
-} catch (e) { console.log('  note: origin/main pspec not available — spec identity check skipped'); }
+  // baseline = main before the microring (f08011b); Phase B only adds the 3A+ modulator key (mod 0 = the old design) to start / ref
+  const old = JSON.parse(cp.execSync('git show f08011b:src/data/pspec.json', { cwd: path.join(__dirname, '..'), stdio: ['ignore', 'pipe', 'ignore'] }).toString()), now = G.PSPEC;
+  const norm = (id, v) => { if (id !== '3A+' || !v) return v; const c = JSON.parse(JSON.stringify(v)); for (const k of ['start', 'ref']) if (c[k] && c[k].mod === 0) delete c[k].mod; return c; };
+  let same = true; for (const p of Object.keys(old)) for (const id of Object.keys(old[p])) if (JSON.stringify(old[p][id]) !== JSON.stringify(norm(id, now[p][id]))) { same = false; console.log('  changed', p, id); }
+  ok(same, 'existing level specs identical to f08011b (only 2-3R added; 3A+ start/ref gain mod 0)');
+} catch (e) { console.log('  note: f08011b pspec not available — spec identity check skipped'); }
 console.log(`${n - fail}/${n} checks passed`); process.exit(fail ? 1 : 0);

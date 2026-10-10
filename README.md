@@ -9,7 +9,7 @@ Photonic IC 설계를 게임으로 배우는 단계별 학습 프로그램입니
 | Stage 0 · 플랫폼 | 파장(1310 O-band / 1550 C-band) → 코어 물질(Si 220 nm / SiN 400 nm, SiO₂ 클래딩) 선택. 진행 기록·부품 카드는 플랫폼별로 저장 |
 | Stage 1 · Passive | 1-1 도파로(TE/TM, 단일/멀티모드) → 1-2 방향성 결합기 → 1-3~1-5 MMI(1×2, 광대역, 2×2) → 1-6 Spot-Size Converter → 1-7 CWDM Demux (Stage 1 피날레 · Active 맛보기) |
 | Stage 2 · Active | 2-1 TO 위상기(★★★ = 1-7 CWDM 다이별 히터 트리밍) → 2-2 PN 공핍 위상기 → 2-3 224G TW-MZM(112 GBd PAM4 눈) → 2-3R 링 변조기(Guided 5단계, MZM과 같은 조건 비교) → 2-4 Ge PD + TIA → 2-5 외부 광원과 링크 버짓(Stage 2 피날레, 부품 카드로 링크 구성) |
-| Stage 3 · System | 3A 1.6T 2×FR4(8×200G, CWDM4 × 2 그룹, 0–70 °C 코너, ★★★ = 다이별 Demux 트리밍 + 산포 수율) → 3A+ 1.6T DR8 / LPO / CPO(비트당 에너지). 손잡이는 아키텍처: 레이저 수·출력·냉각, Mux 열 추적, DSP·패키징. Stage 1·2 부품 카드(또는 각 레벨 기준 설계)로 조립 |
+| Stage 3 · System | 3A 1.6T 2×FR4(8×200G, CWDM4 × 2 그룹, 0–70 °C 코너, ★★★ = 다이별 Demux 트리밍 + 산포 수율) → 3A+ 1.6T DR8 / LPO / CPO(비트당 에너지, 변조기 MZM ×8 / 링 ×8 선택). 손잡이는 아키텍처: 레이저 수·출력·냉각, Mux 열 추적, DSP·패키징. Stage 1·2 부품 카드(또는 각 레벨 기준 설계)로 조립 |
 | Track B 준비 · 긴 지연선 | D-1 저손실 지연 나선(2 ns; 넓힌 아르키메데스 나선 + 테이퍼 Euler S-bend, Hong et al., Photon. Res. 10, 1 (2022)) → D-2 N-bit 스위치형 실시간 지연선(0–5 ns, 10 ps; Hong 2022의 10-bit 칩, Xie et al., Opto-Electron. Adv. 6, 220030 (2023)의 2 µm 암 MZ 스위치). 같은 지연을 Si와 SiN에서 비교 |
 | Stage 3 · System (Track B) | 스위치 기반 FMCW LiDAR: B-1 처프 + 칩 위 기준 간섭계(D-1 나선; 선폭·비선형·데드타임·온도 보정) → B-2 초점면 스위치 어레이(1×N MZ 트리 + 그레이팅 방출기 + 렌즈; FOV·분해능·커버리지·유령 빔) → B-3 시스템 캡스톤(코히어런트 링크 버짓, 반사율 10% 최대 거리·점 속도·전력) |
 
@@ -61,6 +61,14 @@ Photonic IC 설계를 게임으로 배우는 단계별 학습 프로그램입니
 - 레이아웃: 설정 반경 → 1 nm 격자에서 차수 m의 공진을 설계 파장(히터 여유 포함)에 맞춘 **레이아웃 반경**. 내보내기·GDS는 이 반경을 그립니다.
 - MZM vs MRR 비교 패널: ★ 또는 2-3R 카드가 있으면 열림. 같은 112 GBd PAM4, 13 dBm 입력, 0–70 °C, 2-3 ★★ 링크 요구에서 광 대역·EO 대역·면적·IL·OMA·페널티·구동/열 에너지·비트당 에너지·수율을 항목별로 비교(점수 미반영, 충실도 배지 표시).
 - 물리·식·문헌 비교: [docs/mrr_physics.md](docs/mrr_physics.md). 설계 방향 검토와 단계 계획: [docs/design_review_mrr_designlab.md](docs/design_review_mrr_designlab.md).
+
+### 3A+ DR8 변조기 선택 (MZM ×8 / MRR ×8)
+
+3A+에 **변조기 (레인당)** 손잡이가 있습니다(기본 MZM). 링을 고르면 레인마다 2-3R 링(카드 또는 기준 설계)을 모듈의 실제 변조기 입력 파워에서 다시 계산하고, 레인별 히터가 공진을 설계 디튜닝에 잡아 둡니다. 히터는 0–70 °C에서 링 드리프트 − 레이저 드리프트(비냉각 DFB는 같은 방향으로 움직임, TEC면 0)를 FSR 안에서 따라가고, 자기 가열 루프 이득 ≥ 1이면 링크가 닫히지 않습니다. 같은 아키텍처에서 두 변조기를 나란히 보여 주는 비교 패널이 있습니다(점수 미반영).
+
+- 스펙은 MZM 기준 그대로이고, `mod` 키 없는 기존 설계는 MZM으로 열립니다. MZM·2×FR4 결과는 이전과 비트 단위로 같습니다.
+- 3A(2×FR4)는 MZM만 — 링 Tx는 WDM 링 다중화(공진 배정·크로스토크)가 필요한 별도 아키텍처(Phase E)입니다.
+- 모델·가정·결과·열 효율 민감도: [docs/arch_1p6t_dr8.md](docs/arch_1p6t_dr8.md).
 
 ### D-1 직사각형 나선
 
@@ -135,6 +143,7 @@ test/
   e2e/guide.js       jsdom: 모든 레벨 학습 가이드 (절 A–G, 파라미터 행, 예제, 포커스 복원, 설계·점수 불변)
   e2e/flow.js        jsdom: 1-7 Guided 흐름(단계·건너뛰기·값 기록·별 없음·밴드 축) + D-1 직사각형(프리셋·Infeasible·spiral_rect 내보내기)
   e2e/flow.js (2-3R) Guided 기본·1단계 R → 설계 기록·별 없음·Full Design·비교 패널·내보내기 반경 = 레이아웃 반경
+  t_dr8.js           3A+ DR8 변조기 선택: MZM 결과 비트 동일·스펙 불변, 링 = 2-3R 엔진(모듈 입력 파워), 히터(TEC/비냉각), 공정 감도, 열 폭주, 드라이버 (npm run test:dr8)
   t_mrr.js           링 엔진: 반경↔FSR, 공진 조건, Q 관계, Critical coupling, Airy↔Lorentz, 최대 기울기 1/√3, dλ/dT, P_2π, 레이아웃 배치, Q≠대역폭, 정적/동적 OMA, 열 안정 부호, 공정 이동, SiN 이종, 단계 완료, 기존 스펙 불변 (npm run test:mrr)
   t_upgrade.js       엔진: MZI 식·FSR·위상 이동·단계 완료·Lattice 차수 / 직사각형 나선 길이 = cτ/n_g·경계·회전·Mode B·Legacy 동일성
   py/test_smq2gds.py 예제 전부 GDS 생성 + 연결성·폭·간격 DRC·길이·포트 위치 (솔버 없이; spiral_rect는 bbox ⊂ 경계−여유, 포트, S-bend R<sub>min</sub>; ring_allpass는 링 반경·간격 1 nm, 링+버스 2조각, 포트, 히터가 버스 위에 없음, 주석 레이어)
@@ -154,6 +163,8 @@ npm run test:upgrade && npm run test:flow && npm run test:guide
 DES='{"D-1":{"lay":2,"sb":1}}' node test/e2e/bot.js std 2 D-1 si1310   # 직사각형 나선 봇
 node test/e2e/bot.js std 2 2-1,2-2,2-3,2-3R,2-4,2-5 sin1550   # Stage 2 회귀
 npm run test:mrr                                          # 링 변조기 물리
+npm run test:dr8                                          # 3A+ DR8 MZM/MRR
+DES='{"3A+":{"mod":1}}' node test/e2e/bot.js std 2 3A+ si1310   # MRR DR8 봇
 node test/e2e/bot.js std 2 3A,3A+ si1310                  # Stage 3 회귀
 node test/e2e/bot.js std 2 D-1,D-2 sin1550                # 긴 지연선 회귀
 node test/e2e/bot.js std 2 B-1,B-2,B-3 si1550             # Track B 회귀

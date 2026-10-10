@@ -86,10 +86,11 @@ KINDS.mrr = (() => {
   /* ---------- static operating point ---------- */
   // resonance m of a ring of length L (µm) on cross-section x with junction index change dn0: λ = L(n_g + δn)/(m − L(n₀ − n_g)/λ₀)
   const lamRes = (pf, x, L, m, dn0) => L * (x.ng + dn0) / (m - L * (x.neff - x.ng) / pf.lam);
-  // env: { proc, R (explicit radius), noAlign (slider radius), natural (resonance where the geometry puts it), lamR0 (explicit level-0 resonance, µm), sL (laser trim, pm) }
+  // env: { proc, R (explicit radius), noAlign (slider radius), natural (resonance where the geometry puts it), lamR0 (explicit level-0 resonance, µm), sL (laser trim, pm), Pin (input dBm; default 13) }
+  // The layout radius is always designed at the level's 13 dBm input (it is the drawn part); Pin only changes the operating point.
   function core(l, d, env) {
     env = env || {};
-    const pf = l.pf, lam = pf.lam, proc = env.proc || null, P0 = 1e-3 * Math.pow(10, PIN / 10), tr = TRng(l);
+    const pf = l.pf, lam = pf.lam, proc = env.proc || null, P0 = 1e-3 * Math.pow(10, (env.Pin != null ? env.Pin : PIN) / 10), tr = TRng(l);   // env.Pin: modulator input (dBm), e.g. inside a module
     const dw = proc ? proc.dw || 0 : 0, dt = proc ? (proc.dt || 0) * 0.006 / (pf.dt || 0.006) : 0;   // Si-layer thickness spread on every platform
     const pnD = pnDesign(l, d), hd = heaterDesign(l, d), xN = cross(pf), x = proc ? cross(pf, dw, dt) : xN;
     const tabN = pnTab(pf, pnD, null), tab = proc ? pnTab(pf, pnD, proc) : tabN;
@@ -250,13 +251,13 @@ KINDS.mrr = (() => {
   /* ---------- full analysis ---------- */
   function analyse(l, d, proc, opt) {
     opt = opt || {};
-    const c = core(l, d, { proc, R: opt.R, noAlign: opt.noAlign, natural: opt.natural, sL: opt.sL, lamR0: opt.lamR0 });
+    const c = core(l, d, { proc, R: opt.R, noAlign: opt.noAlign, natural: opt.natural, sL: opt.sL, lamR0: opt.lamR0, Pin: opt.Pin });
     const s = statics(c), eo = eoResp(c);
     const eye = opt.noEye ? null : eyeSim(c, eo);
     const pen = !eye ? 0 : eye.ratio > 0.02 && s.mono ? Math.max(0, -10 * Math.log10(Math.min(1, eye.ratio))) : 17;
     const omaDyn = eye ? s.oma * Math.max(eye.ext, 1e-6) : s.oma;   // waveform extrema incl. transition overshoot (Huang et al. 2026)
     // open-loop thermal gain: absorbed-power change per resonance shift × ∂λ/∂T / (G′L) (> 0 on the red side, ≥ 1 = runaway)
-    const eps = 1e-4, cs = core(l, d, { proc, R: c.lay.R, lamR0: c.B.lamOpX(0) + eps, sL: opt.sL }), dP = (cs.Pabs - c.Pabs) / eps;
+    const eps = 1e-4, cs = core(l, d, { proc, R: c.lay.R, lamR0: c.B.lamOpX(0) + eps, sL: opt.sL, Pin: opt.Pin }), dP = (cs.Pabs - c.Pabs) / eps;
     const gth = dP * c.dldT / (c.H.Gp * c.B.L * 1e-6);
     const Ebit = 0.104 * eo.Cj * d.vpp * d.vpp * 1e15;   // fJ/bit, PAM4 C·V² charging energy (driver circuit excluded)
     const Eth = c.PhA * 1e-3 / (2 * BAUD * 1e9) * 1e15;    // fJ/bit, mean heater power over the temperature range
