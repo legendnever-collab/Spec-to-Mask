@@ -11,7 +11,7 @@ window.LABUI = (() => {
   let LS = load(), isOpen = false, C = null, CHK = null, MS = null, sel = null, cam = null, drag = null, timer = null;
   const SH = () => window.GAME_SHELL;
   const S = () => { const p = SH().plat(); LS[p] = LS[p] || {}; return LS[p]; };
-  const ctx = () => ({ pf: SH().pf(), lev: (id) => window.GAME_LEV(id), cards: SH().cards(), des3: Object.keys(SH().design('3A+')).length ? SH().design('3A+') : null });
+  const ctx = () => ({ pf: SH().pf(), lev: (id) => window.GAME_LEV(id), cards: SH().cards(), des3: Object.keys(SH().design('3A+')).length ? SH().design('3A+') : null, gds: S().gds || null });
   function arch3() {
     const cd = SH().cards()['3A+']; if (cd && cd.d) return { mod: cd.d.mod | 0, share: cd.d.share | 0, src: '내 3A+ 카드' };
     const de = SH().design('3A+'); if (Object.keys(de).length) return { mod: de.mod | 0, share: de.share | 0, src: '3A+ 현재 설계' };
@@ -56,7 +56,7 @@ window.LABUI = (() => {
       intro: '연결성, 기하(선폭·간격·굽힘·경계·겹침·간섭), 시스템(레인 속도·용량·변조기·파워 버짓·RF) 검사를 실행합니다. 결과는 PASS / WARNING / FAIL / NOT VERIFIED로 나뉘고, 검사하지 않은 항목에는 PASS를 주지 않습니다. FAIL이 없어야 완료입니다.',
       done: (m, s) => m.verification && !!s.ran },
     { id: 'export', short: '내보내기', title: 'Mission 6 · Circuit Export (→ GDS)', keys: [], adv: [],
-      intro: '설계를 smq-circuit/1 데이터(회로 넷리스트, 소자 파라미터, 포트 연결, 배치, 배선 형상, 플랫폼·규칙, 성능 예측, 검증 결과)로 내보냅니다. 같은 데이터를 tools/smq2gds가 읽어 PCell 조립·GDS·미리보기·재검사를 하는 것은 Phase D입니다.',
+      intro: '설계를 smq-circuit/1 데이터(회로 넷리스트, 소자 파라미터, 포트 연결, 배치, 배선 형상, 플랫폼·규칙, 성능 예측, 검증 결과)로 내보냅니다. tools/smq2gds가 같은 데이터로 PCell 조립·GDS·미리보기·재검사를 하고, 그 결과를 다시 불러오면 GDS Generated가 됩니다.',
       done: (m, s) => !!s.exported && m.verification }
   ];
   const progress = () => { if (!SH() || !SH().plat()) return '—'; const s = LS[SH().plat()] || {}, n = MISS.filter((m) => (s.done || {})[m.id]).length; return `미션 ${n}/${MISS.length}`; };
@@ -70,6 +70,21 @@ window.LABUI = (() => {
     C.samples = (C.routes || []).map((r) => ({ r, pts: LAB.sample(r.prims, Math.max(1, (C.W + C.H) / 4000)) }));
     save();
   }
+  // imported GDS re-check: 'PASS' | 'FAIL' (matches this design) | 'stale' (another design) | null
+  function gdsSt() { const g = S().gds; if (!g || !C) return null; return g.design_hash !== LAB.designHash(C) ? 'stale' : g.summary.FAIL ? 'FAIL' : 'PASS'; }
+  function gdsMsg() {
+    const g = S().gds, st = gdsSt(); if (!g) return S().gdsErr ? `<span class="st-FAIL">${S().gdsErr}</span>` : '아직 불러온 GDS 재검사 결과가 없습니다.';
+    const sm = g.summary, E = (v) => String(v == null ? '' : v).replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[ch]); return `${st === 'stale' ? '<span class="st-WARNING">불러온 결과는 지금과 다른 설계입니다 — 다시 내보내고 GDS를 다시 만드세요.</span> ' : ''}GDS ${E(g.gds)} · sha1 ${E(String(g.gds_sha1).slice(0, 12))} · 셀 ${E(g.cells)}개 · PASS ${sm.PASS} · WARNING ${sm.WARNING} · FAIL ${sm.FAIL}${sm['NOT VERIFIED'] != null ? ` · NOT VERIFIED ${sm['NOT VERIFIED']}` : ''} (hash ${E(g.design_hash)})`;
+  }
+  function importGds(txt) {
+    let V; S().gdsErr = null;
+    try { V = JSON.parse(txt); } catch (er) { S().gdsErr = 'JSON이 아닙니다.'; return; }
+    const r = V && V.gds_recheck;
+    if (!r || r.schema !== LAB.SCHEMA + '#gds-recheck' || !r.summary || !Array.isArray(r.checks)) { S().gdsErr = 'gds_recheck가 없는 파일입니다 — smq2gds.circuit가 만든 engine_verification.json을 고르세요.'; return; }
+    if (V.platform && V.platform !== SH().plat()) { S().gdsErr = `다른 플랫폼(${V.platform})의 결과입니다.`; return; }
+    const sm = { PASS: 0, WARNING: 0, FAIL: 0, 'NOT VERIFIED': 0 }; r.checks.forEach((c) => { if (sm[c.status] != null) sm[c.status]++; });   // count from the checks themselves, not the stated summary
+    S().gds = { design_hash: r.design_hash, gds: r.gds, gds_sha1: r.gds_sha1, cells: r.cells, summary: sm, checks: r.checks.map(({ group, item, status, detail }) => ({ group, item, status, detail })), at: new Date().toISOString() };
+  }
   function setV(k, v) { const d = des(); d[k] = v; if (k === 'mod' || k === 'rf') d.stag = LAB.stagAuto(d); S().ran = false; S().exported = null; save(); }
 
   /* ---------------- render ---------------- */
@@ -82,7 +97,7 @@ window.LABUI = (() => {
     $('#lab-mode').innerHTML = [['beginner', 'Beginner'], ['advanced', 'Advanced']].map(([k, t]) => `<button role="radio" aria-checked="${mode === k}" data-lm="${k}">${t}</button>`).join('');
     const a3 = SH().stars('3A+') > 0, st = [['Schematic Complete', MS.schematic], ['Floorplan Complete', MS.floorplan], ['Routing Complete', MS.routing], ['Electrical Interface', MS.electrical], ['Verification Complete', MS.verification && !!s.ran]];
     $('#lab-prog').innerHTML = st.map(([t, ok]) => `<span class="${ok ? 'ok' : ''}">${ok ? '✓' : '·'} ${t}</span>`).join('')
-      + '<span class="pend" title="Phase D: tools/smq2gds가 GDS를 만들고 다시 읽어 검사">· GDS Generated (Phase D)</span>'
+      + (() => { const g = gdsSt(); return `<span class="${g === 'PASS' ? 'ok' : 'pend'}" title="tools/smq2gds.circuit가 GDS를 만들고 다시 읽어 검사한 결과(engine_verification.json)를 Mission 6에서 불러옴">${g === 'PASS' ? '✓' : '·'} GDS Generated${g === 'PASS' ? '' : g === 'FAIL' ? ' (재검사 FAIL)' : g === 'stale' ? ' (다른 설계)' : ''}</span>`; })()
       + `<span class="${a3 ? 'ok' : 'pend'}" title="정식 Project Completion은 Stage 3 설계 완료와 연계">${a3 ? '✓' : '·'} 3A+ ★ 연계 ${a3 ? '' : '(미리보기 모드)'}</span>`;
     $('#lab-steps').innerHTML = MISS.map((m, j) => `<li><button class="stp ${(s.done || {})[m.id] ? 'done' : ''}" data-ms="${j}" aria-current="${j === cur() ? 'step' : 'false'}" aria-label="미션 ${j + 1} ${m.title}${(s.done || {})[m.id] ? ' (완료)' : ''}"><span class="num">${(s.done || {})[m.id] ? '✓' : j + 1}</span><span class="t">${m.short}</span></button></li>`).join('');
     const m = MISS[cur()], ok = m.done(MS, s), nx = MISS[cur() + 1];
@@ -96,7 +111,9 @@ window.LABUI = (() => {
     if (m.id === 'floorplan') h += `<p class="note">자동 배치 기준 필요한 다이: <b>${(C.need.W / 1000).toFixed(2)} × ${(C.need.H / 1000).toFixed(2)} mm</b>.</p><div class="row-btns"><button class="btn" data-la="fit">필요 크기로 맞춤 (0.1 mm 올림)</button><button class="btn" data-la="auto">자동 배치 값 복원</button></div>`;
     if (m.id === 'routing') h += `<p class="note">배선 폭 w<sub>r</sub> &gt; w<sub>0</sub> ${SH().pf().w0} µm이면 긴 넷의 직선 구간에 선형 테이퍼를 넣어 몸통만 넓힙니다 (짧은 넷은 w<sub>0</sub>). 단일모드 차단 폭 ${SH().pf().wc} µm 이상은 다중모드 — 굽힘은 Euler로.</p>`;
     if (m.id === 'verification') h += `<div class="row-btns"><button class="btn pri" data-la="run">검사 실행</button></div><p class="note">${S().ran ? '마지막 실행 결과가 아래 표에 있습니다. 설계를 바꾸면 다시 실행해야 합니다.' : '아직 실행하지 않았습니다.'}</p>`;
-    if (m.id === 'export') h += `<div class="row-btns"><button class="btn pri" data-la="exp-all">smq-circuit/1 내보내기 (3개 파일)</button></div><div class="row-btns"><button class="btn" data-la="exp-s">engine_schematic.json</button><button class="btn" data-la="exp-l">engine_layout.json</button><button class="btn" data-la="exp-v">engine_verification.json</button></div><textarea id="lab-json" class="jsonout" hidden readonly aria-label="smq-circuit JSON"></textarea>`;
+    if (m.id === 'export') h += `<div class="row-btns"><button class="btn pri" data-la="exp-all">smq-circuit/1 내보내기 (3개 파일)</button></div><div class="row-btns"><button class="btn" data-la="exp-s">engine_schematic.json</button><button class="btn" data-la="exp-l">engine_layout.json</button><button class="btn" data-la="exp-v">engine_verification.json</button></div><textarea id="lab-json" class="jsonout" hidden readonly aria-label="smq-circuit JSON"></textarea>`
+      + `<h4 class="sub">GDS (tools/smq2gds)</h4><p class="note">내려받은 세 파일과 같은 폴더에서: <code>python -m smq2gds.circuit ${SH().plat()}_engine_layout.json -o gds/</code> → engine_layout.gds · engine_preview.png · engine_verification.json(GDS 재검사 포함). 그 verification 파일을 불러오면 지금 설계(design hash)와 맞는지 확인해 반영합니다.</p>`
+      + `<div class="row-btns"><label class="btn" for="lab-gds">GDS 재검사 결과 불러오기</label><input type="file" id="lab-gds" accept=".json,application/json" hidden></div><p class="note" id="lab-gds-msg">${gdsMsg()}</p>`;
     $('#lab-params').innerHTML = h || '<p class="note">이 미션에는 손잡이가 없습니다.</p>';
   }
   function renderLib() {
@@ -173,8 +190,8 @@ window.LABUI = (() => {
   }
   function summary() {
     const s = CHK.sys, n = (st) => CHK.checks.filter((x) => x.status === st).length, a3 = SH().stars('3A+') > 0;
-    return `<table class="ltbl">${row(['총 데이터 속도', `${LAB.LANES} × 200G = 1.6 Tb/s (라인 ${LAB.LANES} × 224 Gb/s)`])}${row(['변조기', C.mod === 'mzm' ? 'TW-MZM ×8' : 'MRR ×8'])}${row(['다이', `${des().W.toFixed(1)} × ${des().H.toFixed(1)} mm`])}${row(['광 손실 추정 (칩 배선, 최악 레인)', `${s.extra.toFixed(2)} dB`])}${row(['링크 마진 (레이아웃 반영)', `${s.marginLayout.toFixed(2)} dB`])}${row(['비트당 에너지 (3A+ 모듈 모델)', `${s.pj.toFixed(2)} pJ/bit`])}${row(['검증 요약', `PASS ${n('PASS')} · WARNING ${n('WARNING')} · FAIL ${n('FAIL')} · NOT VERIFIED ${n('NOT VERIFIED')}${S().ran ? '' : ' (검사 미실행)'}`])}${row(['Project Completion', a3 ? (MISS.every((m) => (S().done || {})[m.id]) ? '<span class="st-PASS">완료</span>' : '진행 중') : '3A+ ★ 이후 정식 완료 (지금은 미리보기)'])}</table>`
-      + `<p class="note">GDS는 Phase D에서 같은 smq-circuit/1 데이터를 tools/smq2gds가 읽어 생성·재검사합니다. 이 결과는 구조 검증이 가능한 Engineering Prototype이며 Tape-out Ready Mask가 아닙니다.</p>`;
+    return `<table class="ltbl">${row(['총 데이터 속도', `${LAB.LANES} × 200G = 1.6 Tb/s (라인 ${LAB.LANES} × 224 Gb/s)`])}${row(['변조기', C.mod === 'mzm' ? 'TW-MZM ×8' : 'MRR ×8'])}${row(['다이', `${des().W.toFixed(1)} × ${des().H.toFixed(1)} mm`])}${row(['광 손실 추정 (칩 배선, 최악 레인)', `${s.extra.toFixed(2)} dB`])}${row(['링크 마진 (레이아웃 반영)', `${s.marginLayout.toFixed(2)} dB`])}${row(['비트당 에너지 (3A+ 모듈 모델)', `${s.pj.toFixed(2)} pJ/bit`])}${row(['검증 요약', `PASS ${n('PASS')} · WARNING ${n('WARNING')} · FAIL ${n('FAIL')} · NOT VERIFIED ${n('NOT VERIFIED')}${S().ran ? '' : ' (검사 미실행)'}`])}${row(['GDS 재검사 (smq2gds)', gdsMsg()])}${row(['Project Completion', a3 ? (MISS.every((m) => (S().done || {})[m.id]) ? '<span class="st-PASS">완료</span>' : '진행 중') : '3A+ ★ 이후 정식 완료 (지금은 미리보기)'])}</table>`
+      + `<p class="note">GDS는 같은 smq-circuit/1 데이터를 tools/smq2gds가 읽어 같은 기본 도형으로 그리고, 다시 읽어 계층·연결·포트·길이·간격·선폭·금속 단락을 검사합니다. 이 결과는 구조 검증이 가능한 Engineering Prototype이며 Tape-out Ready Mask가 아닙니다.</p>`;
   }
   function renderCoach() {
     const m = MISS[cur()], el = $('#lab-coach'), fails = CHK.checks.filter((x) => x.status === 'FAIL');
@@ -247,7 +264,7 @@ window.LABUI = (() => {
     g.strokeStyle = 'rgba(231,236,243,.7)'; g.lineWidth = 1.2 * DPR; g.strokeRect(TX(0), TY(C.H), C.W * s, C.H * s);
     g.setLineDash([4 * DPR, 4 * DPR]); g.strokeStyle = 'rgba(158,171,189,.35)'; const e = C.d.edge; g.strokeRect(TX(e), TY(C.H - e), (C.W - 2 * e) * s, (C.H - 2 * e) * s); g.setLineDash([]);
     // electrical lines under everything
-    (C.elines || []).forEach((l) => { g.strokeStyle = l.kind === 'rf' ? 'rgba(242,176,74,.75)' : 'rgba(158,171,189,.45)'; g.lineWidth = (l.kind === 'rf' ? 1.4 : 1) * DPR; if (l.kind !== 'rf') g.setLineDash([3 * DPR, 3 * DPR]); g.beginPath(); l.pts.forEach((p, i) => (i ? g.lineTo(TX(p[0]), TY(p[1])) : g.moveTo(TX(p[0]), TY(p[1])))); g.stroke(); g.setLineDash([]); });
+    (C.elines || []).forEach((l) => { g.strokeStyle = l.kind === 'rf' ? 'rgba(242,176,74,.75)' : 'rgba(158,171,189,.45)'; g.lineWidth = Math.max((l.kind === 'rf' ? 1.4 : 1) * DPR, (l.width_um || 0) * s); if (l.kind !== 'rf' && (l.width_um || 0) * s < 2 * DPR) g.setLineDash([3 * DPR, 3 * DPR]); g.beginPath(); l.pts.forEach((p, i) => (i ? g.lineTo(TX(p[0]), TY(p[1])) : g.moveTo(TX(p[0]), TY(p[1])))); g.stroke(); g.setLineDash([]); });
     (C.pads || []).forEach((p) => { g.fillStyle = p.kind === 'rf' ? 'rgba(242,176,74,.55)' : 'rgba(158,171,189,.4)'; g.fillRect(TX(p.x - p.w / 2), TY(p.y + p.w / 2), p.w * s, p.w * s); });
     // components
     const bad = new Set(); CHK.checks.filter((x) => x.status === 'FAIL').forEach((x) => C.inst.forEach((I) => { if (String(x.detail).includes(I.id)) bad.add(I.id); }));
@@ -273,19 +290,21 @@ window.LABUI = (() => {
     const rect = (x0, y0, x1, y1, col) => { g.fillStyle = col; const a = X(x0), b = X(x1); g.fillRect(Math.min(a, b), Math.min(Y(y0), Y(y1)), Math.max(1, Math.abs(b - a)), Math.max(1, Math.abs(Y(y1) - Y(y0)))); };
     if (I.type === 'ssc') { g.fillStyle = '#64c9df'; g.beginPath(); g.moveTo(X(0), Y(0.5 * px(1) / s)); g.lineTo(X(I.L), Y(Math.max(0.6, I.params.w_um / 2))); g.lineTo(X(I.L), Y(-Math.max(0.6, I.params.w_um / 2))); g.lineTo(X(0), Y(-0.5 * px(1) / s)); g.fill(); }
     else if (I.type === 'mmi1x2') { const p = I.params; rect(p.taper_len_um, -p.W_um / 2, p.taper_len_um + p.L_um, p.W_um / 2, 'rgba(100,201,223,.8)'); line(0, 0, p.taper_len_um, 0, '#64c9df'); line(p.taper_len_um + p.L_um, p.s_um / 2, I.L, p.s_um / 2, '#64c9df'); line(p.taper_len_um + p.L_um, -p.s_um / 2, I.L, -p.s_um / 2, '#64c9df'); }
-    else if (I.type === 'mzm') {
-      const P = C.P, m = P.mmi, a = gm.arms, h2 = gm.da / 2, gp = P.mzm.g, SW = LAB.SW, GW = LAB.GW;
-      rect(gm.xe0, SW / 2 + gp, gm.xe1, SW / 2 + gp + GW, 'rgba(242,176,74,.35)'); rect(gm.xe0, -SW / 2, gm.xe1, SW / 2, 'rgba(242,176,74,.55)'); rect(gm.xe0, -(SW / 2 + gp + GW), gm.xe1, -(SW / 2 + gp), 'rgba(242,176,74,.35)');
-      rect(0, -m.W / 2, m.Ltot, m.W / 2, 'rgba(100,201,223,.7)'); rect(gm.L - m.Ltot, -m.W / 2, gm.L, m.W / 2, 'rgba(100,201,223,.7)');
-      [1, -1].forEach((sg) => { line(m.Ltot, sg * m.s / 2, a.xa0, sg * h2, '#64c9df'); line(a.xa0, sg * h2, a.xa1, sg * h2, '#64c9df'); line(a.xa1, sg * h2, a.x1, sg * m.s / 2, '#64c9df'); });
-      rect(gm.xh0, h2 - 1, gm.xh1, h2 + 1, '#f6ad55');
+    else if (I.type === 'mzm') {   // the same local primitives and rectangles the GDS backend draws (params.local)
+      const P = C.P, m = P.mmi, loc = I.params.local, lc = { m1: 'rgba(242,176,74,.45)', heater: '#f6ad55', term: '#e53e3e' };
+      loc.rects.forEach((r) => rect(r.x0, r.y0, r.x1, r.y1, lc[r.layer] || 'rgba(231,236,243,.3)'));
+      rect(m.tl, -m.W / 2, m.tl + m.L, m.W / 2, 'rgba(100,201,223,.7)'); rect(gm.L - m.tl - m.L, -m.W / 2, gm.L - m.tl, m.W / 2, 'rgba(100,201,223,.7)');
+      [1, -1].forEach((sg) => { line(0, 0, m.tl, 0, '#64c9df'); line(m.tl + m.L, sg * m.s / 2, m.Ltot, sg * m.s / 2, '#64c9df'); line(gm.L - m.tl, 0, gm.L, 0, '#64c9df'); line(gm.L - m.Ltot, sg * m.s / 2, gm.L - m.tl - m.L, sg * m.s / 2, '#64c9df'); });
+      wg(loc.prims, '#64c9df');
     } else if (I.type === 'mrr') {
-      line(0, 0, gm.L, 0, '#64c9df'); g.strokeStyle = '#64c9df'; g.lineWidth = Math.max(1.2 * DPR, gm.w * s); g.beginPath(); g.arc(X(gm.xc), Y(gm.yc), Math.max(2, gm.R * s), 0, 2 * Math.PI); g.stroke();
+      const loc = I.params.local || { prims: [] };
+      wg(loc.prims.filter((p) => p.layer !== 'si'), '#64c9df'); wg(loc.prims.filter((p) => p.layer === 'si'), '#3b82c4');
+      line(gm.Lt || 0, 0, gm.L - (gm.Lt || 0), 0, '#64c9df', Math.max(1, gm.w * s)); g.strokeStyle = '#64c9df'; g.lineWidth = Math.max(1.2 * DPR, gm.w * s); g.beginPath(); g.arc(X(gm.xc), Y(gm.yc), Math.max(2, gm.R * s), 0, 2 * Math.PI); g.stroke();
       g.strokeStyle = 'rgba(246,173,85,.8)'; g.lineWidth = Math.max(1, 2 * s); g.beginPath(); g.arc(X(gm.xc), Y(gm.yc), Math.max(2, gm.R * s), -(270 - 27) * Math.PI / 180, -(270 + 27 - 360) * Math.PI / 180, true); g.stroke();
     } else if (I.type === 'tap_pd') {
-      line(0, 0, gm.L, 0, '#64c9df'); line(10, gm.yt, 10 + gm.Lc, gm.yt, '#64c9df'); line(10 + gm.Lc, gm.yt, gm.xpd, gm.yt - gm.sb.dy, '#64c9df');
-      rect(gm.xpd, gm.yt - gm.sb.dy - gm.pdw / 2, gm.xpd + gm.Lpd, gm.yt - gm.sb.dy + gm.pdw / 2, 'rgba(180,140,255,.8)');
+      const loc = I.params.local; wg(loc.prims, '#64c9df'); loc.rects.forEach((r) => rect(r.x0, r.y0, r.x1, r.y1, 'rgba(180,140,255,.8)'));
     }
+    function wg(prims, col) { if (!prims.length) return; prims.forEach((p) => { const pts = LAB.sample([p], Math.max(0.05, 1.5 / s)); g.strokeStyle = col; g.lineWidth = Math.max(1, (p.w0 != null ? Math.max(p.w0, p.w1) : p.w) * s); g.beginPath(); pts.forEach((q, i) => (i ? g.lineTo(X(q[0]), Y(q[1])) : g.moveTo(X(q[0]), Y(q[1])))); g.stroke(); }); }
   }
   function hit(px, py) {
     const x = IX(px), y = IY(py);
@@ -332,14 +351,14 @@ window.LABUI = (() => {
       G: ['hong', 'cherchi', 'chrost', 'gdsf'] },
     electrical: { re: /전기 포트|RF 배선 교차|RF 금속|패드 배치|범프 배치|RF 급전선|링 구동선/, A: 'MZM과 링이 서로 다른 전기 인터페이스를 요구하는 이유(진행파 전극 vs 집중 소자), 패드 배치와 RF 선 길이가 성능과 다이 크기에 미치는 영향을 배웁니다.',
       B: '<p>TW-MZM은 RF가 전극을 따라 진행하는 전송선이라 50 Ω급 GSG 입력과 끝단 종단 저항이 필요하고, 급전선이 길어도 정합만 되면 동작하지만 도체 손실(∝√f)이 쌓입니다. 링은 수 fF의 집중 용량이라 구동선이 RF 파장의 1/10보다 길면 반사·공진이 생깁니다 — 그래서 링 변조기는 구동기를 바로 위에 붙이는 3D/플립칩(CPO)과 짝을 이룹니다. 히터와 모니터 PD는 DC 패드가 필요합니다.</p>',
-      deep: '<p>MZM 급전 손실 = (0.35 + 3/g)·√f<sub>GHz</sub> dB/cm (2-3 CPW 도체 손실식, g = 2-3 설계의 신호–접지 간격), f = 56 GHz(112 GBd 나이퀴스트). 링 구동선 기준 λ/10 = c/(f√ε<sub>eff</sub>)/10, ε<sub>eff</sub> = (11.7+1)/2. 가장자리 패드는 RF를 한 변(N), DC를 반대 변(S)에 두고, RF 선은 같은 금속층이라 교차하면 FAIL, DC는 2층 금속(M2) 가정으로 교차 검사를 하지 않습니다(NOT VERIFIED).</p>',
+      deep: '<p>MZM 급전 손실 = (0.35 + 3/g)·√f<sub>GHz</sub> dB/cm (2-3 CPW 도체 손실식, g = 2-3 설계의 신호–접지 간격), f = 56 GHz(112 GBd 나이퀴스트). 링 구동선 기준 λ/10 = c/(f√ε<sub>eff</sub>)/10, ε<sub>eff</sub> = (11.7+1)/2. 가장자리 패드는 RF를 한 변(N), DC를 반대 변(S)에 두고, RF 선(M1, 폭 10 µm)은 같은 금속층이라 다른 넷과 닿으면 FAIL. DC 선(M2, 폭 5 µm)은 패드 열까지 평면 팬아웃(river routing): 패드를 포트 x 순서로 놓고, 왼쪽으로 가는 선은 x가 큰 것부터 패드에 가까운 트랙을 쓰고 오른쪽은 반대로 — 그러면 수직선이 다른 선의 수평 트랙을 가로지르지 않아 한 층으로 충분하며, 트랙 수 × 10 µm가 DC 쪽 여백(다이 높이)이 됩니다.</p>',
       D: '같은 MRR 설계를 가장자리 패드와 플립칩으로 바꿔 링 구동선 길이 WARNING이 사라지고 다이가 얼마나 작아지는지 비교하세요.',
       P: { rf: { m: '구동기 연결 방식', ud: '플립칩: 선 짧음·다이↓, 3D 공정 필요', tr: 'RF 성능 ↔ 패키지 복잡도' }, rfSide: { m: 'RF 패드 변', ud: '엇갈림 방향이 바뀜', tr: '구동기 위치' }, pp: { m: '패드 피치', ud: '↑ 본딩 쉬움, 변 길이↑', tr: '조립 ↔ 다이 크기' } },
       F: [['패드·전극·종단', 'asm', '추상 형상 (Generic PDK에 RF 금속·저항 없음)'], ['RF 손실·반사', 'semi', 'CPW 도체 손실식 / λ/10 기준만 — EM 해석 아님'], ['파운드리 RF 규칙', 'fw', '검증하지 않음 (NOT VERIFIED)']],
       G: ['ieee3dj', 'oif', 'chrost'] },
     verification: { re: /./, A: '설계 검증을 연결성·기하·시스템·모델 유효성으로 나누고, 검사하지 않은 것을 PASS로 표시하지 않는 습관을 익힙니다.',
       B: '<p>연결성은 그래프 검사(모든 광 포트가 정확히 한 번, 8 레인이 입력까지 이어짐, 전기 포트마다 패드), 기하는 실제 형상의 샘플로 선폭·간격·굽힘·경계·겹침·간섭을 계산합니다. 시스템은 3A+ 모듈 엔진의 예측에 레이아웃이 더한 칩 위 배선 손실을 빼서 링크가 여전히 닫히는지 봅니다.</p>',
-      deep: '<p>간격 검사는 서로 다른 넷의 중심선 샘플 사이 최소 거리 − (두 폭의 평균)입니다. 소자 내부(MMI 출력 포트 간격 등)는 각 레벨의 DRC가 맡습니다. NOT VERIFIED 항목(EM, 열 크로스토크, 파운드리 DRC, DC 교차, GDS 재검사)은 이 게임이 계산하지 않는 것들이며, Phase D의 GDS 재검사가 그 일부를 메웁니다.</p>',
+      deep: '<p>간격 검사는 서로 다른 넷의 중심선 샘플 사이 최소 거리 − (두 폭의 평균)입니다. 소자 내부(MMI 출력 포트 간격 등)는 각 레벨의 DRC가 맡습니다. NOT VERIFIED 항목(EM, 열 크로스토크, 파운드리 DRC)은 이 게임이 계산하지 않는 것들입니다. GDS 재검사는 tools/smq2gds 결과를 Mission 6에서 불러오면 PASS/FAIL이 됩니다 — GDS에서 다시 잰 연결·포트·길이·간격·선폭·금속 단락.</p>',
       D: '검사를 실행한 뒤 FAIL 항목을 눌러 원인 미션으로 돌아가 고쳐 보세요.',
       P: {}, F: [['연결성', 'an', '정확한 그래프 검사'], ['기하', 'an', '샘플 기반 (0.5 µm) 간격·경계·겹침'], ['시스템 예측', 'semi', '3A+ 엔진 + 레이아웃 배선 손실'], ['EM·열·파운드리 규칙', 'fw', 'NOT VERIFIED']],
       G: ['chrost', 'gdsf', 'luceda'] },
@@ -347,7 +366,7 @@ window.LABUI = (() => {
       B: '<p>게임은 넷리스트·소자 파라미터·포트 연결·배치·배선 형상(직선·코너·원호 기본 도형)·플랫폼·규칙·성능 예측·검증 결과를 내보냅니다. GDS 백엔드는 그 데이터를 읽어 PCell을 만들고 배치·조립·형상 검증·GDS·미리보기를 만듭니다. 형상을 기본 도형으로 넘기므로 게임 미리보기와 GDS가 같은 모양이 됩니다.</p>',
       deep: '<p>세 파일: engine_schematic.json(소자·포트·넷), engine_layout.json(배치·배선 기본 도형·패드·추상화 수준), engine_verification.json(검사 결과·성능 예측). 링 소자는 2-3R의 ring_allpass PCell 데이터를, MZM은 2-3 전극 길이·간격과 1-3 MMI·2-1 히터를 그대로 담습니다.</p>',
       D: '내보낸 JSON의 routing.optical[].prims가 캔버스에 그린 선과 같은 기본 도형인지 확인해 보세요.',
-      P: {}, F: [['회로 데이터', 'an', '게임 상태 그대로'], ['GDS 생성·재검사', 'fw', 'Phase D (tools/smq2gds)'], ['능동층·금속', 'asm', '주석 레이어 추상화 — Tape-out Ready 아님']],
+      P: {}, F: [['회로 데이터', 'an', '게임 상태 그대로'], ['GDS 생성·재검사', 'an', 'tools/smq2gds: 같은 기본 도형 → GDS → KLayout으로 다시 읽어 검사'], ['능동층·금속', 'asm', '주석 레이어 추상화 — Tape-out Ready 아님']],
       G: ['gdsf', 'luceda', 'chrost'] }
   };
 
@@ -361,6 +380,12 @@ window.LABUI = (() => {
   }
   const sched = (refit) => { clearTimeout(timer); timer = setTimeout(() => renderAll(refit), 90); };
   box.addEventListener('input', (e) => { const t = e.target.closest('[data-lk]'); if (!t) return; const p = pfP()[t.dataset.lk], v = +t.value; $('#lo-' + p.k).textContent = fmtV(p, v); setV(p.k, v); sched(p.k === 'W' || p.k === 'H' || p.k === 'mod' || p.k === 'share'); });
+  box.addEventListener('change', (e) => {
+    if (e.target.id !== 'lab-gds' || !e.target.files || !e.target.files[0]) return;
+    const f = e.target.files[0], rd = new FileReader();
+    rd.onload = () => { importGds(String(rd.result)); save(); renderAll(); };
+    rd.readAsText(f);
+  });
   box.addEventListener('click', (e) => {
     const lm = e.target.closest('[data-lm]'), ms = e.target.closest('[data-ms]'), nx = e.target.closest('#lab-next'), la = e.target.closest('[data-la]'), lv = e.target.closest('[data-lv]'), lt = e.target.closest('[data-lt]'), z = e.target.closest('[data-z]');
     if (lm) { S().mode = lm.dataset.lm; save(); renderAll(); return; }
@@ -397,6 +422,8 @@ window.LABUI = (() => {
 
   function open() { if (!SH() || !SH().plat()) return; isOpen = true; box.hidden = false; const g = $('main.game'); if (g) g.hidden = true; cam = null; renderAll(true); box.scrollIntoView && box.scrollIntoView({ block: 'start' }); }
   function close() { isOpen = false; box.hidden = true; const g = $('main.game'); if (g) g.hidden = false; }
-  return { open, close, isOpen: () => isOpen, progress, state: () => ({ C, CHK, MS, d: isOpen ? des() : null, s: SH() && SH().plat() ? S() : null }), MISS };
+  // focus(x, y, w): centre the layout view on (x, y) µm showing w µm across (inspection, screenshots)
+  const focus = (x, y, w) => { if (!C || !CV) return; cam = { s: CV.width / w, x, y }; draw(); };
+  return { open, close, isOpen: () => isOpen, progress, focus, state: () => ({ C, CHK, MS, d: isOpen ? des() : null, s: SH() && SH().plat() ? S() : null }), MISS };
 })();
 if (window.LABUI && window.GAME_SHELL && window.GAME_SHELL.plat()) window.GAME_SHELL.refreshMap();

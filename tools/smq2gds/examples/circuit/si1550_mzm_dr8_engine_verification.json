@@ -1,6 +1,7 @@
 {
  "schema": "smq-circuit/1#verification",
  "platform": "si1550",
+ "design_hash": "709041e3",
  "checks": [
   {
    "group": "Connectivity",
@@ -64,7 +65,7 @@
   },
   {
    "group": "Geometry",
-   "item": "다이 경계 (5.20 × 2.50 mm, 여유 50 µm)",
+   "item": "다이 경계 (5.30 × 2.70 mm, 여유 50 µm)",
    "status": "PASS",
    "detail": ""
   },
@@ -90,7 +91,13 @@
    "group": "Geometry",
    "item": "RF 배선 교차 (같은 금속층)",
    "status": "PASS",
-   "detail": ""
+   "detail": "M1 선폭 10 µm · 패드·범프 포함"
+  },
+  {
+   "group": "Geometry",
+   "item": "DC 배선 교차 (같은 금속층)",
+   "status": "PASS",
+   "detail": "M2 한 층, 선폭 5 µm · 평면 팬아웃 (트랙 10 µm 간격 × 17)"
   },
   {
    "group": "Geometry",
@@ -126,7 +133,7 @@
    "group": "System",
    "item": "RF 급전선 손실 (56 GHz, CPW 도체 손실)",
    "status": "WARNING",
-   "detail": "최장 2445 µm → 0.73 dB (2-3 CPW 손실식, 반사·분산 미포함)"
+   "detail": "최장 2460 µm → 0.74 dB (2-3 CPW 손실식, 반사·분산 미포함)"
   },
   {
    "group": "Model validity",
@@ -148,86 +155,80 @@
   },
   {
    "group": "Model validity",
-   "item": "DC 배선 교차 (2층 금속 가정)",
-   "status": "NOT VERIFIED",
-   "detail": "DC는 M2로 가정 — 교차 검사 안 함"
-  },
-  {
-   "group": "Model validity",
    "item": "GDS 재검사",
    "status": "NOT VERIFIED",
-   "detail": "Phase D: smq2gds가 GDS를 만들고 다시 읽어 검사"
+   "detail": "tools/smq2gds.circuit로 GDS를 만들고 다시 읽어 검사한 결과(engine_verification.json)를 Mission 6에서 불러오면 반영"
   }
  ],
  "summary": {
-  "PASS": 18,
+  "PASS": 19,
   "WARNING": 3,
   "FAIL": 0,
-  "NOT VERIFIED": 5
+  "NOT VERIFIED": 4
  },
  "performance": {
   "model": "3A+ engine (3A+ 기준 설계)",
   "margin_model_dB": 2.4215,
-  "layout_route_loss_dB_worst": 0.4272,
-  "margin_with_layout_dB": 1.9943,
+  "layout_route_loss_dB_worst": 0.435,
+  "margin_with_layout_dB": 1.9865,
   "module_W": 5.5821,
   "pJ_per_bit": 3.4888,
   "lanes": [
    {
     "lane": 0,
     "before_mod_dB": 0.0866,
-    "after_mod_dB": 0.2528,
+    "after_mod_dB": 0.2606,
     "tap_dB": 0.0877,
-    "total_dB": 0.4272
+    "total_dB": 0.435
    },
    {
     "lane": 1,
     "before_mod_dB": 0.0817,
-    "after_mod_dB": 0.2163,
+    "after_mod_dB": 0.2241,
     "tap_dB": 0.0877,
-    "total_dB": 0.3857
+    "total_dB": 0.3935
    },
    {
     "lane": 2,
     "before_mod_dB": 0.0951,
-    "after_mod_dB": 0.1798,
+    "after_mod_dB": 0.1876,
     "tap_dB": 0.0877,
-    "total_dB": 0.3626
+    "total_dB": 0.3704
    },
    {
     "lane": 3,
     "before_mod_dB": 0.1085,
-    "after_mod_dB": 0.1432,
+    "after_mod_dB": 0.151,
     "tap_dB": 0.0877,
-    "total_dB": 0.3395
+    "total_dB": 0.3473
    },
    {
     "lane": 4,
     "before_mod_dB": 0.1335,
-    "after_mod_dB": 0.1183,
+    "after_mod_dB": 0.1261,
     "tap_dB": 0.0877,
-    "total_dB": 0.3395
+    "total_dB": 0.3473
    },
    {
     "lane": 5,
     "before_mod_dB": 0.17,
-    "after_mod_dB": 0.1048,
+    "after_mod_dB": 0.1126,
     "tap_dB": 0.0877,
-    "total_dB": 0.3626
+    "total_dB": 0.3704
    },
    {
     "lane": 6,
     "before_mod_dB": 0.2065,
-    "after_mod_dB": 0.0914,
+    "after_mod_dB": 0.0992,
     "tap_dB": 0.0877,
-    "total_dB": 0.3857
+    "total_dB": 0.3935
    },
    {
     "lane": 7,
     "before_mod_dB": 0.2615,
-    "after_mod_dB": 0.078,
+    "after_mod_dB": 0.0858,
     "tap_dB": 0.0877,
-    "total_dB": 0.4272
+    "total_dB": 0.435
    }
   ]
  }

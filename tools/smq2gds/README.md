@@ -59,7 +59,21 @@ S-bend
 - 출력 포트 위치
 - 링: 링 내·외 반경 = R ∓ w/2, 버스 간격 = g (1 nm 이내), 링+버스 = 코어 2조각, 다른 코어 층 비어 있음, 포트가 버스 끝, 히터가 버스 위에 없음(≥ 0.3 µm), 주석 층 5개 존재
 
-링의 `--sim mode`는 아직 없습니다(NOT VERIFIED로 보고). FSR·Q·결합의 솔버 검증은 Phase D 범위입니다.
+링의 `--sim mode`는 아직 없습니다(NOT VERIFIED로 보고). FSR·Q·결합의 솔버 검증은 아직 하지 않았습니다.
+
+## 회로 GDS (PIC Design Lab, smq-circuit/1)
+
+Lab의 Mission 6에서 내보낸 `engine_layout.json`(+ `engine_verification.json`)을 계층 GDS로 그리고, 다시 읽어 검사합니다.
+
+```bash
+python -m smq2gds.circuit si1310_engine_layout.json -o out/      # engine_layout.gds · engine_preview.png · engine_verification.json
+python ../test/py/test_circuit.py                                # 8개 예제 + 부정 테스트
+```
+
+- 소자 셀: SSC, 1-3 MMI(`mmi`), TW-MZM(MMI 두 개 + `params.local` 팔·CPW·히터), 링(`ring_allpass` + 버스 전이), 탭+PD. 같은 파라미터는 한 셀을 참조.
+- 배선: `routing.optical[].prims`(L/C/A) — 코너는 `spiral_rect`와 같은 `_corner_local`, 끝 접선이 정확한 리본이라 포트 이음매에 노치 없음.
+- 재검사: 계층, 광 연결(병합 조각·레인 경로), 포트·끝점·길이, 소자 외곽, 간격·선폭·굽힘, 다이 경계, RF(M1)/DC(M2) 넷별 끊김·단락. 결과는 `gds_recheck`로 verification 파일에 붙고 게임에서 불러옵니다.
+- 자세한 내용·한계: [docs/gds_export.md](../../docs/gds_export.md). Tape-out Ready 아님.
 
 ## 솔버 검사의 범위
 

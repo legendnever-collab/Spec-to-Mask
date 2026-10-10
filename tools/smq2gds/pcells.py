@@ -395,7 +395,7 @@ def ring_allpass(g: dict, lay: dict, label_layer=None):
             xs = sorted([xm, xo + s * hw / 2])
             c.add_polygon([(xs[0], y0), (xs[1], y0), (xs[1], y0 + hw), (xs[0], y0 + hw)], layer=tuple(ann["heater"]))
             c.add_polygon([(xo - hw / 2, y0), (xo + hw / 2, y0), (xo + hw / 2, yh), (xo - hw / 2, yh)], layer=tuple(ann["heater"]))
-            if ann.get("pad"):
+            if ann.get("pad") and g.get("local_pads", True):
                 c.add_polygon([(xo - 5, yh), (xo + 5, yh), (xo + 5, yh + 10), (xo - 5, yh + 10)], layer=tuple(ann["pad"]))
     for name, x, o in (("o1", -Lb / 2, 180), ("o2", Lb / 2, 0)):
         c.add_port(name, center=(x, yb), width=wb, orientation=o, layer=tuple(core))
