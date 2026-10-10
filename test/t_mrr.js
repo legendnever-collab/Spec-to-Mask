@@ -124,11 +124,13 @@ for (const pid of Object.keys(G.PLATFORMS)) {
   }
 }
 /* ---- existing level specs untouched ---- */
-try {
+{
   // baseline = main before the microring (f08011b); Phase B only adds the 3A+ modulator key (mod 0 = the old design) to start / ref
-  const old = JSON.parse(cp.execSync('git show f08011b:src/data/pspec.json', { cwd: path.join(__dirname, '..'), stdio: ['ignore', 'pipe', 'ignore'] }).toString()), now = G.PSPEC;
+  const BL = require('./baseline.js'), src = BL.need('f08011b', 'src/data/pspec.json'), ID = BL.identity('test:mrr spec identity', 'f08011b', 1), now = G.PSPEC;
+  if (src) { const old = JSON.parse(src);
   const norm = (id, v) => { if (id !== '3A+' || !v) return v; const c = JSON.parse(JSON.stringify(v)); for (const k of ['start', 'ref']) if (c[k] && c[k].mod === 0) delete c[k].mod; return c; };
   let same = true; for (const p of Object.keys(old)) for (const id of Object.keys(old[p])) if (JSON.stringify(old[p][id]) !== JSON.stringify(norm(id, now[p][id]))) { same = false; console.log('  changed', p, id); }
-  ok(same, 'existing level specs identical to f08011b (only 2-3R added; 3A+ start/ref gain mod 0)');
-} catch (e) { console.log('  note: f08011b pspec not available — spec identity check skipped'); }
+  ID.hit(); ok(same, 'existing level specs identical to f08011b (only 2-3R added; 3A+ start/ref gain mod 0)'); }
+  ok(ID.done(), 'the spec identity check ran');
+}
 console.log(`${n - fail}/${n} checks passed`); process.exit(fail ? 1 : 0);

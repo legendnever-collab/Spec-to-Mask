@@ -16,11 +16,10 @@ const LV = (id, pid, P) => { const L = G.LEVELS.find((x) => x.id === id), S = (P
 G.GAME_LEV = (id) => LV(id, G.__pid);
 const K = G.KINDS.xcvr, X = K._x, M = G.KINDS.mrr._x;
 const BASE = 'fa9f16a';
-const git = (f) => { try { return cp.execSync(`git show ${BASE}:${f}`, { cwd: path.join(__dirname, '..'), stdio: ['ignore', 'pipe', 'ignore'] }).toString(); } catch (e) { return null; } };
-const oldX = git('src/kinds/xcvr.js'), oldP = git('src/data/pspec.json');
+const BL = require('./baseline.js'), ID = BL.identity('test:dr8 MZM path + specs', BASE, 12);   // a missing baseline fails (test/baseline.js)
+const oldX = BL.need(BASE, 'src/kinds/xcvr.js'), oldP = BL.need(BASE, 'src/data/pspec.json');
 let G0 = null;
 if (oldX) { G0 = load(); vm.runInContext(oldX.replace(/^const (\w+) =/gm, 'var $1 ='), G0); G0.GAME_LEV = (id) => LV(id, G.__pid); }
-else console.log(`  note: ${BASE}:src/kinds/xcvr.js not found — MZM identity check skipped`);
 const P0 = oldP ? JSON.parse(oldP) : null;
 const strip = (o) => { const c = { ...o }; delete c.mod; return c; };
 
@@ -30,7 +29,7 @@ for (const pid of Object.keys(G.PLATFORMS)) {
   /* ---- compatibility ---- */
   if (P0) for (const id of ['3A', '3A+']) {
     const a = { ...G.PSPEC[pid][id], start: strip(G.PSPEC[pid][id].start), ref: strip(G.PSPEC[pid][id].ref) };
-    ok(JSON.stringify(a) === JSON.stringify(P0[pid][id]), `${pid} ${id}: specs equal ${BASE} (apart from the mod key)`);
+    ID.hit(); ok(JSON.stringify(a) === JSON.stringify(P0[pid][id]), `${pid} ${id}: specs equal ${BASE} (apart from the mod key)`);
   }
   ok(!K.params(LV('3A', pid)).some((p) => p.k === 'mod') && K.params(l).some((p) => p.k === 'mod'), `${pid}: modulator choice only in DR8 (3A+)`);
   if (G0) {
@@ -43,7 +42,7 @@ for (const pid of Object.keys(G.PLATFORMS)) {
       if (a.margin !== b.margin || a.pw !== b.pw || c.margin !== b.margin || c.pw !== b.pw || K.fabPass(l, a) !== G0.KINDS.xcvr.fabPass(l, b)) same = false;
     }
     const lf = LV('3A', pid); for (const d of [lf.ref, lf.start]) { const a = K.evaluate(lf, d), b = G0.KINDS.xcvr.evaluate(lf, d); if (a.margin !== b.margin || a.pw !== b.pw) same = false; }
-    ok(same, `${pid}: MZM DR8 and 2×FR4 results bit-identical to ${BASE} (${ds.length} designs × 7 process states)`);
+    ID.hit(); ok(same, `${pid}: MZM DR8 and 2×FR4 results bit-identical to ${BASE} (${ds.length} designs × 7 process states)`);
   }
   /* ---- ring in the module ---- */
   const dR = { ...l.ref, mod: 1 }, rR = K.evaluate(l, dR), p = X.parts(l, dR), lr = G.GAME_LEV('2-3R');
@@ -99,5 +98,6 @@ for (const pid of Object.keys(G.PLATFORMS)) {
     ok(pr && /MZM이 유리:<\/b> (?!—)/.test(pr.html) && /MRR이 유리:<\/b> (?!—)/.test(pr.html) && /Fab 수율/.test(pr.html) && ms < 4000, `${pid}: panel with Fab yields lists advantages on both sides (${ms} ms)`);
   }
 }
-console.log(`${n - fail}/${n} checks passed` + (G0 ? '' : ` (${BASE} not available — identity not checked)`));
+ok(ID.done(), 'every MZM identity check ran');
+console.log(`${n - fail}/${n} checks passed` + (G0 ? '' : ` (${BASE} not available — identity NOT RUN)`));
 process.exit(fail ? 1 : 0);

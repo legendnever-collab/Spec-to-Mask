@@ -28,6 +28,8 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # the identity checks read fixed baseline commits (test/baseline.js); a missing baseline fails the job
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -45,8 +47,17 @@ jobs:
         run: git diff --exit-code -- dist/index.html
       - name: JavaScript syntax (sources, tests, tools, assembled script; no external scripts)
         run: node tools/check_syntax.js
-      - name: Engine regression (upgrade identity, MRR, DR8, WDM8)
-        run: npm run test:upgrade && npm run test:mrr && npm run test:dr8 && npm run test:wdm
+      - name: Identity baselines readable (evidence in the job summary)
+        run: node tools/check_baselines.js
+      - name: Engine regression (upgrade identity, MRR, DR8, WDM8) — every identity block must report its full count
+        shell: bash
+        run: |
+          set -o pipefail
+          for t in upgrade mrr dr8 wdm; do npm run test:$t 2>&1 | tee -a identity.log; done
+          { echo '### Identity checks run'; echo; echo '```'; grep -E 'BASELINE|IDENTITY|checks passed' identity.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          test "$(grep -c '^  IDENTITY test:' identity.log)" -eq 4
+      - name: Missing-baseline regression (no history → fail, never a silent skip)
+        run: npm run test:baseline
       - name: Design Lab (engine, e2e, state integrity)
         run: npm run test:lab
       - name: e2e (si1310) — smoke, flow, guide, migrate, backup, fab, learning
@@ -74,6 +85,8 @@ jobs:
         platform: [si1310, si1550, sin1310, sin1550]
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
