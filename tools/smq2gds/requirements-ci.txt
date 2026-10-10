@@ -1,0 +1,7 @@
+gdsfactory==9.51.0
+kfactory==3.0.4
+klayout==0.30.12
+numpy>=2.0
+scipy>=1.11
+pyyaml>=6.0
+matplotlib>=3.8

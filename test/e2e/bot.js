@@ -68,4 +68,8 @@ async function play(id){
 (async()=>{await sleep(300);
  $(`#pick-lam .choice[data-lam="${plat.endsWith('1310')?1.31:1.55}"]`).click(); $(`#pick-mat .choice[data-mat="${plat.startsWith('sin')?'sin':'si'}"]`).click(); $('#btn-start').click(); await sleep(400);
  if(mode!=='std'){$(`#mode-seg button[data-m="${mode}"]`).click(); await sleep(300);}
- for(const id of ids) await play(id); console.log('errors',errs.slice(0,3));process.exit(0);})();
+ const res=[]; for(const id of ids){ await play(id); res.push([id,[...w.document.querySelectorAll('.obj')].slice(0,2).every(o=>o.classList.contains('live'))]); }
+ console.log('errors',errs.slice(0,3));
+ // BOT_MIN=2 (CI): fail when a level ends below ★★ or the page threw
+ const below=res.filter(([,ok])=>!ok).map(([id])=>id); if(process.env.BOT_MIN==='2'&&below.length) console.log('BELOW ★★:',below.join(','));
+ process.exit(errs.length||(process.env.BOT_MIN==='2'&&below.length)?1:0);})();

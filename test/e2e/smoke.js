@@ -25,5 +25,5 @@ const plat=process.argv[2]||'si1310';
   console.log(' tiles',$('#tiles').textContent,'| objs',$('#objs').textContent.replace(/\s+/g,' ').slice(0,200));
   console.log(' chart',$('#chart-title').textContent,$('#chart').innerHTML.length,'| coach',coach().slice(0,150));
  }
- console.log('\nerrors',errs.slice(0,5));process.exit(0);
+ console.log('\nerrors',errs.slice(0,5));process.exit(errs.length?1:0);
 })();

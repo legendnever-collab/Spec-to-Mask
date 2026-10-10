@@ -16,7 +16,9 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   w.ResizeObserver = class { observe() {} };
   Object.defineProperty(w.HTMLElement.prototype, 'clientWidth', { get() { return 700; } });
   const prog = { plat, by: { [plat]: { stars: { easy: {}, std: { '3A+': 1 }, hard: {} }, best: {}, ai: {}, cards: {}, missions: {} } } };
-  w.localStorage.setItem('smq3-progress', JSON.stringify(prog)); w.localStorage.setItem('smq3-designs', JSON.stringify({ [plat]: { '1-4': { W: 1.7, L: 3.8, wt: 0.7, s: 0.9 }, '3A+': { P: 16, share: 1, tc: 0, pkg: 2, mod: 0, useCard: 0 } } })); w.localStorage.setItem('smq3-id', JSON.stringify('1-4'));
+  // each platform's calibrated reference designs (a Si 1-4 MMI would break the SiN design rules)
+  const PS = require('../../src/data/pspec.json')[plat];
+  w.localStorage.setItem('smq3-progress', JSON.stringify(prog)); w.localStorage.setItem('smq3-designs', JSON.stringify({ [plat]: { '1-4': { ...PS['1-4'].ref }, '3A+': { ...PS['3A+'].ref, mod: 0 } } })); w.localStorage.setItem('smq3-id', JSON.stringify('1-4'));
   w.eval(html.split('<script>')[1].split('</script>')[0]);
   const $ = (s) => w.document.querySelector(s), P = () => JSON.parse(w.localStorage.getItem('smq3-progress')).by[plat];
   await sleep(500);

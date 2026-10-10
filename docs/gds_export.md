@@ -8,7 +8,7 @@ PIC Design Lab이 내보낸 회로 데이터(`smq-circuit/1`)를 `tools/smq2gds/
   engine_layout.json      (design_hash)                 └─▶ engine_verification.json  (게임 검사 + gds_recheck)
   engine_verification.json                                        │
         ▲                                                         │
-        └──── Mission 6 "GDS 재검사 결과 불러오기" ◀────────────────┘   design_hash가 같고 FAIL 0 → GDS Generated ✓
+        └──── Mission 6 "GDS 재검사 결과 불러오기" ◀────────────────┘   design_hash가 같고 FAIL 0 → Geometry Rechecked ✓
 ```
 
 ## 1. 사용
@@ -92,7 +92,7 @@ GDS가 **열리는 것만으로는 아무것도 PASS가 아닙니다.** `recheck
 Mission 6의 **GDS 재검사 결과 불러오기**:
 - `gds_recheck`가 없으면 거부, 다른 플랫폼이면 거부.
 - FAIL 개수는 파일의 `summary`가 아니라 `checks`에서 다시 셉니다.
-- `design_hash`가 지금 화면의 설계와 같고 FAIL 0이면 진행 칩 **GDS Generated ✓**, 검사표의 "GDS 재검사" PASS. 설계를 바꾸면 hash가 달라져 "다른 설계"로 표시되고(되돌리면 다시 일치), 다시 내보내고 GDS를 다시 만들어야 합니다.
+- `design_hash`가 지금 화면의 설계와 같고 FAIL 0이면 진행 칩 **Geometry Rechecked ✓** (v0.x의 "GDS Generated"; 파운드리 준비는 별도 칩 **Foundry Readiness: NOT VERIFIED**), 검사표의 "GDS 재검사" PASS. 설계를 바꾸면 hash가 달라져 "다른 설계"로 표시되고(되돌리면 다시 일치), 다시 내보내고 GDS를 다시 만들어야 합니다.
 
 ## 4. 테스트
 
@@ -101,7 +101,7 @@ Mission 6의 **GDS 재검사 결과 불러오기**:
 | `cd tools && python ../test/py/test_circuit.py` | 12개 예제(WDM8 4개 포함, 링 셀 = 서로 다른 반경 수·링 위치·출력 1): 재검사 FAIL 0, 핵심 항목 PASS, `gds_recheck` hash·sha1, **경로 면적 = ∫w ds** (리본·테이퍼·코너·원호를 독립 적분과 비교, 0.2 %), 변조기 셀 1개. 부정 테스트(si1310 MZM, sin1550 MRR): 배선 끝 0.5 µm 어긋남 → 끝점 FAIL · 배선 하나 삭제 → 조각 수·레인 경로 FAIL · 소자 2 µm 이동 → 조각 수·레인 경로 FAIL · RF 패드를 다른 넷 선 위에 → M1 단락 FAIL · 다른 내보내기의 verification → 입력 일치 FAIL. WDM8 링 셀 3 µm 이동 → 연결 FAIL. Euler/원호 코너 끝점·접선·최소 반경 |
 | `npm run test:py` | 위 + 소자 단위 smq-design/1 테스트 |
 | `node test/t_lab.js` | 1 nm 격자, 소자 로컬 도형 연속·MMI/포트 일치, 내보내기의 금속 폭·design hash, DC 평면 팬아웃(24 변형), 불러온 재검사 → GDS 재검사 PASS/FAIL/다른 설계 |
-| `node test/e2e/lab.js <플랫폼>` | 화면에서 불러오기: gds_recheck 없음 거부, hash 불일치, FAIL, 일치 → GDS Generated ✓, 설계 변경 → stale, 복원 → 일치 |
+| `node test/e2e/lab.js <플랫폼>` | 화면에서 불러오기: gds_recheck 없음 거부, hash 불일치, FAIL, 일치 → Geometry Rechecked ✓, 설계 변경 → stale, 복원 → 일치 |
 
 ## 5. 한계 (정직하게)
 

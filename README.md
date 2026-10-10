@@ -2,6 +2,19 @@
 
 Photonic IC 설계를 게임으로 배우는 단계별 학습 프로그램입니다. 브라우저 하나로 동작하는 단일 HTML(`dist/index.html`)로 빌드됩니다.
 
+## v1.0 사내 교육 릴리스
+
+| 문서 | 내용 |
+|---|---|
+| [docs/release/USER_GUIDE-v1.0.md](docs/release/USER_GUIDE-v1.0.md) | 팀원용 사용 안내 (시작, 학습 경로, 화면, Design Lab, 백업/복원) |
+| [docs/release/MODEL_LIMITATIONS-v1.0.md](docs/release/MODEL_LIMITATIONS-v1.0.md) | 근거 분류(◆ Analytical · ◇ Surrogate · ● Experimental · △ Assumption · ○ NOT VERIFIED), 영역별 한계, 열·WDM 민감도 |
+| [docs/release/VERIFICATION_REPORT-v1.0.md](docs/release/VERIFICATION_REPORT-v1.0.md) | 기준선, 변경, 회귀 결과, 미검증 항목 |
+| [docs/release/RELEASE_NOTES-v1.0.md](docs/release/RELEASE_NOTES-v1.0.md) | 변경 요약, 산출물, SHA-256 |
+| [docs/pilot/PILOT_PLAN-v1.0.md](docs/pilot/PILOT_PLAN-v1.0.md) | 팀 파일럿 과제·측정·판정 (미실시) |
+
+- `npm run build` → `dist/index.html` (dev 빌드, Google Fonts 링크 포함) · `npm run build:offline` → 외부 요청 없는 빌드 · `npm run release` → `release/` (오프라인 HTML, 소스 ZIP, Handoff ZIP, 문서, SHA256SUMS)
+- CI: `.github/workflows/ci.yml` — 모든 push/PR에 빌드·산출물 무결성·문법·엔진·Lab·e2e(si1310)·Python GDS; 수동 실행(release=true)이나 v* 태그에 4개 플랫폼 매트릭스·봇 게이트(★★)·릴리스 산출물
+
 ## 학습 흐름
 
 | 단계 | 내용 |
@@ -86,7 +99,7 @@ Photonic IC 설계를 게임으로 배우는 단계별 학습 프로그램입니
 
 ### PIC Design Lab (Track A 후속)
 
-캠페인 맵의 **LAB** 노드. 1.6T Tx PIC(DR8 MZM ×8 / DR8 MRR ×8 / WDM8 공유 버스 링 ×8)를 회로도 → Floorplan → 광 배선 → 전기 인터페이스 → 검증 → 회로 데이터 내보내기(smq-circuit/1) 여섯 미션으로 설계합니다. 부품은 카드(없으면 기준 설계)에서, 배선 형상은 직선·원호/Euler 코너·S-bend 기본 도형으로, 손실은 D-1 산란·굽힘 모델로 계산하고, 3A+ 엔진의 링크 예측에 레이아웃 손실을 더해 비교합니다. 진행은 점수가 아니라 상태(Schematic / Floorplan / Routing / Verification Complete, GDS Generated)로 표시하고, 별·카드·레벨 설계는 건드리지 않습니다(`smq3-lab`). GDS는 `tools/smq2gds/circuit.py`가 같은 기본 도형으로 그리고 KLayout으로 다시 읽어 검사하며(연결·포트·길이·간격·선폭·금속 단락), 그 결과를 Mission 6에서 불러오면 GDS Generated가 됩니다.
+캠페인 맵의 **LAB** 노드. 1.6T Tx PIC(DR8 MZM ×8 / DR8 MRR ×8 / WDM8 공유 버스 링 ×8)를 회로도 → Floorplan → 광 배선 → 전기 인터페이스 → 검증 → 회로 데이터 내보내기(smq-circuit/1) 여섯 미션으로 설계합니다. 부품은 카드(없으면 기준 설계)에서, 배선 형상은 직선·원호/Euler 코너·S-bend 기본 도형으로, 손실은 D-1 산란·굽힘 모델로 계산하고, 3A+ 엔진의 링크 예측에 레이아웃 손실을 더해 비교합니다. 진행은 점수가 아니라 상태(Schematic / Floorplan / Routing / Verification Complete — 모두 지금 설계 기준, Design Valid · Geometry Rechecked · Foundry Readiness NOT VERIFIED)로 표시하고, 별·카드·레벨 설계는 건드리지 않습니다(`smq3-lab`). GDS는 `tools/smq2gds/circuit.py`가 같은 기본 도형으로 그리고 KLayout으로 다시 읽어 검사하며(연결·포트·길이·간격·선폭·금속 단락), 그 결과를 Mission 6에서 불러와 design hash가 같으면 Geometry Rechecked가 됩니다(파운드리 준비는 검증하지 않음).
 - 링 WDM8 (3W · Lab WDM8): [docs/wdm8.md](docs/wdm8.md)
 - 사용법·모델·한계: [docs/design_lab.md](docs/design_lab.md) · 데이터 형식: [docs/circuit_schema.md](docs/circuit_schema.md) · GDS 내보내기: [docs/gds_export.md](docs/gds_export.md) · 예제 GDS: [docs/gds/](docs/gds/)
 
