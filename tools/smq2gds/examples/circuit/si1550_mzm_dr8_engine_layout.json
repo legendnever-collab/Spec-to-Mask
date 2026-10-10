@@ -1,0 +1,6687 @@
+{
+ "schema": "smq-circuit/1",
+ "generator": "SPEC-to-MASK Quest · PIC Design Lab",
+ "exported": "2026-10-10T00:00:00Z",
+ "platform": {
+  "id": "si1550",
+  "mat": "si",
+  "lam_um": 1.55,
+  "core_t_um": 0.22,
+  "w0_um": 0.46,
+  "wc_um": 0.5,
+  "clad": "SiO2",
+  "box": "SiO2",
+  "rules_um": {
+   "gap": 0.18,
+   "wmin": 0.4,
+   "edge": 0.05
+  },
+  "route_rules": {
+   "port_width_um": 0.46,
+   "body_width_um": 1,
+   "taper": "linear on the first / last straight (short nets stay at the port width)",
+   "bend": "euler",
+   "R_um": 10,
+   "R_min_rule_um": 2.5,
+   "alpha_body_dB_cm": 0.7805,
+   "alpha_port_dB_cm": 5.2187,
+   "litho_min_width_um": 0.15
+  }
+ },
+ "architecture": {
+  "name": "1.6T DR8 Tx PIC",
+  "lanes": 8,
+  "lane_rate_gbps": 224,
+  "net_rate_gbps": 200,
+  "baud_gbd": 112,
+  "format": "PAM4",
+  "modulator": "mzm",
+  "laser_share": 1,
+  "lasers": 8,
+  "splitter_depth": 0,
+  "monitor_pd": true
+ },
+ "die": {
+  "W_um": 5200,
+  "H_um": 2500,
+  "edge_um": 50,
+  "optical_io": {
+   "input": "W",
+   "output": "E",
+   "fiber_pitch_um": 127
+  },
+  "electrical_io": {
+   "type": "edge wire-bond pads (abstract)",
+   "rf_side": "N",
+   "dc_side": "S",
+   "pad_pitch_um": 100,
+   "pad_um": 80
+  },
+  "lane_pitch_um": 275,
+  "lane_stagger_um": 320
+ },
+ "instances": [
+  {
+   "id": "IN0",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 60,
+    "tip_um": 0.146,
+    "w_um": 1
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 805.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    803.5,
+    60,
+    807.5
+   ],
+   "size_um": [
+    60,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      805.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      60,
+      805.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "IN1",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 60,
+    "tip_um": 0.146,
+    "w_um": 1
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 932.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    930.5,
+    60,
+    934.5
+   ],
+   "size_um": [
+    60,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      932.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      60,
+      932.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "IN2",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 60,
+    "tip_um": 0.146,
+    "w_um": 1
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 1059.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    1057.5,
+    60,
+    1061.5
+   ],
+   "size_um": [
+    60,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      1059.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      60,
+      1059.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "IN3",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 60,
+    "tip_um": 0.146,
+    "w_um": 1
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 1186.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    1184.5,
+    60,
+    1188.5
+   ],
+   "size_um": [
+    60,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      1186.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      60,
+      1186.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "IN4",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 60,
+    "tip_um": 0.146,
+    "w_um": 1
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 1313.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    1311.5,
+    60,
+    1315.5
+   ],
+   "size_um": [
+    60,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      1313.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      60,
+      1313.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "IN5",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 60,
+    "tip_um": 0.146,
+    "w_um": 1
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 1440.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    1438.5,
+    60,
+    1442.5
+   ],
+   "size_um": [
+    60,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      1440.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      60,
+      1440.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "IN6",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 60,
+    "tip_um": 0.146,
+    "w_um": 1
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 1567.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    1565.5,
+    60,
+    1569.5
+   ],
+   "size_um": [
+    60,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      1567.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      60,
+      1567.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "IN7",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 60,
+    "tip_um": 0.146,
+    "w_um": 1
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 1694.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    1692.5,
+    60,
+    1696.5
+   ],
+   "size_um": [
+    60,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      1694.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      60,
+      1694.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "MOD0",
+   "type": "mzm",
+   "role": "modulator",
+   "lane": 0,
+   "source": "2-3 기준 설계 + 1-3 기준 설계 + 2-1 기준 설계",
+   "params": {
+    "L_e_um": 2000,
+    "gap_um": 60,
+    "signal_um": 15,
+    "ground_um": 50,
+    "arm_sep_um": 75,
+    "RT_ohm": 52,
+    "mmi": {
+     "W_um": 1.8,
+     "L_um": 3.3,
+     "wt_um": 0.7,
+     "s_um": 0.98,
+     "taper_len_um": 10
+    },
+    "heater": {
+     "L_um": 74,
+     "w_um": 2,
+     "h_um": 0.5,
+     "x0_um": 2093.3
+    },
+    "sbend": {
+     "kind": "corners",
+     "len": 20,
+     "dx": 20,
+     "dy": 37.01,
+     "a": 10,
+     "shape": "arc",
+     "mixed": true
+    }
+   },
+   "placement": {
+    "x_um": 281.6077,
+    "y_um": 287.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    281.6077,
+    170,
+    2512.2077,
+    405
+   ],
+   "size_um": [
+    2230.6,
+    235
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      281.6077,
+      287.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      2512.2077,
+      287.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      344.9077,
+      287.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g1",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      344.9077,
+      380
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g2",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      344.9077,
+      195
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "term",
+     "kind": "internal",
+     "sub": "int",
+     "xy_um": [
+      2344.9077,
+      287.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      2374.9077,
+      325
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      2448.9077,
+      325
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON0",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 0,
+   "source": "2-4 기준 설계 (Ge 28×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 34.3239,
+    "gap_um": 0.36,
+    "ratio": 0.02,
+    "pd_L_um": 28,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 2522.2077,
+    "y_um": 287.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    2522.2077,
+    273.64,
+    2620.5316,
+    291.5
+   ],
+   "size_um": [
+    98.3239,
+    17.86
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      2522.2077,
+      287.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      2620.5316,
+      287.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      2589.5316,
+      278.14
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      2603.5316,
+      278.14
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MOD1",
+   "type": "mzm",
+   "role": "modulator",
+   "lane": 1,
+   "source": "2-3 기준 설계 + 1-3 기준 설계 + 2-1 기준 설계",
+   "params": {
+    "L_e_um": 2000,
+    "gap_um": 60,
+    "signal_um": 15,
+    "ground_um": 50,
+    "arm_sep_um": 75,
+    "RT_ohm": 52,
+    "mmi": {
+     "W_um": 1.8,
+     "L_um": 3.3,
+     "wt_um": 0.7,
+     "s_um": 0.98,
+     "taper_len_um": 10
+    },
+    "heater": {
+     "L_um": 74,
+     "w_um": 2,
+     "h_um": 0.5,
+     "x0_um": 2093.3
+    },
+    "sbend": {
+     "kind": "corners",
+     "len": 20,
+     "dx": 20,
+     "dy": 37.01,
+     "a": 10,
+     "shape": "arc",
+     "mixed": true
+    }
+   },
+   "placement": {
+    "x_um": 601.6077,
+    "y_um": 562.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    601.6077,
+    445,
+    2832.2077,
+    680
+   ],
+   "size_um": [
+    2230.6,
+    235
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      601.6077,
+      562.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      2832.2077,
+      562.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      664.9077,
+      562.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g1",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      664.9077,
+      655
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g2",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      664.9077,
+      470
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "term",
+     "kind": "internal",
+     "sub": "int",
+     "xy_um": [
+      2664.9077,
+      562.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      2694.9077,
+      600
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      2768.9077,
+      600
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON1",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 1,
+   "source": "2-4 기준 설계 (Ge 28×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 34.3239,
+    "gap_um": 0.36,
+    "ratio": 0.02,
+    "pd_L_um": 28,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 2842.2077,
+    "y_um": 562.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    2842.2077,
+    548.64,
+    2940.5316,
+    566.5
+   ],
+   "size_um": [
+    98.3239,
+    17.86
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      2842.2077,
+      562.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      2940.5316,
+      562.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      2909.5316,
+      553.14
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      2923.5316,
+      553.14
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MOD2",
+   "type": "mzm",
+   "role": "modulator",
+   "lane": 2,
+   "source": "2-3 기준 설계 + 1-3 기준 설계 + 2-1 기준 설계",
+   "params": {
+    "L_e_um": 2000,
+    "gap_um": 60,
+    "signal_um": 15,
+    "ground_um": 50,
+    "arm_sep_um": 75,
+    "RT_ohm": 52,
+    "mmi": {
+     "W_um": 1.8,
+     "L_um": 3.3,
+     "wt_um": 0.7,
+     "s_um": 0.98,
+     "taper_len_um": 10
+    },
+    "heater": {
+     "L_um": 74,
+     "w_um": 2,
+     "h_um": 0.5,
+     "x0_um": 2093.3
+    },
+    "sbend": {
+     "kind": "corners",
+     "len": 20,
+     "dx": 20,
+     "dy": 37.01,
+     "a": 10,
+     "shape": "arc",
+     "mixed": true
+    }
+   },
+   "placement": {
+    "x_um": 921.6077,
+    "y_um": 837.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    921.6077,
+    720,
+    3152.2077,
+    955
+   ],
+   "size_um": [
+    2230.6,
+    235
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      921.6077,
+      837.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      3152.2077,
+      837.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      984.9077,
+      837.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g1",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      984.9077,
+      930
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g2",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      984.9077,
+      745
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "term",
+     "kind": "internal",
+     "sub": "int",
+     "xy_um": [
+      2984.9077,
+      837.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      3014.9077,
+      875
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      3088.9077,
+      875
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON2",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 2,
+   "source": "2-4 기준 설계 (Ge 28×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 34.3239,
+    "gap_um": 0.36,
+    "ratio": 0.02,
+    "pd_L_um": 28,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 3162.2077,
+    "y_um": 837.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    3162.2077,
+    823.64,
+    3260.5316,
+    841.5
+   ],
+   "size_um": [
+    98.3239,
+    17.86
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      3162.2077,
+      837.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      3260.5316,
+      837.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      3229.5316,
+      828.14
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      3243.5316,
+      828.14
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MOD3",
+   "type": "mzm",
+   "role": "modulator",
+   "lane": 3,
+   "source": "2-3 기준 설계 + 1-3 기준 설계 + 2-1 기준 설계",
+   "params": {
+    "L_e_um": 2000,
+    "gap_um": 60,
+    "signal_um": 15,
+    "ground_um": 50,
+    "arm_sep_um": 75,
+    "RT_ohm": 52,
+    "mmi": {
+     "W_um": 1.8,
+     "L_um": 3.3,
+     "wt_um": 0.7,
+     "s_um": 0.98,
+     "taper_len_um": 10
+    },
+    "heater": {
+     "L_um": 74,
+     "w_um": 2,
+     "h_um": 0.5,
+     "x0_um": 2093.3
+    },
+    "sbend": {
+     "kind": "corners",
+     "len": 20,
+     "dx": 20,
+     "dy": 37.01,
+     "a": 10,
+     "shape": "arc",
+     "mixed": true
+    }
+   },
+   "placement": {
+    "x_um": 1241.6077,
+    "y_um": 1112.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    1241.6077,
+    995,
+    3472.2077,
+    1230
+   ],
+   "size_um": [
+    2230.6,
+    235
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      1241.6077,
+      1112.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      3472.2077,
+      1112.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      1304.9077,
+      1112.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g1",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      1304.9077,
+      1205
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g2",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      1304.9077,
+      1020
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "term",
+     "kind": "internal",
+     "sub": "int",
+     "xy_um": [
+      3304.9077,
+      1112.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      3334.9077,
+      1150
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      3408.9077,
+      1150
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON3",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 3,
+   "source": "2-4 기준 설계 (Ge 28×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 34.3239,
+    "gap_um": 0.36,
+    "ratio": 0.02,
+    "pd_L_um": 28,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 3482.2077,
+    "y_um": 1112.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    3482.2077,
+    1098.64,
+    3580.5316,
+    1116.5
+   ],
+   "size_um": [
+    98.3239,
+    17.86
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      3482.2077,
+      1112.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      3580.5316,
+      1112.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      3549.5316,
+      1103.14
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      3563.5316,
+      1103.14
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MOD4",
+   "type": "mzm",
+   "role": "modulator",
+   "lane": 4,
+   "source": "2-3 기준 설계 + 1-3 기준 설계 + 2-1 기준 설계",
+   "params": {
+    "L_e_um": 2000,
+    "gap_um": 60,
+    "signal_um": 15,
+    "ground_um": 50,
+    "arm_sep_um": 75,
+    "RT_ohm": 52,
+    "mmi": {
+     "W_um": 1.8,
+     "L_um": 3.3,
+     "wt_um": 0.7,
+     "s_um": 0.98,
+     "taper_len_um": 10
+    },
+    "heater": {
+     "L_um": 74,
+     "w_um": 2,
+     "h_um": 0.5,
+     "x0_um": 2093.3
+    },
+    "sbend": {
+     "kind": "corners",
+     "len": 20,
+     "dx": 20,
+     "dy": 37.01,
+     "a": 10,
+     "shape": "arc",
+     "mixed": true
+    }
+   },
+   "placement": {
+    "x_um": 1561.6077,
+    "y_um": 1387.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    1561.6077,
+    1270,
+    3792.2077,
+    1505
+   ],
+   "size_um": [
+    2230.6,
+    235
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      1561.6077,
+      1387.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      3792.2077,
+      1387.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      1624.9077,
+      1387.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g1",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      1624.9077,
+      1480
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g2",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      1624.9077,
+      1295
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "term",
+     "kind": "internal",
+     "sub": "int",
+     "xy_um": [
+      3624.9077,
+      1387.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      3654.9077,
+      1425
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      3728.9077,
+      1425
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON4",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 4,
+   "source": "2-4 기준 설계 (Ge 28×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 34.3239,
+    "gap_um": 0.36,
+    "ratio": 0.02,
+    "pd_L_um": 28,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 3802.2077,
+    "y_um": 1387.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    3802.2077,
+    1373.64,
+    3900.5316,
+    1391.5
+   ],
+   "size_um": [
+    98.3239,
+    17.86
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      3802.2077,
+      1387.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      3900.5316,
+      1387.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      3869.5316,
+      1378.14
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      3883.5316,
+      1378.14
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MOD5",
+   "type": "mzm",
+   "role": "modulator",
+   "lane": 5,
+   "source": "2-3 기준 설계 + 1-3 기준 설계 + 2-1 기준 설계",
+   "params": {
+    "L_e_um": 2000,
+    "gap_um": 60,
+    "signal_um": 15,
+    "ground_um": 50,
+    "arm_sep_um": 75,
+    "RT_ohm": 52,
+    "mmi": {
+     "W_um": 1.8,
+     "L_um": 3.3,
+     "wt_um": 0.7,
+     "s_um": 0.98,
+     "taper_len_um": 10
+    },
+    "heater": {
+     "L_um": 74,
+     "w_um": 2,
+     "h_um": 0.5,
+     "x0_um": 2093.3
+    },
+    "sbend": {
+     "kind": "corners",
+     "len": 20,
+     "dx": 20,
+     "dy": 37.01,
+     "a": 10,
+     "shape": "arc",
+     "mixed": true
+    }
+   },
+   "placement": {
+    "x_um": 1881.6077,
+    "y_um": 1662.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    1881.6077,
+    1545,
+    4112.2077,
+    1780
+   ],
+   "size_um": [
+    2230.6,
+    235
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      1881.6077,
+      1662.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      4112.2077,
+      1662.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      1944.9077,
+      1662.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g1",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      1944.9077,
+      1755
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g2",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      1944.9077,
+      1570
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "term",
+     "kind": "internal",
+     "sub": "int",
+     "xy_um": [
+      3944.9077,
+      1662.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      3974.9077,
+      1700
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      4048.9077,
+      1700
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON5",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 5,
+   "source": "2-4 기준 설계 (Ge 28×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 34.3239,
+    "gap_um": 0.36,
+    "ratio": 0.02,
+    "pd_L_um": 28,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 4122.2077,
+    "y_um": 1662.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    4122.2077,
+    1648.64,
+    4220.5316,
+    1666.5
+   ],
+   "size_um": [
+    98.3239,
+    17.86
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      4122.2077,
+      1662.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      4220.5316,
+      1662.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      4189.5316,
+      1653.14
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      4203.5316,
+      1653.14
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MOD6",
+   "type": "mzm",
+   "role": "modulator",
+   "lane": 6,
+   "source": "2-3 기준 설계 + 1-3 기준 설계 + 2-1 기준 설계",
+   "params": {
+    "L_e_um": 2000,
+    "gap_um": 60,
+    "signal_um": 15,
+    "ground_um": 50,
+    "arm_sep_um": 75,
+    "RT_ohm": 52,
+    "mmi": {
+     "W_um": 1.8,
+     "L_um": 3.3,
+     "wt_um": 0.7,
+     "s_um": 0.98,
+     "taper_len_um": 10
+    },
+    "heater": {
+     "L_um": 74,
+     "w_um": 2,
+     "h_um": 0.5,
+     "x0_um": 2093.3
+    },
+    "sbend": {
+     "kind": "corners",
+     "len": 20,
+     "dx": 20,
+     "dy": 37.01,
+     "a": 10,
+     "shape": "arc",
+     "mixed": true
+    }
+   },
+   "placement": {
+    "x_um": 2201.6077,
+    "y_um": 1937.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    2201.6077,
+    1820,
+    4432.2077,
+    2055
+   ],
+   "size_um": [
+    2230.6,
+    235
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      2201.6077,
+      1937.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      4432.2077,
+      1937.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      2264.9077,
+      1937.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g1",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      2264.9077,
+      2030
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g2",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      2264.9077,
+      1845
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "term",
+     "kind": "internal",
+     "sub": "int",
+     "xy_um": [
+      4264.9077,
+      1937.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      4294.9077,
+      1975
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      4368.9077,
+      1975
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON6",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 6,
+   "source": "2-4 기준 설계 (Ge 28×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 34.3239,
+    "gap_um": 0.36,
+    "ratio": 0.02,
+    "pd_L_um": 28,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 4442.2077,
+    "y_um": 1937.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    4442.2077,
+    1923.64,
+    4540.5316,
+    1941.5
+   ],
+   "size_um": [
+    98.3239,
+    17.86
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      4442.2077,
+      1937.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      4540.5316,
+      1937.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      4509.5316,
+      1928.14
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      4523.5316,
+      1928.14
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MOD7",
+   "type": "mzm",
+   "role": "modulator",
+   "lane": 7,
+   "source": "2-3 기준 설계 + 1-3 기준 설계 + 2-1 기준 설계",
+   "params": {
+    "L_e_um": 2000,
+    "gap_um": 60,
+    "signal_um": 15,
+    "ground_um": 50,
+    "arm_sep_um": 75,
+    "RT_ohm": 52,
+    "mmi": {
+     "W_um": 1.8,
+     "L_um": 3.3,
+     "wt_um": 0.7,
+     "s_um": 0.98,
+     "taper_len_um": 10
+    },
+    "heater": {
+     "L_um": 74,
+     "w_um": 2,
+     "h_um": 0.5,
+     "x0_um": 2093.3
+    },
+    "sbend": {
+     "kind": "corners",
+     "len": 20,
+     "dx": 20,
+     "dy": 37.01,
+     "a": 10,
+     "shape": "arc",
+     "mixed": true
+    }
+   },
+   "placement": {
+    "x_um": 2521.6077,
+    "y_um": 2212.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    2521.6077,
+    2095,
+    4752.2077,
+    2330
+   ],
+   "size_um": [
+    2230.6,
+    235
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      2521.6077,
+      2212.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      4752.2077,
+      2212.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      2584.9077,
+      2212.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g1",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      2584.9077,
+      2305
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g2",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      2584.9077,
+      2120
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "term",
+     "kind": "internal",
+     "sub": "int",
+     "xy_um": [
+      4584.9077,
+      2212.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      4614.9077,
+      2250
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      4688.9077,
+      2250
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON7",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 7,
+   "source": "2-4 기준 설계 (Ge 28×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 34.3239,
+    "gap_um": 0.36,
+    "ratio": 0.02,
+    "pd_L_um": 28,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 4762.2077,
+    "y_um": 2212.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    4762.2077,
+    2198.64,
+    4860.5316,
+    2216.5
+   ],
+   "size_um": [
+    98.3239,
+    17.86
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      4762.2077,
+      2212.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      4860.5316,
+      2212.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      4829.5316,
+      2203.14
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      4843.5316,
+      2203.14
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "OUT0",
+   "type": "ssc",
+   "role": "output",
+   "lane": 0,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 60,
+    "tip_um": 0.146,
+    "w_um": 1
+   },
+   "placement": {
+    "x_um": 5200,
+    "y_um": 805.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    5140,
+    803.5,
+    5200,
+    807.5
+   ],
+   "size_um": [
+    60,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      5200,
+      805.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      5140,
+      805.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  },
+  {
+   "id": "OUT1",
+   "type": "ssc",
+   "role": "output",
+   "lane": 1,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 60,
+    "tip_um": 0.146,
+    "w_um": 1
+   },
+   "placement": {
+    "x_um": 5200,
+    "y_um": 932.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    5140,
+    930.5,
+    5200,
+    934.5
+   ],
+   "size_um": [
+    60,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      5200,
+      932.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      5140,
+      932.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  },
+  {
+   "id": "OUT2",
+   "type": "ssc",
+   "role": "output",
+   "lane": 2,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 60,
+    "tip_um": 0.146,
+    "w_um": 1
+   },
+   "placement": {
+    "x_um": 5200,
+    "y_um": 1059.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    5140,
+    1057.5,
+    5200,
+    1061.5
+   ],
+   "size_um": [
+    60,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      5200,
+      1059.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      5140,
+      1059.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  },
+  {
+   "id": "OUT3",
+   "type": "ssc",
+   "role": "output",
+   "lane": 3,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 60,
+    "tip_um": 0.146,
+    "w_um": 1
+   },
+   "placement": {
+    "x_um": 5200,
+    "y_um": 1186.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    5140,
+    1184.5,
+    5200,
+    1188.5
+   ],
+   "size_um": [
+    60,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      5200,
+      1186.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      5140,
+      1186.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  },
+  {
+   "id": "OUT4",
+   "type": "ssc",
+   "role": "output",
+   "lane": 4,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 60,
+    "tip_um": 0.146,
+    "w_um": 1
+   },
+   "placement": {
+    "x_um": 5200,
+    "y_um": 1313.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    5140,
+    1311.5,
+    5200,
+    1315.5
+   ],
+   "size_um": [
+    60,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      5200,
+      1313.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      5140,
+      1313.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  },
+  {
+   "id": "OUT5",
+   "type": "ssc",
+   "role": "output",
+   "lane": 5,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 60,
+    "tip_um": 0.146,
+    "w_um": 1
+   },
+   "placement": {
+    "x_um": 5200,
+    "y_um": 1440.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    5140,
+    1438.5,
+    5200,
+    1442.5
+   ],
+   "size_um": [
+    60,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      5200,
+      1440.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      5140,
+      1440.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  },
+  {
+   "id": "OUT6",
+   "type": "ssc",
+   "role": "output",
+   "lane": 6,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 60,
+    "tip_um": 0.146,
+    "w_um": 1
+   },
+   "placement": {
+    "x_um": 5200,
+    "y_um": 1567.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    5140,
+    1565.5,
+    5200,
+    1569.5
+   ],
+   "size_um": [
+    60,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      5200,
+      1567.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      5140,
+      1567.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  },
+  {
+   "id": "OUT7",
+   "type": "ssc",
+   "role": "output",
+   "lane": 7,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 60,
+    "tip_um": 0.146,
+    "w_um": 1
+   },
+   "placement": {
+    "x_um": 5200,
+    "y_um": 1694.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    5140,
+    1692.5,
+    5200,
+    1696.5
+   ],
+   "size_um": [
+    60,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      5200,
+      1694.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      5140,
+      1694.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  }
+ ],
+ "nets": {
+  "optical": [
+   {
+    "id": "n0",
+    "from": "IN0.out",
+    "to": "MOD0.in",
+    "lane": 0,
+    "kind": "feed"
+   },
+   {
+    "id": "n1",
+    "from": "IN1.out",
+    "to": "MOD1.in",
+    "lane": 1,
+    "kind": "feed"
+   },
+   {
+    "id": "n2",
+    "from": "IN2.out",
+    "to": "MOD2.in",
+    "lane": 2,
+    "kind": "feed"
+   },
+   {
+    "id": "n3",
+    "from": "IN3.out",
+    "to": "MOD3.in",
+    "lane": 3,
+    "kind": "feed"
+   },
+   {
+    "id": "n4",
+    "from": "IN4.out",
+    "to": "MOD4.in",
+    "lane": 4,
+    "kind": "feed"
+   },
+   {
+    "id": "n5",
+    "from": "IN5.out",
+    "to": "MOD5.in",
+    "lane": 5,
+    "kind": "feed"
+   },
+   {
+    "id": "n6",
+    "from": "IN6.out",
+    "to": "MOD6.in",
+    "lane": 6,
+    "kind": "feed"
+   },
+   {
+    "id": "n7",
+    "from": "IN7.out",
+    "to": "MOD7.in",
+    "lane": 7,
+    "kind": "feed"
+   },
+   {
+    "id": "n8",
+    "from": "MOD0.out",
+    "to": "MON0.in",
+    "lane": 0,
+    "kind": "lane"
+   },
+   {
+    "id": "n9",
+    "from": "MON0.out",
+    "to": "OUT0.in",
+    "lane": 0,
+    "kind": "out"
+   },
+   {
+    "id": "n10",
+    "from": "MOD1.out",
+    "to": "MON1.in",
+    "lane": 1,
+    "kind": "lane"
+   },
+   {
+    "id": "n11",
+    "from": "MON1.out",
+    "to": "OUT1.in",
+    "lane": 1,
+    "kind": "out"
+   },
+   {
+    "id": "n12",
+    "from": "MOD2.out",
+    "to": "MON2.in",
+    "lane": 2,
+    "kind": "lane"
+   },
+   {
+    "id": "n13",
+    "from": "MON2.out",
+    "to": "OUT2.in",
+    "lane": 2,
+    "kind": "out"
+   },
+   {
+    "id": "n14",
+    "from": "MOD3.out",
+    "to": "MON3.in",
+    "lane": 3,
+    "kind": "lane"
+   },
+   {
+    "id": "n15",
+    "from": "MON3.out",
+    "to": "OUT3.in",
+    "lane": 3,
+    "kind": "out"
+   },
+   {
+    "id": "n16",
+    "from": "MOD4.out",
+    "to": "MON4.in",
+    "lane": 4,
+    "kind": "lane"
+   },
+   {
+    "id": "n17",
+    "from": "MON4.out",
+    "to": "OUT4.in",
+    "lane": 4,
+    "kind": "out"
+   },
+   {
+    "id": "n18",
+    "from": "MOD5.out",
+    "to": "MON5.in",
+    "lane": 5,
+    "kind": "lane"
+   },
+   {
+    "id": "n19",
+    "from": "MON5.out",
+    "to": "OUT5.in",
+    "lane": 5,
+    "kind": "out"
+   },
+   {
+    "id": "n20",
+    "from": "MOD6.out",
+    "to": "MON6.in",
+    "lane": 6,
+    "kind": "lane"
+   },
+   {
+    "id": "n21",
+    "from": "MON6.out",
+    "to": "OUT6.in",
+    "lane": 6,
+    "kind": "out"
+   },
+   {
+    "id": "n22",
+    "from": "MOD7.out",
+    "to": "MON7.in",
+    "lane": 7,
+    "kind": "lane"
+   },
+   {
+    "id": "n23",
+    "from": "MON7.out",
+    "to": "OUT7.in",
+    "lane": 7,
+    "kind": "out"
+   }
+  ],
+  "electrical": [
+   {
+    "id": "MOD0.rf_g2",
+    "kind": "rf",
+    "lane": 0,
+    "from": "MOD0.rf_g2",
+    "to": "pad:RF0_g2"
+   },
+   {
+    "id": "MOD0.rf_s",
+    "kind": "rf",
+    "lane": 0,
+    "from": "MOD0.rf_s",
+    "to": "pad:RF0_s"
+   },
+   {
+    "id": "MOD0.rf_g1",
+    "kind": "rf",
+    "lane": 0,
+    "from": "MOD0.rf_g1",
+    "to": "pad:RF0_g1"
+   },
+   {
+    "id": "MOD0.term",
+    "kind": "rf_term",
+    "lane": 0,
+    "from": "MOD0.term",
+    "to": "R_T 52 Ω (온칩, 추상)"
+   },
+   {
+    "id": "MOD0.h_p",
+    "kind": "dc",
+    "lane": 0,
+    "from": "MOD0.h_p",
+    "to": "pad:DC0_h_p"
+   },
+   {
+    "id": "MOD0.h_n",
+    "kind": "dc",
+    "lane": 0,
+    "from": "MOD0.h_n",
+    "to": "pad:DC0_h_n"
+   },
+   {
+    "id": "MON0.pd_a",
+    "kind": "dc",
+    "lane": 0,
+    "from": "MON0.pd_a",
+    "to": "pad:DC0_pd_a"
+   },
+   {
+    "id": "MON0.pd_k",
+    "kind": "dc",
+    "lane": 0,
+    "from": "MON0.pd_k",
+    "to": "pad:DC0_pd_k"
+   },
+   {
+    "id": "MOD1.rf_g2",
+    "kind": "rf",
+    "lane": 1,
+    "from": "MOD1.rf_g2",
+    "to": "pad:RF1_g2"
+   },
+   {
+    "id": "MOD1.rf_s",
+    "kind": "rf",
+    "lane": 1,
+    "from": "MOD1.rf_s",
+    "to": "pad:RF1_s"
+   },
+   {
+    "id": "MOD1.rf_g1",
+    "kind": "rf",
+    "lane": 1,
+    "from": "MOD1.rf_g1",
+    "to": "pad:RF1_g1"
+   },
+   {
+    "id": "MOD1.term",
+    "kind": "rf_term",
+    "lane": 1,
+    "from": "MOD1.term",
+    "to": "R_T 52 Ω (온칩, 추상)"
+   },
+   {
+    "id": "MOD1.h_p",
+    "kind": "dc",
+    "lane": 1,
+    "from": "MOD1.h_p",
+    "to": "pad:DC1_h_p"
+   },
+   {
+    "id": "MOD1.h_n",
+    "kind": "dc",
+    "lane": 1,
+    "from": "MOD1.h_n",
+    "to": "pad:DC1_h_n"
+   },
+   {
+    "id": "MON1.pd_a",
+    "kind": "dc",
+    "lane": 1,
+    "from": "MON1.pd_a",
+    "to": "pad:DC1_pd_a"
+   },
+   {
+    "id": "MON1.pd_k",
+    "kind": "dc",
+    "lane": 1,
+    "from": "MON1.pd_k",
+    "to": "pad:DC1_pd_k"
+   },
+   {
+    "id": "MOD2.rf_g2",
+    "kind": "rf",
+    "lane": 2,
+    "from": "MOD2.rf_g2",
+    "to": "pad:RF2_g2"
+   },
+   {
+    "id": "MOD2.rf_s",
+    "kind": "rf",
+    "lane": 2,
+    "from": "MOD2.rf_s",
+    "to": "pad:RF2_s"
+   },
+   {
+    "id": "MOD2.rf_g1",
+    "kind": "rf",
+    "lane": 2,
+    "from": "MOD2.rf_g1",
+    "to": "pad:RF2_g1"
+   },
+   {
+    "id": "MOD2.term",
+    "kind": "rf_term",
+    "lane": 2,
+    "from": "MOD2.term",
+    "to": "R_T 52 Ω (온칩, 추상)"
+   },
+   {
+    "id": "MOD2.h_p",
+    "kind": "dc",
+    "lane": 2,
+    "from": "MOD2.h_p",
+    "to": "pad:DC2_h_p"
+   },
+   {
+    "id": "MOD2.h_n",
+    "kind": "dc",
+    "lane": 2,
+    "from": "MOD2.h_n",
+    "to": "pad:DC2_h_n"
+   },
+   {
+    "id": "MON2.pd_a",
+    "kind": "dc",
+    "lane": 2,
+    "from": "MON2.pd_a",
+    "to": "pad:DC2_pd_a"
+   },
+   {
+    "id": "MON2.pd_k",
+    "kind": "dc",
+    "lane": 2,
+    "from": "MON2.pd_k",
+    "to": "pad:DC2_pd_k"
+   },
+   {
+    "id": "MOD3.rf_g2",
+    "kind": "rf",
+    "lane": 3,
+    "from": "MOD3.rf_g2",
+    "to": "pad:RF3_g2"
+   },
+   {
+    "id": "MOD3.rf_s",
+    "kind": "rf",
+    "lane": 3,
+    "from": "MOD3.rf_s",
+    "to": "pad:RF3_s"
+   },
+   {
+    "id": "MOD3.rf_g1",
+    "kind": "rf",
+    "lane": 3,
+    "from": "MOD3.rf_g1",
+    "to": "pad:RF3_g1"
+   },
+   {
+    "id": "MOD3.term",
+    "kind": "rf_term",
+    "lane": 3,
+    "from": "MOD3.term",
+    "to": "R_T 52 Ω (온칩, 추상)"
+   },
+   {
+    "id": "MOD3.h_p",
+    "kind": "dc",
+    "lane": 3,
+    "from": "MOD3.h_p",
+    "to": "pad:DC3_h_p"
+   },
+   {
+    "id": "MOD3.h_n",
+    "kind": "dc",
+    "lane": 3,
+    "from": "MOD3.h_n",
+    "to": "pad:DC3_h_n"
+   },
+   {
+    "id": "MON3.pd_a",
+    "kind": "dc",
+    "lane": 3,
+    "from": "MON3.pd_a",
+    "to": "pad:DC3_pd_a"
+   },
+   {
+    "id": "MON3.pd_k",
+    "kind": "dc",
+    "lane": 3,
+    "from": "MON3.pd_k",
+    "to": "pad:DC3_pd_k"
+   },
+   {
+    "id": "MOD4.rf_g2",
+    "kind": "rf",
+    "lane": 4,
+    "from": "MOD4.rf_g2",
+    "to": "pad:RF4_g2"
+   },
+   {
+    "id": "MOD4.rf_s",
+    "kind": "rf",
+    "lane": 4,
+    "from": "MOD4.rf_s",
+    "to": "pad:RF4_s"
+   },
+   {
+    "id": "MOD4.rf_g1",
+    "kind": "rf",
+    "lane": 4,
+    "from": "MOD4.rf_g1",
+    "to": "pad:RF4_g1"
+   },
+   {
+    "id": "MOD4.term",
+    "kind": "rf_term",
+    "lane": 4,
+    "from": "MOD4.term",
+    "to": "R_T 52 Ω (온칩, 추상)"
+   },
+   {
+    "id": "MOD4.h_p",
+    "kind": "dc",
+    "lane": 4,
+    "from": "MOD4.h_p",
+    "to": "pad:DC4_h_p"
+   },
+   {
+    "id": "MOD4.h_n",
+    "kind": "dc",
+    "lane": 4,
+    "from": "MOD4.h_n",
+    "to": "pad:DC4_h_n"
+   },
+   {
+    "id": "MON4.pd_a",
+    "kind": "dc",
+    "lane": 4,
+    "from": "MON4.pd_a",
+    "to": "pad:DC4_pd_a"
+   },
+   {
+    "id": "MON4.pd_k",
+    "kind": "dc",
+    "lane": 4,
+    "from": "MON4.pd_k",
+    "to": "pad:DC4_pd_k"
+   },
+   {
+    "id": "MOD5.rf_g2",
+    "kind": "rf",
+    "lane": 5,
+    "from": "MOD5.rf_g2",
+    "to": "pad:RF5_g2"
+   },
+   {
+    "id": "MOD5.rf_s",
+    "kind": "rf",
+    "lane": 5,
+    "from": "MOD5.rf_s",
+    "to": "pad:RF5_s"
+   },
+   {
+    "id": "MOD5.rf_g1",
+    "kind": "rf",
+    "lane": 5,
+    "from": "MOD5.rf_g1",
+    "to": "pad:RF5_g1"
+   },
+   {
+    "id": "MOD5.term",
+    "kind": "rf_term",
+    "lane": 5,
+    "from": "MOD5.term",
+    "to": "R_T 52 Ω (온칩, 추상)"
+   },
+   {
+    "id": "MOD5.h_p",
+    "kind": "dc",
+    "lane": 5,
+    "from": "MOD5.h_p",
+    "to": "pad:DC5_h_p"
+   },
+   {
+    "id": "MOD5.h_n",
+    "kind": "dc",
+    "lane": 5,
+    "from": "MOD5.h_n",
+    "to": "pad:DC5_h_n"
+   },
+   {
+    "id": "MON5.pd_a",
+    "kind": "dc",
+    "lane": 5,
+    "from": "MON5.pd_a",
+    "to": "pad:DC5_pd_a"
+   },
+   {
+    "id": "MON5.pd_k",
+    "kind": "dc",
+    "lane": 5,
+    "from": "MON5.pd_k",
+    "to": "pad:DC5_pd_k"
+   },
+   {
+    "id": "MOD6.rf_g2",
+    "kind": "rf",
+    "lane": 6,
+    "from": "MOD6.rf_g2",
+    "to": "pad:RF6_g2"
+   },
+   {
+    "id": "MOD6.rf_s",
+    "kind": "rf",
+    "lane": 6,
+    "from": "MOD6.rf_s",
+    "to": "pad:RF6_s"
+   },
+   {
+    "id": "MOD6.rf_g1",
+    "kind": "rf",
+    "lane": 6,
+    "from": "MOD6.rf_g1",
+    "to": "pad:RF6_g1"
+   },
+   {
+    "id": "MOD6.term",
+    "kind": "rf_term",
+    "lane": 6,
+    "from": "MOD6.term",
+    "to": "R_T 52 Ω (온칩, 추상)"
+   },
+   {
+    "id": "MOD6.h_p",
+    "kind": "dc",
+    "lane": 6,
+    "from": "MOD6.h_p",
+    "to": "pad:DC6_h_p"
+   },
+   {
+    "id": "MOD6.h_n",
+    "kind": "dc",
+    "lane": 6,
+    "from": "MOD6.h_n",
+    "to": "pad:DC6_h_n"
+   },
+   {
+    "id": "MON6.pd_a",
+    "kind": "dc",
+    "lane": 6,
+    "from": "MON6.pd_a",
+    "to": "pad:DC6_pd_a"
+   },
+   {
+    "id": "MON6.pd_k",
+    "kind": "dc",
+    "lane": 6,
+    "from": "MON6.pd_k",
+    "to": "pad:DC6_pd_k"
+   },
+   {
+    "id": "MOD7.rf_g2",
+    "kind": "rf",
+    "lane": 7,
+    "from": "MOD7.rf_g2",
+    "to": "pad:RF7_g2"
+   },
+   {
+    "id": "MOD7.rf_s",
+    "kind": "rf",
+    "lane": 7,
+    "from": "MOD7.rf_s",
+    "to": "pad:RF7_s"
+   },
+   {
+    "id": "MOD7.rf_g1",
+    "kind": "rf",
+    "lane": 7,
+    "from": "MOD7.rf_g1",
+    "to": "pad:RF7_g1"
+   },
+   {
+    "id": "MOD7.term",
+    "kind": "rf_term",
+    "lane": 7,
+    "from": "MOD7.term",
+    "to": "R_T 52 Ω (온칩, 추상)"
+   },
+   {
+    "id": "MOD7.h_p",
+    "kind": "dc",
+    "lane": 7,
+    "from": "MOD7.h_p",
+    "to": "pad:DC7_h_p"
+   },
+   {
+    "id": "MOD7.h_n",
+    "kind": "dc",
+    "lane": 7,
+    "from": "MOD7.h_n",
+    "to": "pad:DC7_h_n"
+   },
+   {
+    "id": "MON7.pd_a",
+    "kind": "dc",
+    "lane": 7,
+    "from": "MON7.pd_a",
+    "to": "pad:DC7_pd_a"
+   },
+   {
+    "id": "MON7.pd_k",
+    "kind": "dc",
+    "lane": 7,
+    "from": "MON7.pd_k",
+    "to": "pad:DC7_pd_k"
+   }
+  ]
+ },
+ "routing": {
+  "optical": [
+   {
+    "net": "n0",
+    "from": "IN0.out",
+    "to": "MOD0.in",
+    "lane": 0,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 1,
+    "length_um": 727.6357,
+    "loss_dB": 0.0866,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       60,
+       805.5
+      ],
+      "b": [
+       70,
+       805.5
+      ],
+      "w": 0.46
+     },
+     {
+      "t": "C",
+      "V": [
+       88.701,
+       805.5
+      ],
+      "h_deg": 0,
+      "turn": -1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 0.46
+     },
+     {
+      "t": "L",
+      "a": [
+       88.701,
+       786.799
+      ],
+      "b": [
+       88.701,
+       760.999
+      ],
+      "w0": 0.46,
+      "w1": 1,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       88.701,
+       760.999
+      ],
+      "b": [
+       88.701,
+       306.201
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       88.701,
+       287.5
+      ],
+      "h_deg": 270,
+      "turn": 1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       107.4019,
+       287.5
+      ],
+      "b": [
+       255.8077,
+       287.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       255.8077,
+       287.5
+      ],
+      "b": [
+       281.6077,
+       287.5
+      ],
+      "w0": 1,
+      "w1": 0.46,
+      "w": 1
+     }
+    ]
+   },
+   {
+    "net": "n1",
+    "from": "IN1.out",
+    "to": "MOD1.in",
+    "lane": 1,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 1,
+    "length_um": 899.6357,
+    "loss_dB": 0.0817,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       60,
+       932.5
+      ],
+      "b": [
+       85.8,
+       932.5
+      ],
+      "w0": 0.46,
+      "w1": 1,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       85.8,
+       932.5
+      ],
+      "b": [
+       111.4019,
+       932.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       130.1029,
+       932.5
+      ],
+      "h_deg": 0,
+      "turn": -1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       130.1029,
+       913.799
+      ],
+      "b": [
+       130.1029,
+       581.201
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       130.1029,
+       562.5
+      ],
+      "h_deg": 270,
+      "turn": 1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       148.8038,
+       562.5
+      ],
+      "b": [
+       575.8077,
+       562.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       575.8077,
+       562.5
+      ],
+      "b": [
+       601.6077,
+       562.5
+      ],
+      "w0": 1,
+      "w1": 0.46,
+      "w": 1
+     }
+    ]
+   },
+   {
+    "net": "n2",
+    "from": "IN2.out",
+    "to": "MOD2.in",
+    "lane": 2,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 1,
+    "length_um": 1071.6357,
+    "loss_dB": 0.0951,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       60,
+       1059.5
+      ],
+      "b": [
+       85.8,
+       1059.5
+      ],
+      "w0": 0.46,
+      "w1": 1,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       85.8,
+       1059.5
+      ],
+      "b": [
+       152.8038,
+       1059.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       171.5048,
+       1059.5
+      ],
+      "h_deg": 0,
+      "turn": -1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       171.5048,
+       1040.799
+      ],
+      "b": [
+       171.5048,
+       856.201
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       171.5048,
+       837.5
+      ],
+      "h_deg": 270,
+      "turn": 1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       190.2058,
+       837.5
+      ],
+      "b": [
+       895.8077,
+       837.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       895.8077,
+       837.5
+      ],
+      "b": [
+       921.6077,
+       837.5
+      ],
+      "w0": 1,
+      "w1": 0.46,
+      "w": 1
+     }
+    ]
+   },
+   {
+    "net": "n3",
+    "from": "IN3.out",
+    "to": "MOD3.in",
+    "lane": 3,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 1,
+    "length_um": 1243.6357,
+    "loss_dB": 0.1085,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       60,
+       1186.5
+      ],
+      "b": [
+       85.8,
+       1186.5
+      ],
+      "w0": 0.46,
+      "w1": 1,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       85.8,
+       1186.5
+      ],
+      "b": [
+       194.2058,
+       1186.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       212.9067,
+       1186.5
+      ],
+      "h_deg": 0,
+      "turn": -1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       212.9067,
+       1167.799
+      ],
+      "b": [
+       212.9067,
+       1131.201
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       212.9067,
+       1112.5
+      ],
+      "h_deg": 270,
+      "turn": 1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       231.6077,
+       1112.5
+      ],
+      "b": [
+       1215.8077,
+       1112.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       1215.8077,
+       1112.5
+      ],
+      "b": [
+       1241.6077,
+       1112.5
+      ],
+      "w0": 1,
+      "w1": 0.46,
+      "w": 1
+     }
+    ]
+   },
+   {
+    "net": "n4",
+    "from": "IN4.out",
+    "to": "MOD4.in",
+    "lane": 4,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 1,
+    "length_um": 1563.6357,
+    "loss_dB": 0.1335,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       60,
+       1313.5
+      ],
+      "b": [
+       85.8,
+       1313.5
+      ],
+      "w0": 0.46,
+      "w1": 1,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       85.8,
+       1313.5
+      ],
+      "b": [
+       194.2058,
+       1313.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       212.9067,
+       1313.5
+      ],
+      "h_deg": 0,
+      "turn": 1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       212.9067,
+       1332.201
+      ],
+      "b": [
+       212.9067,
+       1368.799
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       212.9067,
+       1387.5
+      ],
+      "h_deg": 90,
+      "turn": -1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       231.6077,
+       1387.5
+      ],
+      "b": [
+       1535.8077,
+       1387.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       1535.8077,
+       1387.5
+      ],
+      "b": [
+       1561.6077,
+       1387.5
+      ],
+      "w0": 1,
+      "w1": 0.46,
+      "w": 1
+     }
+    ]
+   },
+   {
+    "net": "n5",
+    "from": "IN5.out",
+    "to": "MOD5.in",
+    "lane": 5,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 1,
+    "length_um": 2031.6357,
+    "loss_dB": 0.17,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       60,
+       1440.5
+      ],
+      "b": [
+       85.8,
+       1440.5
+      ],
+      "w0": 0.46,
+      "w1": 1,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       85.8,
+       1440.5
+      ],
+      "b": [
+       152.8038,
+       1440.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       171.5048,
+       1440.5
+      ],
+      "h_deg": 0,
+      "turn": 1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       171.5048,
+       1459.201
+      ],
+      "b": [
+       171.5048,
+       1643.799
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       171.5048,
+       1662.5
+      ],
+      "h_deg": 90,
+      "turn": -1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       190.2058,
+       1662.5
+      ],
+      "b": [
+       1855.8077,
+       1662.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       1855.8077,
+       1662.5
+      ],
+      "b": [
+       1881.6077,
+       1662.5
+      ],
+      "w0": 1,
+      "w1": 0.46,
+      "w": 1
+     }
+    ]
+   },
+   {
+    "net": "n6",
+    "from": "IN6.out",
+    "to": "MOD6.in",
+    "lane": 6,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 1,
+    "length_um": 2499.6357,
+    "loss_dB": 0.2065,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       60,
+       1567.5
+      ],
+      "b": [
+       85.8,
+       1567.5
+      ],
+      "w0": 0.46,
+      "w1": 1,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       85.8,
+       1567.5
+      ],
+      "b": [
+       111.4019,
+       1567.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       130.1029,
+       1567.5
+      ],
+      "h_deg": 0,
+      "turn": 1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       130.1029,
+       1586.201
+      ],
+      "b": [
+       130.1029,
+       1918.799
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       130.1029,
+       1937.5
+      ],
+      "h_deg": 90,
+      "turn": -1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       148.8038,
+       1937.5
+      ],
+      "b": [
+       2175.8077,
+       1937.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       2175.8077,
+       1937.5
+      ],
+      "b": [
+       2201.6077,
+       1937.5
+      ],
+      "w0": 1,
+      "w1": 0.46,
+      "w": 1
+     }
+    ]
+   },
+   {
+    "net": "n7",
+    "from": "IN7.out",
+    "to": "MOD7.in",
+    "lane": 7,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 1,
+    "length_um": 2967.6357,
+    "loss_dB": 0.2615,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       60,
+       1694.5
+      ],
+      "b": [
+       70,
+       1694.5
+      ],
+      "w": 0.46
+     },
+     {
+      "t": "C",
+      "V": [
+       88.701,
+       1694.5
+      ],
+      "h_deg": 0,
+      "turn": 1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 0.46
+     },
+     {
+      "t": "L",
+      "a": [
+       88.701,
+       1713.201
+      ],
+      "b": [
+       88.701,
+       1739.001
+      ],
+      "w0": 0.46,
+      "w1": 1,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       88.701,
+       1739.001
+      ],
+      "b": [
+       88.701,
+       2193.799
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       88.701,
+       2212.5
+      ],
+      "h_deg": 90,
+      "turn": -1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       107.4019,
+       2212.5
+      ],
+      "b": [
+       2495.8077,
+       2212.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       2495.8077,
+       2212.5
+      ],
+      "b": [
+       2521.6077,
+       2212.5
+      ],
+      "w0": 1,
+      "w1": 0.46,
+      "w": 1
+     }
+    ]
+   },
+   {
+    "net": "n8",
+    "from": "MOD0.out",
+    "to": "MON0.in",
+    "lane": 0,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 0.46,
+    "length_um": 10,
+    "loss_dB": 0.0052,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       2512.2077,
+       287.5
+      ],
+      "b": [
+       2522.2077,
+       287.5
+      ],
+      "w": 0.46
+     }
+    ]
+   },
+   {
+    "net": "n10",
+    "from": "MOD1.out",
+    "to": "MON1.in",
+    "lane": 1,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 0.46,
+    "length_um": 10,
+    "loss_dB": 0.0052,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       2832.2077,
+       562.5
+      ],
+      "b": [
+       2842.2077,
+       562.5
+      ],
+      "w": 0.46
+     }
+    ]
+   },
+   {
+    "net": "n12",
+    "from": "MOD2.out",
+    "to": "MON2.in",
+    "lane": 2,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 0.46,
+    "length_um": 10,
+    "loss_dB": 0.0052,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       3152.2077,
+       837.5
+      ],
+      "b": [
+       3162.2077,
+       837.5
+      ],
+      "w": 0.46
+     }
+    ]
+   },
+   {
+    "net": "n14",
+    "from": "MOD3.out",
+    "to": "MON3.in",
+    "lane": 3,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 0.46,
+    "length_um": 10,
+    "loss_dB": 0.0052,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       3472.2077,
+       1112.5
+      ],
+      "b": [
+       3482.2077,
+       1112.5
+      ],
+      "w": 0.46
+     }
+    ]
+   },
+   {
+    "net": "n16",
+    "from": "MOD4.out",
+    "to": "MON4.in",
+    "lane": 4,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 0.46,
+    "length_um": 10,
+    "loss_dB": 0.0052,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       3792.2077,
+       1387.5
+      ],
+      "b": [
+       3802.2077,
+       1387.5
+      ],
+      "w": 0.46
+     }
+    ]
+   },
+   {
+    "net": "n18",
+    "from": "MOD5.out",
+    "to": "MON5.in",
+    "lane": 5,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 0.46,
+    "length_um": 10,
+    "loss_dB": 0.0052,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       4112.2077,
+       1662.5
+      ],
+      "b": [
+       4122.2077,
+       1662.5
+      ],
+      "w": 0.46
+     }
+    ]
+   },
+   {
+    "net": "n20",
+    "from": "MOD6.out",
+    "to": "MON6.in",
+    "lane": 6,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 0.46,
+    "length_um": 10,
+    "loss_dB": 0.0052,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       4432.2077,
+       1937.5
+      ],
+      "b": [
+       4442.2077,
+       1937.5
+      ],
+      "w": 0.46
+     }
+    ]
+   },
+   {
+    "net": "n22",
+    "from": "MOD7.out",
+    "to": "MON7.in",
+    "lane": 7,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 0.46,
+    "length_um": 10,
+    "loss_dB": 0.0052,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       4752.2077,
+       2212.5
+      ],
+      "b": [
+       4762.2077,
+       2212.5
+      ],
+      "w": 0.46
+     }
+    ]
+   },
+   {
+    "net": "n9",
+    "from": "MON0.out",
+    "to": "OUT0.in",
+    "lane": 0,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 1,
+    "length_um": 3025.4964,
+    "loss_dB": 0.2476,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       2620.5316,
+       287.5
+      ],
+      "b": [
+       2646.3316,
+       287.5
+      ],
+      "w0": 0.46,
+      "w1": 1,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       2646.3316,
+       287.5
+      ],
+      "b": [
+       4994.7373,
+       287.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       5013.4383,
+       287.5
+      ],
+      "h_deg": 0,
+      "turn": 1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       5013.4383,
+       306.201
+      ],
+      "b": [
+       5013.4383,
+       786.799
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       5013.4383,
+       805.5
+      ],
+      "h_deg": 90,
+      "turn": -1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       5032.1393,
+       805.5
+      ],
+      "b": [
+       5114.2,
+       805.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       5114.2,
+       805.5
+      ],
+      "b": [
+       5140,
+       805.5
+      ],
+      "w0": 1,
+      "w1": 0.46,
+      "w": 1
+     }
+    ]
+   },
+   {
+    "net": "n11",
+    "from": "MON1.out",
+    "to": "OUT1.in",
+    "lane": 1,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 1,
+    "length_um": 2557.4964,
+    "loss_dB": 0.2111,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       2940.5316,
+       562.5
+      ],
+      "b": [
+       2966.3316,
+       562.5
+      ],
+      "w0": 0.46,
+      "w1": 1,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       2966.3316,
+       562.5
+      ],
+      "b": [
+       4953.3354,
+       562.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       4972.0364,
+       562.5
+      ],
+      "h_deg": 0,
+      "turn": 1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       4972.0364,
+       581.201
+      ],
+      "b": [
+       4972.0364,
+       913.799
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       4972.0364,
+       932.5
+      ],
+      "h_deg": 90,
+      "turn": -1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       4990.7373,
+       932.5
+      ],
+      "b": [
+       5114.2,
+       932.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       5114.2,
+       932.5
+      ],
+      "b": [
+       5140,
+       932.5
+      ],
+      "w0": 1,
+      "w1": 0.46,
+      "w": 1
+     }
+    ]
+   },
+   {
+    "net": "n13",
+    "from": "MON2.out",
+    "to": "OUT2.in",
+    "lane": 2,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 1,
+    "length_um": 2089.4964,
+    "loss_dB": 0.1745,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       3260.5316,
+       837.5
+      ],
+      "b": [
+       3286.3316,
+       837.5
+      ],
+      "w0": 0.46,
+      "w1": 1,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       3286.3316,
+       837.5
+      ],
+      "b": [
+       4911.9335,
+       837.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       4930.6345,
+       837.5
+      ],
+      "h_deg": 0,
+      "turn": 1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       4930.6345,
+       856.201
+      ],
+      "b": [
+       4930.6345,
+       1040.799
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       4930.6345,
+       1059.5
+      ],
+      "h_deg": 90,
+      "turn": -1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       4949.3354,
+       1059.5
+      ],
+      "b": [
+       5114.2,
+       1059.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       5114.2,
+       1059.5
+      ],
+      "b": [
+       5140,
+       1059.5
+      ],
+      "w0": 1,
+      "w1": 0.46,
+      "w": 1
+     }
+    ]
+   },
+   {
+    "net": "n15",
+    "from": "MON3.out",
+    "to": "OUT3.in",
+    "lane": 3,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 1,
+    "length_um": 1621.4964,
+    "loss_dB": 0.138,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       3580.5316,
+       1112.5
+      ],
+      "b": [
+       3606.3316,
+       1112.5
+      ],
+      "w0": 0.46,
+      "w1": 1,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       3606.3316,
+       1112.5
+      ],
+      "b": [
+       4870.5316,
+       1112.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       4889.2326,
+       1112.5
+      ],
+      "h_deg": 0,
+      "turn": 1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       4889.2326,
+       1131.201
+      ],
+      "b": [
+       4889.2326,
+       1167.799
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       4889.2326,
+       1186.5
+      ],
+      "h_deg": 90,
+      "turn": -1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       4907.9335,
+       1186.5
+      ],
+      "b": [
+       5114.2,
+       1186.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       5114.2,
+       1186.5
+      ],
+      "b": [
+       5140,
+       1186.5
+      ],
+      "w0": 1,
+      "w1": 0.46,
+      "w": 1
+     }
+    ]
+   },
+   {
+    "net": "n17",
+    "from": "MON4.out",
+    "to": "OUT4.in",
+    "lane": 4,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 1,
+    "length_um": 1301.4964,
+    "loss_dB": 0.113,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       3900.5316,
+       1387.5
+      ],
+      "b": [
+       3926.3316,
+       1387.5
+      ],
+      "w0": 0.46,
+      "w1": 1,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       3926.3316,
+       1387.5
+      ],
+      "b": [
+       4870.5316,
+       1387.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       4889.2326,
+       1387.5
+      ],
+      "h_deg": 0,
+      "turn": -1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       4889.2326,
+       1368.799
+      ],
+      "b": [
+       4889.2326,
+       1332.201
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       4889.2326,
+       1313.5
+      ],
+      "h_deg": 270,
+      "turn": 1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       4907.9335,
+       1313.5
+      ],
+      "b": [
+       5114.2,
+       1313.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       5114.2,
+       1313.5
+      ],
+      "b": [
+       5140,
+       1313.5
+      ],
+      "w0": 1,
+      "w1": 0.46,
+      "w": 1
+     }
+    ]
+   },
+   {
+    "net": "n19",
+    "from": "MON5.out",
+    "to": "OUT5.in",
+    "lane": 5,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 1,
+    "length_um": 1129.4964,
+    "loss_dB": 0.0996,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       4220.5316,
+       1662.5
+      ],
+      "b": [
+       4246.3316,
+       1662.5
+      ],
+      "w0": 0.46,
+      "w1": 1,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       4246.3316,
+       1662.5
+      ],
+      "b": [
+       4911.9335,
+       1662.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       4930.6345,
+       1662.5
+      ],
+      "h_deg": 0,
+      "turn": -1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       4930.6345,
+       1643.799
+      ],
+      "b": [
+       4930.6345,
+       1459.201
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       4930.6345,
+       1440.5
+      ],
+      "h_deg": 270,
+      "turn": 1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       4949.3354,
+       1440.5
+      ],
+      "b": [
+       5114.2,
+       1440.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       5114.2,
+       1440.5
+      ],
+      "b": [
+       5140,
+       1440.5
+      ],
+      "w0": 1,
+      "w1": 0.46,
+      "w": 1
+     }
+    ]
+   },
+   {
+    "net": "n21",
+    "from": "MON6.out",
+    "to": "OUT6.in",
+    "lane": 6,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 1,
+    "length_um": 957.4964,
+    "loss_dB": 0.0862,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       4540.5316,
+       1937.5
+      ],
+      "b": [
+       4566.3316,
+       1937.5
+      ],
+      "w0": 0.46,
+      "w1": 1,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       4566.3316,
+       1937.5
+      ],
+      "b": [
+       4953.3354,
+       1937.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       4972.0364,
+       1937.5
+      ],
+      "h_deg": 0,
+      "turn": -1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       4972.0364,
+       1918.799
+      ],
+      "b": [
+       4972.0364,
+       1586.201
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       4972.0364,
+       1567.5
+      ],
+      "h_deg": 270,
+      "turn": 1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       4990.7373,
+       1567.5
+      ],
+      "b": [
+       5114.2,
+       1567.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       5114.2,
+       1567.5
+      ],
+      "b": [
+       5140,
+       1567.5
+      ],
+      "w0": 1,
+      "w1": 0.46,
+      "w": 1
+     }
+    ]
+   },
+   {
+    "net": "n23",
+    "from": "MON7.out",
+    "to": "OUT7.in",
+    "lane": 7,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 1,
+    "length_um": 785.4964,
+    "loss_dB": 0.0728,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       4860.5316,
+       2212.5
+      ],
+      "b": [
+       4886.3316,
+       2212.5
+      ],
+      "w0": 0.46,
+      "w1": 1,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       4886.3316,
+       2212.5
+      ],
+      "b": [
+       4994.7373,
+       2212.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       5013.4383,
+       2212.5
+      ],
+      "h_deg": 0,
+      "turn": -1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       5013.4383,
+       2193.799
+      ],
+      "b": [
+       5013.4383,
+       1713.201
+      ],
+      "w": 1
+     },
+     {
+      "t": "C",
+      "V": [
+       5013.4383,
+       1694.5
+      ],
+      "h_deg": 270,
+      "turn": 1,
+      "shape": "euler",
+      "R": 10,
+      "a0": 18.701,
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       5032.1393,
+       1694.5
+      ],
+      "b": [
+       5114.2,
+       1694.5
+      ],
+      "w": 1
+     },
+     {
+      "t": "L",
+      "a": [
+       5114.2,
+       1694.5
+      ],
+      "b": [
+       5140,
+       1694.5
+      ],
+      "w0": 1,
+      "w1": 0.46,
+      "w": 1
+     }
+    ]
+   }
+  ],
+  "electrical": [
+   {
+    "net": "MOD0.rf_g2",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 2445,
+    "pts": [
+     [
+      344.9077,
+      195
+     ],
+     [
+      114.9077,
+      195
+     ],
+     [
+      114.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD0.rf_s",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 2252.5,
+    "pts": [
+     [
+      344.9077,
+      287.5
+     ],
+     [
+      214.9077,
+      287.5
+     ],
+     [
+      214.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD0.rf_g1",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 2060,
+    "pts": [
+     [
+      344.9077,
+      380
+     ],
+     [
+      314.9077,
+      380
+     ],
+     [
+      314.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD0.h_p",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 2509.9077,
+    "pts": [
+     [
+      2374.9077,
+      325
+     ],
+     [
+      2374.9077,
+      130
+     ],
+     [
+      100,
+      130
+     ],
+     [
+      100,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MOD0.h_n",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 2483.9077,
+    "pts": [
+     [
+      2448.9077,
+      325
+     ],
+     [
+      2448.9077,
+      130
+     ],
+     [
+      200,
+      130
+     ],
+     [
+      200,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MON0.pd_a",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 2477.6716,
+    "pts": [
+     [
+      2589.5316,
+      278.14
+     ],
+     [
+      2589.5316,
+      130
+     ],
+     [
+      300,
+      130
+     ],
+     [
+      300,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MON0.pd_k",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 2391.6716,
+    "pts": [
+     [
+      2603.5316,
+      278.14
+     ],
+     [
+      2603.5316,
+      130
+     ],
+     [
+      400,
+      130
+     ],
+     [
+      400,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MOD1.rf_g2",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 2170,
+    "pts": [
+     [
+      664.9077,
+      470
+     ],
+     [
+      434.9077,
+      470
+     ],
+     [
+      434.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD1.rf_s",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 1977.5,
+    "pts": [
+     [
+      664.9077,
+      562.5
+     ],
+     [
+      534.9077,
+      562.5
+     ],
+     [
+      534.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD1.rf_g1",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 1785,
+    "pts": [
+     [
+      664.9077,
+      655
+     ],
+     [
+      634.9077,
+      655
+     ],
+     [
+      634.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD1.h_p",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 2704.9077,
+    "pts": [
+     [
+      2694.9077,
+      600
+     ],
+     [
+      2694.9077,
+      130
+     ],
+     [
+      500,
+      130
+     ],
+     [
+      500,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MOD1.h_n",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 2678.9077,
+    "pts": [
+     [
+      2768.9077,
+      600
+     ],
+     [
+      2768.9077,
+      130
+     ],
+     [
+      600,
+      130
+     ],
+     [
+      600,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MON1.pd_a",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 2672.6716,
+    "pts": [
+     [
+      2909.5316,
+      553.14
+     ],
+     [
+      2909.5316,
+      130
+     ],
+     [
+      700,
+      130
+     ],
+     [
+      700,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MON1.pd_k",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 2586.6716,
+    "pts": [
+     [
+      2923.5316,
+      553.14
+     ],
+     [
+      2923.5316,
+      130
+     ],
+     [
+      800,
+      130
+     ],
+     [
+      800,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MOD2.rf_g2",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 1895,
+    "pts": [
+     [
+      984.9077,
+      745
+     ],
+     [
+      754.9077,
+      745
+     ],
+     [
+      754.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD2.rf_s",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 1702.5,
+    "pts": [
+     [
+      984.9077,
+      837.5
+     ],
+     [
+      854.9077,
+      837.5
+     ],
+     [
+      854.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD2.rf_g1",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 1510,
+    "pts": [
+     [
+      984.9077,
+      930
+     ],
+     [
+      954.9077,
+      930
+     ],
+     [
+      954.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD2.h_p",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 2899.9077,
+    "pts": [
+     [
+      3014.9077,
+      875
+     ],
+     [
+      3014.9077,
+      130
+     ],
+     [
+      900,
+      130
+     ],
+     [
+      900,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MOD2.h_n",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 2873.9077,
+    "pts": [
+     [
+      3088.9077,
+      875
+     ],
+     [
+      3088.9077,
+      130
+     ],
+     [
+      1000,
+      130
+     ],
+     [
+      1000,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MON2.pd_a",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 2867.6716,
+    "pts": [
+     [
+      3229.5316,
+      828.14
+     ],
+     [
+      3229.5316,
+      130
+     ],
+     [
+      1100,
+      130
+     ],
+     [
+      1100,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MON2.pd_k",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 2781.6716,
+    "pts": [
+     [
+      3243.5316,
+      828.14
+     ],
+     [
+      3243.5316,
+      130
+     ],
+     [
+      1200,
+      130
+     ],
+     [
+      1200,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MOD3.rf_g2",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 1620,
+    "pts": [
+     [
+      1304.9077,
+      1020
+     ],
+     [
+      1074.9077,
+      1020
+     ],
+     [
+      1074.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD3.rf_s",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 1427.5,
+    "pts": [
+     [
+      1304.9077,
+      1112.5
+     ],
+     [
+      1174.9077,
+      1112.5
+     ],
+     [
+      1174.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD3.rf_g1",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 1235,
+    "pts": [
+     [
+      1304.9077,
+      1205
+     ],
+     [
+      1274.9077,
+      1205
+     ],
+     [
+      1274.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD3.h_p",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 3094.9077,
+    "pts": [
+     [
+      3334.9077,
+      1150
+     ],
+     [
+      3334.9077,
+      130
+     ],
+     [
+      1300,
+      130
+     ],
+     [
+      1300,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MOD3.h_n",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 3068.9077,
+    "pts": [
+     [
+      3408.9077,
+      1150
+     ],
+     [
+      3408.9077,
+      130
+     ],
+     [
+      1400,
+      130
+     ],
+     [
+      1400,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MON3.pd_a",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 3062.6716,
+    "pts": [
+     [
+      3549.5316,
+      1103.14
+     ],
+     [
+      3549.5316,
+      130
+     ],
+     [
+      1500,
+      130
+     ],
+     [
+      1500,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MON3.pd_k",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 2976.6716,
+    "pts": [
+     [
+      3563.5316,
+      1103.14
+     ],
+     [
+      3563.5316,
+      130
+     ],
+     [
+      1600,
+      130
+     ],
+     [
+      1600,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MOD4.rf_g2",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 1345,
+    "pts": [
+     [
+      1624.9077,
+      1295
+     ],
+     [
+      1394.9077,
+      1295
+     ],
+     [
+      1394.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD4.rf_s",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 1152.5,
+    "pts": [
+     [
+      1624.9077,
+      1387.5
+     ],
+     [
+      1494.9077,
+      1387.5
+     ],
+     [
+      1494.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD4.rf_g1",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 960,
+    "pts": [
+     [
+      1624.9077,
+      1480
+     ],
+     [
+      1594.9077,
+      1480
+     ],
+     [
+      1594.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD4.h_p",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 3289.9077,
+    "pts": [
+     [
+      3654.9077,
+      1425
+     ],
+     [
+      3654.9077,
+      130
+     ],
+     [
+      1700,
+      130
+     ],
+     [
+      1700,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MOD4.h_n",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 3263.9077,
+    "pts": [
+     [
+      3728.9077,
+      1425
+     ],
+     [
+      3728.9077,
+      130
+     ],
+     [
+      1800,
+      130
+     ],
+     [
+      1800,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MON4.pd_a",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 3257.6716,
+    "pts": [
+     [
+      3869.5316,
+      1378.14
+     ],
+     [
+      3869.5316,
+      130
+     ],
+     [
+      1900,
+      130
+     ],
+     [
+      1900,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MON4.pd_k",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 3171.6716,
+    "pts": [
+     [
+      3883.5316,
+      1378.14
+     ],
+     [
+      3883.5316,
+      130
+     ],
+     [
+      2000,
+      130
+     ],
+     [
+      2000,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MOD5.rf_g2",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 1070,
+    "pts": [
+     [
+      1944.9077,
+      1570
+     ],
+     [
+      1714.9077,
+      1570
+     ],
+     [
+      1714.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD5.rf_s",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 877.5,
+    "pts": [
+     [
+      1944.9077,
+      1662.5
+     ],
+     [
+      1814.9077,
+      1662.5
+     ],
+     [
+      1814.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD5.rf_g1",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 685,
+    "pts": [
+     [
+      1944.9077,
+      1755
+     ],
+     [
+      1914.9077,
+      1755
+     ],
+     [
+      1914.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD5.h_p",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 3484.9077,
+    "pts": [
+     [
+      3974.9077,
+      1700
+     ],
+     [
+      3974.9077,
+      130
+     ],
+     [
+      2100,
+      130
+     ],
+     [
+      2100,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MOD5.h_n",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 3458.9077,
+    "pts": [
+     [
+      4048.9077,
+      1700
+     ],
+     [
+      4048.9077,
+      130
+     ],
+     [
+      2200,
+      130
+     ],
+     [
+      2200,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MON5.pd_a",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 3452.6716,
+    "pts": [
+     [
+      4189.5316,
+      1653.14
+     ],
+     [
+      4189.5316,
+      130
+     ],
+     [
+      2300,
+      130
+     ],
+     [
+      2300,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MON5.pd_k",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 3366.6716,
+    "pts": [
+     [
+      4203.5316,
+      1653.14
+     ],
+     [
+      4203.5316,
+      130
+     ],
+     [
+      2400,
+      130
+     ],
+     [
+      2400,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MOD6.rf_g2",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 795,
+    "pts": [
+     [
+      2264.9077,
+      1845
+     ],
+     [
+      2034.9077,
+      1845
+     ],
+     [
+      2034.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD6.rf_s",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 602.5,
+    "pts": [
+     [
+      2264.9077,
+      1937.5
+     ],
+     [
+      2134.9077,
+      1937.5
+     ],
+     [
+      2134.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD6.rf_g1",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 410,
+    "pts": [
+     [
+      2264.9077,
+      2030
+     ],
+     [
+      2234.9077,
+      2030
+     ],
+     [
+      2234.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD6.h_p",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 3679.9077,
+    "pts": [
+     [
+      4294.9077,
+      1975
+     ],
+     [
+      4294.9077,
+      130
+     ],
+     [
+      2500,
+      130
+     ],
+     [
+      2500,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MOD6.h_n",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 3653.9077,
+    "pts": [
+     [
+      4368.9077,
+      1975
+     ],
+     [
+      4368.9077,
+      130
+     ],
+     [
+      2600,
+      130
+     ],
+     [
+      2600,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MON6.pd_a",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 3647.6716,
+    "pts": [
+     [
+      4509.5316,
+      1928.14
+     ],
+     [
+      4509.5316,
+      130
+     ],
+     [
+      2700,
+      130
+     ],
+     [
+      2700,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MON6.pd_k",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 3561.6716,
+    "pts": [
+     [
+      4523.5316,
+      1928.14
+     ],
+     [
+      4523.5316,
+      130
+     ],
+     [
+      2800,
+      130
+     ],
+     [
+      2800,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MOD7.rf_g2",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 520,
+    "pts": [
+     [
+      2584.9077,
+      2120
+     ],
+     [
+      2354.9077,
+      2120
+     ],
+     [
+      2354.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD7.rf_s",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 327.5,
+    "pts": [
+     [
+      2584.9077,
+      2212.5
+     ],
+     [
+      2454.9077,
+      2212.5
+     ],
+     [
+      2454.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD7.rf_g1",
+    "kind": "rf",
+    "layer": "M1",
+    "length_um": 135,
+    "pts": [
+     [
+      2584.9077,
+      2305
+     ],
+     [
+      2554.9077,
+      2305
+     ],
+     [
+      2554.9077,
+      2410
+     ]
+    ]
+   },
+   {
+    "net": "MOD7.h_p",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 3874.9077,
+    "pts": [
+     [
+      4614.9077,
+      2250
+     ],
+     [
+      4614.9077,
+      130
+     ],
+     [
+      2900,
+      130
+     ],
+     [
+      2900,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MOD7.h_n",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 3848.9077,
+    "pts": [
+     [
+      4688.9077,
+      2250
+     ],
+     [
+      4688.9077,
+      130
+     ],
+     [
+      3000,
+      130
+     ],
+     [
+      3000,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MON7.pd_a",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 3842.6716,
+    "pts": [
+     [
+      4829.5316,
+      2203.14
+     ],
+     [
+      4829.5316,
+      130
+     ],
+     [
+      3100,
+      130
+     ],
+     [
+      3100,
+      90
+     ]
+    ]
+   },
+   {
+    "net": "MON7.pd_k",
+    "kind": "dc",
+    "layer": "M2",
+    "length_um": 3756.6716,
+    "pts": [
+     [
+      4843.5316,
+      2203.14
+     ],
+     [
+      4843.5316,
+      130
+     ],
+     [
+      3200,
+      130
+     ],
+     [
+      3200,
+      90
+     ]
+    ]
+   }
+  ],
+  "pads": [
+   {
+    "id": "RF0_g2",
+    "kind": "rf",
+    "x": 114.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD0.rf_g2"
+   },
+   {
+    "id": "RF0_s",
+    "kind": "rf",
+    "x": 214.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD0.rf_s"
+   },
+   {
+    "id": "RF0_g1",
+    "kind": "rf",
+    "x": 314.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD0.rf_g1"
+   },
+   {
+    "id": "DC0_h_p",
+    "kind": "dc",
+    "x": 100,
+    "y": 90,
+    "w": 80,
+    "net": "MOD0.h_p"
+   },
+   {
+    "id": "DC0_h_n",
+    "kind": "dc",
+    "x": 200,
+    "y": 90,
+    "w": 80,
+    "net": "MOD0.h_n"
+   },
+   {
+    "id": "DC0_pd_a",
+    "kind": "dc",
+    "x": 300,
+    "y": 90,
+    "w": 80,
+    "net": "MON0.pd_a"
+   },
+   {
+    "id": "DC0_pd_k",
+    "kind": "dc",
+    "x": 400,
+    "y": 90,
+    "w": 80,
+    "net": "MON0.pd_k"
+   },
+   {
+    "id": "RF1_g2",
+    "kind": "rf",
+    "x": 434.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD1.rf_g2"
+   },
+   {
+    "id": "RF1_s",
+    "kind": "rf",
+    "x": 534.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD1.rf_s"
+   },
+   {
+    "id": "RF1_g1",
+    "kind": "rf",
+    "x": 634.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD1.rf_g1"
+   },
+   {
+    "id": "DC1_h_p",
+    "kind": "dc",
+    "x": 500,
+    "y": 90,
+    "w": 80,
+    "net": "MOD1.h_p"
+   },
+   {
+    "id": "DC1_h_n",
+    "kind": "dc",
+    "x": 600,
+    "y": 90,
+    "w": 80,
+    "net": "MOD1.h_n"
+   },
+   {
+    "id": "DC1_pd_a",
+    "kind": "dc",
+    "x": 700,
+    "y": 90,
+    "w": 80,
+    "net": "MON1.pd_a"
+   },
+   {
+    "id": "DC1_pd_k",
+    "kind": "dc",
+    "x": 800,
+    "y": 90,
+    "w": 80,
+    "net": "MON1.pd_k"
+   },
+   {
+    "id": "RF2_g2",
+    "kind": "rf",
+    "x": 754.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD2.rf_g2"
+   },
+   {
+    "id": "RF2_s",
+    "kind": "rf",
+    "x": 854.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD2.rf_s"
+   },
+   {
+    "id": "RF2_g1",
+    "kind": "rf",
+    "x": 954.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD2.rf_g1"
+   },
+   {
+    "id": "DC2_h_p",
+    "kind": "dc",
+    "x": 900,
+    "y": 90,
+    "w": 80,
+    "net": "MOD2.h_p"
+   },
+   {
+    "id": "DC2_h_n",
+    "kind": "dc",
+    "x": 1000,
+    "y": 90,
+    "w": 80,
+    "net": "MOD2.h_n"
+   },
+   {
+    "id": "DC2_pd_a",
+    "kind": "dc",
+    "x": 1100,
+    "y": 90,
+    "w": 80,
+    "net": "MON2.pd_a"
+   },
+   {
+    "id": "DC2_pd_k",
+    "kind": "dc",
+    "x": 1200,
+    "y": 90,
+    "w": 80,
+    "net": "MON2.pd_k"
+   },
+   {
+    "id": "RF3_g2",
+    "kind": "rf",
+    "x": 1074.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD3.rf_g2"
+   },
+   {
+    "id": "RF3_s",
+    "kind": "rf",
+    "x": 1174.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD3.rf_s"
+   },
+   {
+    "id": "RF3_g1",
+    "kind": "rf",
+    "x": 1274.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD3.rf_g1"
+   },
+   {
+    "id": "DC3_h_p",
+    "kind": "dc",
+    "x": 1300,
+    "y": 90,
+    "w": 80,
+    "net": "MOD3.h_p"
+   },
+   {
+    "id": "DC3_h_n",
+    "kind": "dc",
+    "x": 1400,
+    "y": 90,
+    "w": 80,
+    "net": "MOD3.h_n"
+   },
+   {
+    "id": "DC3_pd_a",
+    "kind": "dc",
+    "x": 1500,
+    "y": 90,
+    "w": 80,
+    "net": "MON3.pd_a"
+   },
+   {
+    "id": "DC3_pd_k",
+    "kind": "dc",
+    "x": 1600,
+    "y": 90,
+    "w": 80,
+    "net": "MON3.pd_k"
+   },
+   {
+    "id": "RF4_g2",
+    "kind": "rf",
+    "x": 1394.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD4.rf_g2"
+   },
+   {
+    "id": "RF4_s",
+    "kind": "rf",
+    "x": 1494.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD4.rf_s"
+   },
+   {
+    "id": "RF4_g1",
+    "kind": "rf",
+    "x": 1594.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD4.rf_g1"
+   },
+   {
+    "id": "DC4_h_p",
+    "kind": "dc",
+    "x": 1700,
+    "y": 90,
+    "w": 80,
+    "net": "MOD4.h_p"
+   },
+   {
+    "id": "DC4_h_n",
+    "kind": "dc",
+    "x": 1800,
+    "y": 90,
+    "w": 80,
+    "net": "MOD4.h_n"
+   },
+   {
+    "id": "DC4_pd_a",
+    "kind": "dc",
+    "x": 1900,
+    "y": 90,
+    "w": 80,
+    "net": "MON4.pd_a"
+   },
+   {
+    "id": "DC4_pd_k",
+    "kind": "dc",
+    "x": 2000,
+    "y": 90,
+    "w": 80,
+    "net": "MON4.pd_k"
+   },
+   {
+    "id": "RF5_g2",
+    "kind": "rf",
+    "x": 1714.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD5.rf_g2"
+   },
+   {
+    "id": "RF5_s",
+    "kind": "rf",
+    "x": 1814.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD5.rf_s"
+   },
+   {
+    "id": "RF5_g1",
+    "kind": "rf",
+    "x": 1914.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD5.rf_g1"
+   },
+   {
+    "id": "DC5_h_p",
+    "kind": "dc",
+    "x": 2100,
+    "y": 90,
+    "w": 80,
+    "net": "MOD5.h_p"
+   },
+   {
+    "id": "DC5_h_n",
+    "kind": "dc",
+    "x": 2200,
+    "y": 90,
+    "w": 80,
+    "net": "MOD5.h_n"
+   },
+   {
+    "id": "DC5_pd_a",
+    "kind": "dc",
+    "x": 2300,
+    "y": 90,
+    "w": 80,
+    "net": "MON5.pd_a"
+   },
+   {
+    "id": "DC5_pd_k",
+    "kind": "dc",
+    "x": 2400,
+    "y": 90,
+    "w": 80,
+    "net": "MON5.pd_k"
+   },
+   {
+    "id": "RF6_g2",
+    "kind": "rf",
+    "x": 2034.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD6.rf_g2"
+   },
+   {
+    "id": "RF6_s",
+    "kind": "rf",
+    "x": 2134.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD6.rf_s"
+   },
+   {
+    "id": "RF6_g1",
+    "kind": "rf",
+    "x": 2234.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD6.rf_g1"
+   },
+   {
+    "id": "DC6_h_p",
+    "kind": "dc",
+    "x": 2500,
+    "y": 90,
+    "w": 80,
+    "net": "MOD6.h_p"
+   },
+   {
+    "id": "DC6_h_n",
+    "kind": "dc",
+    "x": 2600,
+    "y": 90,
+    "w": 80,
+    "net": "MOD6.h_n"
+   },
+   {
+    "id": "DC6_pd_a",
+    "kind": "dc",
+    "x": 2700,
+    "y": 90,
+    "w": 80,
+    "net": "MON6.pd_a"
+   },
+   {
+    "id": "DC6_pd_k",
+    "kind": "dc",
+    "x": 2800,
+    "y": 90,
+    "w": 80,
+    "net": "MON6.pd_k"
+   },
+   {
+    "id": "RF7_g2",
+    "kind": "rf",
+    "x": 2354.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD7.rf_g2"
+   },
+   {
+    "id": "RF7_s",
+    "kind": "rf",
+    "x": 2454.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD7.rf_s"
+   },
+   {
+    "id": "RF7_g1",
+    "kind": "rf",
+    "x": 2554.9077,
+    "y": 2410,
+    "w": 80,
+    "net": "MOD7.rf_g1"
+   },
+   {
+    "id": "DC7_h_p",
+    "kind": "dc",
+    "x": 2900,
+    "y": 90,
+    "w": 80,
+    "net": "MOD7.h_p"
+   },
+   {
+    "id": "DC7_h_n",
+    "kind": "dc",
+    "x": 3000,
+    "y": 90,
+    "w": 80,
+    "net": "MOD7.h_n"
+   },
+   {
+    "id": "DC7_pd_a",
+    "kind": "dc",
+    "x": 3100,
+    "y": 90,
+    "w": 80,
+    "net": "MON7.pd_a"
+   },
+   {
+    "id": "DC7_pd_k",
+    "kind": "dc",
+    "x": 3200,
+    "y": 90,
+    "w": 80,
+    "net": "MON7.pd_k"
+   }
+  ]
+ },
+ "abstraction": {
+  "implants": "annotation layers (generic PDK)",
+  "rf_metal": "abstract CPW / pads, not foundry RF rules",
+  "termination": "on-chip resistor placeholder",
+  "not_tape_out_ready": true
+ },
+ "design": {
+  "mod": 0,
+  "share": 0,
+  "edge": 50,
+  "fp": 127,
+  "rf": 0,
+  "rfSide": 0,
+  "pp": 100,
+  "bend": 1,
+  "R": 10,
+  "wr": 1,
+  "jog": 4,
+  "mon": 1,
+  "W": 5.2,
+  "H": 2.5,
+  "P": 275,
+  "stag": 320
+ }
+}

@@ -1,0 +1,234 @@
+{
+ "schema": "smq-circuit/1#verification",
+ "platform": "si1550",
+ "checks": [
+  {
+   "group": "Connectivity",
+   "item": "광 포트 연결 (모든 광 포트 정확히 한 번)",
+   "status": "PASS",
+   "detail": "48개 포트, 24개 광 넷"
+  },
+  {
+   "group": "Connectivity",
+   "item": "포트 종류 (광↔광, 전기↔패드)",
+   "status": "PASS",
+   "detail": "광 넷은 광 포트끼리만 연결"
+  },
+  {
+   "group": "Connectivity",
+   "item": "레인 수 = 8 (입력 → 변조기 → 출력)",
+   "status": "PASS",
+   "detail": "8/8 레인이 입력 광섬유까지 이어짐"
+  },
+  {
+   "group": "Connectivity",
+   "item": "입·출력 일관성",
+   "status": "PASS",
+   "detail": "입력 8 (레이저 8개, 1:1) · 출력 8"
+  },
+  {
+   "group": "Connectivity",
+   "item": "전기 포트 → 패드 매핑",
+   "status": "PASS",
+   "detail": "56개 전기 포트 → 56개 패드 + 온칩 종단 8개 (추상)"
+  },
+  {
+   "group": "Geometry",
+   "item": "최소 선폭 (0.46 µm ≥ 0.15 µm, 일반 리소 가정)",
+   "status": "PASS",
+   "detail": "게임의 rules.wmin은 MMI 테이퍼 등 다중모드 구조용 — 단일모드 배선에는 리소 한계를 적용 (Unverified Assumption)"
+  },
+  {
+   "group": "Geometry",
+   "item": "넓은 배선의 굽힘 (w > wc 0.5 µm)",
+   "status": "WARNING",
+   "detail": "다중모드 폭 1 µm 배선 16개, 굽힘 32곳 — Euler 굽힘(곡률 연속)이라 모드 변환은 작지만 계산하지 않음 · 짧은 넷 8개는 w0"
+  },
+  {
+   "group": "Geometry",
+   "item": "최소 굽힘 반경 R ≥ 2.5 µm (w0, 90° 방사 < 0.005 dB)",
+   "status": "PASS",
+   "detail": "설정 R 10 µm (Euler: Rmin) · 작은 S-bend 원호 포함"
+  },
+  {
+   "group": "Geometry",
+   "item": "광 배선 생성",
+   "status": "PASS",
+   "detail": "24개 넷 모두 배선"
+  },
+  {
+   "group": "Geometry",
+   "item": "배선 간격 ≥ 0.18 µm",
+   "status": "PASS",
+   "detail": "서로 다른 넷이 4.0 µm 안에 오지 않음"
+  },
+  {
+   "group": "Geometry",
+   "item": "다이 경계 (5.20 × 2.50 mm, 여유 50 µm)",
+   "status": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "Geometry",
+   "item": "소자 겹침",
+   "status": "PASS",
+   "detail": "32개 소자"
+  },
+  {
+   "group": "Geometry",
+   "item": "배선–소자 간섭 (장애물)",
+   "status": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "Geometry",
+   "item": "패드 배치 (다이 안, 간격 ≥ 10 µm)",
+   "status": "PASS",
+   "detail": "56개 패드"
+  },
+  {
+   "group": "Geometry",
+   "item": "RF 배선 교차 (같은 금속층)",
+   "status": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "Geometry",
+   "item": "RF 금속 – 광 도파로 교차",
+   "status": "WARNING",
+   "detail": "112곳 (산화막 위 금속: 광 손실·RF 결합 미계산)"
+  },
+  {
+   "group": "System",
+   "item": "레인 속도 224 Gb/s 라인 (200G 순 데이터, 112 GBd PAM4)",
+   "status": "PASS",
+   "detail": "모든 레인 같은 변조기"
+  },
+  {
+   "group": "System",
+   "item": "총 용량 8 × 200G = 1.6 Tb/s",
+   "status": "PASS",
+   "detail": "8개 레인 연결"
+  },
+  {
+   "group": "System",
+   "item": "변조기 종류 ↔ 3A+ 아키텍처",
+   "status": "PASS",
+   "detail": "3A+ 기준 설계와 같음 (MZM ×8, 1:1)"
+  },
+  {
+   "group": "System",
+   "item": "광 파워 버짓 (레이아웃 배선 손실 포함)",
+   "status": "PASS",
+   "detail": "3A+ 모델 마진 2.42 dB − 배선 손실(최악 레인) 0.43 dB = 1.99 dB"
+  },
+  {
+   "group": "System",
+   "item": "RF 급전선 손실 (56 GHz, CPW 도체 손실)",
+   "status": "WARNING",
+   "detail": "최장 2445 µm → 0.73 dB (2-3 CPW 손실식, 반사·분산 미포함)"
+  },
+  {
+   "group": "Model validity",
+   "item": "RF 전극·급전선 전자기 해석",
+   "status": "NOT VERIFIED",
+   "detail": "CPW·패드·종단은 추상 형상 — EM 시뮬레이션 필요"
+  },
+  {
+   "group": "Model validity",
+   "item": "레인 간 열 크로스토크 · 링 락 상호작용",
+   "status": "NOT VERIFIED",
+   "detail": "레인 간 거리만 표시, 열해석 없음"
+  },
+  {
+   "group": "Model validity",
+   "item": "파운드리 DRC (주입·금속·비아 규칙)",
+   "status": "NOT VERIFIED",
+   "detail": "일반 규칙만: 선폭·간격·굽힘·경계·겹침"
+  },
+  {
+   "group": "Model validity",
+   "item": "DC 배선 교차 (2층 금속 가정)",
+   "status": "NOT VERIFIED",
+   "detail": "DC는 M2로 가정 — 교차 검사 안 함"
+  },
+  {
+   "group": "Model validity",
+   "item": "GDS 재검사",
+   "status": "NOT VERIFIED",
+   "detail": "Phase D: smq2gds가 GDS를 만들고 다시 읽어 검사"
+  }
+ ],
+ "summary": {
+  "PASS": 18,
+  "WARNING": 3,
+  "FAIL": 0,
+  "NOT VERIFIED": 5
+ },
+ "performance": {
+  "model": "3A+ engine (3A+ 기준 설계)",
+  "margin_model_dB": 2.4215,
+  "layout_route_loss_dB_worst": 0.4272,
+  "margin_with_layout_dB": 1.9943,
+  "module_W": 5.5821,
+  "pJ_per_bit": 3.4888,
+  "lanes": [
+   {
+    "lane": 0,
+    "before_mod_dB": 0.0866,
+    "after_mod_dB": 0.2528,
+    "tap_dB": 0.0877,
+    "total_dB": 0.4272
+   },
+   {
+    "lane": 1,
+    "before_mod_dB": 0.0817,
+    "after_mod_dB": 0.2163,
+    "tap_dB": 0.0877,
+    "total_dB": 0.3857
+   },
+   {
+    "lane": 2,
+    "before_mod_dB": 0.0951,
+    "after_mod_dB": 0.1798,
+    "tap_dB": 0.0877,
+    "total_dB": 0.3626
+   },
+   {
+    "lane": 3,
+    "before_mod_dB": 0.1085,
+    "after_mod_dB": 0.1432,
+    "tap_dB": 0.0877,
+    "total_dB": 0.3395
+   },
+   {
+    "lane": 4,
+    "before_mod_dB": 0.1335,
+    "after_mod_dB": 0.1183,
+    "tap_dB": 0.0877,
+    "total_dB": 0.3395
+   },
+   {
+    "lane": 5,
+    "before_mod_dB": 0.17,
+    "after_mod_dB": 0.1048,
+    "tap_dB": 0.0877,
+    "total_dB": 0.3626
+   },
+   {
+    "lane": 6,
+    "before_mod_dB": 0.2065,
+    "after_mod_dB": 0.0914,
+    "tap_dB": 0.0877,
+    "total_dB": 0.3857
+   },
+   {
+    "lane": 7,
+    "before_mod_dB": 0.2615,
+    "after_mod_dB": 0.078,
+    "tap_dB": 0.0877,
+    "total_dB": 0.4272
+   }
+  ]
+ }
+}

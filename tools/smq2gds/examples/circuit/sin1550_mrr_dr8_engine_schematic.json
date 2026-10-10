@@ -1,0 +1,3030 @@
+{
+ "schema": "smq-circuit/1",
+ "generator": "SPEC-to-MASK Quest · PIC Design Lab",
+ "exported": "2026-10-10T00:00:00Z",
+ "platform": {
+  "id": "sin1550",
+  "mat": "sin",
+  "lam_um": 1.55,
+  "core_t_um": 0.4,
+  "w0_um": 1,
+  "wc_um": 1.098,
+  "clad": "SiO2",
+  "box": "SiO2",
+  "rules_um": {
+   "gap": 0.4,
+   "wmin": 0.8,
+   "edge": 0.1
+  },
+  "route_rules": {
+   "port_width_um": 1,
+   "body_width_um": 2,
+   "taper": "linear on the first / last straight (short nets stay at the port width)",
+   "bend": "euler",
+   "R_um": 100,
+   "R_min_rule_um": 20,
+   "alpha_body_dB_cm": 0.0845,
+   "alpha_port_dB_cm": 0.1522,
+   "litho_min_width_um": 0.3
+  }
+ },
+ "architecture": {
+  "name": "1.6T DR8 Tx PIC",
+  "lanes": 8,
+  "lane_rate_gbps": 224,
+  "net_rate_gbps": 200,
+  "baud_gbd": 112,
+  "format": "PAM4",
+  "modulator": "mrr",
+  "laser_share": 1,
+  "lasers": 8,
+  "splitter_depth": 0,
+  "monitor_pd": true
+ },
+ "die": {
+  "W_um": 600,
+  "H_um": 1200,
+  "edge_um": 50,
+  "optical_io": {
+   "input": "W",
+   "output": "E",
+   "fiber_pitch_um": 127
+  },
+  "electrical_io": {
+   "type": "flip-chip bumps (abstract)",
+   "side": "local"
+  },
+  "lane_pitch_um": 127,
+  "lane_stagger_um": 0
+ },
+ "instances": [
+  {
+   "id": "IN0",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.325,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 155.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    153.5,
+    100,
+    157.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      155.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      100,
+      155.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "IN1",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.325,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 282.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    280.5,
+    100,
+    284.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      282.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      100,
+      282.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "IN2",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.325,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 409.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    407.5,
+    100,
+    411.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      409.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      100,
+      409.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "IN3",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.325,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 536.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    534.5,
+    100,
+    538.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      536.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      100,
+      536.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "IN4",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.325,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 663.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    661.5,
+    100,
+    665.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      663.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      100,
+      663.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "IN5",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.325,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 790.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    788.5,
+    100,
+    792.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      790.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      100,
+      790.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "IN6",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.325,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 917.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    915.5,
+    100,
+    919.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      917.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      100,
+      917.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "IN7",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.325,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 1044.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    1042.5,
+    100,
+    1046.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      1044.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      100,
+      1044.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "MOD0",
+   "type": "mrr",
+   "role": "modulator",
+   "lane": 0,
+   "source": "2-3R 기준 설계",
+   "params": {
+    "ring": {
+     "pcell": "ring_allpass",
+     "core_mat": "si",
+     "R_um": 7.051,
+     "R_slider_um": 7.05,
+     "gap_um": 0.23,
+     "w_um": 0.5,
+     "bus_w_um": 0.5,
+     "bus_len_um": 34.102,
+     "rib": {
+      "t_um": 0.22,
+      "slab_um": 0.09,
+      "slab_ext_um": 2
+     },
+     "order_m": 75,
+     "heterogeneous_si": true,
+     "junction": {
+      "type": "lateral PN (P inside, N outside)",
+      "coverage": 0.75,
+      "arc_deg": 270,
+      "centred_opposite_coupler": true,
+      "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+     },
+     "heater": {
+      "h_um": 1.6,
+      "iso": 1,
+      "coverage": 0.85,
+      "w_um": 2,
+      "arc_deg": 306,
+      "gap_centred_opposite_coupler": true,
+      "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+     },
+     "lambda_design_um": 1.55,
+     "predicted": {
+      "fsr_nm": 13.9745,
+      "QL": 4014,
+      "Qi": 11988,
+      "Qc": 6036,
+      "kappa2": 0.109,
+      "shift_pm_per_V": 23.1887,
+      "Cj_fF": 19.1488,
+      "PhW_mW": 11.2139,
+      "dlambda_dT_pm_K": 75.8307
+     },
+     "model": {
+      "neff": 2.6003,
+      "ng": 3.8806,
+      "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+     }
+    }
+   },
+   "placement": {
+    "x_um": 160,
+    "y_um": 155.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    160,
+    152.25,
+    194.102,
+    180.332
+   ],
+   "size_um": [
+    34.102,
+    28.082
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      160,
+      155.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      194.102,
+      155.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      177.051,
+      163.281
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      177.051,
+      175.332
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      166,
+      178.332
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      188.102,
+      178.332
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON0",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 0,
+   "source": "2-4 기준 설계 (Ge 28×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 58.6847,
+    "gap_um": 0.8,
+    "ratio": 0.02,
+    "pd_L_um": 28,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 204.102,
+    "y_um": 155.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    204.102,
+    140.2,
+    366.7867,
+    159.5
+   ],
+   "size_um": [
+    162.6847,
+    19.3
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      204.102,
+      155.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      366.7867,
+      155.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      335.7867,
+      144.7
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      349.7867,
+      144.7
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MOD1",
+   "type": "mrr",
+   "role": "modulator",
+   "lane": 1,
+   "source": "2-3R 기준 설계",
+   "params": {
+    "ring": {
+     "pcell": "ring_allpass",
+     "core_mat": "si",
+     "R_um": 7.051,
+     "R_slider_um": 7.05,
+     "gap_um": 0.23,
+     "w_um": 0.5,
+     "bus_w_um": 0.5,
+     "bus_len_um": 34.102,
+     "rib": {
+      "t_um": 0.22,
+      "slab_um": 0.09,
+      "slab_ext_um": 2
+     },
+     "order_m": 75,
+     "heterogeneous_si": true,
+     "junction": {
+      "type": "lateral PN (P inside, N outside)",
+      "coverage": 0.75,
+      "arc_deg": 270,
+      "centred_opposite_coupler": true,
+      "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+     },
+     "heater": {
+      "h_um": 1.6,
+      "iso": 1,
+      "coverage": 0.85,
+      "w_um": 2,
+      "arc_deg": 306,
+      "gap_centred_opposite_coupler": true,
+      "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+     },
+     "lambda_design_um": 1.55,
+     "predicted": {
+      "fsr_nm": 13.9745,
+      "QL": 4014,
+      "Qi": 11988,
+      "Qc": 6036,
+      "kappa2": 0.109,
+      "shift_pm_per_V": 23.1887,
+      "Cj_fF": 19.1488,
+      "PhW_mW": 11.2139,
+      "dlambda_dT_pm_K": 75.8307
+     },
+     "model": {
+      "neff": 2.6003,
+      "ng": 3.8806,
+      "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+     }
+    }
+   },
+   "placement": {
+    "x_um": 160,
+    "y_um": 282.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    160,
+    279.25,
+    194.102,
+    307.332
+   ],
+   "size_um": [
+    34.102,
+    28.082
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      160,
+      282.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      194.102,
+      282.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      177.051,
+      290.281
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      177.051,
+      302.332
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      166,
+      305.332
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      188.102,
+      305.332
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON1",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 1,
+   "source": "2-4 기준 설계 (Ge 28×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 58.6847,
+    "gap_um": 0.8,
+    "ratio": 0.02,
+    "pd_L_um": 28,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 204.102,
+    "y_um": 282.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    204.102,
+    267.2,
+    366.7867,
+    286.5
+   ],
+   "size_um": [
+    162.6847,
+    19.3
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      204.102,
+      282.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      366.7867,
+      282.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      335.7867,
+      271.7
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      349.7867,
+      271.7
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MOD2",
+   "type": "mrr",
+   "role": "modulator",
+   "lane": 2,
+   "source": "2-3R 기준 설계",
+   "params": {
+    "ring": {
+     "pcell": "ring_allpass",
+     "core_mat": "si",
+     "R_um": 7.051,
+     "R_slider_um": 7.05,
+     "gap_um": 0.23,
+     "w_um": 0.5,
+     "bus_w_um": 0.5,
+     "bus_len_um": 34.102,
+     "rib": {
+      "t_um": 0.22,
+      "slab_um": 0.09,
+      "slab_ext_um": 2
+     },
+     "order_m": 75,
+     "heterogeneous_si": true,
+     "junction": {
+      "type": "lateral PN (P inside, N outside)",
+      "coverage": 0.75,
+      "arc_deg": 270,
+      "centred_opposite_coupler": true,
+      "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+     },
+     "heater": {
+      "h_um": 1.6,
+      "iso": 1,
+      "coverage": 0.85,
+      "w_um": 2,
+      "arc_deg": 306,
+      "gap_centred_opposite_coupler": true,
+      "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+     },
+     "lambda_design_um": 1.55,
+     "predicted": {
+      "fsr_nm": 13.9745,
+      "QL": 4014,
+      "Qi": 11988,
+      "Qc": 6036,
+      "kappa2": 0.109,
+      "shift_pm_per_V": 23.1887,
+      "Cj_fF": 19.1488,
+      "PhW_mW": 11.2139,
+      "dlambda_dT_pm_K": 75.8307
+     },
+     "model": {
+      "neff": 2.6003,
+      "ng": 3.8806,
+      "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+     }
+    }
+   },
+   "placement": {
+    "x_um": 160,
+    "y_um": 409.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    160,
+    406.25,
+    194.102,
+    434.332
+   ],
+   "size_um": [
+    34.102,
+    28.082
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      160,
+      409.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      194.102,
+      409.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      177.051,
+      417.281
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      177.051,
+      429.332
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      166,
+      432.332
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      188.102,
+      432.332
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON2",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 2,
+   "source": "2-4 기준 설계 (Ge 28×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 58.6847,
+    "gap_um": 0.8,
+    "ratio": 0.02,
+    "pd_L_um": 28,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 204.102,
+    "y_um": 409.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    204.102,
+    394.2,
+    366.7867,
+    413.5
+   ],
+   "size_um": [
+    162.6847,
+    19.3
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      204.102,
+      409.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      366.7867,
+      409.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      335.7867,
+      398.7
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      349.7867,
+      398.7
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MOD3",
+   "type": "mrr",
+   "role": "modulator",
+   "lane": 3,
+   "source": "2-3R 기준 설계",
+   "params": {
+    "ring": {
+     "pcell": "ring_allpass",
+     "core_mat": "si",
+     "R_um": 7.051,
+     "R_slider_um": 7.05,
+     "gap_um": 0.23,
+     "w_um": 0.5,
+     "bus_w_um": 0.5,
+     "bus_len_um": 34.102,
+     "rib": {
+      "t_um": 0.22,
+      "slab_um": 0.09,
+      "slab_ext_um": 2
+     },
+     "order_m": 75,
+     "heterogeneous_si": true,
+     "junction": {
+      "type": "lateral PN (P inside, N outside)",
+      "coverage": 0.75,
+      "arc_deg": 270,
+      "centred_opposite_coupler": true,
+      "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+     },
+     "heater": {
+      "h_um": 1.6,
+      "iso": 1,
+      "coverage": 0.85,
+      "w_um": 2,
+      "arc_deg": 306,
+      "gap_centred_opposite_coupler": true,
+      "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+     },
+     "lambda_design_um": 1.55,
+     "predicted": {
+      "fsr_nm": 13.9745,
+      "QL": 4014,
+      "Qi": 11988,
+      "Qc": 6036,
+      "kappa2": 0.109,
+      "shift_pm_per_V": 23.1887,
+      "Cj_fF": 19.1488,
+      "PhW_mW": 11.2139,
+      "dlambda_dT_pm_K": 75.8307
+     },
+     "model": {
+      "neff": 2.6003,
+      "ng": 3.8806,
+      "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+     }
+    }
+   },
+   "placement": {
+    "x_um": 160,
+    "y_um": 536.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    160,
+    533.25,
+    194.102,
+    561.332
+   ],
+   "size_um": [
+    34.102,
+    28.082
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      160,
+      536.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      194.102,
+      536.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      177.051,
+      544.281
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      177.051,
+      556.332
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      166,
+      559.332
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      188.102,
+      559.332
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON3",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 3,
+   "source": "2-4 기준 설계 (Ge 28×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 58.6847,
+    "gap_um": 0.8,
+    "ratio": 0.02,
+    "pd_L_um": 28,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 204.102,
+    "y_um": 536.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    204.102,
+    521.2,
+    366.7867,
+    540.5
+   ],
+   "size_um": [
+    162.6847,
+    19.3
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      204.102,
+      536.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      366.7867,
+      536.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      335.7867,
+      525.7
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      349.7867,
+      525.7
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MOD4",
+   "type": "mrr",
+   "role": "modulator",
+   "lane": 4,
+   "source": "2-3R 기준 설계",
+   "params": {
+    "ring": {
+     "pcell": "ring_allpass",
+     "core_mat": "si",
+     "R_um": 7.051,
+     "R_slider_um": 7.05,
+     "gap_um": 0.23,
+     "w_um": 0.5,
+     "bus_w_um": 0.5,
+     "bus_len_um": 34.102,
+     "rib": {
+      "t_um": 0.22,
+      "slab_um": 0.09,
+      "slab_ext_um": 2
+     },
+     "order_m": 75,
+     "heterogeneous_si": true,
+     "junction": {
+      "type": "lateral PN (P inside, N outside)",
+      "coverage": 0.75,
+      "arc_deg": 270,
+      "centred_opposite_coupler": true,
+      "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+     },
+     "heater": {
+      "h_um": 1.6,
+      "iso": 1,
+      "coverage": 0.85,
+      "w_um": 2,
+      "arc_deg": 306,
+      "gap_centred_opposite_coupler": true,
+      "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+     },
+     "lambda_design_um": 1.55,
+     "predicted": {
+      "fsr_nm": 13.9745,
+      "QL": 4014,
+      "Qi": 11988,
+      "Qc": 6036,
+      "kappa2": 0.109,
+      "shift_pm_per_V": 23.1887,
+      "Cj_fF": 19.1488,
+      "PhW_mW": 11.2139,
+      "dlambda_dT_pm_K": 75.8307
+     },
+     "model": {
+      "neff": 2.6003,
+      "ng": 3.8806,
+      "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+     }
+    }
+   },
+   "placement": {
+    "x_um": 160,
+    "y_um": 663.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    160,
+    660.25,
+    194.102,
+    688.332
+   ],
+   "size_um": [
+    34.102,
+    28.082
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      160,
+      663.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      194.102,
+      663.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      177.051,
+      671.281
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      177.051,
+      683.332
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      166,
+      686.332
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      188.102,
+      686.332
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON4",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 4,
+   "source": "2-4 기준 설계 (Ge 28×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 58.6847,
+    "gap_um": 0.8,
+    "ratio": 0.02,
+    "pd_L_um": 28,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 204.102,
+    "y_um": 663.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    204.102,
+    648.2,
+    366.7867,
+    667.5
+   ],
+   "size_um": [
+    162.6847,
+    19.3
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      204.102,
+      663.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      366.7867,
+      663.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      335.7867,
+      652.7
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      349.7867,
+      652.7
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MOD5",
+   "type": "mrr",
+   "role": "modulator",
+   "lane": 5,
+   "source": "2-3R 기준 설계",
+   "params": {
+    "ring": {
+     "pcell": "ring_allpass",
+     "core_mat": "si",
+     "R_um": 7.051,
+     "R_slider_um": 7.05,
+     "gap_um": 0.23,
+     "w_um": 0.5,
+     "bus_w_um": 0.5,
+     "bus_len_um": 34.102,
+     "rib": {
+      "t_um": 0.22,
+      "slab_um": 0.09,
+      "slab_ext_um": 2
+     },
+     "order_m": 75,
+     "heterogeneous_si": true,
+     "junction": {
+      "type": "lateral PN (P inside, N outside)",
+      "coverage": 0.75,
+      "arc_deg": 270,
+      "centred_opposite_coupler": true,
+      "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+     },
+     "heater": {
+      "h_um": 1.6,
+      "iso": 1,
+      "coverage": 0.85,
+      "w_um": 2,
+      "arc_deg": 306,
+      "gap_centred_opposite_coupler": true,
+      "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+     },
+     "lambda_design_um": 1.55,
+     "predicted": {
+      "fsr_nm": 13.9745,
+      "QL": 4014,
+      "Qi": 11988,
+      "Qc": 6036,
+      "kappa2": 0.109,
+      "shift_pm_per_V": 23.1887,
+      "Cj_fF": 19.1488,
+      "PhW_mW": 11.2139,
+      "dlambda_dT_pm_K": 75.8307
+     },
+     "model": {
+      "neff": 2.6003,
+      "ng": 3.8806,
+      "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+     }
+    }
+   },
+   "placement": {
+    "x_um": 160,
+    "y_um": 790.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    160,
+    787.25,
+    194.102,
+    815.332
+   ],
+   "size_um": [
+    34.102,
+    28.082
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      160,
+      790.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      194.102,
+      790.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      177.051,
+      798.281
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      177.051,
+      810.332
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      166,
+      813.332
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      188.102,
+      813.332
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON5",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 5,
+   "source": "2-4 기준 설계 (Ge 28×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 58.6847,
+    "gap_um": 0.8,
+    "ratio": 0.02,
+    "pd_L_um": 28,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 204.102,
+    "y_um": 790.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    204.102,
+    775.2,
+    366.7867,
+    794.5
+   ],
+   "size_um": [
+    162.6847,
+    19.3
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      204.102,
+      790.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      366.7867,
+      790.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      335.7867,
+      779.7
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      349.7867,
+      779.7
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MOD6",
+   "type": "mrr",
+   "role": "modulator",
+   "lane": 6,
+   "source": "2-3R 기준 설계",
+   "params": {
+    "ring": {
+     "pcell": "ring_allpass",
+     "core_mat": "si",
+     "R_um": 7.051,
+     "R_slider_um": 7.05,
+     "gap_um": 0.23,
+     "w_um": 0.5,
+     "bus_w_um": 0.5,
+     "bus_len_um": 34.102,
+     "rib": {
+      "t_um": 0.22,
+      "slab_um": 0.09,
+      "slab_ext_um": 2
+     },
+     "order_m": 75,
+     "heterogeneous_si": true,
+     "junction": {
+      "type": "lateral PN (P inside, N outside)",
+      "coverage": 0.75,
+      "arc_deg": 270,
+      "centred_opposite_coupler": true,
+      "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+     },
+     "heater": {
+      "h_um": 1.6,
+      "iso": 1,
+      "coverage": 0.85,
+      "w_um": 2,
+      "arc_deg": 306,
+      "gap_centred_opposite_coupler": true,
+      "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+     },
+     "lambda_design_um": 1.55,
+     "predicted": {
+      "fsr_nm": 13.9745,
+      "QL": 4014,
+      "Qi": 11988,
+      "Qc": 6036,
+      "kappa2": 0.109,
+      "shift_pm_per_V": 23.1887,
+      "Cj_fF": 19.1488,
+      "PhW_mW": 11.2139,
+      "dlambda_dT_pm_K": 75.8307
+     },
+     "model": {
+      "neff": 2.6003,
+      "ng": 3.8806,
+      "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+     }
+    }
+   },
+   "placement": {
+    "x_um": 160,
+    "y_um": 917.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    160,
+    914.25,
+    194.102,
+    942.332
+   ],
+   "size_um": [
+    34.102,
+    28.082
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      160,
+      917.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      194.102,
+      917.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      177.051,
+      925.281
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      177.051,
+      937.332
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      166,
+      940.332
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      188.102,
+      940.332
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON6",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 6,
+   "source": "2-4 기준 설계 (Ge 28×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 58.6847,
+    "gap_um": 0.8,
+    "ratio": 0.02,
+    "pd_L_um": 28,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 204.102,
+    "y_um": 917.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    204.102,
+    902.2,
+    366.7867,
+    921.5
+   ],
+   "size_um": [
+    162.6847,
+    19.3
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      204.102,
+      917.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      366.7867,
+      917.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      335.7867,
+      906.7
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      349.7867,
+      906.7
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MOD7",
+   "type": "mrr",
+   "role": "modulator",
+   "lane": 7,
+   "source": "2-3R 기준 설계",
+   "params": {
+    "ring": {
+     "pcell": "ring_allpass",
+     "core_mat": "si",
+     "R_um": 7.051,
+     "R_slider_um": 7.05,
+     "gap_um": 0.23,
+     "w_um": 0.5,
+     "bus_w_um": 0.5,
+     "bus_len_um": 34.102,
+     "rib": {
+      "t_um": 0.22,
+      "slab_um": 0.09,
+      "slab_ext_um": 2
+     },
+     "order_m": 75,
+     "heterogeneous_si": true,
+     "junction": {
+      "type": "lateral PN (P inside, N outside)",
+      "coverage": 0.75,
+      "arc_deg": 270,
+      "centred_opposite_coupler": true,
+      "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+     },
+     "heater": {
+      "h_um": 1.6,
+      "iso": 1,
+      "coverage": 0.85,
+      "w_um": 2,
+      "arc_deg": 306,
+      "gap_centred_opposite_coupler": true,
+      "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+     },
+     "lambda_design_um": 1.55,
+     "predicted": {
+      "fsr_nm": 13.9745,
+      "QL": 4014,
+      "Qi": 11988,
+      "Qc": 6036,
+      "kappa2": 0.109,
+      "shift_pm_per_V": 23.1887,
+      "Cj_fF": 19.1488,
+      "PhW_mW": 11.2139,
+      "dlambda_dT_pm_K": 75.8307
+     },
+     "model": {
+      "neff": 2.6003,
+      "ng": 3.8806,
+      "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+     }
+    }
+   },
+   "placement": {
+    "x_um": 160,
+    "y_um": 1044.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    160,
+    1041.25,
+    194.102,
+    1069.332
+   ],
+   "size_um": [
+    34.102,
+    28.082
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      160,
+      1044.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      194.102,
+      1044.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      177.051,
+      1052.281
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      177.051,
+      1064.332
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      166,
+      1067.332
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      188.102,
+      1067.332
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON7",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 7,
+   "source": "2-4 기준 설계 (Ge 28×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 58.6847,
+    "gap_um": 0.8,
+    "ratio": 0.02,
+    "pd_L_um": 28,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 204.102,
+    "y_um": 1044.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    204.102,
+    1029.2,
+    366.7867,
+    1048.5
+   ],
+   "size_um": [
+    162.6847,
+    19.3
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      204.102,
+      1044.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      366.7867,
+      1044.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      335.7867,
+      1033.7
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      349.7867,
+      1033.7
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "OUT0",
+   "type": "ssc",
+   "role": "output",
+   "lane": 0,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.325,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 600,
+    "y_um": 155.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    500,
+    153.5,
+    600,
+    157.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      600,
+      155.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      500,
+      155.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  },
+  {
+   "id": "OUT1",
+   "type": "ssc",
+   "role": "output",
+   "lane": 1,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.325,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 600,
+    "y_um": 282.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    500,
+    280.5,
+    600,
+    284.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      600,
+      282.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      500,
+      282.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  },
+  {
+   "id": "OUT2",
+   "type": "ssc",
+   "role": "output",
+   "lane": 2,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.325,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 600,
+    "y_um": 409.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    500,
+    407.5,
+    600,
+    411.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      600,
+      409.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      500,
+      409.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  },
+  {
+   "id": "OUT3",
+   "type": "ssc",
+   "role": "output",
+   "lane": 3,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.325,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 600,
+    "y_um": 536.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    500,
+    534.5,
+    600,
+    538.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      600,
+      536.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      500,
+      536.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  },
+  {
+   "id": "OUT4",
+   "type": "ssc",
+   "role": "output",
+   "lane": 4,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.325,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 600,
+    "y_um": 663.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    500,
+    661.5,
+    600,
+    665.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      600,
+      663.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      500,
+      663.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  },
+  {
+   "id": "OUT5",
+   "type": "ssc",
+   "role": "output",
+   "lane": 5,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.325,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 600,
+    "y_um": 790.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    500,
+    788.5,
+    600,
+    792.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      600,
+      790.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      500,
+      790.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  },
+  {
+   "id": "OUT6",
+   "type": "ssc",
+   "role": "output",
+   "lane": 6,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.325,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 600,
+    "y_um": 917.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    500,
+    915.5,
+    600,
+    919.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      600,
+      917.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      500,
+      917.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  },
+  {
+   "id": "OUT7",
+   "type": "ssc",
+   "role": "output",
+   "lane": 7,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.325,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 600,
+    "y_um": 1044.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    500,
+    1042.5,
+    600,
+    1046.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      600,
+      1044.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      500,
+      1044.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  }
+ ],
+ "nets": {
+  "optical": [
+   {
+    "id": "n0",
+    "from": "IN0.out",
+    "to": "MOD0.in",
+    "lane": 0,
+    "kind": "feed"
+   },
+   {
+    "id": "n1",
+    "from": "IN1.out",
+    "to": "MOD1.in",
+    "lane": 1,
+    "kind": "feed"
+   },
+   {
+    "id": "n2",
+    "from": "IN2.out",
+    "to": "MOD2.in",
+    "lane": 2,
+    "kind": "feed"
+   },
+   {
+    "id": "n3",
+    "from": "IN3.out",
+    "to": "MOD3.in",
+    "lane": 3,
+    "kind": "feed"
+   },
+   {
+    "id": "n4",
+    "from": "IN4.out",
+    "to": "MOD4.in",
+    "lane": 4,
+    "kind": "feed"
+   },
+   {
+    "id": "n5",
+    "from": "IN5.out",
+    "to": "MOD5.in",
+    "lane": 5,
+    "kind": "feed"
+   },
+   {
+    "id": "n6",
+    "from": "IN6.out",
+    "to": "MOD6.in",
+    "lane": 6,
+    "kind": "feed"
+   },
+   {
+    "id": "n7",
+    "from": "IN7.out",
+    "to": "MOD7.in",
+    "lane": 7,
+    "kind": "feed"
+   },
+   {
+    "id": "n8",
+    "from": "MOD0.out",
+    "to": "MON0.in",
+    "lane": 0,
+    "kind": "lane"
+   },
+   {
+    "id": "n9",
+    "from": "MON0.out",
+    "to": "OUT0.in",
+    "lane": 0,
+    "kind": "out"
+   },
+   {
+    "id": "n10",
+    "from": "MOD1.out",
+    "to": "MON1.in",
+    "lane": 1,
+    "kind": "lane"
+   },
+   {
+    "id": "n11",
+    "from": "MON1.out",
+    "to": "OUT1.in",
+    "lane": 1,
+    "kind": "out"
+   },
+   {
+    "id": "n12",
+    "from": "MOD2.out",
+    "to": "MON2.in",
+    "lane": 2,
+    "kind": "lane"
+   },
+   {
+    "id": "n13",
+    "from": "MON2.out",
+    "to": "OUT2.in",
+    "lane": 2,
+    "kind": "out"
+   },
+   {
+    "id": "n14",
+    "from": "MOD3.out",
+    "to": "MON3.in",
+    "lane": 3,
+    "kind": "lane"
+   },
+   {
+    "id": "n15",
+    "from": "MON3.out",
+    "to": "OUT3.in",
+    "lane": 3,
+    "kind": "out"
+   },
+   {
+    "id": "n16",
+    "from": "MOD4.out",
+    "to": "MON4.in",
+    "lane": 4,
+    "kind": "lane"
+   },
+   {
+    "id": "n17",
+    "from": "MON4.out",
+    "to": "OUT4.in",
+    "lane": 4,
+    "kind": "out"
+   },
+   {
+    "id": "n18",
+    "from": "MOD5.out",
+    "to": "MON5.in",
+    "lane": 5,
+    "kind": "lane"
+   },
+   {
+    "id": "n19",
+    "from": "MON5.out",
+    "to": "OUT5.in",
+    "lane": 5,
+    "kind": "out"
+   },
+   {
+    "id": "n20",
+    "from": "MOD6.out",
+    "to": "MON6.in",
+    "lane": 6,
+    "kind": "lane"
+   },
+   {
+    "id": "n21",
+    "from": "MON6.out",
+    "to": "OUT6.in",
+    "lane": 6,
+    "kind": "out"
+   },
+   {
+    "id": "n22",
+    "from": "MOD7.out",
+    "to": "MON7.in",
+    "lane": 7,
+    "kind": "lane"
+   },
+   {
+    "id": "n23",
+    "from": "MON7.out",
+    "to": "OUT7.in",
+    "lane": 7,
+    "kind": "out"
+   }
+  ],
+  "electrical": [
+   {
+    "id": "MOD0.rf_s",
+    "kind": "rf",
+    "lane": 0,
+    "from": "MOD0.rf_s",
+    "to": "pad:RF0_s"
+   },
+   {
+    "id": "MOD0.rf_g",
+    "kind": "rf",
+    "lane": 0,
+    "from": "MOD0.rf_g",
+    "to": "pad:RF0_g"
+   },
+   {
+    "id": "MOD0.h_p",
+    "kind": "dc",
+    "lane": 0,
+    "from": "MOD0.h_p",
+    "to": "pad:DC0_h_p"
+   },
+   {
+    "id": "MOD0.h_n",
+    "kind": "dc",
+    "lane": 0,
+    "from": "MOD0.h_n",
+    "to": "pad:DC0_h_n"
+   },
+   {
+    "id": "MON0.pd_a",
+    "kind": "dc",
+    "lane": 0,
+    "from": "MON0.pd_a",
+    "to": "pad:DC0_pd_a"
+   },
+   {
+    "id": "MON0.pd_k",
+    "kind": "dc",
+    "lane": 0,
+    "from": "MON0.pd_k",
+    "to": "pad:DC0_pd_k"
+   },
+   {
+    "id": "MOD1.rf_s",
+    "kind": "rf",
+    "lane": 1,
+    "from": "MOD1.rf_s",
+    "to": "pad:RF1_s"
+   },
+   {
+    "id": "MOD1.rf_g",
+    "kind": "rf",
+    "lane": 1,
+    "from": "MOD1.rf_g",
+    "to": "pad:RF1_g"
+   },
+   {
+    "id": "MOD1.h_p",
+    "kind": "dc",
+    "lane": 1,
+    "from": "MOD1.h_p",
+    "to": "pad:DC1_h_p"
+   },
+   {
+    "id": "MOD1.h_n",
+    "kind": "dc",
+    "lane": 1,
+    "from": "MOD1.h_n",
+    "to": "pad:DC1_h_n"
+   },
+   {
+    "id": "MON1.pd_a",
+    "kind": "dc",
+    "lane": 1,
+    "from": "MON1.pd_a",
+    "to": "pad:DC1_pd_a"
+   },
+   {
+    "id": "MON1.pd_k",
+    "kind": "dc",
+    "lane": 1,
+    "from": "MON1.pd_k",
+    "to": "pad:DC1_pd_k"
+   },
+   {
+    "id": "MOD2.rf_s",
+    "kind": "rf",
+    "lane": 2,
+    "from": "MOD2.rf_s",
+    "to": "pad:RF2_s"
+   },
+   {
+    "id": "MOD2.rf_g",
+    "kind": "rf",
+    "lane": 2,
+    "from": "MOD2.rf_g",
+    "to": "pad:RF2_g"
+   },
+   {
+    "id": "MOD2.h_p",
+    "kind": "dc",
+    "lane": 2,
+    "from": "MOD2.h_p",
+    "to": "pad:DC2_h_p"
+   },
+   {
+    "id": "MOD2.h_n",
+    "kind": "dc",
+    "lane": 2,
+    "from": "MOD2.h_n",
+    "to": "pad:DC2_h_n"
+   },
+   {
+    "id": "MON2.pd_a",
+    "kind": "dc",
+    "lane": 2,
+    "from": "MON2.pd_a",
+    "to": "pad:DC2_pd_a"
+   },
+   {
+    "id": "MON2.pd_k",
+    "kind": "dc",
+    "lane": 2,
+    "from": "MON2.pd_k",
+    "to": "pad:DC2_pd_k"
+   },
+   {
+    "id": "MOD3.rf_s",
+    "kind": "rf",
+    "lane": 3,
+    "from": "MOD3.rf_s",
+    "to": "pad:RF3_s"
+   },
+   {
+    "id": "MOD3.rf_g",
+    "kind": "rf",
+    "lane": 3,
+    "from": "MOD3.rf_g",
+    "to": "pad:RF3_g"
+   },
+   {
+    "id": "MOD3.h_p",
+    "kind": "dc",
+    "lane": 3,
+    "from": "MOD3.h_p",
+    "to": "pad:DC3_h_p"
+   },
+   {
+    "id": "MOD3.h_n",
+    "kind": "dc",
+    "lane": 3,
+    "from": "MOD3.h_n",
+    "to": "pad:DC3_h_n"
+   },
+   {
+    "id": "MON3.pd_a",
+    "kind": "dc",
+    "lane": 3,
+    "from": "MON3.pd_a",
+    "to": "pad:DC3_pd_a"
+   },
+   {
+    "id": "MON3.pd_k",
+    "kind": "dc",
+    "lane": 3,
+    "from": "MON3.pd_k",
+    "to": "pad:DC3_pd_k"
+   },
+   {
+    "id": "MOD4.rf_s",
+    "kind": "rf",
+    "lane": 4,
+    "from": "MOD4.rf_s",
+    "to": "pad:RF4_s"
+   },
+   {
+    "id": "MOD4.rf_g",
+    "kind": "rf",
+    "lane": 4,
+    "from": "MOD4.rf_g",
+    "to": "pad:RF4_g"
+   },
+   {
+    "id": "MOD4.h_p",
+    "kind": "dc",
+    "lane": 4,
+    "from": "MOD4.h_p",
+    "to": "pad:DC4_h_p"
+   },
+   {
+    "id": "MOD4.h_n",
+    "kind": "dc",
+    "lane": 4,
+    "from": "MOD4.h_n",
+    "to": "pad:DC4_h_n"
+   },
+   {
+    "id": "MON4.pd_a",
+    "kind": "dc",
+    "lane": 4,
+    "from": "MON4.pd_a",
+    "to": "pad:DC4_pd_a"
+   },
+   {
+    "id": "MON4.pd_k",
+    "kind": "dc",
+    "lane": 4,
+    "from": "MON4.pd_k",
+    "to": "pad:DC4_pd_k"
+   },
+   {
+    "id": "MOD5.rf_s",
+    "kind": "rf",
+    "lane": 5,
+    "from": "MOD5.rf_s",
+    "to": "pad:RF5_s"
+   },
+   {
+    "id": "MOD5.rf_g",
+    "kind": "rf",
+    "lane": 5,
+    "from": "MOD5.rf_g",
+    "to": "pad:RF5_g"
+   },
+   {
+    "id": "MOD5.h_p",
+    "kind": "dc",
+    "lane": 5,
+    "from": "MOD5.h_p",
+    "to": "pad:DC5_h_p"
+   },
+   {
+    "id": "MOD5.h_n",
+    "kind": "dc",
+    "lane": 5,
+    "from": "MOD5.h_n",
+    "to": "pad:DC5_h_n"
+   },
+   {
+    "id": "MON5.pd_a",
+    "kind": "dc",
+    "lane": 5,
+    "from": "MON5.pd_a",
+    "to": "pad:DC5_pd_a"
+   },
+   {
+    "id": "MON5.pd_k",
+    "kind": "dc",
+    "lane": 5,
+    "from": "MON5.pd_k",
+    "to": "pad:DC5_pd_k"
+   },
+   {
+    "id": "MOD6.rf_s",
+    "kind": "rf",
+    "lane": 6,
+    "from": "MOD6.rf_s",
+    "to": "pad:RF6_s"
+   },
+   {
+    "id": "MOD6.rf_g",
+    "kind": "rf",
+    "lane": 6,
+    "from": "MOD6.rf_g",
+    "to": "pad:RF6_g"
+   },
+   {
+    "id": "MOD6.h_p",
+    "kind": "dc",
+    "lane": 6,
+    "from": "MOD6.h_p",
+    "to": "pad:DC6_h_p"
+   },
+   {
+    "id": "MOD6.h_n",
+    "kind": "dc",
+    "lane": 6,
+    "from": "MOD6.h_n",
+    "to": "pad:DC6_h_n"
+   },
+   {
+    "id": "MON6.pd_a",
+    "kind": "dc",
+    "lane": 6,
+    "from": "MON6.pd_a",
+    "to": "pad:DC6_pd_a"
+   },
+   {
+    "id": "MON6.pd_k",
+    "kind": "dc",
+    "lane": 6,
+    "from": "MON6.pd_k",
+    "to": "pad:DC6_pd_k"
+   },
+   {
+    "id": "MOD7.rf_s",
+    "kind": "rf",
+    "lane": 7,
+    "from": "MOD7.rf_s",
+    "to": "pad:RF7_s"
+   },
+   {
+    "id": "MOD7.rf_g",
+    "kind": "rf",
+    "lane": 7,
+    "from": "MOD7.rf_g",
+    "to": "pad:RF7_g"
+   },
+   {
+    "id": "MOD7.h_p",
+    "kind": "dc",
+    "lane": 7,
+    "from": "MOD7.h_p",
+    "to": "pad:DC7_h_p"
+   },
+   {
+    "id": "MOD7.h_n",
+    "kind": "dc",
+    "lane": 7,
+    "from": "MOD7.h_n",
+    "to": "pad:DC7_h_n"
+   },
+   {
+    "id": "MON7.pd_a",
+    "kind": "dc",
+    "lane": 7,
+    "from": "MON7.pd_a",
+    "to": "pad:DC7_pd_a"
+   },
+   {
+    "id": "MON7.pd_k",
+    "kind": "dc",
+    "lane": 7,
+    "from": "MON7.pd_k",
+    "to": "pad:DC7_pd_k"
+   }
+  ]
+ },
+ "design": {
+  "mod": 1,
+  "share": 0,
+  "edge": 50,
+  "fp": 127,
+  "rf": 1,
+  "rfSide": 0,
+  "pp": 100,
+  "bend": 1,
+  "R": 100,
+  "wr": 2,
+  "jog": 8,
+  "mon": 1,
+  "W": 0.6,
+  "H": 1.2,
+  "P": 127,
+  "stag": 0
+ }
+}

@@ -1,0 +1,3121 @@
+{
+ "schema": "smq-circuit/1",
+ "generator": "SPEC-to-MASK Quest · PIC Design Lab",
+ "exported": "2026-10-10T00:00:00Z",
+ "platform": {
+  "id": "sin1310",
+  "mat": "sin",
+  "lam_um": 1.31,
+  "core_t_um": 0.4,
+  "w0_um": 0.78,
+  "wc_um": 0.844,
+  "clad": "SiO2",
+  "box": "SiO2",
+  "rules_um": {
+   "gap": 0.4,
+   "wmin": 0.8,
+   "edge": 0.1
+  },
+  "route_rules": {
+   "port_width_um": 0.78,
+   "body_width_um": 2,
+   "taper": "linear on the first / last straight (short nets stay at the port width)",
+   "bend": "euler",
+   "R_um": 100,
+   "R_min_rule_um": 15,
+   "alpha_body_dB_cm": 0.0443,
+   "alpha_port_dB_cm": 0.1828,
+   "litho_min_width_um": 0.3
+  }
+ },
+ "architecture": {
+  "name": "1.6T DR8 Tx PIC",
+  "lanes": 8,
+  "lane_rate_gbps": 224,
+  "net_rate_gbps": 200,
+  "baud_gbd": 112,
+  "format": "PAM4",
+  "modulator": "mzm",
+  "laser_share": 1,
+  "lasers": 8,
+  "splitter_depth": 0,
+  "monitor_pd": true
+ },
+ "die": {
+  "W_um": 8300,
+  "H_um": 2500,
+  "edge_um": 50,
+  "optical_io": {
+   "input": "W",
+   "output": "E",
+   "fiber_pitch_um": 127
+  },
+  "electrical_io": {
+   "type": "edge wire-bond pads (abstract)",
+   "rf_side": "N",
+   "dc_side": "S",
+   "pad_pitch_um": 100,
+   "pad_um": 80
+  },
+  "lane_pitch_um": 275,
+  "lane_stagger_um": 320
+ },
+ "instances": [
+  {
+   "id": "IN0",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.23,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 805.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    803.5,
+    100,
+    807.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      805.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      100,
+      805.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "IN1",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.23,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 932.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    930.5,
+    100,
+    934.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      932.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      100,
+      932.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "IN2",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.23,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 1059.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    1057.5,
+    100,
+    1061.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      1059.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      100,
+      1059.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "IN3",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.23,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 1186.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    1184.5,
+    100,
+    1188.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      1186.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      100,
+      1186.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "IN4",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.23,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 1313.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    1311.5,
+    100,
+    1315.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      1313.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      100,
+      1313.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "IN5",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.23,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 1440.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    1438.5,
+    100,
+    1442.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      1440.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      100,
+      1440.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "IN6",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.23,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 1567.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    1565.5,
+    100,
+    1569.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      1567.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      100,
+      1567.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "IN7",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.23,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 1694.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    1692.5,
+    100,
+    1696.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      1694.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      100,
+      1694.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "MOD0",
+   "type": "mzm",
+   "role": "modulator",
+   "lane": 0,
+   "source": "2-3 기준 설계 + 1-3 기준 설계 + 2-1 기준 설계",
+   "params": {
+    "L_e_um": 2450,
+    "gap_um": 60,
+    "signal_um": 15,
+    "ground_um": 50,
+    "arm_sep_um": 75,
+    "RT_ohm": 53,
+    "mmi": {
+     "W_um": 4.2,
+     "L_um": 14,
+     "wt_um": 1.6,
+     "s_um": 2.25,
+     "taper_len_um": 30
+    },
+    "heater": {
+     "L_um": 590,
+     "w_um": 2,
+     "h_um": 1.25,
+     "x0_um": 2689.0080839549987
+    },
+    "sbend": {
+     "kind": "arcs",
+     "len": 115.00808395499857,
+     "dx": 115.00808395499857,
+     "dy": 36.375,
+     "th": 0.6126535525689929,
+     "R": 100
+    }
+   },
+   "placement": {
+    "x_um": 1113.3382,
+    "y_um": 287.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    1113.3382,
+    170,
+    4601.3544,
+    405
+   ],
+   "size_um": [
+    3488.0162,
+    235
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      1113.3382,
+      287.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      4601.3544,
+      287.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      1322.3463,
+      287.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g1",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      1322.3463,
+      380
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g2",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      1322.3463,
+      195
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "term",
+     "kind": "internal",
+     "sub": "int",
+     "xy_um": [
+      3772.3463,
+      287.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      3802.3463,
+      325
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      4392.3463,
+      325
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON0",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 0,
+   "source": "2-4 기준 설계 (Ge 11.5×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 192.8731,
+    "gap_um": 0.8,
+    "ratio": 0.02,
+    "pd_L_um": 11.5,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 4611.3544,
+    "y_um": 287.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    4611.3544,
+    272.2,
+    4891.7275,
+    291.5
+   ],
+   "size_um": [
+    280.3731,
+    19.3
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      4611.3544,
+      287.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      4891.7275,
+      287.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      4873.1025,
+      276.7
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      4878.8525,
+      276.7
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MOD1",
+   "type": "mzm",
+   "role": "modulator",
+   "lane": 1,
+   "source": "2-3 기준 설계 + 1-3 기준 설계 + 2-1 기준 설계",
+   "params": {
+    "L_e_um": 2450,
+    "gap_um": 60,
+    "signal_um": 15,
+    "ground_um": 50,
+    "arm_sep_um": 75,
+    "RT_ohm": 53,
+    "mmi": {
+     "W_um": 4.2,
+     "L_um": 14,
+     "wt_um": 1.6,
+     "s_um": 2.25,
+     "taper_len_um": 30
+    },
+    "heater": {
+     "L_um": 590,
+     "w_um": 2,
+     "h_um": 1.25,
+     "x0_um": 2689.0080839549987
+    },
+    "sbend": {
+     "kind": "arcs",
+     "len": 115.00808395499857,
+     "dx": 115.00808395499857,
+     "dy": 36.375,
+     "th": 0.6126535525689929,
+     "R": 100
+    }
+   },
+   "placement": {
+    "x_um": 1433.3382,
+    "y_um": 562.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    1433.3382,
+    445,
+    4921.3544,
+    680
+   ],
+   "size_um": [
+    3488.0162,
+    235
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      1433.3382,
+      562.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      4921.3544,
+      562.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      1642.3463,
+      562.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g1",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      1642.3463,
+      655
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g2",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      1642.3463,
+      470
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "term",
+     "kind": "internal",
+     "sub": "int",
+     "xy_um": [
+      4092.3463,
+      562.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      4122.3463,
+      600
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      4712.3463,
+      600
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON1",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 1,
+   "source": "2-4 기준 설계 (Ge 11.5×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 192.8731,
+    "gap_um": 0.8,
+    "ratio": 0.02,
+    "pd_L_um": 11.5,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 4931.3544,
+    "y_um": 562.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    4931.3544,
+    547.2,
+    5211.7275,
+    566.5
+   ],
+   "size_um": [
+    280.3731,
+    19.3
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      4931.3544,
+      562.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      5211.7275,
+      562.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      5193.1025,
+      551.7
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      5198.8525,
+      551.7
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MOD2",
+   "type": "mzm",
+   "role": "modulator",
+   "lane": 2,
+   "source": "2-3 기준 설계 + 1-3 기준 설계 + 2-1 기준 설계",
+   "params": {
+    "L_e_um": 2450,
+    "gap_um": 60,
+    "signal_um": 15,
+    "ground_um": 50,
+    "arm_sep_um": 75,
+    "RT_ohm": 53,
+    "mmi": {
+     "W_um": 4.2,
+     "L_um": 14,
+     "wt_um": 1.6,
+     "s_um": 2.25,
+     "taper_len_um": 30
+    },
+    "heater": {
+     "L_um": 590,
+     "w_um": 2,
+     "h_um": 1.25,
+     "x0_um": 2689.0080839549987
+    },
+    "sbend": {
+     "kind": "arcs",
+     "len": 115.00808395499857,
+     "dx": 115.00808395499857,
+     "dy": 36.375,
+     "th": 0.6126535525689929,
+     "R": 100
+    }
+   },
+   "placement": {
+    "x_um": 1753.3382,
+    "y_um": 837.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    1753.3382,
+    720,
+    5241.3544,
+    955
+   ],
+   "size_um": [
+    3488.0162,
+    235
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      1753.3382,
+      837.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      5241.3544,
+      837.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      1962.3463,
+      837.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g1",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      1962.3463,
+      930
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g2",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      1962.3463,
+      745
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "term",
+     "kind": "internal",
+     "sub": "int",
+     "xy_um": [
+      4412.3463,
+      837.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      4442.3463,
+      875
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      5032.3463,
+      875
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON2",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 2,
+   "source": "2-4 기준 설계 (Ge 11.5×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 192.8731,
+    "gap_um": 0.8,
+    "ratio": 0.02,
+    "pd_L_um": 11.5,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 5251.3544,
+    "y_um": 837.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    5251.3544,
+    822.2,
+    5531.7275,
+    841.5
+   ],
+   "size_um": [
+    280.3731,
+    19.3
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      5251.3544,
+      837.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      5531.7275,
+      837.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      5513.1025,
+      826.7
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      5518.8525,
+      826.7
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MOD3",
+   "type": "mzm",
+   "role": "modulator",
+   "lane": 3,
+   "source": "2-3 기준 설계 + 1-3 기준 설계 + 2-1 기준 설계",
+   "params": {
+    "L_e_um": 2450,
+    "gap_um": 60,
+    "signal_um": 15,
+    "ground_um": 50,
+    "arm_sep_um": 75,
+    "RT_ohm": 53,
+    "mmi": {
+     "W_um": 4.2,
+     "L_um": 14,
+     "wt_um": 1.6,
+     "s_um": 2.25,
+     "taper_len_um": 30
+    },
+    "heater": {
+     "L_um": 590,
+     "w_um": 2,
+     "h_um": 1.25,
+     "x0_um": 2689.0080839549987
+    },
+    "sbend": {
+     "kind": "arcs",
+     "len": 115.00808395499857,
+     "dx": 115.00808395499857,
+     "dy": 36.375,
+     "th": 0.6126535525689929,
+     "R": 100
+    }
+   },
+   "placement": {
+    "x_um": 2073.3382,
+    "y_um": 1112.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    2073.3382,
+    995,
+    5561.3544,
+    1230
+   ],
+   "size_um": [
+    3488.0162,
+    235
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      2073.3382,
+      1112.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      5561.3544,
+      1112.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      2282.3463,
+      1112.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g1",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      2282.3463,
+      1205
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g2",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      2282.3463,
+      1020
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "term",
+     "kind": "internal",
+     "sub": "int",
+     "xy_um": [
+      4732.3463,
+      1112.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      4762.3463,
+      1150
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      5352.3463,
+      1150
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON3",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 3,
+   "source": "2-4 기준 설계 (Ge 11.5×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 192.8731,
+    "gap_um": 0.8,
+    "ratio": 0.02,
+    "pd_L_um": 11.5,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 5571.3544,
+    "y_um": 1112.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    5571.3544,
+    1097.2,
+    5851.7275,
+    1116.5
+   ],
+   "size_um": [
+    280.3731,
+    19.3
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      5571.3544,
+      1112.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      5851.7275,
+      1112.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      5833.1025,
+      1101.7
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      5838.8525,
+      1101.7
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MOD4",
+   "type": "mzm",
+   "role": "modulator",
+   "lane": 4,
+   "source": "2-3 기준 설계 + 1-3 기준 설계 + 2-1 기준 설계",
+   "params": {
+    "L_e_um": 2450,
+    "gap_um": 60,
+    "signal_um": 15,
+    "ground_um": 50,
+    "arm_sep_um": 75,
+    "RT_ohm": 53,
+    "mmi": {
+     "W_um": 4.2,
+     "L_um": 14,
+     "wt_um": 1.6,
+     "s_um": 2.25,
+     "taper_len_um": 30
+    },
+    "heater": {
+     "L_um": 590,
+     "w_um": 2,
+     "h_um": 1.25,
+     "x0_um": 2689.0080839549987
+    },
+    "sbend": {
+     "kind": "arcs",
+     "len": 115.00808395499857,
+     "dx": 115.00808395499857,
+     "dy": 36.375,
+     "th": 0.6126535525689929,
+     "R": 100
+    }
+   },
+   "placement": {
+    "x_um": 2393.3382,
+    "y_um": 1387.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    2393.3382,
+    1270,
+    5881.3544,
+    1505
+   ],
+   "size_um": [
+    3488.0162,
+    235
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      2393.3382,
+      1387.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      5881.3544,
+      1387.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      2602.3463,
+      1387.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g1",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      2602.3463,
+      1480
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g2",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      2602.3463,
+      1295
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "term",
+     "kind": "internal",
+     "sub": "int",
+     "xy_um": [
+      5052.3463,
+      1387.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      5082.3463,
+      1425
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      5672.3463,
+      1425
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON4",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 4,
+   "source": "2-4 기준 설계 (Ge 11.5×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 192.8731,
+    "gap_um": 0.8,
+    "ratio": 0.02,
+    "pd_L_um": 11.5,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 5891.3544,
+    "y_um": 1387.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    5891.3544,
+    1372.2,
+    6171.7275,
+    1391.5
+   ],
+   "size_um": [
+    280.3731,
+    19.3
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      5891.3544,
+      1387.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      6171.7275,
+      1387.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      6153.1025,
+      1376.7
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      6158.8525,
+      1376.7
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MOD5",
+   "type": "mzm",
+   "role": "modulator",
+   "lane": 5,
+   "source": "2-3 기준 설계 + 1-3 기준 설계 + 2-1 기준 설계",
+   "params": {
+    "L_e_um": 2450,
+    "gap_um": 60,
+    "signal_um": 15,
+    "ground_um": 50,
+    "arm_sep_um": 75,
+    "RT_ohm": 53,
+    "mmi": {
+     "W_um": 4.2,
+     "L_um": 14,
+     "wt_um": 1.6,
+     "s_um": 2.25,
+     "taper_len_um": 30
+    },
+    "heater": {
+     "L_um": 590,
+     "w_um": 2,
+     "h_um": 1.25,
+     "x0_um": 2689.0080839549987
+    },
+    "sbend": {
+     "kind": "arcs",
+     "len": 115.00808395499857,
+     "dx": 115.00808395499857,
+     "dy": 36.375,
+     "th": 0.6126535525689929,
+     "R": 100
+    }
+   },
+   "placement": {
+    "x_um": 2713.3382,
+    "y_um": 1662.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    2713.3382,
+    1545,
+    6201.3544,
+    1780
+   ],
+   "size_um": [
+    3488.0162,
+    235
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      2713.3382,
+      1662.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      6201.3544,
+      1662.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      2922.3463,
+      1662.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g1",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      2922.3463,
+      1755
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g2",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      2922.3463,
+      1570
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "term",
+     "kind": "internal",
+     "sub": "int",
+     "xy_um": [
+      5372.3463,
+      1662.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      5402.3463,
+      1700
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      5992.3463,
+      1700
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON5",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 5,
+   "source": "2-4 기준 설계 (Ge 11.5×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 192.8731,
+    "gap_um": 0.8,
+    "ratio": 0.02,
+    "pd_L_um": 11.5,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 6211.3544,
+    "y_um": 1662.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    6211.3544,
+    1647.2,
+    6491.7275,
+    1666.5
+   ],
+   "size_um": [
+    280.3731,
+    19.3
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      6211.3544,
+      1662.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      6491.7275,
+      1662.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      6473.1025,
+      1651.7
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      6478.8525,
+      1651.7
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MOD6",
+   "type": "mzm",
+   "role": "modulator",
+   "lane": 6,
+   "source": "2-3 기준 설계 + 1-3 기준 설계 + 2-1 기준 설계",
+   "params": {
+    "L_e_um": 2450,
+    "gap_um": 60,
+    "signal_um": 15,
+    "ground_um": 50,
+    "arm_sep_um": 75,
+    "RT_ohm": 53,
+    "mmi": {
+     "W_um": 4.2,
+     "L_um": 14,
+     "wt_um": 1.6,
+     "s_um": 2.25,
+     "taper_len_um": 30
+    },
+    "heater": {
+     "L_um": 590,
+     "w_um": 2,
+     "h_um": 1.25,
+     "x0_um": 2689.0080839549987
+    },
+    "sbend": {
+     "kind": "arcs",
+     "len": 115.00808395499857,
+     "dx": 115.00808395499857,
+     "dy": 36.375,
+     "th": 0.6126535525689929,
+     "R": 100
+    }
+   },
+   "placement": {
+    "x_um": 3033.3382,
+    "y_um": 1937.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    3033.3382,
+    1820,
+    6521.3544,
+    2055
+   ],
+   "size_um": [
+    3488.0162,
+    235
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      3033.3382,
+      1937.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      6521.3544,
+      1937.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      3242.3463,
+      1937.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g1",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      3242.3463,
+      2030
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g2",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      3242.3463,
+      1845
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "term",
+     "kind": "internal",
+     "sub": "int",
+     "xy_um": [
+      5692.3463,
+      1937.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      5722.3463,
+      1975
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      6312.3463,
+      1975
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON6",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 6,
+   "source": "2-4 기준 설계 (Ge 11.5×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 192.8731,
+    "gap_um": 0.8,
+    "ratio": 0.02,
+    "pd_L_um": 11.5,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 6531.3544,
+    "y_um": 1937.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    6531.3544,
+    1922.2,
+    6811.7275,
+    1941.5
+   ],
+   "size_um": [
+    280.3731,
+    19.3
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      6531.3544,
+      1937.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      6811.7275,
+      1937.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      6793.1025,
+      1926.7
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      6798.8525,
+      1926.7
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MOD7",
+   "type": "mzm",
+   "role": "modulator",
+   "lane": 7,
+   "source": "2-3 기준 설계 + 1-3 기준 설계 + 2-1 기준 설계",
+   "params": {
+    "L_e_um": 2450,
+    "gap_um": 60,
+    "signal_um": 15,
+    "ground_um": 50,
+    "arm_sep_um": 75,
+    "RT_ohm": 53,
+    "mmi": {
+     "W_um": 4.2,
+     "L_um": 14,
+     "wt_um": 1.6,
+     "s_um": 2.25,
+     "taper_len_um": 30
+    },
+    "heater": {
+     "L_um": 590,
+     "w_um": 2,
+     "h_um": 1.25,
+     "x0_um": 2689.0080839549987
+    },
+    "sbend": {
+     "kind": "arcs",
+     "len": 115.00808395499857,
+     "dx": 115.00808395499857,
+     "dy": 36.375,
+     "th": 0.6126535525689929,
+     "R": 100
+    }
+   },
+   "placement": {
+    "x_um": 3353.3382,
+    "y_um": 2212.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    3353.3382,
+    2095,
+    6841.3544,
+    2330
+   ],
+   "size_um": [
+    3488.0162,
+    235
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      3353.3382,
+      2212.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      6841.3544,
+      2212.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      3562.3463,
+      2212.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g1",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      3562.3463,
+      2305
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g2",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      3562.3463,
+      2120
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "term",
+     "kind": "internal",
+     "sub": "int",
+     "xy_um": [
+      6012.3463,
+      2212.5
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      6042.3463,
+      2250
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      6632.3463,
+      2250
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "MON7",
+   "type": "tap_pd",
+   "role": "monitor",
+   "lane": 7,
+   "source": "2-4 기준 설계 (Ge 11.5×1 µm) · 2 % 방향성 결합기",
+   "params": {
+    "Lc_um": 192.8731,
+    "gap_um": 0.8,
+    "ratio": 0.02,
+    "pd_L_um": 11.5,
+    "pd_w_um": 1
+   },
+   "placement": {
+    "x_um": 6851.3544,
+    "y_um": 2212.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    6851.3544,
+    2197.2,
+    7131.7275,
+    2216.5
+   ],
+   "size_um": [
+    280.3731,
+    19.3
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      6851.3544,
+      2212.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      7131.7275,
+      2212.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "pd_a",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      7113.1025,
+      2201.7
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "pd_k",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      7118.8525,
+      2201.7
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "OUT0",
+   "type": "ssc",
+   "role": "output",
+   "lane": 0,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.23,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 8300,
+    "y_um": 805.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    8200,
+    803.5,
+    8300,
+    807.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      8300,
+      805.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      8200,
+      805.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  },
+  {
+   "id": "OUT1",
+   "type": "ssc",
+   "role": "output",
+   "lane": 1,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.23,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 8300,
+    "y_um": 932.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    8200,
+    930.5,
+    8300,
+    934.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      8300,
+      932.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      8200,
+      932.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  },
+  {
+   "id": "OUT2",
+   "type": "ssc",
+   "role": "output",
+   "lane": 2,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.23,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 8300,
+    "y_um": 1059.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    8200,
+    1057.5,
+    8300,
+    1061.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      8300,
+      1059.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      8200,
+      1059.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  },
+  {
+   "id": "OUT3",
+   "type": "ssc",
+   "role": "output",
+   "lane": 3,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.23,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 8300,
+    "y_um": 1186.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    8200,
+    1184.5,
+    8300,
+    1188.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      8300,
+      1186.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      8200,
+      1186.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  },
+  {
+   "id": "OUT4",
+   "type": "ssc",
+   "role": "output",
+   "lane": 4,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.23,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 8300,
+    "y_um": 1313.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    8200,
+    1311.5,
+    8300,
+    1315.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      8300,
+      1313.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      8200,
+      1313.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  },
+  {
+   "id": "OUT5",
+   "type": "ssc",
+   "role": "output",
+   "lane": 5,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.23,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 8300,
+    "y_um": 1440.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    8200,
+    1438.5,
+    8300,
+    1442.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      8300,
+      1440.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      8200,
+      1440.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  },
+  {
+   "id": "OUT6",
+   "type": "ssc",
+   "role": "output",
+   "lane": 6,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.23,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 8300,
+    "y_um": 1567.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    8200,
+    1565.5,
+    8300,
+    1569.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      8300,
+      1567.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      8200,
+      1567.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  },
+  {
+   "id": "OUT7",
+   "type": "ssc",
+   "role": "output",
+   "lane": 7,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.23,
+    "w_um": 2
+   },
+   "placement": {
+    "x_um": 8300,
+    "y_um": 1694.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    8200,
+    1692.5,
+    8300,
+    1696.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      8300,
+      1694.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      8200,
+      1694.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  }
+ ],
+ "nets": {
+  "optical": [
+   {
+    "id": "n0",
+    "from": "IN0.out",
+    "to": "MOD0.in",
+    "lane": 0,
+    "kind": "feed"
+   },
+   {
+    "id": "n1",
+    "from": "IN1.out",
+    "to": "MOD1.in",
+    "lane": 1,
+    "kind": "feed"
+   },
+   {
+    "id": "n2",
+    "from": "IN2.out",
+    "to": "MOD2.in",
+    "lane": 2,
+    "kind": "feed"
+   },
+   {
+    "id": "n3",
+    "from": "IN3.out",
+    "to": "MOD3.in",
+    "lane": 3,
+    "kind": "feed"
+   },
+   {
+    "id": "n4",
+    "from": "IN4.out",
+    "to": "MOD4.in",
+    "lane": 4,
+    "kind": "feed"
+   },
+   {
+    "id": "n5",
+    "from": "IN5.out",
+    "to": "MOD5.in",
+    "lane": 5,
+    "kind": "feed"
+   },
+   {
+    "id": "n6",
+    "from": "IN6.out",
+    "to": "MOD6.in",
+    "lane": 6,
+    "kind": "feed"
+   },
+   {
+    "id": "n7",
+    "from": "IN7.out",
+    "to": "MOD7.in",
+    "lane": 7,
+    "kind": "feed"
+   },
+   {
+    "id": "n8",
+    "from": "MOD0.out",
+    "to": "MON0.in",
+    "lane": 0,
+    "kind": "lane"
+   },
+   {
+    "id": "n9",
+    "from": "MON0.out",
+    "to": "OUT0.in",
+    "lane": 0,
+    "kind": "out"
+   },
+   {
+    "id": "n10",
+    "from": "MOD1.out",
+    "to": "MON1.in",
+    "lane": 1,
+    "kind": "lane"
+   },
+   {
+    "id": "n11",
+    "from": "MON1.out",
+    "to": "OUT1.in",
+    "lane": 1,
+    "kind": "out"
+   },
+   {
+    "id": "n12",
+    "from": "MOD2.out",
+    "to": "MON2.in",
+    "lane": 2,
+    "kind": "lane"
+   },
+   {
+    "id": "n13",
+    "from": "MON2.out",
+    "to": "OUT2.in",
+    "lane": 2,
+    "kind": "out"
+   },
+   {
+    "id": "n14",
+    "from": "MOD3.out",
+    "to": "MON3.in",
+    "lane": 3,
+    "kind": "lane"
+   },
+   {
+    "id": "n15",
+    "from": "MON3.out",
+    "to": "OUT3.in",
+    "lane": 3,
+    "kind": "out"
+   },
+   {
+    "id": "n16",
+    "from": "MOD4.out",
+    "to": "MON4.in",
+    "lane": 4,
+    "kind": "lane"
+   },
+   {
+    "id": "n17",
+    "from": "MON4.out",
+    "to": "OUT4.in",
+    "lane": 4,
+    "kind": "out"
+   },
+   {
+    "id": "n18",
+    "from": "MOD5.out",
+    "to": "MON5.in",
+    "lane": 5,
+    "kind": "lane"
+   },
+   {
+    "id": "n19",
+    "from": "MON5.out",
+    "to": "OUT5.in",
+    "lane": 5,
+    "kind": "out"
+   },
+   {
+    "id": "n20",
+    "from": "MOD6.out",
+    "to": "MON6.in",
+    "lane": 6,
+    "kind": "lane"
+   },
+   {
+    "id": "n21",
+    "from": "MON6.out",
+    "to": "OUT6.in",
+    "lane": 6,
+    "kind": "out"
+   },
+   {
+    "id": "n22",
+    "from": "MOD7.out",
+    "to": "MON7.in",
+    "lane": 7,
+    "kind": "lane"
+   },
+   {
+    "id": "n23",
+    "from": "MON7.out",
+    "to": "OUT7.in",
+    "lane": 7,
+    "kind": "out"
+   }
+  ],
+  "electrical": [
+   {
+    "id": "MOD0.rf_g2",
+    "kind": "rf",
+    "lane": 0,
+    "from": "MOD0.rf_g2",
+    "to": "pad:RF0_g2"
+   },
+   {
+    "id": "MOD0.rf_s",
+    "kind": "rf",
+    "lane": 0,
+    "from": "MOD0.rf_s",
+    "to": "pad:RF0_s"
+   },
+   {
+    "id": "MOD0.rf_g1",
+    "kind": "rf",
+    "lane": 0,
+    "from": "MOD0.rf_g1",
+    "to": "pad:RF0_g1"
+   },
+   {
+    "id": "MOD0.term",
+    "kind": "rf_term",
+    "lane": 0,
+    "from": "MOD0.term",
+    "to": "R_T 53 Ω (온칩, 추상)"
+   },
+   {
+    "id": "MOD0.h_p",
+    "kind": "dc",
+    "lane": 0,
+    "from": "MOD0.h_p",
+    "to": "pad:DC0_h_p"
+   },
+   {
+    "id": "MOD0.h_n",
+    "kind": "dc",
+    "lane": 0,
+    "from": "MOD0.h_n",
+    "to": "pad:DC0_h_n"
+   },
+   {
+    "id": "MON0.pd_a",
+    "kind": "dc",
+    "lane": 0,
+    "from": "MON0.pd_a",
+    "to": "pad:DC0_pd_a"
+   },
+   {
+    "id": "MON0.pd_k",
+    "kind": "dc",
+    "lane": 0,
+    "from": "MON0.pd_k",
+    "to": "pad:DC0_pd_k"
+   },
+   {
+    "id": "MOD1.rf_g2",
+    "kind": "rf",
+    "lane": 1,
+    "from": "MOD1.rf_g2",
+    "to": "pad:RF1_g2"
+   },
+   {
+    "id": "MOD1.rf_s",
+    "kind": "rf",
+    "lane": 1,
+    "from": "MOD1.rf_s",
+    "to": "pad:RF1_s"
+   },
+   {
+    "id": "MOD1.rf_g1",
+    "kind": "rf",
+    "lane": 1,
+    "from": "MOD1.rf_g1",
+    "to": "pad:RF1_g1"
+   },
+   {
+    "id": "MOD1.term",
+    "kind": "rf_term",
+    "lane": 1,
+    "from": "MOD1.term",
+    "to": "R_T 53 Ω (온칩, 추상)"
+   },
+   {
+    "id": "MOD1.h_p",
+    "kind": "dc",
+    "lane": 1,
+    "from": "MOD1.h_p",
+    "to": "pad:DC1_h_p"
+   },
+   {
+    "id": "MOD1.h_n",
+    "kind": "dc",
+    "lane": 1,
+    "from": "MOD1.h_n",
+    "to": "pad:DC1_h_n"
+   },
+   {
+    "id": "MON1.pd_a",
+    "kind": "dc",
+    "lane": 1,
+    "from": "MON1.pd_a",
+    "to": "pad:DC1_pd_a"
+   },
+   {
+    "id": "MON1.pd_k",
+    "kind": "dc",
+    "lane": 1,
+    "from": "MON1.pd_k",
+    "to": "pad:DC1_pd_k"
+   },
+   {
+    "id": "MOD2.rf_g2",
+    "kind": "rf",
+    "lane": 2,
+    "from": "MOD2.rf_g2",
+    "to": "pad:RF2_g2"
+   },
+   {
+    "id": "MOD2.rf_s",
+    "kind": "rf",
+    "lane": 2,
+    "from": "MOD2.rf_s",
+    "to": "pad:RF2_s"
+   },
+   {
+    "id": "MOD2.rf_g1",
+    "kind": "rf",
+    "lane": 2,
+    "from": "MOD2.rf_g1",
+    "to": "pad:RF2_g1"
+   },
+   {
+    "id": "MOD2.term",
+    "kind": "rf_term",
+    "lane": 2,
+    "from": "MOD2.term",
+    "to": "R_T 53 Ω (온칩, 추상)"
+   },
+   {
+    "id": "MOD2.h_p",
+    "kind": "dc",
+    "lane": 2,
+    "from": "MOD2.h_p",
+    "to": "pad:DC2_h_p"
+   },
+   {
+    "id": "MOD2.h_n",
+    "kind": "dc",
+    "lane": 2,
+    "from": "MOD2.h_n",
+    "to": "pad:DC2_h_n"
+   },
+   {
+    "id": "MON2.pd_a",
+    "kind": "dc",
+    "lane": 2,
+    "from": "MON2.pd_a",
+    "to": "pad:DC2_pd_a"
+   },
+   {
+    "id": "MON2.pd_k",
+    "kind": "dc",
+    "lane": 2,
+    "from": "MON2.pd_k",
+    "to": "pad:DC2_pd_k"
+   },
+   {
+    "id": "MOD3.rf_g2",
+    "kind": "rf",
+    "lane": 3,
+    "from": "MOD3.rf_g2",
+    "to": "pad:RF3_g2"
+   },
+   {
+    "id": "MOD3.rf_s",
+    "kind": "rf",
+    "lane": 3,
+    "from": "MOD3.rf_s",
+    "to": "pad:RF3_s"
+   },
+   {
+    "id": "MOD3.rf_g1",
+    "kind": "rf",
+    "lane": 3,
+    "from": "MOD3.rf_g1",
+    "to": "pad:RF3_g1"
+   },
+   {
+    "id": "MOD3.term",
+    "kind": "rf_term",
+    "lane": 3,
+    "from": "MOD3.term",
+    "to": "R_T 53 Ω (온칩, 추상)"
+   },
+   {
+    "id": "MOD3.h_p",
+    "kind": "dc",
+    "lane": 3,
+    "from": "MOD3.h_p",
+    "to": "pad:DC3_h_p"
+   },
+   {
+    "id": "MOD3.h_n",
+    "kind": "dc",
+    "lane": 3,
+    "from": "MOD3.h_n",
+    "to": "pad:DC3_h_n"
+   },
+   {
+    "id": "MON3.pd_a",
+    "kind": "dc",
+    "lane": 3,
+    "from": "MON3.pd_a",
+    "to": "pad:DC3_pd_a"
+   },
+   {
+    "id": "MON3.pd_k",
+    "kind": "dc",
+    "lane": 3,
+    "from": "MON3.pd_k",
+    "to": "pad:DC3_pd_k"
+   },
+   {
+    "id": "MOD4.rf_g2",
+    "kind": "rf",
+    "lane": 4,
+    "from": "MOD4.rf_g2",
+    "to": "pad:RF4_g2"
+   },
+   {
+    "id": "MOD4.rf_s",
+    "kind": "rf",
+    "lane": 4,
+    "from": "MOD4.rf_s",
+    "to": "pad:RF4_s"
+   },
+   {
+    "id": "MOD4.rf_g1",
+    "kind": "rf",
+    "lane": 4,
+    "from": "MOD4.rf_g1",
+    "to": "pad:RF4_g1"
+   },
+   {
+    "id": "MOD4.term",
+    "kind": "rf_term",
+    "lane": 4,
+    "from": "MOD4.term",
+    "to": "R_T 53 Ω (온칩, 추상)"
+   },
+   {
+    "id": "MOD4.h_p",
+    "kind": "dc",
+    "lane": 4,
+    "from": "MOD4.h_p",
+    "to": "pad:DC4_h_p"
+   },
+   {
+    "id": "MOD4.h_n",
+    "kind": "dc",
+    "lane": 4,
+    "from": "MOD4.h_n",
+    "to": "pad:DC4_h_n"
+   },
+   {
+    "id": "MON4.pd_a",
+    "kind": "dc",
+    "lane": 4,
+    "from": "MON4.pd_a",
+    "to": "pad:DC4_pd_a"
+   },
+   {
+    "id": "MON4.pd_k",
+    "kind": "dc",
+    "lane": 4,
+    "from": "MON4.pd_k",
+    "to": "pad:DC4_pd_k"
+   },
+   {
+    "id": "MOD5.rf_g2",
+    "kind": "rf",
+    "lane": 5,
+    "from": "MOD5.rf_g2",
+    "to": "pad:RF5_g2"
+   },
+   {
+    "id": "MOD5.rf_s",
+    "kind": "rf",
+    "lane": 5,
+    "from": "MOD5.rf_s",
+    "to": "pad:RF5_s"
+   },
+   {
+    "id": "MOD5.rf_g1",
+    "kind": "rf",
+    "lane": 5,
+    "from": "MOD5.rf_g1",
+    "to": "pad:RF5_g1"
+   },
+   {
+    "id": "MOD5.term",
+    "kind": "rf_term",
+    "lane": 5,
+    "from": "MOD5.term",
+    "to": "R_T 53 Ω (온칩, 추상)"
+   },
+   {
+    "id": "MOD5.h_p",
+    "kind": "dc",
+    "lane": 5,
+    "from": "MOD5.h_p",
+    "to": "pad:DC5_h_p"
+   },
+   {
+    "id": "MOD5.h_n",
+    "kind": "dc",
+    "lane": 5,
+    "from": "MOD5.h_n",
+    "to": "pad:DC5_h_n"
+   },
+   {
+    "id": "MON5.pd_a",
+    "kind": "dc",
+    "lane": 5,
+    "from": "MON5.pd_a",
+    "to": "pad:DC5_pd_a"
+   },
+   {
+    "id": "MON5.pd_k",
+    "kind": "dc",
+    "lane": 5,
+    "from": "MON5.pd_k",
+    "to": "pad:DC5_pd_k"
+   },
+   {
+    "id": "MOD6.rf_g2",
+    "kind": "rf",
+    "lane": 6,
+    "from": "MOD6.rf_g2",
+    "to": "pad:RF6_g2"
+   },
+   {
+    "id": "MOD6.rf_s",
+    "kind": "rf",
+    "lane": 6,
+    "from": "MOD6.rf_s",
+    "to": "pad:RF6_s"
+   },
+   {
+    "id": "MOD6.rf_g1",
+    "kind": "rf",
+    "lane": 6,
+    "from": "MOD6.rf_g1",
+    "to": "pad:RF6_g1"
+   },
+   {
+    "id": "MOD6.term",
+    "kind": "rf_term",
+    "lane": 6,
+    "from": "MOD6.term",
+    "to": "R_T 53 Ω (온칩, 추상)"
+   },
+   {
+    "id": "MOD6.h_p",
+    "kind": "dc",
+    "lane": 6,
+    "from": "MOD6.h_p",
+    "to": "pad:DC6_h_p"
+   },
+   {
+    "id": "MOD6.h_n",
+    "kind": "dc",
+    "lane": 6,
+    "from": "MOD6.h_n",
+    "to": "pad:DC6_h_n"
+   },
+   {
+    "id": "MON6.pd_a",
+    "kind": "dc",
+    "lane": 6,
+    "from": "MON6.pd_a",
+    "to": "pad:DC6_pd_a"
+   },
+   {
+    "id": "MON6.pd_k",
+    "kind": "dc",
+    "lane": 6,
+    "from": "MON6.pd_k",
+    "to": "pad:DC6_pd_k"
+   },
+   {
+    "id": "MOD7.rf_g2",
+    "kind": "rf",
+    "lane": 7,
+    "from": "MOD7.rf_g2",
+    "to": "pad:RF7_g2"
+   },
+   {
+    "id": "MOD7.rf_s",
+    "kind": "rf",
+    "lane": 7,
+    "from": "MOD7.rf_s",
+    "to": "pad:RF7_s"
+   },
+   {
+    "id": "MOD7.rf_g1",
+    "kind": "rf",
+    "lane": 7,
+    "from": "MOD7.rf_g1",
+    "to": "pad:RF7_g1"
+   },
+   {
+    "id": "MOD7.term",
+    "kind": "rf_term",
+    "lane": 7,
+    "from": "MOD7.term",
+    "to": "R_T 53 Ω (온칩, 추상)"
+   },
+   {
+    "id": "MOD7.h_p",
+    "kind": "dc",
+    "lane": 7,
+    "from": "MOD7.h_p",
+    "to": "pad:DC7_h_p"
+   },
+   {
+    "id": "MOD7.h_n",
+    "kind": "dc",
+    "lane": 7,
+    "from": "MOD7.h_n",
+    "to": "pad:DC7_h_n"
+   },
+   {
+    "id": "MON7.pd_a",
+    "kind": "dc",
+    "lane": 7,
+    "from": "MON7.pd_a",
+    "to": "pad:DC7_pd_a"
+   },
+   {
+    "id": "MON7.pd_k",
+    "kind": "dc",
+    "lane": 7,
+    "from": "MON7.pd_k",
+    "to": "pad:DC7_pd_k"
+   }
+  ]
+ },
+ "design": {
+  "mod": 0,
+  "share": 0,
+  "edge": 50,
+  "fp": 127,
+  "rf": 0,
+  "rfSide": 0,
+  "pp": 100,
+  "bend": 1,
+  "R": 100,
+  "wr": 2,
+  "jog": 8,
+  "mon": 1,
+  "W": 8.3,
+  "H": 2.5,
+  "P": 275,
+  "stag": 320
+ }
+}

@@ -66,6 +66,9 @@ function lev() {
 }
 window.GAME_LEV = (id) => { if (!LMAP[id] || !state.plat) return null; const sv = state.id; state.id = id; const e = lev(); state.id = sv; return e; };
 // read-only snapshot for the Learning Guide (src/guide.js): it explains and explores, it never writes to the design or the score
+// read-only view for the PIC Design Lab (src/lab/ui.js): platform, cards, saved designs, campaign map refresh
+window.GAME_SHELL = { plat: () => state.plat, pf: () => (state.plat ? PLATFORMS[state.plat] : null), cards: () => (state.plat ? PP().cards : {}), stars: (id) => starsOf(id),
+  design: (id) => (state.plat ? { ...(DESP()[id] || {}) } : {}), refreshMap: () => renderMap(), busy: () => state.fabRunning || state.aiRunning != null };
 window.GAME_CTX = () => {
   if (!state.plat || !state.cur) return null;
   const c = state.cur, K = kind(), S = c.S;
@@ -122,12 +125,14 @@ function renderMap() {
     const m = starsOf(l.id), st = [1, 2, 4].map((b) => (m & b ? '<b>★</b>' : '☆')).join('');
     return `<button class="node" data-id="${l.id}" aria-current="${l.id === state.id}" ${l.locked ? 'disabled title="준비 중"' : ''}>
       <span class="t1">${l.id}${PP().cards[l.id] ? '<span class="card-dot" title="카드 보유"></span>' : ''}</span><span class="t2">${l.name}</span><span class="stars">${l.locked ? '준비 중' : st}</span></button>`;
-  }).join('')}</div></div>`).join('');
+  }).join('')}</div></div>`).join('') + (window.LABUI ? `<div class="stage"><div class="stage-h">Design Lab (Track A 후속)</div><div class="stage-n"><button class="node lab-node" data-lab="1" aria-current="${window.LABUI.isOpen()}"><span class="t1">LAB</span><span class="t2">1.6T Tx PIC 설계</span><span class="stars">${window.LABUI.progress()}</span></button></div></div>` : '');
   const n = PLAY.filter((l) => PP().cards[l.id]).length;
   $('#cardcount').hidden = false;
   $('#cardcount').innerHTML = `부품 카드 <b>${n}</b> / ${PLAY.length} · Stage ${LMAP[state.id].stage}`;
 }
 $('#map').addEventListener('click', (e) => {
+  if (e.target.closest('[data-lab]')) { if (window.LABUI && !state.fabRunning && state.aiRunning == null) { window.LABUI.open(); renderMap(); } return; }
+  const b0 = e.target.closest('.node'); if (b0 && window.LABUI && window.LABUI.isOpen()) { window.LABUI.close(); renderMap(); if (b0.dataset.id === state.id) return; }
   const b = e.target.closest('.node'); if (!b || b.disabled || b.dataset.id === state.id) return;
   state.id = b.dataset.id; state.lastLogged = ''; persist(); setupLevel();
 });
@@ -539,7 +544,7 @@ function renderDB() {
   [0, 0.25, 0.5, 0.75, 1].forEach((f) => { const v = y0 + (y1 - y0) * f; s += `<line x1="${ml}" x2="${W - mr}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${ml - 6}" y="${Y(v) + 4}" text-anchor="end" font-size="11" font-family="var(--mono)" fill="var(--fg-3)">${+v.toFixed(2)}</text>`; });
   [-1, -0.5, 0, 0.5, 1].forEach((e) => { const v = l.aRef * Math.pow(10, e); s += `<text x="${X(v)}" y="${H - mb + 17}" text-anchor="middle" font-size="11" font-family="var(--mono)" fill="var(--fg-3)">${v >= 10 ? Math.round(v) : +v.toFixed(1)}</text>`; });
   s += `<text x="${W - mr}" y="${H - 4}" text-anchor="end" font-size="10.5" font-family="var(--mono)" fill="var(--fg-3)">${K.sizeLabel} ${K.sizeUnit} (log)</text><text x="${ml}" y="${mt + 2}" dx="4" dy="8" font-size="10.5" font-family="var(--mono)" fill="var(--fg-3)">${K.primaryLabel}</text>`;
-  s += `<line x1="${X(lev().s2.size)}" x2="${X(lev().s2.size)}" y1="${mt}" y2="${H - mb}" stroke="rgba(242,176,74,.35)" stroke-dasharray="3 4"/>`;
+  if (Number.isFinite(X(lev().s2.size))) s += `<line x1="${X(lev().s2.size)}" x2="${X(lev().s2.size)}" y1="${mt}" y2="${H - mb}" stroke="rgba(242,176,74,.35)" stroke-dasharray="3 4"/>`;   // levels without a ★★ size target have no line
   const show = rows.slice(-1200);
   show.filter((r) => r.src === 'A').forEach((r) => { s += `<circle cx="${X(r.a).toFixed(1)}" cy="${Y(r.y).toFixed(1)}" r="2.4" fill="var(--cyan)" fill-opacity=".45"/>`; });
   show.filter((r) => r.src === 'H').forEach((r) => { s += `<circle cx="${X(r.a).toFixed(1)}" cy="${Y(r.y).toFixed(1)}" r="2.8" fill="var(--amber)" fill-opacity=".85"/>`; });
@@ -691,6 +696,7 @@ $('#btn-start').addEventListener('click', () => {
   if (!pick.lam || !pick.mat || state.fabRunning || state.aiRunning != null) return;
   const pid = pidOf(pick.lam, pick.mat), fresh = !P.by[pid];
   state.plat = pid; applyPlatform(); if (fresh) state.id = '1-1';
+  if (window.LABUI && window.LABUI.isOpen()) window.LABUI.close();
   persist(); showSetup(false); setupLevel();
 });
 $('#btn-cancel').addEventListener('click', () => showSetup(false));
@@ -739,7 +745,7 @@ if (hot && hot.snapshot) hot.snapshot(() => ({ id: state.id, DES }));
 function start(data) {
   if (data && data.DES) { DES = data.DES; if (LMAP[data.id] && !LMAP[data.id].locked) state.id = data.id; }
   if (!state.plat) { showSetup(true); } else { applyPlatform(); showSetup(false); setupLevel(); }
-  let lastW = 0; new ResizeObserver(() => { const w = $('#cwrap').clientWidth; if (w !== lastW) { lastW = w; sizeCanvas(); } }).observe($('#cwrap'));
+  let lastW = 0; new ResizeObserver(() => { const w = $('#cwrap').clientWidth; if (w && w !== lastW) { lastW = w; sizeCanvas(); } }).observe($('#cwrap'));   // w = 0 while the Design Lab hides the game
 }
 if (hot && hot.ready) hot.ready(start); else start(hot && hot.data ? hot.data : {});
 })();
