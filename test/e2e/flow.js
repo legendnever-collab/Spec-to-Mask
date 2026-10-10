@@ -4,6 +4,9 @@
 //        Full Design shows every parameter; a player who already has 1-7 stars starts in Full Design.
 //   D-1  the rectangular layout exposes the boundary parameters, presets rewrite W × H, an impossible target is reported as
 //        Infeasible with alternatives, and the export carries the pcell 'spiral_rect' with the same boundary.
+//   2-3R microring: Guided by default (step 1 = radius only), step 1 solved with the FSR relation without stars, the radius is
+//        the real design value in step 2 and Full Design; a player with 2-3R stars sees the MZM-vs-MRR comparison panel, the
+//        comparison runs on request, and the export draws the resonance-aligned layout radius (not the slider value).
 // node test/e2e/flow.js [platform]
 const { JSDOM } = require('jsdom'); const fs = require('fs');
 const html = fs.readFileSync(require('path').join(__dirname, '../../dist/index.html'), 'utf8');
@@ -99,6 +102,39 @@ const keys = ($$) => $$('#prm-list .prm input[id^="p-"]').map((e) => e.id.slice(
   okm(g && g.pcell === 'spiral_rect' && g.boundary.W_um === 10000 && g.boundary.H_um === 30000, 'export carries pcell spiral_rect with the 10×30 mm boundary');
   okm(g && Math.abs(g.tau_ns - ctx.l.tau) < 1e-4 && j.predicted, `exported delay ${g && g.tau_ns} ns = target, predicted block present`);
 
-  okm(!A.errs.length && !B.errs.length, `no page errors (${A.errs.concat(B.errs).slice(0, 3).join(' | ')})`);
+  /* ---------------- 2-3R microring modulator ---------------- */
+  await A.go('2-3R');
+  okm(!$('#m-guided').hidden && $('[data-gm="guided"]').getAttribute('aria-checked') === 'true', '2-3R starts in Guided mode');
+  okm(keys($$).join() === 'R', `step 1 exposes only the radius (${keys($$)})`);
+  okm($('#xpanel').hidden, 'no comparison panel during a learning step');
+  ctx = w.GAME_CTX();
+  const fsrT = +(ctx.step.goals[0].k.match(/([\d.]+) nm/) || [])[1];
+  const Rst = +$('#p-R').step, Rt = +(Math.round(ctx.d.R * ctx.res.fsr * 1e3 / fsrT / Rst) * Rst).toFixed(2);   // on the slider grid
+  await A.set('R', Rt); await sleep(400); ctx = w.GAME_CTX();
+  okm(Math.abs(ctx.res.fsr * 1e3 - fsrT) <= 0.5 && /완료/.test($('#m-stepnote').textContent), `R = ${Rt} µm from FSR = λ²/(n_g·2πR) gives FSR ${(ctx.res.fsr * 1e3).toFixed(2)} nm ≈ ${fsrT} nm → step 1 complete`);
+  const pr2 = A.store('smq3-progress'), ns2 = (pr2 && pr2.by && pr2.by[plat]) || {};
+  okm(!['easy', 'std', 'hard'].some((m) => ns2.stars && ns2.stars[m] && ns2.stars[m]['2-3R']) && !(ns2.cards || {})['2-3R'], 'no stars or card during the learning step');
+  $('#step-next').click(); await sleep(500);
+  okm(keys($$).join() === 'g', `step 2 exposes the coupling gap (${keys($$)})`);
+  okm(Math.abs(((A.store('smq3-designs') || {})[plat] || {})['2-3R'].R - Rt) < 1e-9, 'the step-1 radius is stored in the 2-3R design');
+  $('[data-gm="full"]').click(); await sleep(500);
+  const mk = keys($$);
+  okm(['R', 'g', 'dop', 'vb', 'vpp', 'det', 'bm'].every((k) => mk.includes(k)) && Math.abs(+$('#p-R').value - Rt) < 1e-9, `Full Design shows every parameter with R = ${Rt} (${mk})`);
+  const C = boot((w2) => {
+    w2.localStorage.setItem('smq3-progress', JSON.stringify({ plat, by: { [plat]: { stars: { easy: {}, std: { '2-3R': 2 }, hard: {} }, best: {}, ai: {}, cards: {}, missions: {} } } }));
+  });
+  await sleep(300); if (!C.$('.node[data-id="2-3R"]')) await C.start(); await C.go('2-3R'); await sleep(300);
+  okm(C.$('[data-gm="full"]').getAttribute('aria-checked') === 'true', 'a player with 2-3R stars starts in Full Design');
+  okm(!C.$('#xpanel').hidden && C.$('[data-xp-run]'), 'the MZM-vs-MRR comparison panel is offered');
+  C.$('[data-xp-run]').click(); await sleep(400);
+  const xt = C.$('#xp-body').textContent;
+  okm(/MZM/.test(xt) && /MRR/.test(xt) && C.$('#xp-body table') && /MZM이 유리/.test(xt) && /MRR이 유리/.test(xt), 'comparison table lists items where each modulator wins');
+  C.$('#btn-export').click(); await sleep(80);
+  let jr = null; try { jr = JSON.parse(C.$('#jsonOut').value); } catch (e) { jr = null; }
+  const cr = C.w.GAME_CTX(), gr = jr && jr.geometry;
+  okm(gr && gr.pcell === 'ring_allpass' && Math.abs(gr.R_um - cr.res.Rlay) < 1e-9 && gr.R_slider_um === cr.d.R, `export draws the layout radius ${gr && gr.R_um} µm (slider ${cr.d.R} µm), order m ${gr && gr.order_m}`);
+  okm(gr && Math.abs(gr.gap_um - cr.d.g) < 1e-9 && gr.core_mat === 'si' && gr.heterogeneous_si === !plat.startsWith('si1'), `gap ${gr && gr.gap_um} µm on the Si layer${plat.startsWith('sin') ? ' (heterogeneous Si on SiN)' : ''}`);
+
+  okm(!A.errs.length && !B.errs.length && !C.errs.length, `no page errors (${A.errs.concat(B.errs, C.errs).slice(0, 3).join(' | ')})`);
   console.log(fail ? `FAILED ${fail}` : 'flow checks passed'); process.exit(fail ? 1 : 0);
 })();

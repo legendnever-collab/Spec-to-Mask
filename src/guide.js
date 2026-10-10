@@ -9,9 +9,12 @@
   const $ = (s) => document.querySelector(s);
   const strip = (h) => String(h == null ? '' : h).replace(/<[^>]+>/g, '');
   const nm = (v) => Math.round(v * 1000);
+  // model-fidelity classes (one vocabulary for the whole game): Analytical · Physics-informed Surrogate · Calibrated ·
+  // Experimental Reference · Unverified Assumption — plus a flag for what only a full-wave / TCAD solver can settle
   const CLS = {
-    an: ['Analytical Model', 'b-an', '닫힌 식'], semi: ['Semi-analytical Approximation', 'b-semi', '근사 모델'], pre: ['Precomputed Simulation Data', 'b-pre', '사전 계산 솔버 결과'],
-    emp: ['Empirical Calibration', 'b-emp', '측정값에 맞춘 상수'], asm: ['Assumed Parameters', 'b-asm', '대표값 가정'], fw: ['Full-wave Verification Required', 'b-fw', '전파동 검증 필요']
+    an: ['Analytical', 'b-an', '닫힌 식'], semi: ['Physics-informed Surrogate', 'b-semi', '물리 기반 근사 모델'], pre: ['Physics-informed Surrogate · 사전계산 솔버', 'b-pre', '오프라인 모드·열 솔버 결과 테이블'],
+    emp: ['Calibrated', 'b-emp', '측정값에 맞춘 상수'], exp: ['Experimental Reference', 'b-exp', '문헌 측정값을 비교 기준으로 사용'], asm: ['Unverified Assumption', 'b-asm', '검증되지 않은 대표값 가정'],
+    fw: ['Full-wave / TCAD Verification Required', 'b-fw', '게임 밖 솔버로 검증 필요']
   };
   /* ---------- references (checked links; DOIs resolve to the publisher) ---------- */
   const REF = {
@@ -57,6 +60,14 @@
     michel: { t: 'J. Michel, J. Liu, L. C. Kimerling, "High-performance Ge-on-Si photodetectors," Nature Photonics 4, 527–534 (2010)', u: 'https://doi.org/10.1038/nphoton.2010.157' },
     ieee3dj: { t: 'IEEE P802.3dj — 200 Gb/s, 400 Gb/s, 800 Gb/s and 1.6 Tb/s Ethernet Task Force', u: 'https://www.ieee802.org/3/dj/', n: '1.6T(8×200G) 광 PMD 표준화 현황' },
     oif: { t: 'Optical Internetworking Forum (OIF) — CPO·외부 광원(ELSFP) 등 구현 협약', u: 'https://www.oiforum.com/' },
+    bogaerts: { t: 'W. Bogaerts et al., "Silicon microring resonators," Laser & Photonics Reviews 6(1), 47–73 (2012)', u: 'https://doi.org/10.1002/lpor.201100017', n: 'all-pass/add-drop 전달함수, Q, 결합 영역 — 이 레벨의 링 식' },
+    sacher: { t: 'W. D. Sacher, J. K. S. Poon, "Dynamics of microring resonator modulators," Opt. Express 16(20), 15741–15753 (2008)', u: 'https://doi.org/10.1364/OE.16.015741', n: '결합 모드 이론 소신호 응답, 디튜닝 피크' },
+    xu05: { t: 'Q. Xu, B. Schmidt, S. Pradhan, M. Lipson, "Micrometre-scale silicon electro-optic modulator," Nature 435, 325–327 (2005)', u: 'https://doi.org/10.1038/nature03569', n: '최초의 µm급 Si 링 변조기' },
+    yuan24: { t: 'Y. Yuan et al., "A 5 × 200 Gbps microring modulator silicon chip empowered by two-segment Z-shape junctions," Nature Communications 15, 918 (2024)', u: 'https://doi.org/10.1038/s41467-024-45301-3', n: '실험 기준: R 12 µm, Q≈3700, 11–16 pm/V, EO ≈49 GHz, 바깥 ER 3.6 dB, 히터 73 pm/mW' },
+    huang26: { t: 'Z. Huang et al., "Co-design of Silicon Microring Modulator beyond 200 Gb/s per Lane: Device Physics, Operating Point, and Compact Models for Scale-Up and Scale-Out Optical I/O," arXiv:2609.36690 (2026)', u: 'https://arxiv.org/abs/2609.36690', n: '정적/동적 OMA 구분, 파랑 쪽 디튜닝(x ≈ −0.6…−1), 자기 가열·히터 여유·냉간 공진 배치 (프리프린트)' },
+    carmon04: { t: 'T. Carmon, L. Yang, K. J. Vahala, "Dynamical thermal behavior and thermal self-stability of microcavities," Opt. Express 12(20), 4742–4750 (2004)', u: 'https://doi.org/10.1364/OPEX.12.004742', n: '열 자기안정(파랑 쪽)과 쌍안정' },
+    padmaraju: { t: 'K. Padmaraju, K. Bergman, "Resolving the thermal challenges for silicon microring resonator devices," Nanophotonics 3(4–5), 269–281 (2014)', u: 'https://doi.org/10.1515/nanoph-2013-0013', n: '링의 열 드리프트와 안정화 방법 총설' },
+    bristow: { t: 'A. D. Bristow, N. Rotenberg, H. M. van Driel, "Two-photon absorption and Kerr coefficients of silicon for 850–2200 nm," Appl. Phys. Lett. 90, 191104 (2007)', u: 'https://doi.org/10.1063/1.2737359', n: 'Si TPA 계수 (통신 파장 ≈0.8 cm/GW)' },
     hong: { t: 'S. Hong et al., "Ultralow-loss compact silicon photonic waveguide spirals and delay lines," Photonics Research 10(1), 1 (2022)', u: 'https://www.researching.cn/articles/OJ1f5643a2091e40d7', n: 'D-1·D-2의 기준 논문 (넓힌 나선 + Euler S-bend, 10-bit TTD)' },
     xie: { t: 'Y. Xie et al., "Low-loss chip-scale programmable silicon photonic processor," Opto-Electronic Advances 6(3), 220030 (2023)', u: 'https://doi.org/10.29026/oea.2023.220030', n: '넓은 암 MZ 스위치로 위상 오차 감소' },
     cherchi: { t: 'M. Cherchi et al., "Dramatic size reduction of waveguide bends on a micron-scale silicon photonic platform," Opt. Express 21(15), 17814 (2013)', u: 'https://doi.org/10.1364/OE.21.017814', n: 'Euler(clothoid) 굽힘 — arXiv:1301.2197 공개본' },
@@ -81,6 +92,7 @@
     '2-1': { goal: '열광학 위상기의 P_π·응답 시간·열 크로스토크를 설계하고, 1-7 CWDM을 다이마다 트리밍해 수율을 올립니다.', prev: ['1-7: 공정 오차로 밀린 채널 (Phase Trim의 한계).'], next: ['2-3: MZM 바이어스.', 'D-2·B-2: MZ 스위치 위상기.'] },
     '2-2': { goal: '캐리어 공핍 PN 위상기의 효율(V_πL)·광 손실·RC 속도를 도핑과 접합 위치로 교환합니다.', prev: ['2-1: 위상기의 개념 (열 대신 캐리어).'], next: ['2-3: 이 위상기를 진행파 MZM의 코어로 씁니다.'] },
     '2-3': { goal: '112 GBd PAM4(224G)용 진행파 MZM의 전극 길이·임피던스·속도 정합을 설계해 눈(eye)을 엽니다.', prev: ['2-2: 접합 C′·R′와 V_πL (카드).', '1-5: 3-dB 커플러.'], next: ['2-5: 링크 버짓의 변조기 항목.', '3A·3A+: 모듈 송신부.'] },
+    '2-3R': { goal: '링 공진기의 공진·FSR·결합·Q부터 PN 접합 변조, 112 GBd PAM4, 온도 드리프트와 히터 제어까지 단계별로 쌓아 MRR 변조기를 설계하고, 같은 조건에서 2-3 MZM과 비교합니다.', prev: ['2-2: 접합 Δn(V)·C′·R′ (카드, 도핑을 더 올릴 수 있음).', '2-1: 히터 단면 h·격리 (카드).', '2-3: 같은 PAM4 눈 평가와 비교 대상.'], next: ['3A+: DR8 송신부의 변조기 선택 (Phase B).', 'PIC Design Lab: 링 PCell과 히터·패드 배치 (Phase C·D).'] },
     '2-4': { goal: 'Ge 도파로 수광기의 흡수·전이 시간·RC와 TIA 잡음을 함께 보며 감도(OMA)를 최적화합니다.', prev: ['1-1·1-6: 도파로와 결합.'], next: ['2-5: 수신 감도.', 'B-3: 균형 검출 LiDAR 수신.'] },
     '2-5': { goal: '외부 광원부터 수광기까지 레인당 링크 버짓을 부품 카드로 조립하고, 레이저 출력·공유·반사 대책을 결정합니다.', prev: ['1-3·1-6·1-7·2-3·2-4 카드.'], next: ['3A·3A+: 모듈 전체 전력과 온도 코너.'] },
     '3A': { goal: '1.6T 2×FR4 모듈을 아키텍처 수준(레이저 수·냉각·Mux 열 추적·DSP)에서 설계해 0–70 °C 최악 레인 마진과 전력을 맞춥니다.', prev: ['Stage 1·2 카드 전부 (특히 1-7 Demux, 2-1 히터).'], next: ['3A+: 병렬 광섬유·LPO·CPO 비교.'] },
@@ -127,6 +139,13 @@
     mzm: () => W0(440, 200, `<rect width="440" height="200" fill="#0b1220"/><path d="M20 100 H60 C90 100 90 70 120 70 H330 C360 70 360 100 390 100 H420 M60 100 C90 100 90 130 120 130 H330 C360 130 360 100 390 100" stroke="#e7ecf3" stroke-width="2.5" fill="none"/>
       <rect x="120" y="40" width="210" height="16" fill="#9eabbd"/><rect x="120" y="92" width="210" height="16" fill="#f2b04a" opacity=".8"/><rect x="120" y="144" width="210" height="16" fill="#9eabbd"/>${T(225, 34, '접지 (G)', { s: 10 })}${T(225, 104, '신호 (S) — 마이크로파 진행 →', { s: 10, c: '#0b1220' })}${T(225, 178, '접지 (G) · 간격 g', { s: 10 })}
       ${T(100, 190, 'RF in', { c: '#f2b04a', s: 10 })}${T(350, 190, '종단 R_T', { c: '#f2b04a', s: 10 })}${T(225, 18, '전기 속도 c/n_µ ≈ 광 군속도 c/n_g 이면 대역폭이 길이에 덜 묶임', { s: 10 })}`, '진행파 MZM 모식도'),
+    mrr: () => W0(440, 220, `<rect width="440" height="220" fill="#0b1220"/><circle cx="170" cy="95" r="62" fill="none" stroke="#e7ecf3" stroke-width="3"/>
+      <path d="M131 145 A55 55 0 1 1 209 145" fill="none" stroke="rgba(255,141,156,.8)" stroke-width="5"/><path d="M122 152 A69 69 0 1 1 218 152" fill="none" stroke="rgba(100,201,223,.8)" stroke-width="5"/>
+      <path d="M110 162 A78 78 0 1 1 230 162" fill="none" stroke="#f2b04a" stroke-width="2" stroke-dasharray="5 4"/><path d="M20 168 H320" stroke="#e7ecf3" stroke-width="3"/>
+      ${T(170, 92, 'R', { c: '#e7ecf3' })}${T(170, 108, 'L = 2πR', { s: 10 })}${T(190, 185, '갭 g → κ', { c: '#f2b04a', s: 10 })}${T(40, 160, 'IN', { a: 'start', c: '#64c9df' })}${T(318, 160, 'THROUGH', { a: 'end' })}
+      ${T(60, 40, 'p (안쪽)', { c: '#ff8d9c', s: 10 })}${T(270, 40, 'n (바깥)', { c: '#64c9df', s: 10 })}${T(285, 70, '히터', { c: '#f2b04a', s: 10 })}
+      <path d="M340 170 C352 170 356 120 362 120 C368 120 372 170 384 170 H420" stroke="#f2b04a" fill="none"/>${T(380, 110, '공진 골', { s: 10 })}${T(380, 196, 'λ ↦ T(λ)', { s: 10 })}
+      ${T(220, 212, 'mλ = n_eff·L · T = (a² − 2at·cosφ + t²)/(1 − 2at·cosφ + a²t²)', { s: 10, c: '#f2b04a' })}`, '링 변조기 모식도'),
     pd: () => W0(420, 200, `<rect width="420" height="200" fill="#0b1220"/><rect x="20" y="120" width="380" height="20" fill="#f2b04a" opacity=".6"/><rect x="170" y="78" width="140" height="42" fill="#5d6b80"/><rect x="170" y="70" width="140" height="8" fill="#9eabbd"/>
       <path d="M40 130 H170" stroke="#64c9df" stroke-width="3"/>${[0, 1, 2, 3, 4].map((i) => `<path d="M${180 + i * 25} 128 V${92 - i * 2}" stroke="#64c9df" opacity="${0.8 - i * 0.14}"/>`).join('')}${T(240, 62, 'Ge (진성층 d_i)', { c: '#e7ecf3', s: 10 })}${T(100, 112, 'Si 도파로', { s: 10 })}
       ${T(240, 160, '길이 L: 흡수 1−exp(−ΓαL) ↑ · 커패시턴스 ↑', { s: 10 })}${T(350, 100, '→ TIA', { c: '#f2b04a' })}`, 'Ge 수광기 모식도'),
@@ -250,6 +269,32 @@
       miss: [[/대역|GHz/, 'L, eta, g', '속도 정합·RF 손실'], [/OMA|페널티|눈|eye/, 'L, RT, g', 'V_π와 대역폭의 균형, 반사'], [/S11|반사/, 'RT, g, eta', '임피던스 정합']],
       lim: [['CPW 임피던스', 'an', '등각사상 준-TEM'], ['접합 부하', 'semi', '2-2 카드의 C′, R′ 집중 모델'], ['도체 손실', 'emp', '√f 스케일'], ['눈 다이어그램', 'semi', 'PAM4 의사난수 + FFE 기준 수신기 (TDECQ 근사)'], ['RF 전자기장', 'fw', '3D EM(HFSS 등)·INTERCONNECT 검증 필요']],
       refs: ['reed', 'rp_eom', 'rp_mod', 'ieee3dj']
+    }),
+    mrr: R({
+      basic: (c) => `<p>버스 도파로 옆에 둘레 L = 2πR인 고리를 두면, 한 바퀴 돈 빛이 같은 위상으로 돌아오는 파장(<b>mλ = n<sub>eff</sub>L</b>)에서 빛이 고리에 쌓입니다(공진). 버스의 투과 스펙트럼에는 공진마다 좁은 골이 생기고, 골 사이 간격이 <b>FSR ≈ λ²/(n<sub>g</sub>L)</b>입니다.</p>
+        <p>고리 둘레에 PN 접합을 감고 역바이어스를 바꾸면 굴절률이 변해 공진이 옆으로 이동합니다. 레이저를 공진 골의 <b>사면</b>에 두면 이 이동이 세기 변화(변조)가 됩니다. 수십 µm의 작은 크기와 fJ/bit급 구동 에너지가 장점이고, 대신 공진이 온도에 매우 민감해(${c.pf.lam > 1.4 ? '≈75' : '≈64'} pm/K) <b>히터와 제어</b>가 반드시 필요합니다.</p>
+        <p>이 레벨은 Guided 학습 다섯 단계(공진 → 결합·Q → 전기광학 → 고속 PAM4 → 온도)와 Full Design으로 되어 있습니다. 코치는 지금 설계의 다음 한 수를, 이 가이드는 왜 그런지를 설명합니다.</p>`,
+      deep: () => `<p><b>All-pass 링</b>(Bogaerts 2012): 필드 자기결합 t, 결합 κ (t² + κ² = 1, 무손실 결합기), 한 바퀴 필드 투과 a = 10<sup>−αL/20</sup>. T = (a² − 2at·cosφ + t²)/(1 − 2at·cosφ + a²t²), φ = 2πn<sub>eff</sub>L/λ. Q<sub>i</sub> = πn<sub>g</sub>L√a/(λ(1−a)), Q<sub>c</sub> = πn<sub>g</sub>L√t/(λ(1−t)), Q<sub>L</sub> = πn<sub>g</sub>L√(at)/(λ(1−at)), 1/Q<sub>L</sub> ≈ 1/Q<sub>i</sub> + 1/Q<sub>c</sub>. t = a(Critical)에서 공진 골이 0, t &gt; a는 Under-, t &lt; a는 Over-coupled.</p>
+        <p><b>결합</b>: 결합 슬랩 κ(d) = κ₀e<sup>−γd</sup>(Marcuse)를 휘어진 간격 d(z) = g + z²/2R 위에서 적분 → κ<sub>f</sub> = sin(κ₀e<sup>−γg</sup>√(2πR/γ)). <b>단면</b>: Si 리브 220/90 nm의 유효굴절률법(n<sub>eff</sub>, n<sub>g</sub>, ∂n/∂T, ∂n/∂w, ∂n/∂t). <b>접합</b>: 2-2와 같은 Soref–Bennett·공핍 근사로 Δn<sub>eff</sub>(V), α(V), C′(V), R′ — 둘레의 η = 75%를 덮음.</p>
+        <p><b>동역학</b>: 결합 모드 이론 da/dt = (jΔ(t) − 1/τ(t))a − jμs, μ² = 2/τ<sub>e</sub>, 출력 s − jμa. 112 GBd PAM4 구동(드라이버 70 GHz × 접합 RC)을 시간영역으로 적분하고, 소신호 응답은 선형화한 CMT(Sacher &amp; Poon 2008) × RC 극. 공진 중심의 광자 수명 한계는 c/(2λQ<sub>L</sub>)이지만, 디튜닝 x = 2(λ<sub>L</sub> − λ<sub>r</sub>)/FWHM이 클수록 Ω ≈ |Δ| 근처에 피크가 생겨 대역이 넓어지고 정적 기울기는 줄어듭니다. OMA<sub>outer</sub>는 정착 레벨(TDECQ 방식), 동적 OMA는 파형 극값(오버슈트 포함, Huang 2026)으로 구분합니다.</p>
+        <p><b>열</b>: ∂λ/∂T = λ(∂n<sub>eff</sub>/∂T)/n<sub>g</sub>. 히터 이동 Δλ = (P/P<sub>2π</sub>)·FSR, P<sub>2π</sub> = λG′/(∂n<sub>eff</sub>/∂T) — 반경과 무관, 그래서 작은 링(FSR↑)이 nm/mW에 유리. 히터는 빨강 쪽으로만 옮기고, 한 FSR 안에서 어느 공진 차수든 쓸 수 있어 최악 필요 전력은 P<sub>2π</sub>입니다. 흡수된 빛(자유 캐리어 + TPA)은 링을 데워 공진을 빨강 쪽으로 끌고(자기 가열), 레이저가 빨강 쪽(x &gt; 0)이면 양의 되먹임(열 폭주·쌍안정, Carmon 2004), 파랑 쪽이면 자기 안정입니다.</p>`,
+      fig: 'mrr', cap: '링 변조기: 버스(아래) 옆의 링, 안쪽 p·바깥 n 접합(둘레 75%), 링 위 히터(점선). 오른쪽은 투과 스펙트럼의 공진 골.',
+      P: {
+        R: { m: '링 반경. 게임이 레이저 파장에 공진 차수 m을 맞춘 레이아웃 반경(1 nm 격자)으로 바꿔 GDS에 그대로 씀', up: 'FSR↓, 굽힘 손실↓, C<sub>j</sub>↑, 면적↑', dn: 'FSR↑ (히터 nm/mW↑), 굽힘 방사↑ (Q<sub>i</sub>↓)', tr: '열 튜닝 효율·FSR ↔ 굽힘 손실·C', f: 'FSR = λ²/(n<sub>g</sub>·2πR) · mλ = n<sub>eff</sub>·2πR', rg: 'Si 리브 링 ≈ 5–15 µm (90 nm 슬랩은 작은 반경에서 방사)' },
+        g: { m: '버스–링 간격 (결합)', up: 'κ↓ → Q<sub>c</sub>↑ (Under-coupling 쪽), 선폭↓', dn: 'κ↑ → Over-coupling, Q<sub>L</sub>↓, 대역↑, ER↓', tr: '정적 기울기·ER ↔ 광자 수명 대역', f: 'κ<sub>f</sub> = sin(κ₀e<sup>−γg</sup>√(2πR/γ)) · t = √(1−κ²)', rg: '0.15–0.35 µm (고속 변조기는 보통 Over-coupled)' },
+        dop: { m: '2-2 접합 도핑을 양쪽 모두 올리는 양 (log₁₀ decade)', up: 'pm/V↑, R↓, 자유 캐리어 손실↑ (Q<sub>i</sub>↓), C↑', dn: '손실↓, 효율↓', tr: '변조 효율 ↔ 손실·C', f: 'Δλ = λ·η·Δn<sub>eff</sub>/n<sub>g</sub> (Soref–Bennett)', rg: '0–0.8 decade (링 접합은 MZM보다 진하게 도핑하는 경우가 많음)' },
+        vb: { m: 'DC 역바이어스 (PAM4 최저 레벨)', up: '공핍↑ → C<sub>j</sub>↓ (빠름), pm/V는 √V로 둔화', dn: 'C↑, 효율 구간 이동', tr: 'RC ↔ 효율', f: 'W ∝ √(V<sub>bi</sub>+V)', rg: '0–3 V' },
+        vpp: { m: 'PAM4 바깥 레벨 사이 구동 진폭', up: 'OMA↑, 레벨 압축(Lorentzian 비선형)↑, CV² 에너지↑', dn: 'OMA↓', tr: 'OMA ↔ 선형성·구동 에너지', f: 'E<sub>bit</sub> ≈ 0.104·C<sub>j</sub>·V<sub>pp</sub>² (PAM4 충전)', rg: '1–3 V<sub>pp</sub>' },
+        det: { m: '레이저와 레벨 0 공진의 간격, 반선폭 단위 x = 2(λ<sub>L</sub> − λ<sub>r</sub>)/FWHM (음수 = 파랑 쪽)', up: '|x|↑: 정적 기울기↓, 동적 응답 피크·대역↑, IL↓', dn: '|x|↓: 공진 골 가까이 (IL↑, 기울기 최대 |x| ≈ 0.58)', tr: '정적 기울기 ↔ 대역·IL · 파랑 쪽만 열적으로 안정', f: 'T(x) = 1 − D/(1 + x²) (Lorentzian 근사)', rg: '−1 … −0.5 (Huang 2026의 동작점 범위)' },
+        bm: { m: '공진 배치 여유: 최고 온도에서 히터 없이 레이저보다 얼마나 파랑 쪽에 둘지', up: '공정 오차로 빨강 쪽으로 밀린 다이도 수용, 대신 평균 히터 전력↑', dn: '히터 전력↓, 공정 여유↓ (FSR 넘는 재정렬 증가)', tr: '수율 ↔ 열 제어 전력', f: '필요 이동 = 드리프트 + Δλ<sub>b</sub> − δ<sub>공정</sub> (mod FSR)', rg: '0 – FSR' },
+        sT: { m: '칩 온도 (Guided 5단계)', up: '공진이 빨강 쪽으로 이동 (∂λ/∂T)', dn: '파랑 쪽 이동', tr: '온도 범위 = 필요한 히터 범위', f: 'Δλ = λ(∂n<sub>eff</sub>/∂T)ΔT/n<sub>g</sub>', rg: '0–70 °C (모듈 케이스 기준)' },
+        sP: { m: '히터 전력 (Guided 5단계)', up: '공진이 빨강 쪽으로 (P/P<sub>2π</sub>·FSR)', dn: '되돌아감 (식는 쪽으로만 — 냉각 불가)', tr: '정렬 ↔ 전력', f: 'Δλ = (P/P<sub>2π</sub>)·FSR', rg: '0 – P<sub>2π</sub>' },
+        sL: { m: '외부 광원(ELS) 파장 미세 조정 (Guided 5단계)', up: '레이저가 빨강 쪽 → 모든 온도에서 히터↑', dn: '파랑 쪽 → 최고 온도에서 히터로 못 따라감', tr: '히터 범위의 중심 맞추기', f: '필요 이동 = 드리프트 + Δλ<sub>b</sub> + Δλ<sub>L</sub>', rg: '±수백 pm' }
+      },
+      ix: { k: 'g', m: [['Q_L', (r) => r.QL, '', 0], ['EO 대역폭', (r) => r.bw, 'GHz', 1], ['OMA_outer', (r) => r.omaDbm, 'dBm', 1], ['정적 ER', (r) => r.er, 'dB', 2]], note: '간격을 줄이면(Over-coupling) Q_L이 떨어져 대역은 넓어지고 ER·OMA는 줄어드는 교환을 확인하세요. 디튜닝(x)을 바꿔 다시 보면 대역과 기울기의 교환이 보입니다.' },
+      miss: [[/FSR/, 'R', 'FSR = λ²/(n_g·2πR)'], [/골|ER|Critical|Under|Over/, 'g', 't = a 임계 결합'], [/대역|GHz/, 'g, det, vb', '광자 수명 × 디튜닝 피크 × RC'], [/OMA|페널티|눈/, 'det, vpp, g', '정적 기울기와 레벨 압축, ISI'], [/히터|온도|°C/, 'bm, R', 'P_2π와 FSR, 드리프트'], [/열적 안정|루프/, 'det', '파랑 쪽 자기 안정'], [/IL|손실/, 'det, g', '공진 골과의 거리'], [/수율|Fab/, 'bm, R', '공정 공진 산포와 FSR 안의 히터 여유']],
+      lim: [['링 전달함수·Q', 'an', 'all-pass Airy 식 (Bogaerts 2012), 무손실 결합기 가정'], ['리브 단면 n<sub>eff</sub>·n<sub>g</sub>·∂n/∂T', 'semi', '유효굴절률법 (벡터 모드 솔버보다 근사)'], ['결합 κ(g, R)', 'semi', '결합 슬랩 κ를 휘어진 간격 위에서 적분 — 결합 구간의 위상·파장 분산 무시'], ['굽힘 방사', 'semi', 'Marcuse 슬랩 식 (리브 측면 누설은 근사)'], ['접합 Δn(V)·α(V)·C·R', 'emp', '2-2 모델 (Soref–Bennett 실험식, 계단 접합) — 링 굽힘의 모드 이동 무시, 둘레 75% 가정'], ['동역학·EO 응답', 'an', '결합 모드 이론 (Haus; Sacher & Poon 2008) × RC 극, 드라이버 2차 70 GHz'], ['PAM4 눈', 'semi', '의사난수 128 심볼 + 5-tap FFE 기준 수신기 (TDECQ 근사, 잡음 미포함)'], ['열 단면 G′·히터', 'pre', '2-1 열해석 테이블(직선 단면)을 링 둘레에 적용 — 작은 링의 3D 열 확산 무시. 측정 히터 효율 73–160 pm/mW (Yuan 2024, Huang 2026)보다 낙관적일 수 있음'], ['자기 가열·TPA', 'asm', '흡수 = 자유 캐리어 + TPA(β ≈ 0.8–0.9 cm/GW, A<sub>eff</sub> 추정), 평균 전력의 정상 상태'], ['실험 기준 (참고)', 'exp', 'Yuan 2024: R 12 µm, Q≈3700, 11–16 pm/V, EO≈49 GHz, 바깥 ER 3.6 dB @200G PAM4 — 이 게임의 수치는 같은 범위인지 비교만 함'], ['3D 구조·도핑 프로파일', 'fw', '링 결합 영역 FDTD, 접합 TCAD, 3D 열해석으로 검증 필요']],
+      refs: ['bogaerts', 'sacher', 'xu05', 'yuan24', 'huang26', 'carmon04', 'padmaraju', 'bristow', 'soref', 'reed']
     }),
     pd: R({
       basic: () => `<p>Si는 1.1 µm보다 긴 빛을 흡수하지 못하므로, 그 위에 키운 <b>Ge</b>가 빛을 흡수해 전자–정공을 만듭니다. Ge가 길면 빛을 다 흡수하지만 커패시턴스가 커져 느려지고, 진성층이 두꺼우면 캐리어가 이동하는 시간이 길어집니다.</p><p>수광기 뒤 TIA의 잡음은 입력 커패시턴스가 클수록 커집니다 — 감도는 흡수·속도·잡음의 균형입니다.</p>`,

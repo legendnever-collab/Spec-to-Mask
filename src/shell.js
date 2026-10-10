@@ -220,7 +220,16 @@ function evaluate() {
   drawView(); renderHUD(); renderObjectives(); renderFabPanel(); renderHint(); drawStrips(false); scheduleIdle();
 }
 let idleT = null;
-function scheduleIdle() { clearTimeout(idleT); idleT = setTimeout(() => { computeChart(); drawStrips(true); renderCoach(); }, 110); }
+function scheduleIdle() { clearTimeout(idleT); idleT = setTimeout(() => { computeChart(); drawStrips(true); renderCoach(); renderPanel(); }, 110); }
+// optional kind panel (e.g. the MZM vs MRR comparison): full design only, recomputed when idle
+function renderPanel(run) {
+  const box = $('#xpanel'), K = kind(), c = state.cur;
+  let out = null;
+  try { out = c && !c.S && !c.pr && K.panel && !(c.res.drc && c.res.drc.length) ? K.panel(c.l, c.res, { stars: starsOf(state.id), hasCard: !!PP().cards[state.id], run: !!run }) : null; } catch (e) { out = null; }
+  box.hidden = !out; if (!out) return;
+  $('#xp-title').textContent = out.title; $('#xp-body').innerHTML = out.html;
+}
+$('#xp-body').addEventListener('click', (e) => { const b = e.target.closest('[data-xp-run]'); if (!b) return; b.disabled = true; b.textContent = '계산 중…'; setTimeout(() => renderPanel(true), 30); });
 let commitT = null;
 function scheduleCommit() { clearTimeout(commitT); commitT = setTimeout(commit, 450); }
 function commit() {
@@ -230,7 +239,7 @@ function commit() {
   if (c.key !== state.lastLogged) { state.lastLogged = c.key; DB.push(rec(state.id, 'H', c.d, c.res)); persistDB(); }
   awardStars(); maybeCard();
   if (c.sc.total > (PP().best[state.id] || 0)) PP().best[state.id] = Math.round(c.sc.total);
-  persist(); renderMap(); renderAI(); renderDB(); renderCards();
+  persist(); renderMap(); renderAI(); renderDB(); renderCards(); renderPanel();
 }
 const rec = (id, src, d, r) => ({ lv: id, pf: state.plat, src, p: { ...d }, y: +(+r.primary).toFixed(4), y2: r.secondary != null ? +(+r.secondary).toFixed(4) : null, a: +(+r.size).toFixed(2), t: Date.now() });
 

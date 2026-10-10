@@ -1,0 +1,192 @@
+{
+  "schema": "smq-design/1",
+  "generator": "SPEC-to-MASK Quest",
+  "exported": "2026-10-10T02:16:51.614Z",
+  "platform": {
+    "id": "si1310",
+    "mat": "si",
+    "lam_um": 1.31,
+    "core_t_um": 0.22,
+    "w0_um": 0.36,
+    "clad": "SiO2",
+    "box": "SiO2",
+    "rules_um": {
+      "gap": 0.18,
+      "wmin": 0.4,
+      "edge": 0.05
+    }
+  },
+  "level": {
+    "id": "2-3R",
+    "kind": "mrr",
+    "name": "링 변조기",
+    "device": "Microring Modulator — Resonance to 200G PAM4",
+    "mode": "std",
+    "stars": 0
+  },
+  "params": {
+    "R": {
+      "value": 6.1,
+      "unit": "µm",
+      "label": "링 반경 (설정값 → 공진 정렬 레이아웃 반경)"
+    },
+    "g": {
+      "value": 0.185,
+      "unit": "µm",
+      "label": "버스–링 결합 간격"
+    },
+    "dop": {
+      "value": 0.8,
+      "unit": "decade",
+      "label": "링 접합 도핑 증가 (2-2 접합 대비, 양쪽)"
+    },
+    "vb": {
+      "value": 0.7,
+      "unit": "V",
+      "label": "DC 역바이어스 (PAM4 최저 레벨)"
+    },
+    "vpp": {
+      "value": 3,
+      "unit": "V",
+      "label": "구동 진폭 (PAM4 바깥 레벨 간)"
+    },
+    "det": {
+      "value": -0.28,
+      "unit": "",
+      "label": "레이저 디튜닝 x = 2(λ_L − λ_r)/FWHM (음수 = 파랑 쪽)"
+    },
+    "bm": {
+      "value": 0.5,
+      "unit": "nm",
+      "label": "공진 배치 여유 (최고 온도에서 레이저보다 파랑 쪽)"
+    }
+  },
+  "geometry": {
+    "pcell": "ring_allpass",
+    "core_mat": "si",
+    "R_um": 6.099,
+    "R_slider_um": 6.1,
+    "gap_um": 0.185,
+    "w_um": 0.45,
+    "bus_w_um": 0.45,
+    "bus_len_um": 32.198,
+    "rib": {
+      "t_um": 0.22,
+      "slab_um": 0.09,
+      "slab_ext_um": 2
+    },
+    "order_m": 82,
+    "heterogeneous_si": false,
+    "junction": {
+      "type": "lateral PN (P inside, N outside)",
+      "coverage": 0.75,
+      "arc_deg": 270,
+      "centred_opposite_coupler": true,
+      "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+    },
+    "heater": {
+      "h_um": 0.4,
+      "iso": 1,
+      "coverage": 0.85,
+      "w_um": 2,
+      "arc_deg": 306,
+      "gap_centred_opposite_coupler": true,
+      "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+    },
+    "lambda_design_um": 1.31,
+    "predicted": {
+      "fsr_nm": 11.2047,
+      "QL": 6476,
+      "Qi": 21983,
+      "Qc": 9182,
+      "kappa2": 0.07688,
+      "shift_pm_per_V": 12.6043,
+      "Cj_fF": 13.9621,
+      "PhW_mW": 8.9991,
+      "dlambda_dT_pm_K": 63.9021
+    },
+    "model": {
+      "neff": 2.7754,
+      "ng": 3.9967,
+      "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+    }
+  },
+  "predicted": {
+    "model": "game surrogate (see README · 모델 범위)",
+    "primary": {
+      "label": "OMA−페널티 dBm",
+      "value": 4.11921
+    },
+    "size": {
+      "value": 407.959,
+      "unit": "µm²"
+    },
+    "card": {
+      "bw": 40.8,
+      "il": 3.85,
+      "gain": -7,
+      "pen": 1.88,
+      "R": 6.099,
+      "g": 0.185,
+      "fsr": 11.205,
+      "QL": 6476,
+      "er": 2.88,
+      "ph": 9,
+      "pha": 4.91,
+      "p2pi": 20.48,
+      "eb": 13.07,
+      "eth": 21.9,
+      "area": 408,
+      "dldT": 63.9,
+      "cj": 13.96,
+      "vpp": 3
+    },
+    "score": 675,
+    "objectives": [
+      {
+        "tier": 1,
+        "spec": "삽입 손실 ≤ 4.9 dB",
+        "value": "3.85 dB",
+        "ok": true
+      },
+      {
+        "tier": 1,
+        "spec": "정적 ER ≥ 1.7 dB",
+        "value": "2.88 dB",
+        "ok": true
+      },
+      {
+        "tier": 1,
+        "spec": "EO 대역폭 ≥ 30 GHz",
+        "value": "40.8 GHz",
+        "ok": true
+      },
+      {
+        "tier": 2,
+        "spec": "112 GBd PAM4 페널티 ≤ 2.35 dB",
+        "value": "1.88 dB",
+        "ok": true
+      },
+      {
+        "tier": 2,
+        "spec": "OMA_outer ≥ 5.2 dBm",
+        "value": "6.00 dBm",
+        "ok": true
+      },
+      {
+        "tier": 2,
+        "spec": "최악 히터 전력 (0–70 °C) ≤ 11.7 mW",
+        "value": "9.0 mW",
+        "ok": true
+      },
+      {
+        "tier": 2,
+        "spec": "열적 안정 (자기 가열 루프 이득 < 1)",
+        "value": "-38.30",
+        "ok": true
+      }
+    ],
+    "fab_criterion": "페널티 ≤ 2.7 dB · OMA ≥ 4.7 dBm · 온도 0–70 °C 전체 히터 ≤ 17.5 mW (폭·두께·도핑·간격 공정 오차, 공진 위치는 다이마다 무작위)"
+  },
+  "next": "python -m smq2gds design.json -o out.gds  (tools/smq2gds, README 참조)"
+}

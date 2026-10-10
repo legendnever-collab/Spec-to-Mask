@@ -103,6 +103,30 @@ module.exports = function (G, pf, S, H) {
     S['2-3'] = { start, pnRef, aRef: l.s2.size, dbY: [-8, 6], ...stored(l, ['s1', 's2', 'fab', 'hb', 'ns']), ref: b.d };
     console.log(' 2-3 pnRef', JSON.stringify(pnRef), 'ref', JSON.stringify(b.d), 'bw', r2(R.bw, 1), 'IL', r2(R.IL), 'OMA', r2(R.omaDbm), 'pen', r2(R.pen), '→ s1', JSON.stringify(l.s1), 's2', JSON.stringify(l.s2), 'y', JSON.stringify(yMode));
   }
+  /* 2-3R microring modulator: the 2-2 reference junction on a Si rib ring, the 2-1 reference heater cross-section */
+  {
+    const K = KINDS.mrr, pnD = S['2-2'].ref, hd = { h: S['2-1'].ref.h, iso: S['2-1'].ref.iso | 0 }, tr = [0, 70];
+    const start = { R: 12, g: 0.3, dop: 0, vb: 0.5, vpp: 1.0, det: -0.6, bm: 1.0, useCard: 0, useHeater: 0 };
+    const l = L('2-3R', { pnD, hd, tr, st: { fsr: 10 }, s1: { il: 1e9, er: 1e-9, bw: 1, omaS: 1e-9 }, s2: { pen: 1e9, oma: 1e-9, ph: 1e9, eb: 1 }, fab: { pen: 1e9, oma: 1e-9, ph: 1e9 }, hb: ['bw', 'er', 'oma', 'omaS'], ns: ['oma', 'omaS', 'eb'] });
+    // best OMA − penalty with a heater-power term; red-side (thermally regenerative) points are excluded
+    const obj = (r) => -(r.omaDbm - r.pen) + 0.04 * r.PhW + (r.gth >= 1 ? 20 : 0) + 0.1 * Math.max(0, 40 - r.bw);
+    const b = opt(K, l, obj, [{ ...start, R: 7.5, g: 0.24, dop: 0.6, vb: 1.0, vpp: 2.0, det: -0.6 }, { ...start, R: 6, g: 0.2, dop: 0.4, vb: 1.2, vpp: 2.4, det: -0.8 }, { ...start, R: 10, g: 0.26, dop: 0.5, vb: 0.8, vpp: 2.2, det: -0.5 }], 240);
+    const R = b.r;
+    l.st = { fsr: Math.round(R.fsr * 1e3 * 2) / 2 };
+    l.s1 = { il: Math.ceil((R.IL + 1.0) * 10) / 10, er: Math.floor(R.er * 0.6 * 10) / 10, bw: Math.floor(R.bw * 0.75), omaS: +(R.oma * Math.pow(10, -0.3)).toFixed(4) };
+    l.s2 = { pen: r2(Math.max(R.pen * 1.25, R.pen + 0.4), 2), oma: +(R.oma * Math.pow(10, -0.08)).toFixed(4), ph: Math.ceil(R.PhW * 1.3 * 10) / 10, eb: r2(R.Etot * 1.2, 1) };
+    // heater budget for the Fab run: 80th percentile of the per-die worst-case heater power (process moves the resonance by nm)
+    const need = []; for (const s of [11, 22, 33]) for (const die of makeWafer(s * 97, 1)) need.push(K.evaluate(l, b.d, { ...die, dt: die.dt * pf.dt / 0.006 }).PhW);
+    need.sort((x, y) => x - y);
+    // when the process spread is comparable to the FSR the 80th percentile reaches P_2π (any order is reachable within one FSR);
+    // the budget is then capped at 85 % of P_2π so that FSR, placement margin and heater efficiency still decide the yield
+    const q80 = need[Math.floor(need.length * 0.8)];
+    l.fab = { pen: r2(l.s2.pen * 1.15, 2), oma: +(l.s2.oma * Math.pow(10, -0.05)).toFixed(4), ph: Math.ceil(Math.max(Math.min(q80 * 1.05, 0.85 * R.P2pi), l.s2.ph * 1.1) * 10) / 10 };
+    tune(K, l, [b.d, start], '2-3R');
+    const yMode = yT(K, l, b.d); l.fab.y = yMode.std; l.fab.yMode = yMode;
+    S['2-3R'] = { start, pnD, hd, tr, aRef: 1, dbY: [-8, 8], ...stored(l, ['st', 's1', 's2', 'fab', 'hb', 'ns']), ref: b.d };
+    console.log(' 2-3R ref', JSON.stringify(b.d), 'R', R.Rlay, 'QL', Math.round(R.QL), 'shift', r2(R.shiftPmV, 1), 'pm/V bw', r2(R.bw, 1), 'IL', r2(R.IL), 'ER', r2(R.er), 'OMA', r2(R.omaDbm), 'pen', r2(R.pen), 'PhW', r2(R.PhW, 1), 'E', r2(R.Ebit, 1), '+', r2(R.Eth, 1), 'fJ/b → s1', JSON.stringify(l.s1), 's2', JSON.stringify(l.s2), 'fab', JSON.stringify(l.fab), 'heater q80', r2(need[Math.floor(need.length * 0.8)], 1));
+  }
   /* 2-4 Ge PD + TIA */
   {
     const K = KINDS.pd, start = { L: 40, w: 4, di: 0.8, V: 0.5 };
