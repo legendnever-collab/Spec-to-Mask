@@ -14,7 +14,8 @@
     "test:upgrade": "node test/t_upgrade.js",
     "test:flow": "node test/e2e/flow.js si1310 && node test/e2e/flow.js si1550 && node test/e2e/flow.js sin1310 && node test/e2e/flow.js sin1550",
     "test:guide": "node test/e2e/guide.js si1310 && node test/e2e/guide.js sin1550",
-    "test:mrr": "node test/t_mrr.js"
+    "test:mrr": "node test/t_mrr.js",
+    "test:dr8": "node test/t_dr8.js"
   },
   "devDependencies": {
     "jsdom": "^24.1.3"

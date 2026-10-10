@@ -47,12 +47,12 @@
 | 비교 화면 상시 표시 | ★ 또는 카드 이후, "비교 계산" 버튼 | 61 다이 몬테카를로 × 두 변조기라 1–2 s. 슬라이더 조작마다 돌리지 않음 |
 | Design Lab GDS (Phase D) | 회로 스키마 `smq-circuit/1` 신설, `smq-design/1` 보존 | 기존 예제·테스트 호환 |
 
-## 5. 단계 계획과 이번 PR 범위
+## 5. 단계 계획과 PR 범위
 
 | Phase | 내용 | 이번 PR |
 |---|---|---|
-| A | MRR 물리 엔진, Guided 5단계 + Full, UI, 학습 가이드, 카드, MZM 비교 | **구현** |
-| B | 3A+에 MZM DR8 / MRR DR8, 카드 통합, 링크·열·전력 | 다음 |
+| A | MRR 물리 엔진, Guided 5단계 + Full, UI, 학습 가이드, 카드, MZM 비교 | PR #2 (병합) |
+| B | 3A+에 MZM DR8 / MRR DR8, 카드 통합, 링크·열·전력 | **구현** — [arch_1p6t_dr8.md](arch_1p6t_dr8.md) |
 | C | PIC Design Lab (회로도·평면배치·배선·전기 인터페이스·검증) | 다음 |
 | D | `smq-circuit/1` + PCell 조립 + GDS + 재검증 | 다음 |
 | E | MRR WDM8 | 안정화 이후 |

@@ -21,13 +21,15 @@ module.exports = function (G, pf, S, H) {
   const yT = (K, l, d) => { const out = {}; for (const m of ['easy', 'std', 'hard']) { MODE = m; const y = yieldOf(K, scaleLev(l, m), d, H.MODES[m].sig); out[m] = r2(clamp(Math.floor(Math.min(y - 0.12, y * 0.75) * 20) / 20, 0.05, 0.95), 2); } MODE = 'std'; return out; };
   for (const id of ['3A', '3A+']) {
     const K = KINDS.xcvr, fr4 = LV[id].arch === 'fr4';
-    const start = fr4 ? { P: 12, share: 0, tc: 0, mt: 0, dsp: 0, useCard: 0 } : { P: 12, share: 3, tc: 0, pkg: 0, useCard: 0 };
+    const start = fr4 ? { P: 12, share: 0, tc: 0, mt: 0, dsp: 0, useCard: 0 } : { P: 12, share: 3, tc: 0, pkg: 0, mod: 0, useCard: 0 };
     const l = L(id, { parts, muxRef: S['1-7'].ref, s1: { margin: 0, pw: 1e9 }, s2: { margin: 0, pw: 1e9 }, fab: { margin: 0 }, ns: ['margin', 'pw'] });
     const all = [];
     const ks = fr4 ? { share: [0, 1], tc: [0, 1], mt: [0, 1], dsp: [0, 1] } : { share: [0, 1, 2, 3], tc: [0, 1], pkg: [0, 1, 2] };
     const combos = Object.entries(ks).reduce((acc, [k, vs]) => acc.flatMap((o) => vs.map((v) => ({ ...o, [k]: v }))), [{}]);
     for (let P = 10; P <= 20.001; P += 0.5) for (const c of combos) { const d = { ...start, ...c, P }; all.push({ d, r: K.evaluate(l, d) }); }
     const ok0 = all.filter((x) => x.r.margin >= 0), mmax = Math.max(...all.map((x) => x.r.margin));
+    // specs come from the MZM transmitter only (mod 0 = the original 3A+); the MRR option (mod 1, Phase B) is judged against the same
+    // specs — it is an architecture choice inside the level, not a different level
     // ★ power: FR4 → 25% above the cheapest closing link; DR8 → reachable with the DSP pluggable (★★ then needs LPO/CPO)
     const pw0 = Math.min(...ok0.filter((x) => fr4 || (x.d.pkg | 0) === 0).map((x) => x.r.pw));
     l.s1.pw = Math.ceil(pw0 * (fr4 ? 1.25 : 1.1) * 2) / 2;
@@ -39,6 +41,11 @@ module.exports = function (G, pf, S, H) {
     const yMode = yT(K, l, ref.d); l.fab = { margin: 0, y: yMode.std, yMode };
     S[id] = { start, parts, muxRef: fr4 ? S['1-7'].ref : undefined, aRef: 1, dbY: [-4, 6], s1: l.s1, s2: l.s2, fab: l.fab, ns: l.ns, ref: ref.d };
     const desc = (x) => `${JSON.stringify(x.d)} m ${r2(x.r.margin)} pw ${r2(x.r.pw, 1)}`;
+    if (!fr4) { // report how the microring transmitter does against these specs (no effect on the specs)
+      const mr = []; for (let P = 10; P <= 20.001; P += 0.5) for (const c of combos) { const d = { ...start, ...c, P, mod: 1 }; mr.push({ d, r: K.evaluate(l, d) }); }
+      const ok1 = mr.filter((x) => x.r.stable && x.r.margin >= l.s1.margin && x.r.pw <= l.s1.pw), ok2m = mr.filter((x) => x.r.stable && x.r.margin >= l.s2.margin && x.r.pw <= l.s2.pw).sort((a, b) => a.r.pw - b.r.pw);
+      console.log(`   MRR DR8: ★ ${ok1.length}/${mr.length} · ★★ ${ok2m.length} · unstable ${mr.filter((x) => !x.r.stable).length}${ok2m[0] ? ' · cheapest ★★ ' + desc(ok2m[0]) : ''}`);
+    }
     console.log(` ${id} parts ${JSON.stringify(parts)}\n   max margin ${r2(mmax)} · cheapest ★ ${desc(ok0.sort((a, b) => a.r.pw - b.r.pw)[0])}\n   s1 ${JSON.stringify(l.s1)} s2 ${JSON.stringify(l.s2)} cheapest ★★ ${desc(ok2[0])}\n   ref ${desc(ref)} y ${JSON.stringify(yMode)} start m ${r2(K.evaluate(l, start).margin)} pw ${r2(K.evaluate(l, start).pw, 1)}`);
   }
 };
