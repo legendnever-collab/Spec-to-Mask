@@ -352,7 +352,7 @@ KINDS.wdm = (() => {
     const row = (k, v, c, n) => `<tr><th scope="row">${k}${n ? `<br><span class="note">${n}</span>` : ''}</th><td>${v}</td><td>${confBadge(c, true)}</td></tr>`;
     const thin = r.margin < CAUTION_DB;
     return `<div class="tsens"><h4>WDM8 결과의 근거 — 광학 모델 · 제어 구조 · 시스템 견고성</h4>`
-      + (thin ? `<p class="note" style="color:var(--amber)">△ 주의: 최악 채널 마진 ${f2(r.margin, 2)} dB &lt; ${CAUTION_DB} dB — 아래 가정 하나만 나빠져도 링크가 닫힐 수 있습니다 (임계값 ${CAUTION_DB} dB는 교육용 휴리스틱이며 파운드리·표준 요구값이 아닙니다).</p>` : '')
+      + (r.margin < 0 ? `<p class="note" style="color:var(--fail)">✕ 최악 채널 마진 ${f2(r.margin, 2)} dB — 지금 설계는 링크가 닫히지 않습니다. 아래 광학 항목에서 원인을 찾으세요.</p>` : thin ? `<p class="note" style="color:var(--amber)">△ 주의: 최악 채널 마진 ${f2(r.margin, 2)} dB &lt; ${CAUTION_DB} dB — 아래 가정 하나만 나빠져도 링크가 닫힐 수 있습니다 (임계값 ${CAUTION_DB} dB는 교육용 휴리스틱이며 파운드리·표준 요구값이 아닙니다).</p>` : '')
       + `<div class="gtbl"><table class="cmp"><tr><th>항목</th><th>값</th><th>근거</th></tr>`
       + head('Optical Model — 계산된 광학')
       + row('최악 채널 마진', `${f2(r.margin, 2)} dB (λ${w.j})`, 'semi', '버스 위 링 8개의 all-pass 응답 곱 + PAM4 눈')

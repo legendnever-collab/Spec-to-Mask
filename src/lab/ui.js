@@ -8,7 +8,7 @@ window.LABUI = (() => {
   const KEY = 'smq3-lab';
   const load = () => { try { const v = localStorage.getItem(KEY); return v ? JSON.parse(v) : {}; } catch (e) { return {}; } };
   const save = () => SMQ_STORE.set(KEY, LS);   // a refused write shows in the header save chip (src/persist.js)
-  let LS = load(), isOpen = false, C = null, CHK = null, MS = null, sel = null, cam = null, drag = null, timer = null;
+  let LS = load(), isOpen = false, C = null, CHK = null, MS = null, sel = null, cam = null, drag = null, timer = null, diag = null;
   const SH = () => window.GAME_SHELL;
   const S = () => { const p = SH().plat(); LS[p] = LS[p] || {}; return LS[p]; };
   const ctx = () => ({ pf: SH().pf(), lev: (id) => window.GAME_LEV(id), cards: SH().cards(), des3: Object.keys(SH().design('3A+')).length ? SH().design('3A+') : null, desW: Object.keys(SH().design('3W') || {}).length ? SH().design('3W') : null, gds: S().gds || null });
@@ -105,7 +105,7 @@ window.LABUI = (() => {
     const sm = { PASS: 0, WARNING: 0, FAIL: 0, 'NOT VERIFIED': 0 }; r.checks.forEach((c) => { if (sm[c.status] != null) sm[c.status]++; });   // count from the checks themselves, not the stated summary
     S().gds = { design_hash: r.design_hash, gds: r.gds, gds_sha1: r.gds_sha1, cells: r.cells, summary: sm, checks: r.checks.map(({ group, item, status, detail }) => ({ group, item, status, detail })), at: new Date().toISOString() };
   }
-  function setV(k, v) { const d = des(); if (k === 'mod' && ((v | 0) === 2) !== ((d.mod | 0) === 2)) { S().d = LAB.defaults(ctx(), { mod: v | 0, share: 0 }); save(); return; } d[k] = v; if (k === 'mod' || k === 'rf') d.stag = LAB.stagAuto(d); save(); }   // no reset: run / export validity follows the design hash
+  function setV(k, v) { diag = null; const d = des(); if (k === 'mod' && ((v | 0) === 2) !== ((d.mod | 0) === 2)) { S().d = LAB.defaults(ctx(), { mod: v | 0, share: 0 }); save(); return; } d[k] = v; if (k === 'mod' || k === 'rf') d.stag = LAB.stagAuto(d); save(); }   // no reset: run / export validity follows the design hash
 
   /* ---------------- render ---------------- */
   const pfP = () => PR(SH().pf());
@@ -164,6 +164,13 @@ window.LABUI = (() => {
     $('#lab-lib-list').innerHTML = it.join('') + '<p class="note">카드가 있으면 내 설계, 없으면 각 레벨의 기준 설계로 조립합니다. 항목을 누르면 그 소자들이 강조됩니다.</p>';
   }
   function renderSel() {
+    if (diag) {
+      const D = diag, mi = D.fix ? MISS.findIndex((m) => m.id === D.fix.m) : -1, P = pfP();
+      $('#lab-sel').innerHTML = `<div class="diag"><h3>진단 · ${D.item}</h3><p class="note">${stBadge(D.status)} ${D.why || ''}</p>`
+        + `<p class="note">${D.located ? `표시: ${[D.ids.length ? `소자 ${D.ids.slice(0, 6).join(', ')}${D.ids.length > 6 ? ' …' : ''}` : '', D.nets.length ? `넷 ${D.nets.length}개` : '', D.pt ? `지점 (${D.pt[0].toFixed(0)}, ${D.pt[1].toFixed(0)}) µm` : ''].filter(Boolean).join(' · ')}` : '이 검사는 위치를 계산하지 않습니다 — 캔버스에 임의의 지점을 표시하지 않습니다.'}</p>`
+        + (D.fix ? `<p class="note"><b>고칠 곳:</b> ${D.fix.t}${D.fix.keys.length ? ` (손잡이: ${D.fix.keys.map((k) => (P[k] ? P[k].label : k)).join(', ')})` : ''}</p><div class="row-btns">${mi >= 0 ? `<button class="btn" data-goto="${D.fix.m}" ${D.fix.keys.some((k) => MISS[mi].adv.includes(k)) ? 'data-adv="1"' : ''}>Mission ${mi + 1}로 가기</button>` : ''}<button class="btn" data-diag-clear="1">진단 닫기</button></div>` : '<div class="row-btns"><button class="btn" data-diag-clear="1">진단 닫기</button></div>') + '</div>';
+      return;
+    }
     const box2 = $('#lab-sel');
     if (!sel || !sel.id) { box2.innerHTML = sel && sel.type ? `<h3>${sel.type} 강조</h3><p class="note">${C.inst.filter((x) => x.type === sel.type).length}개 — 캔버스에서 하나를 누르면 상세를 봅니다.</p>` : '<p class="note">캔버스(회로도·레이아웃)에서 소자를 누르면 여기에 파라미터·포트·연결·크기·손실·DRC 상태가 나옵니다.</p>'; return; }
     const I = C.I(sel.id); if (!I) { box2.innerHTML = ''; return; }
@@ -179,7 +186,7 @@ window.LABUI = (() => {
   function renderOut() {
     const m = MISS[cur()], d = des(), pf = SH().pf(); let t = '', h = '';
     const chk = (re) => CHK.checks.filter((x) => re.test(x.item));
-    const ctab = (rows) => `<table class="ltbl"><tr><th>검사</th><th>상태</th><th>내용</th></tr>${rows.map((x) => `<tr><td>${x.item}</td><td>${stBadge(x.status)}</td><td>${x.detail || ''}</td></tr>`).join('')}</table>`;
+    const ctab = (rows) => `<table class="ltbl"><tr><th>검사</th><th>상태</th><th>내용</th></tr>${rows.map((x) => `<tr><td>${x.item}</td><td>${stBadge(x.status)}${x.status === 'FAIL' || x.status === 'WARNING' ? `<br><button class="btn diagbtn" data-diag="${CHK.checks.indexOf(x)}" aria-label="${String(x.item).replace(/<[^>]+>/g, '')} 위치 보기">위치 보기</button>` : ''}</td><td>${x.detail || ''}</td></tr>`).join('')}</table>`;
     if (m.id === 'schematic') {
       t = '회로 구성';
       h = `<table class="ltbl">${row(['레인', `${LAB.LANES} × ${224} Gb/s 라인 (200G 순 데이터)`])}${row(['변조기', C.mod === 'mzm' ? 'TW-MZM (2-3) + 바이어스 히터' : C.mod === 'wdm' ? `공유 버스 all-pass 링 ×8 (2-3R, 3W) · ${C.wdm.r.grid} GHz · 출력 1` : 'all-pass 링 (2-3R) + 링 히터'])}${row(['레이저 입력', `${C.nL}개 (1:${C.N})`])}${row(['분배 트리', C.depth ? `1×2 MMI ${C.depth}단 × ${C.nL} = ${C.inst.filter((x) => x.type === 'mmi1x2').length}개` : '없음'])}${row(['모니터', d.mon ? '레인마다 2 % 탭 + Ge PD' : '없음'])}${row(['소자 / 광 넷 / 전기 넷', `${C.inst.length} / ${C.onets.length} / ${C.enets.length}`])}</table>` + ctab(CHK.checks.filter((x) => x.group === 'Connectivity'));
@@ -225,10 +232,20 @@ window.LABUI = (() => {
     const lv = s.wdm ? '3W' : '3A+';
     return `<h4>레이아웃 결과 vs 시스템 예측 (${lv} 엔진)</h4><table class="ltbl">${row([s.wdm ? '3W 모델 (같은 링·격자·배정·링 간격)' : '3A+ 모델 (같은 변조기·레이저 공유)', `${s.src} → 최악 ${s.wdm ? '채널' : '레인'} 마진 ${s.marginModel.toFixed(2)} dB · 모듈 ${s.pw.toFixed(2)} W · ${s.pj.toFixed(2)} pJ/bit`])}${row(['레이아웃이 더한 손실 (최악 레인)', `${s.extra.toFixed(2)} dB — ${lv} 모델에 없는 칩 위 배선 전파·굽힘 + 모니터 탭${s.wdm ? ' (링 사이 버스는 3W가 이미 셈)' : ''}`])}${row(['레이아웃 반영 마진', `<b>${s.marginLayout.toFixed(2)} dB</b>`])}</table><p class="note">3A+ 모델은 SSC·결합·분배기 과잉손실을 이미 셉니다. 여기서는 레이아웃에서 생긴 길이만 더합니다 (RF 급전 손실은 위 RF 항목에서 따로 표시).</p>`;
   }
+  // baseline (v1.0 §7.4): the system numbers of a pinned Lab design next to the current one — engine values only, no single score
+  const labSnap = () => ({ margin: CHK.sys.marginLayout, pw: CHK.sys.pw, pj: CHK.sys.pj, extra: CHK.sys.extra, area: C.W * C.H / 1e6, W: C.W, H: C.H, mod: C.mod, nL: C.nL, fails: CHK.checks.filter((x) => x.status === 'FAIL').length });
+  function pinTable() {
+    const P0 = S().pin; if (!P0) return '<div class="row-btns"><button class="btn" data-la="pin">이 설계를 기준으로 고정 (비교용)</button></div>';
+    const a = P0.snap, b = labSnap(), r = (k, x, y, dec, u, better) => { const dv = y - x, tol = Math.pow(10, -dec) / 2, cls = Math.abs(dv) <= tol || !better ? 'dlt-0' : (better === 'hi') === (dv > 0) ? 'dlt-up' : 'dlt-dn'; return `<tr><td>${k}</td><td class="num">${x.toFixed(dec)} ${u}</td><td class="num">${y.toFixed(dec)} ${u}</td><td class="num ${cls}">${dv > 0 ? '+' : ''}${dv.toFixed(dec)}</td></tr>`; };
+    return `<h4>기준 설계와 비교 (고정 ${String(P0.at).slice(0, 16).replace('T', ' ')} · hash ${P0.hash}${P0.hash === C.hash ? ' — 지금과 같음' : ''})</h4><table class="ltbl"><tr><th>항목</th><th>기준</th><th>현재</th><th>Δ</th></tr>`
+      + `<tr><td>변조기 · 레이저</td><td>${a.mod.toUpperCase()} · ${a.nL}개</td><td>${b.mod.toUpperCase()} · ${b.nL}개</td><td></td></tr>`
+      + r('링크 마진 (레이아웃 반영)', a.margin, b.margin, 2, 'dB', 'hi') + r('칩 배선 손실 (최악 레인)', a.extra, b.extra, 2, 'dB', 'lo') + r('모듈 전력', a.pw, b.pw, 2, 'W', 'lo') + r('비트당 에너지', a.pj, b.pj, 2, 'pJ/bit', 'lo') + r('다이 면적', a.area, b.area, 2, 'mm²', 'lo') + r('검증 FAIL 수', a.fails, b.fails, 0, '', 'lo')
+      + `</table><p class="note">같은 Lab 엔진 값만 나란히 둡니다. 하나의 점수로 합치지 않습니다.</p><div class="row-btns"><button class="btn" data-la="pin">지금 설계를 새 기준으로</button><button class="btn" data-la="unpin">기준 해제</button></div>`;
+  }
   function summary() {
     const s = CHK.sys, n = (st) => CHK.checks.filter((x) => x.status === st).length, a3 = SH().stars('3A+') > 0;
     return `<table class="ltbl">${row(['총 데이터 속도', `${LAB.LANES} × 200 Gb/s = 1.6 Tb/s 데이터 (게임 라인 대표값 ${LAB.LANES} × 224 Gb/s = 112 GBd PAM4; 표준 라인은 FEC·부호화 포함 212.5 Gb/s/레인 — 3A+의 “1.6T 속도 정의”)`])}${row(['변조기', C.mod === 'mzm' ? 'TW-MZM ×8 (DR8)' : C.mod === 'wdm' ? 'MRR WDM8 (공유 버스 · 광섬유 1)' : 'MRR ×8 (DR8)'])}${row(['다이', `${des().W.toFixed(1)} × ${des().H.toFixed(1)} mm`])}${row(['광 손실 추정 (칩 배선, 최악 레인)', `${s.extra.toFixed(2)} dB`])}${row(['링크 마진 (레이아웃 반영)', `${s.marginLayout.toFixed(2)} dB`])}${row(['비트당 에너지 (3A+ 모듈 모델)', `${s.pj.toFixed(2)} pJ/bit`])}${row(['검증 요약', `PASS ${n('PASS')} · WARNING ${n('WARNING')} · FAIL ${n('FAIL')} · NOT VERIFIED ${n('NOT VERIFIED')}${valid().ran ? '' : S().ran ? ' (마지막 실행 이후 설계 변경 — 다시 실행)' : ' (검사 미실행)'}`])}${row(['설계 식별 (design hash)', `${C.hash}${S().exported ? ` · 마지막 내보내기 ${S().exported.hash || '(식별 없음, 이전 버전)'} ${valid().exp ? '<span class="st-PASS">현재 설계와 같음</span>' : '<span class="st-WARNING">Stale — 다시 내보내기</span>'}` : ' · 아직 내보내지 않음'}`])}${row(['Design Valid (게임 모델)', MISS.slice(0, 5).every((m) => (S().live || {})[m.id]) ? '<span class="st-PASS">✓ 충족</span>' : '<span class="st-WARNING">미충족</span>'])}${row(['Geometry Rechecked (smq2gds)', gdsMsg()])}${row(['Foundry Readiness', '<span class="st-NOT">NOT VERIFIED</span> — Generic PDK · 추상 금속 · 파운드리 DRC/LVS·RF·열 검사 없음'])}${row(['Project Completion', a3 ? (MISS.every((m) => (S().live || {})[m.id]) ? '<span class="st-PASS">완료 (현재 설계)</span>' : MISS.every((m) => (S().done || {})[m.id]) ? '<span class="st-WARNING">이전에 완료 · 현재 설계는 미충족</span>' : '진행 중') : '3A+ ★ 이후 정식 완료 (지금은 미리보기)'])}</table>`
-      + `<p class="note">GDS는 같은 smq-circuit/1 데이터를 tools/smq2gds가 읽어 같은 기본 도형으로 그리고, 다시 읽어 계층·연결·포트·길이·간격·선폭·금속 단락을 검사합니다. 이 결과는 구조 검증이 가능한 Engineering Prototype이며 Tape-out Ready Mask가 아닙니다.</p>`;
+      + `<p class="note">GDS는 같은 smq-circuit/1 데이터를 tools/smq2gds가 읽어 같은 기본 도형으로 그리고, 다시 읽어 계층·연결·포트·길이·간격·선폭·금속 단락을 검사합니다. 이 결과는 구조 검증이 가능한 Engineering Prototype이며 Tape-out Ready Mask가 아닙니다.</p>` + pinTable();
   }
   function renderCoach() {
     const m = MISS[cur()], el = $('#lab-coach'), fails = CHK.checks.filter((x) => x.status === 'FAIL');
@@ -246,9 +263,47 @@ window.LABUI = (() => {
     el.hidden = !msg; if (msg) el.innerHTML = `<div class="coach-h"><span class="badge">코치</span><b>${msg.h}</b></div><p>${msg.b}</p>`;
   }
   function legend() {
-    const v = S().view || 'layout';
+    const v = S().view || 'layout', LY = S().layers || { opt: 1, ele: 1, drc: 1 };
+    $('#lab-layers').innerHTML = v === 'layout' ? [['opt', '광'], ['ele', '전기 (RF·DC·패드)'], ['drc', '검사 표시 (실패·위반)']].map(([k, t]) => `<label><input type="checkbox" data-ly="${k}" ${LY[k] ? 'checked' : ''}> ${t}</label>`).join('') + '<span class="note" style="margin:0">보기 전용 — 내보내는 GDS에는 영향 없음</span>' : '';
     $('#lab-view').innerHTML = [['schematic', 'Schematic'], ['layout', 'Physical Layout']].map(([k, t]) => `<button role="radio" aria-checked="${v === k}" data-lv="${k}">${t}</button>`).join('');
     $('#lab-legend').innerHTML = v === 'layout' ? legendHTML([['#64c9df', '광 도파로'], ['#f2b04a', 'RF 전극·선 (추상)'], ['#9eabbd', 'DC 선 (M2, 추상)'], ['#b48cff', 'Ge PD'], ['#ff6b6b', '실패·위반']]) : legendHTML([['#64c9df', '광 넷'], ['#f2b04a', 'RF 포트'], ['#9eabbd', 'DC 포트'], ['#ff6b6b', '미연결·실패']]);
+  }
+
+  /* ---------------- diagnosis: a FAIL / WARNING row → the related instances, nets or point, the cause and the knob ---------------- */
+  // Only places the check itself names are marked (instance ids in its text, failed route nets, the measured min-gap point);
+  // checks without coordinates (RF / DC metal shorts, budgets) highlight the related parts, never a guessed spot.
+  const MI = { schematic: 0, floorplan: 1, routing: 2, electrical: 3 };
+  function diagOf(x) {
+    const txt = `${x.item} ${x.detail}`, pf = SH().pf(), rmin = LAB.wgModel(pf, pf.w0).Rmin, it = x.item;
+    let ids = C.inst.filter((I) => new RegExp(`(^|[^A-Za-z0-9_])${I.id}([^A-Za-z0-9_]|$)`).test(txt)).map((I) => I.id), nets = [], pt = null, fix = null, why = '';
+    const fails = (C.routes || []).filter((r) => !r.ok);
+    if (/광 배선 생성|장애물/.test(it)) { nets = fails.map((r) => r.net); const r0 = fails.find((r) => r.at); if (r0) pt = r0.at; why = fails.length ? fails.slice(0, 2).map((r) => `${r.from} → ${r.to}: ${r.why}`).join(' · ') : String(x.detail); fix = { m: 'routing', keys: ['R', 'jog'], t: '굽힘 반경·팬 간격을 줄이거나, 평면 배치에서 레인 피치·엇갈림을 늘려 공간을 만드세요.' }; }
+    else if (/배선 간격/.test(it)) { if (C.gapAt) pt = C.gapAt; why = `두 넷의 도파로 가장자리 간격이 규칙 ${pf.rules.gap} µm보다 좁습니다.`; fix = { m: 'routing', keys: ['jog'], t: 'Advanced의 팬 수직선 간격(p_j)을 늘리거나 레인 피치를 늘리세요.' }; }
+    else if (/굽힘 반경/.test(it)) { nets = (C.routes || []).map((r) => r.net); why = `모든 넷이 같은 굽힘 반경 설정을 씁니다 (R ${C.d.R} µm < ${rmin} µm).`; fix = { m: 'routing', keys: ['R'], t: `Advanced의 굽힘 반경을 ${rmin} µm 이상으로.` }; }
+    else if (/넓은 배선의 굽힘/.test(it)) { nets = (C.routes || []).filter((r) => r.ok && r.w > pf.wc).map((r) => r.net); why = '다중모드 폭의 도파로가 원호로 굽으면 고차 모드가 섞입니다.'; fix = { m: 'routing', keys: ['bend', 'wr'], t: 'Euler 굽힘을 고르거나 배선 폭을 단일모드로.' }; }
+    else if (/다이 경계|소자 겹침/.test(it)) { why = String(x.detail).replace(/<[^>]+>/g, ''); fix = { m: 'floorplan', keys: ['W', 'H'], t: '“필요 크기로 맞춤”을 누르거나 다이를 키우세요.' }; }
+    else if (/패드 배치|범프 배치/.test(it)) { why = String(x.detail).replace(/<[^>]+>/g, ''); fix = { m: 'floorplan', keys: ['W', 'H'], t: '다이 변 길이가 패드 수 × 피치보다 커야 합니다 — 다이를 키우거나 패드 피치를 줄이세요(Advanced).' }; }
+    else if (/RF 배선 교차|RF 금속|RF 급전선|링 구동선/.test(it)) { ids = ids.length ? ids : C.inst.filter((I) => I.role === 'modulator').map((I) => I.id); why = 'RF 선의 정확한 교차 좌표는 계산하지 않으므로 관련 변조기만 표시합니다.'; fix = { m: 'electrical', keys: ['rf'], t: '플립칩(3D 구동기)으로 바꾸거나 Advanced에서 레인 엇갈림을 늘리세요.' }; }
+    else if (/DC 배선 교차/.test(it)) { why = 'DC 선 교차 좌표는 계산하지 않습니다.'; fix = { m: 'electrical', keys: ['pp'], t: '패드 피치·다이 크기를 바꿔 팬아웃 트랙 공간을 만드세요.' }; }
+    else if (/파워 버짓|마진/.test(it)) { why = '시스템 예측(3A+ / 3W 엔진)에서 레이아웃 배선 손실을 뺀 마진입니다 — 특정 위치가 아니라 전체 손실의 합입니다.'; fix = { m: 'routing', keys: ['wr'], t: '긴 넷을 넓은 도파로로(배선 폭 w_r) — 산란 손실이 줄어듭니다.' }; }
+    else if (/선폭/.test(it)) { fix = { m: 'routing', keys: ['wr'], t: '배선 폭을 리소 한계 이상으로.' }; }
+    else if (/광 포트|포트 종류|레인 수|입·출력|전기 포트/.test(it)) { why = String(x.detail).replace(/<[^>]+>/g, ''); fix = { m: 'schematic', keys: ['mod', 'share'], t: '회로도(Mission 1)의 구성을 확인하세요.' }; }
+    else why = String(x.detail).replace(/<[^>]+>/g, '');
+    return { item: String(it).replace(/<[^>]+>/g, ''), status: x.status, ids, nets, pt, fix, why, located: !!(ids.length || nets.length || pt) };
+  }
+  function diagBox(D) {
+    const bs = D.ids.map((id) => C.bbox(C.I(id))).concat((C.routes || []).filter((r) => D.nets.includes(r.net)).flatMap((r) => LAB.sample(r.prims, 5).map((p) => [p[0], p[1], p[0], p[1]])));
+    if (D.pt) bs.push([D.pt[0] - 120, D.pt[1] - 120, D.pt[0] + 120, D.pt[1] + 120]);
+    if (!bs.length) return null;
+    return [Math.min(...bs.map((b) => b[0])), Math.min(...bs.map((b) => b[1])), Math.max(...bs.map((b) => b[2])), Math.max(...bs.map((b) => b[3]))];
+  }
+  function fitBox(b) { if (!b) { fit(); return; } const { w, h } = size(), pad = 60, bw = Math.max(80, b[2] - b[0] + 2 * pad), bh = Math.max(80, b[3] - b[1] + 2 * pad); cam = { s: Math.min(w / bw, h / bh), x: (b[0] + b[2]) / 2, y: (b[1] + b[3]) / 2 }; }
+  function showDiag(i) {
+    const x = CHK.checks[i]; if (!x) return;
+    diag = diagOf(x); sel = diag.ids.length === 1 ? { id: diag.ids[0] } : null;
+    if ((S().view || 'layout') !== 'layout') { S().view = 'layout'; save(); legend(); }
+    fitBox(diagBox(diag)); renderSel(); draw();
+    const ws = $('#lab-ws'); if (ws && ws.scrollIntoView) ws.scrollIntoView({ block: 'start', behavior: smqMotion() });
   }
 
   /* ---------------- canvas ---------------- */
@@ -300,23 +355,35 @@ window.LABUI = (() => {
     // die, edge margin
     g.strokeStyle = 'rgba(231,236,243,.7)'; g.lineWidth = 1.2 * DPR; g.strokeRect(TX(0), TY(C.H), C.W * s, C.H * s);
     g.setLineDash([4 * DPR, 4 * DPR]); g.strokeStyle = 'rgba(158,171,189,.35)'; const e = C.d.edge; g.strokeRect(TX(e), TY(C.H - e), (C.W - 2 * e) * s, (C.H - 2 * e) * s); g.setLineDash([]);
+    const LY = S().layers || { opt: 1, ele: 1, drc: 1 };   // view-only layer toggles (the exported GDS is not affected)
     // electrical lines under everything
-    (C.elines || []).forEach((l) => { g.strokeStyle = l.kind === 'rf' ? 'rgba(242,176,74,.75)' : 'rgba(158,171,189,.45)'; g.lineWidth = Math.max((l.kind === 'rf' ? 1.4 : 1) * DPR, (l.width_um || 0) * s); if (l.kind !== 'rf' && (l.width_um || 0) * s < 2 * DPR) g.setLineDash([3 * DPR, 3 * DPR]); g.beginPath(); l.pts.forEach((p, i) => (i ? g.lineTo(TX(p[0]), TY(p[1])) : g.moveTo(TX(p[0]), TY(p[1])))); g.stroke(); g.setLineDash([]); });
-    (C.pads || []).forEach((p) => { g.fillStyle = p.kind === 'rf' ? 'rgba(242,176,74,.55)' : 'rgba(158,171,189,.4)'; g.fillRect(TX(p.x - p.w / 2), TY(p.y + p.w / 2), p.w * s, p.w * s); });
+    if (LY.ele) (C.elines || []).forEach((l) => { g.strokeStyle = l.kind === 'rf' ? 'rgba(242,176,74,.75)' : 'rgba(158,171,189,.45)'; g.lineWidth = Math.max((l.kind === 'rf' ? 1.4 : 1) * DPR, (l.width_um || 0) * s); if (l.kind !== 'rf' && (l.width_um || 0) * s < 2 * DPR) g.setLineDash([3 * DPR, 3 * DPR]); g.beginPath(); l.pts.forEach((p, i) => (i ? g.lineTo(TX(p[0]), TY(p[1])) : g.moveTo(TX(p[0]), TY(p[1])))); g.stroke(); g.setLineDash([]); });
+    if (LY.ele) (C.pads || []).forEach((p) => { g.fillStyle = p.kind === 'rf' ? 'rgba(242,176,74,.55)' : 'rgba(158,171,189,.4)'; g.fillRect(TX(p.x - p.w / 2), TY(p.y + p.w / 2), p.w * s, p.w * s); });
     // components
-    const bad = new Set(); CHK.checks.filter((x) => x.status === 'FAIL').forEach((x) => C.inst.forEach((I) => { if (String(x.detail).includes(I.id)) bad.add(I.id); }));
+    const bad = new Set(); if (LY.drc) CHK.checks.filter((x) => x.status === 'FAIL').forEach((x) => C.inst.forEach((I) => { if (String(x.detail).includes(I.id)) bad.add(I.id); }));
     C.inst.forEach((I) => {
       const b = C.bbox(I), on = sel && (sel.id === I.id || sel.type === I.type);
       g.strokeStyle = bad.has(I.id) ? '#ff6b6b' : on ? '#64c9df' : 'rgba(158,171,189,.35)'; g.lineWidth = (on || bad.has(I.id) ? 2 : 1) * DPR;
+      if (on) { g.fillStyle = 'rgba(100,201,223,.12)'; g.fillRect(TX(b[0]) - 3 * DPR, TY(b[3]) - 3 * DPR, Math.max(2, (b[2] - b[0]) * s) + 6 * DPR, Math.max(2, (b[3] - b[1]) * s) + 6 * DPR); }
       g.strokeRect(TX(b[0]), TY(b[3]), Math.max(2, (b[2] - b[0]) * s), Math.max(2, (b[3] - b[1]) * s));
-      drawComp(g, I, px);
+      if (LY.opt || I.role === 'modulator') drawComp(g, I, px);
+      if (on && sel.id) { g.fillStyle = '#64c9df'; g.textAlign = 'left'; g.fillText(`▸ ${I.id}`, TX(b[0]), TY(b[3]) - 8 * DPR); }
     });
     // routes
-    C.samples.forEach(({ r, pts }) => { if (!pts.length) return; g.strokeStyle = r.ok ? '#64c9df' : '#ff6b6b'; g.lineWidth = Math.max(1.2 * DPR, (r.w || 0.5) * s); g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(TX(p[0]), TY(p[1])) : g.moveTo(TX(p[0]), TY(p[1])))); g.stroke(); });
+    if (LY.opt) C.samples.forEach(({ r, pts }) => { if (!pts.length || (!r.ok && !LY.drc)) return; g.strokeStyle = r.ok ? '#64c9df' : '#ff6b6b'; g.lineWidth = Math.max(1.2 * DPR, (r.w || 0.5) * s); g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(TX(p[0]), TY(p[1])) : g.moveTo(TX(p[0]), TY(p[1])))); g.stroke(); });
     // failure markers
     const mark = (x, y, t) => { g.strokeStyle = '#ff6b6b'; g.lineWidth = 2 * DPR; g.beginPath(); g.arc(TX(x), TY(y), 9 * DPR, 0, 2 * Math.PI); g.stroke(); g.fillStyle = '#ff6b6b'; g.textAlign = 'left'; g.fillText(t, TX(x) + 12 * DPR, TY(y)); };
-    (C.routes || []).filter((r) => !r.ok && r.at).forEach((r) => mark(r.at[0], r.at[1], `✗ ${r.code || '배선'}`));
-    if (C.gapAt && C.minGap < SH().pf().rules.gap) mark(C.gapAt[0], C.gapAt[1], `간격 ${C.minGap.toFixed(2)} µm`);
+    if (LY.drc) { (C.routes || []).filter((r) => !r.ok && r.at).forEach((r) => mark(r.at[0], r.at[1], `✗ ${r.code || '배선'}`));
+      if (C.gapAt && C.minGap < SH().pf().rules.gap) mark(C.gapAt[0], C.gapAt[1], `간격 ${C.minGap.toFixed(2)} µm`); }
+    // the selected diagnosis: its instances, nets and point in amber (drawn last, on top)
+    if (diag) {
+      g.setLineDash([6 * DPR, 4 * DPR]); g.strokeStyle = '#f2b04a'; g.lineWidth = 2.4 * DPR;
+      diag.ids.forEach((id) => { const I = C.I(id); if (!I) return; const b = C.bbox(I); g.strokeRect(TX(b[0]) - 4 * DPR, TY(b[3]) - 4 * DPR, (b[2] - b[0]) * s + 8 * DPR, (b[3] - b[1]) * s + 8 * DPR); });
+      g.setLineDash([]);
+      C.samples.filter(({ r }) => diag.nets.includes(r.net)).forEach(({ pts }) => { g.strokeStyle = 'rgba(242,176,74,.9)'; g.lineWidth = Math.max(3 * DPR, 2 * s); g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(TX(p[0]), TY(p[1])) : g.moveTo(TX(p[0]), TY(p[1])))); g.stroke(); });
+      if (diag.pt) { g.strokeStyle = '#f2b04a'; g.lineWidth = 2 * DPR; const X0 = TX(diag.pt[0]), Y0 = TY(diag.pt[1]); g.beginPath(); g.moveTo(X0 - 14 * DPR, Y0); g.lineTo(X0 + 14 * DPR, Y0); g.moveTo(X0, Y0 - 14 * DPR); g.lineTo(X0, Y0 + 14 * DPR); g.stroke(); g.beginPath(); g.arc(X0, Y0, 10 * DPR, 0, 2 * Math.PI); g.stroke(); }
+      g.fillStyle = '#f2b04a'; g.textAlign = 'left'; g.fillText(`진단: ${diag.item.slice(0, 40)}${diag.located ? '' : ' (위치 정보 없음)'}`, 8 * DPR, 28 * DPR);
+    }
     g.textAlign = 'left'; g.fillStyle = 'rgba(158,171,189,.9)'; g.fillText(`${(C.W / 1000).toFixed(2)} × ${(C.H / 1000).toFixed(2)} mm · ${C.mod.toUpperCase()} ×8 · 광 넷 ${(C.routes || []).length} (실패 ${(C.routes || []).filter((r) => !r.ok).length}) · 패드 ${(C.pads || []).length}`, 8 * DPR, 12 * DPR);
     // scale bar
     const bar = [10, 20, 50, 100, 200, 500, 1000, 2000].find((v) => v * s > 60 * DPR) || 5000; g.strokeStyle = '#e7ecf3'; g.lineWidth = 2 * DPR; g.beginPath(); g.moveTo(10 * DPR, cv().height - 12 * DPR); g.lineTo(10 * DPR + bar * s, cv().height - 12 * DPR); g.stroke(); g.fillStyle = '#e7ecf3'; g.fillText(`${bar >= 1000 ? bar / 1000 + ' mm' : bar + ' µm'}`, 14 * DPR + bar * s, cv().height - 12 * DPR);
@@ -418,10 +485,12 @@ window.LABUI = (() => {
     if (refit || !cam) fit(); else size();
     draw();
     if (SH() && SH().refreshMap) SH().refreshMap();
+    renderHooks.forEach((f) => { try { f(); } catch (e) { /* learning layer */ } });
   }
   const sched = (refit) => { clearTimeout(timer); timer = setTimeout(() => renderAll(refit), 90); };
   box.addEventListener('input', (e) => { const t = e.target.closest('[data-lk]'); if (!t) return; const p = pfP()[t.dataset.lk], v = +t.value; $('#lo-' + p.k).textContent = fmtV(p, v); setV(p.k, v); sched(p.k === 'W' || p.k === 'H' || p.k === 'mod' || p.k === 'share'); });
   box.addEventListener('change', (e) => {
+    const ly = e.target.closest && e.target.closest('[data-ly]'); if (ly) { const L2 = { opt: 1, ele: 1, drc: 1, ...(S().layers || {}) }; L2[ly.dataset.ly] = ly.checked ? 1 : 0; S().layers = L2; save(); draw(); return; }
     if (e.target.id !== 'lab-gds' || !e.target.files || !e.target.files[0]) return;
     const f = e.target.files[0], rd = new FileReader();
     rd.onload = () => { importGds(String(rd.result)); save(); renderAll(); };
@@ -434,7 +503,10 @@ window.LABUI = (() => {
     if (nx) { S().cur = Math.min(MISS.length - 1, cur() + 1); save(); renderAll(); return; }
     if (lv) { S().view = lv.dataset.lv; save(); cam = null; renderAll(true); return; }
     if (lt) { sel = sel && sel.type === lt.dataset.lt ? null : { type: lt.dataset.lt }; renderLib(); renderSel(); draw(); return; }
-    if (z) { if (z.dataset.z === 'fit') fit(); else cam.s *= z.dataset.z === 'in' ? 1.6 : 1 / 1.6; draw(); return; }
+    if (z) { if (z.dataset.z === 'fit') fit(); else if (z.dataset.z === 'sel') fitBox(diag ? diagBox(diag) : sel && sel.id && C.I(sel.id) ? C.bbox(C.I(sel.id)) : null); else cam.s *= z.dataset.z === 'in' ? 1.6 : 1 / 1.6; draw(); return; }
+    const dg = e.target.closest('[data-diag]'); if (dg) { showDiag(+dg.dataset.diag); return; }
+    if (e.target.closest('[data-diag-clear]')) { diag = null; renderSel(); draw(); return; }
+    const gm = e.target.closest('[data-goto]'); if (gm) { S().cur = MI[gm.dataset.goto] != null ? MI[gm.dataset.goto] : S().cur; if (gm.dataset.adv) S().mode = 'advanced'; save(); renderAll(); return; }
     if (e.target.closest('#lab-back')) { close(); if (SH()) SH().refreshMap(); return; }
     if (e.target.closest('#lab-guide')) { guide(); return; }
     if (la) {
@@ -442,7 +514,9 @@ window.LABUI = (() => {
       if (a === 'fit') { d.W = Math.ceil(C.need.W / 100) / 10; d.H = Math.ceil(C.need.H / 100) / 10; save(); renderAll(true); }
       if (a === 'auto') { const nd = LAB.defaults(ctx(), { mod: d.mod, share: d.share }); Object.assign(d, { P: nd.P, stag: nd.stag, edge: nd.edge, fp: nd.fp, W: nd.W, H: nd.H }); save(); renderAll(true); }
       if (a === 'arch') { const a3 = arch3(); d.mod = a3.mod; d.share = a3.share; d.stag = LAB.stagAuto(d); save(); renderAll(true); }
-      if (a === 'run') { S().ran = { hash: C.hash, sig: CHK.sig, at: new Date().toISOString() }; save(); renderAll(); const o = $('#lab-out'); if (o && o.scrollIntoView) o.scrollIntoView({ block: 'start', behavior: 'smooth' }); }   // the result table is below the workspace
+      if (a === 'pin') { S().pin = { hash: C.hash, at: new Date().toISOString(), snap: labSnap() }; save(); renderOut(); }
+      if (a === 'unpin') { delete S().pin; save(); renderOut(); }
+      if (a === 'run') { S().ran = { hash: C.hash, sig: CHK.sig, at: new Date().toISOString() }; save(); renderAll(); const o = $('#lab-out'); if (o && o.scrollIntoView) o.scrollIntoView({ block: 'start', behavior: smqMotion() }); }   // the result table is below the workspace
       if (a.startsWith('exp')) exportFiles(a);
     }
   });
@@ -455,8 +529,12 @@ window.LABUI = (() => {
   }
   // canvas: drag to pan, Ctrl/⌘ + wheel to zoom, click to select
   const c0 = $('#lab-cv');
-  c0.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, y: e.clientY, cx: cam && cam.x, cy: cam && cam.y, moved: false }; c0.setPointerCapture && c0.setPointerCapture(e.pointerId); });
-  c0.addEventListener('pointermove', (e) => { if (!drag || !cam) return; const dx = (e.clientX - drag.x) * DPR, dy = (e.clientY - drag.y) * DPR; if (Math.abs(dx) + Math.abs(dy) > 4) drag.moved = true; if (drag.moved) { cam.x = drag.cx - dx / cam.s; cam.y = drag.cy + dy / cam.s; draw(); } });
+  // two fingers pinch-zoom (touch); one finger / mouse drags; a tap selects
+  const touches = new Map(); let pinch = null;
+  const tdist = () => { const v = [...touches.values()]; return Math.hypot(v[0].x - v[1].x, v[0].y - v[1].y); };
+  c0.addEventListener('pointerdown', (e) => { touches.set(e.pointerId, { x: e.clientX, y: e.clientY }); if (touches.size === 2 && cam) { pinch = { d0: tdist(), s0: cam.s }; drag = null; return; } drag = { x: e.clientX, y: e.clientY, cx: cam && cam.x, cy: cam && cam.y, moved: false }; c0.setPointerCapture && c0.setPointerCapture(e.pointerId); });
+  ['pointerup', 'pointercancel'].forEach((ev) => c0.addEventListener(ev, (e) => { touches.delete(e.pointerId); if (touches.size < 2) pinch = null; }));
+  c0.addEventListener('pointermove', (e) => { if (touches.has(e.pointerId)) touches.set(e.pointerId, { x: e.clientX, y: e.clientY }); if (pinch && touches.size === 2 && cam) { cam.s = pinch.s0 * Math.max(0.2, Math.min(8, tdist() / Math.max(1, pinch.d0))); draw(); return; } if (!drag || !cam) return; const dx = (e.clientX - drag.x) * DPR, dy = (e.clientY - drag.y) * DPR; if (Math.abs(dx) + Math.abs(dy) > 4) drag.moved = true; if (drag.moved) { cam.x = drag.cx - dx / cam.s; cam.y = drag.cy + dy / cam.s; draw(); } });
   c0.addEventListener('pointerup', (e) => { if (!drag) return; const moved = drag.moved; drag = null; if (moved || !C) return; const r = c0.getBoundingClientRect(), I = hit((e.clientX - r.left) * DPR, (e.clientY - r.top) * DPR); sel = I ? { id: I.id, type: I.type } : null; renderLib(); renderSel(); draw(); });
   c0.addEventListener('wheel', (e) => { if (!(e.ctrlKey || e.metaKey) || !cam) return; e.preventDefault(); const r = c0.getBoundingClientRect(), px = (e.clientX - r.left) * DPR, py = (e.clientY - r.top) * DPR, wx = IX(px), wy = IY(py); cam.s *= e.deltaY < 0 ? 1.25 : 0.8; cam.x = wx - (px - c0.width / 2) / cam.s; cam.y = wy + (py - c0.height / 2) / cam.s; draw(); }, { passive: false });
   if (typeof ResizeObserver !== 'undefined') new ResizeObserver(() => { if (isOpen && C) { fit(); draw(); } }).observe(c0.parentElement);
@@ -465,6 +543,8 @@ window.LABUI = (() => {
   function close() { isOpen = false; box.hidden = true; const g = $('main.game'); if (g) g.hidden = false; }
   // focus(x, y, w): centre the layout view on (x, y) µm showing w µm across (inspection, screenshots)
   const focus = (x, y, w) => { if (!C || !CV) return; cam = { s: CV.width / w, x, y }; draw(); };
-  return { open, close, isOpen: () => isOpen, progress, focus, state: () => ({ C, CHK, MS, d: isOpen ? des() : null, s: SH() && SH().plat() ? S() : null }), MISS };
+  const renderHooks = [];
+  const mission = (k) => { S().cur = Math.max(0, Math.min(MISS.length - 1, k | 0)); save(); renderAll(); };
+  return { open, close, isOpen: () => isOpen, progress, focus, mission, onRender: (f) => renderHooks.push(f), state: () => ({ C, CHK, MS, d: isOpen ? des() : null, s: SH() && SH().plat() ? S() : null }), MISS };
 })();
 if (window.LABUI && window.GAME_SHELL && window.GAME_SHELL.plat()) window.GAME_SHELL.refreshMap();

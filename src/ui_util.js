@@ -88,5 +88,8 @@ const CONF = {
   asm: ['△', 'Unverified Assumption', '대표값으로 둔 가정 — 검증하지 않음'],
   nv: ['○', 'NOT VERIFIED', '이 프로그램이 검사하지 않은 항목 (PASS가 아님)']
 };
-const confBadge = (k, short) => { const c = CONF[k] || CONF.asm; return `<button type="button" class="conf conf-${k}" data-conf="${k}" title="${c[1]} — ${c[2]} (누르면 학습 가이드의 모델 한계)"><span aria-hidden="true">${c[0]}</span> ${short ? c[1].split(' ')[0] : c[1]}</button>`; };
+const CONF_SHORT = { an: 'Analytical', semi: 'Surrogate', exp: 'Experimental', asm: 'Assumption', nv: 'NOT VERIFIED' };
+const confBadge = (k, short) => { const c = CONF[k] || CONF.asm; return `<button type="button" class="conf conf-${k}" data-conf="${k}" title="${c[1]} — ${c[2]} (누르면 학습 가이드의 모델 한계)" aria-label="모델 근거: ${c[1]}"><span aria-hidden="true">${c[0]}</span> ${short ? CONF_SHORT[k] || c[1] : c[1]}</button>`; };
 const confLegend = (keys) => `<div class="conf-legend" role="note" aria-label="모델 신뢰도 범례">${(keys || Object.keys(CONF)).map((k) => `<span><b aria-hidden="true">${CONF[k][0]}</b> ${CONF[k][1]}</span>`).join('')}<span class="conf-hint">PASS/FAIL은 그 모델의 조건을 만족했는지이지, 제조 가능성 검증이 아닙니다.</span></div>`;
+// scroll behaviour that honours prefers-reduced-motion
+const smqMotion = () => { try { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'; } catch (e) { return 'auto'; } };

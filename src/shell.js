@@ -66,7 +66,13 @@ window.GAME_LEV = (id) => { if (!LMAP[id] || !state.plat) return null; const sv 
 // read-only snapshot for the Learning Guide (src/guide.js): it explains and explores, it never writes to the design or the score
 // read-only view for the PIC Design Lab (src/lab/ui.js): platform, cards, saved designs, campaign map refresh
 window.GAME_SHELL = { plat: () => state.plat, pf: () => (state.plat ? PLATFORMS[state.plat] : null), cards: () => (state.plat ? PP().cards : {}), stars: (id) => starsOf(id),
-  design: (id) => (state.plat ? { ...(DESP()[id] || {}) } : {}), refreshMap: () => renderMap(), busy: () => state.fabRunning || state.aiRunning != null };
+  design: (id) => (state.plat ? { ...(DESP()[id] || {}) } : {}), refreshMap: () => renderMap(), busy: () => state.fabRunning || state.aiRunning != null,
+  // v1.0 learning layer (src/learn.js): navigation, learning record, view prefs — never stars, scores or designs
+  curId: () => state.id, levels: () => PLAY.map((l) => ({ id: l.id, name: l.name, stage: l.stage, kind: l.kind })),
+  go: (id) => { if (!LMAP[id] || state.fabRunning || state.aiRunning != null) return; if (window.LABUI && window.LABUI.isOpen()) window.LABUI.close(); if (state.id !== id) { state.id = id; state.lastLogged = ''; persist(); } setupLevel(); },
+  review: () => (state.plat ? (PP().review = PP().review || {}) : {}), save: () => persist(), ui: () => UI, saveUI: () => store.set('smq3-ui', UI),
+  onLevel: (f) => levelHooks.push(f), progress: () => progressCount() };
+const levelHooks = [];
 window.GAME_CTX = () => {
   if (!state.plat || !state.cur) return null;
   const c = state.cur, K = kind(), S = c.S;
@@ -138,7 +144,7 @@ function renderMap() {
 // mouse users have no horizontal wheel: arrows page the campaign map (touch scrolls it directly)
 function mapArrows() { const m = $('#map'), max = m.scrollWidth - m.clientWidth; $('#map-l').hidden = !(max > 4 && m.scrollLeft > 4); $('#map-r').hidden = !(max > 4 && m.scrollLeft < max - 4); }
 $('#map').addEventListener('scroll', () => mapArrows(), { passive: true });
-['l', 'r'].forEach((k) => $('#map-' + k).addEventListener('click', () => { const m = $('#map'); m.scrollBy ? m.scrollBy({ left: (k === 'l' ? -1 : 1) * m.clientWidth * 0.8, behavior: 'smooth' }) : (m.scrollLeft += (k === 'l' ? -1 : 1) * m.clientWidth * 0.8); }));
+['l', 'r'].forEach((k) => $('#map-' + k).addEventListener('click', () => { const m = $('#map'); m.scrollBy ? m.scrollBy({ left: (k === 'l' ? -1 : 1) * m.clientWidth * 0.8, behavior: smqMotion() }) : (m.scrollLeft += (k === 'l' ? -1 : 1) * m.clientWidth * 0.8); }));
 window.addEventListener('resize', () => mapArrows());
 $('#map').addEventListener('click', (e) => {
   if (e.target.closest('[data-lab]')) { if (window.LABUI && !state.fabRunning && state.aiRunning == null) { window.LABUI.open(); renderMap(); } return; }
@@ -169,6 +175,7 @@ function setParam(k, v, fromBtn) {
   const p = params().find((x) => x.k === k); if (!p) return;
   const nv = snapP(p, v);
   if (nv === dv()[k] && !fromBtn) return;
+  noteChange(k, dv()[k], nv);
   putV(k, nv); state.fromAI[state.id] = false;
   const K = kind();
   if (!curStep() && K.onParam) K.onParam(lev(), des(), k);   // e.g. a boundary preset writes W and H
@@ -218,7 +225,7 @@ function evaluate() {
     if (!G.done[S.id] && S.done(l, res, mem)) { G.done[S.id] = Date.now(); ch = true; }
     state.cur = { l, d, res, sc: { perf: 0, comp: 0, total: 0 }, key: keyOf(d), robust: 0, fabHere: null, S, pr: null };
     if (ch) { persist(); renderGuided(); }
-    drawView(); renderHUD(); renderObjectives(); renderFabPanel(); renderHint(); scheduleIdle();
+    drawView(); renderHUD(); renderObjectives(); renderDelta(); renderFabPanel(); renderHint(); scheduleIdle();
     return;
   }
   const res = K.evaluate(l, d, null, { full: true });
@@ -232,7 +239,7 @@ function evaluate() {
     if (st && st.full && st.fullDone && !pr && !G.done[st.id] && st.fullDone(l, res, { fab: fabHere, ob: objectives() })) { G.done[st.id] = Date.now(); persist(); renderGuided(); }
   }
   if (K.landKeys && K.landKeys(l, d).includes('L') && K.land && !K.cheap) landFor('L');   // MMI coach needs the L sweep
-  drawView(); renderHUD(); renderObjectives(); renderFabPanel(); renderHint(); drawStrips(false); scheduleIdle();
+  drawView(); renderHUD(); renderObjectives(); renderDelta(); renderFabPanel(); renderHint(); drawStrips(false); scheduleIdle();
 }
 let idleT = null;
 function scheduleIdle() { clearTimeout(idleT); idleT = setTimeout(() => { computeChart(); drawStrips(true); renderCoach(); renderPanel(); renderCompare(); }, 110); }
@@ -414,8 +421,39 @@ $('#m-next').addEventListener('click', (e) => {
   if (lb && window.LABUI) { window.LABUI.open(); renderMap(); return; }
   if (!b || !LMAP[b.dataset.next]) return;
   state.id = b.dataset.next; state.lastLogged = ''; persist(); setupLevel();
-  const m = $('#mission'); if (m.scrollIntoView) m.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  const m = $('#mission'); if (m.scrollIntoView) m.scrollIntoView({ block: 'start', behavior: smqMotion() });
 });
+/* ---------- parameter → result feedback (v1.0 §6.3 / §7.3): what changed, which mission metrics moved, why, trade-off ---------- */
+// The "before" is taken when a burst of changes to one knob starts (a slider drag is one change); up to three objective rows
+// that moved are shown, status flips first. The physical reason and trade-off come from the Learning Guide's parameter table.
+function metricRows() {
+  const c = state.cur; if (!c) return [];
+  try {
+    const rows = c.S ? c.S.goals(c.l, c.res, stepMem(c.S)) : c.pr ? c.pr.goals(c.l, c.res) : objectives().flatMap((o) => o.items);
+    return rows.filter((x) => !x.na && !x.crit).map((x) => ({ k: String(x.k).replace(/<[^>]+>/g, ''), v: String(x.v).replace(/<[^>]+>/g, ''), ok: !!x.ok }));
+  } catch (e) { return []; }
+}
+function noteChange(k, from, to) {
+  const ch = state.chg, now = Date.now();
+  if (!ch || ch.id !== state.id || ch.k !== k || now - ch.at > 1500 || !!ch.step !== !!curStep()) state.chg = { id: state.id, k, from, to, at: now, before: metricRows(), step: !!curStep() };
+  else { ch.to = to; ch.at = now; }
+}
+const numOf = (v) => { const m = String(v).replace(/−/g, '-').match(/-?\d+(?:\.\d+)?/); return m ? +m[0] : null; };
+function renderDelta() {
+  const box = $('#delta'), ch = state.chg, c = state.cur;
+  if (!ch || !c || ch.id !== state.id || ch.from === ch.to || ch.from == null) { box.hidden = true; return; }
+  const p = params().find((x) => x.k === ch.k); if (!p) { box.hidden = true; return; }
+  const now = metricRows(), prev = new Map(ch.before.map((x) => [x.k, x]));
+  const moved = now.map((x) => { const b = prev.get(x.k); if (!b || b.v === x.v) return null; const a = numOf(b.v), z = numOf(x.v); return { k: x.k, from: b.v, to: x.v, flip: b.ok !== x.ok ? (x.ok ? 'pass' : 'fail') : null, rel: a != null && z != null ? Math.abs(z - a) / Math.max(1e-9, Math.abs(a)) : 0 }; }).filter(Boolean)
+    .sort((a, b) => (!!b.flip - !!a.flip) || b.rel - a.rel).slice(0, 3);
+  const G = window.GAME_GUIDE && window.GAME_GUIDE.content && window.GAME_GUIDE.content[LMAP[state.id].kind], row = G && G.P && G.P[ch.k];
+  const up = +ch.to > +ch.from, why = row ? (up ? row.up : row.dn) : null;
+  box.hidden = false;
+  box.innerHTML = `<div class="dh"><b>바꾼 것</b><span>${p.label}${p.sym ? ` (${p.sym})` : ''}: ${pFmt(p, ch.from)} → ${pFmt(p, ch.to)}</span></div>`
+    + (moved.length ? `<ul aria-label="미션 지표 변화">${moved.map((m) => `<li>${m.k}: ${m.from} → <b>${m.to}</b>${m.flip ? `<span class="flip ${m.flip === 'pass' ? 'st-PASS' : 'st-FAIL'}">${m.flip === 'pass' ? '✓ 이제 충족' : '✕ 이제 미달'}</span>` : ''}</li>`).join('')}</ul>` : '<p>미션 지표는 바뀌지 않았습니다 (이 손잡이는 지금 목표에 직접 걸려 있지 않거나 변화가 표시 자릿수보다 작습니다).</p>')
+    + (why ? `<p><b>물리적으로</b> ${p.sym || p.k} ${up ? '↑' : '↓'}: ${why}</p>` : '')
+    + (row && row.tr ? `<p><b>Trade-off</b> ${row.tr}${row.f ? ` · 관계식 <span style="font-family:var(--mono)">${row.f}</span>` : ''}</p>` : '');
+}
 function renderCards() {
   const slots = LEVELS.slice(), n = PLAY.filter((l) => PP().cards[l.id]).length, last = PLAY.filter((l) => PP().cards[l.id]).sort((a, b) => PP().cards[b.id].t - PP().cards[a.id].t)[0];
   $('#cards-sum').textContent = `${n} / ${PLAY.length} 보유${last ? ` · 최근 ${last.id}` : ''}`;
@@ -434,7 +472,7 @@ function sizeCanvas() {
   cv.width = Math.round(w * DPR); cv.height = Math.round(h * DPR); cv.style.height = h + 'px';
   if (state.cur) drawView();
 }
-function drawView() { const c = state.cur; if (!c || c.l.id !== state.id) return; ((c.S && c.S.draw) || kind().draw)($('#field'), c.l, c.res, { hintTier: state.hintTier, redraw: drawView }); }
+function drawView() { const c = state.cur; if (c) $('#field').setAttribute('aria-label', `${c.l.id} ${c.l.name} 소자 화면 — 점수·핵심 수치는 아래 타일, 목표는 미션 카드에 텍스트로 있습니다`); if (!c || c.l.id !== state.id) return; ((c.S && c.S.draw) || kind().draw)($('#field'), c.l, c.res, { hintTier: state.hintTier, redraw: drawView }); }
 function renderHUD() {
   const c = state.cur, K = kind();
   if (c.S) {
@@ -454,6 +492,8 @@ function renderHUD() {
 function computeChart() {
   const c = state.cur, src = c.S && c.S.chart ? c.S : kind(), out = src.chart(c.l, c.res);
   $('#chart').innerHTML = out.html; $('#legend').innerHTML = out.legend; $('#chart-title').textContent = src.chartTitle(c.l, c.res);
+  // text alternative: the chart title and its legend (the numbers behind it are in the tiles and objectives as text)
+  const svg = $('#chart svg'); if (svg) { svg.setAttribute('role', 'img'); svg.setAttribute('aria-label', `${$('#chart-title').textContent} — ${$('#legend').textContent.replace(/\s+/g, ' ').trim()}`); }
 }
 function renderHint() {
   const h = $('#hint'), c = state.cur; h.hidden = state.hintTier < 2 || !c || c.l.id !== state.id;
@@ -516,7 +556,7 @@ function renderCoach() {
   const go = !state.cur.S && !state.cur.pr && /Tape-out|공정 변동/.test(m.h) && !$('#btn-fab').disabled ? '<div class="row-btns" style="margin-top:6px"><button class="btn" data-go="fab">Fab Run으로 ↓</button></div>' : '';
   box.innerHTML = `<div class="coach-h"><span class="badge">코치 · ${HINTS[state.hintTier]}</span><b>${m.h}</b></div><p>${m.b}</p>${go}`;
 }
-$('#coach').addEventListener('click', (e) => { if (!e.target.closest('[data-go="fab"]')) return; const f = $('#fab'); if (f.scrollIntoView) f.scrollIntoView({ block: 'center', behavior: 'smooth' }); setTimeout(() => $('#btn-fab').focus({ preventScroll: true }), 350); });
+$('#coach').addEventListener('click', (e) => { if (!e.target.closest('[data-go="fab"]')) return; const f = $('#fab'); if (f.scrollIntoView) f.scrollIntoView({ block: 'center', behavior: smqMotion() }); setTimeout(() => $('#btn-fab').focus({ preventScroll: true }), 350); });
 /* ---------- mini status bar: score, stars and the coach headline stay in sight while the field is scrolled away ---------- */
 const mini = { off: true, dir: '▲' };
 function renderMini() {
@@ -534,7 +574,7 @@ let miniRaf = 0;
 function miniCheck() { miniRaf = 0; const r = $('#view').getBoundingClientRect(); const off = !r.height || r.bottom > 80; if (off !== mini.off) { mini.off = off; renderMini(); } }
 const miniSched = () => { if (!miniRaf) miniRaf = requestAnimationFrame(miniCheck); };
 window.addEventListener('scroll', miniSched, { passive: true }); window.addEventListener('resize', miniSched);
-$('#mb-go').addEventListener('click', () => { const v = $('#view'); if (v.scrollIntoView) v.scrollIntoView({ block: 'center', behavior: 'smooth' }); });
+$('#mb-go').addEventListener('click', () => { const v = $('#view'); if (v.scrollIntoView) v.scrollIntoView({ block: 'center', behavior: smqMotion() }); });
 
 /* ---------- Fab run ---------- */
 function drawWafer(dies, done) {
@@ -867,12 +907,13 @@ function setupLevel() {
   if (l.concepts) { const seen = (PP().seen = PP().seen || {}); cc.innerHTML = `<summary>개념 노트 · ${l.concepts.length}개 — ${l.concepts.map((c) => c[0].replace(/<[^>]+>/g, '')).join(', ')}</summary><dl>${l.concepts.map(([t, d]) => `<dt>${t}</dt><dd>${d}</dd>`).join('')}</dl>`; cc.open = !seen[l.id] && !curStep(); seen[l.id] = 1; }   // a guided step carries its own intro, so the notes start folded there
   { const rb = $('#m-rate'); rb.hidden = !RATE_LEVELS.includes(l.id); if (!rb.hidden) $('#m-rate-b').innerHTML = RATE_DEF; }
   const pf = PLATFORMS[state.plat]; $('#plat-chip').innerHTML = `${pf.short} · ${pf.band}<span>변경</span>`; $('#plat-chip').hidden = false;
-  state.land = {}; state.cur = null;
+  state.land = {}; state.cur = null; state.chg = null;
   // a guided step gives no stars, cards, AI or tape-out: those panels step aside until Full Design
   $('main.game').classList.toggle('stepping', !!curStep());
   renderMap(); renderGuided(); renderParams(); syncParamUI(); renderModeSeg(); renderHintSeg(); sizeCanvas();
   const w = state.wafer[state.id]; drawWafer(w, w ? w.length : 0);
   evaluate(); renderAI(); renderDB(); renderCards();
+  levelHooks.forEach((f) => { try { f(state.id); } catch (e) { /* learning layer must not break the level */ } });
 }
 const hot = window.claude && window.claude.hot;
 if (hot && hot.snapshot) hot.snapshot(() => ({ id: state.id, DES }));
@@ -894,7 +935,7 @@ function renderSave(st) {
 const DATA = smqModal($('#data-dlg'));
 function renderDataStatus(st, adv) {
   st = st || store.status(); const u = store.usage(), m = st.meta || {};
-  const name = { 'smq3-progress': '진행 기록 (별·카드·학습 기록)', 'smq3-designs': '레벨 설계', 'smq3-db': 'Design DB', 'smq3-lab': 'Design Lab 프로젝트', 'smq3-ui': '화면 설정', 'smq3-meta': '백업 메타', 'smq3-undo': '복원 직전 데이터' };
+  const name = { 'smq3-id': '현재 레벨', 'smq-mode-v1': '난이도', 'smq-hint-v1': '힌트 단계', 'smq-guide-depth': '가이드 깊이', 'smq3-progress': '진행 기록 (별·카드·학습 기록)', 'smq3-designs': '레벨 설계', 'smq3-db': 'Design DB', 'smq3-lab': 'Design Lab 프로젝트', 'smq3-ui': '화면 설정', 'smq3-meta': '백업 메타', 'smq3-undo': '복원 직전 데이터' };
   $('#data-status').innerHTML = `<table class="ltbl"><tr><th>상태</th><td>${st.state === 'failed' ? `<b class="st-FAIL">✕ 저장 실패</b> · ${st.err || ''}${st.failed.length ? ` (${st.failed.join(', ')})` : ''}` : st.state === 'saving' ? '저장 중…' : '<b class="st-PASS">✓ 저장됨</b>'}${st.lastOk ? ` · 마지막 저장 ${tstr(st.lastOk)}` : ''}</td></tr>`
     + `<tr><th>마지막 전체 백업</th><td>${m.lastBackup ? tstr(m.lastBackup) : '없음'}${adv ? ` · <span class="st-WARNING">${adv}</span>` : ''}</td></tr>`
     + `<tr><th>사용량</th><td>${kb(u.total)} (브라우저 한도 보통 ≈ 5 MB)<br><span class="note">${Object.entries(u.by).map(([k2, v]) => `${name[k2] || k2} ${kb(v)}`).join(' · ')}</span></td></tr>`
@@ -959,7 +1000,7 @@ document.addEventListener('click', (e) => {
   const b = e.target.closest('[data-conf]'); if (!b || !window.GAME_GUIDE) return;
   const lab = window.LABUI && window.LABUI.isOpen();
   if (lab) { const g = $('#lab-guide'); if (g) g.click(); } else window.GAME_GUIDE.open();
-  setTimeout(() => { const h = document.querySelector('#g-F-h'); if (h) { h.scrollIntoView({ block: 'start' }); h.focus({ preventScroll: true }); } }, 60);
+  setTimeout(() => { const h = document.querySelector('#g-F-h'); if (h) { if (h.scrollIntoView) h.scrollIntoView({ block: 'start' }); h.focus({ preventScroll: true }); } }, 60);
 });
 
 const UI = store.get('smq3-ui', {}) || {};   // view-only preferences (which sections are open); never progress or designs

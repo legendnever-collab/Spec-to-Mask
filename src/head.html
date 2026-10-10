@@ -8,7 +8,7 @@
 :root{
   color-scheme: dark;
   --bg:#0d131c; --panel:#131b26; --panel-2:#192330; --line:#253244; --line-2:#334459;
-  --fg:#e7ecf3; --fg-2:#9eabbd; --fg-3:#6c7b90;
+  --fg:#e7ecf3; --fg-2:#9eabbd; --fg-3:#8a98ad;
   --amber:#f2b04a; --amber-ink:#2a1a02; --rose:#ff8d9c; --cyan:#64c9df;
   --pass:#5dd193; --fail:#ff6b6b;
   --display:"Chakra Petch","Arial Narrow",system-ui,sans-serif;
@@ -326,6 +326,12 @@ details.sect[open] > summary{margin-bottom:10px}
 .lab-ws-h h2{margin:0}
 .lab-zoom{display:flex;gap:4px}
 .lab-zoom .btn{padding:5px 9px}
+.lab-layers{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12px;color:var(--fg-2);margin:0 0 6px}
+.lab-layers label{display:inline-flex;align-items:center;gap:5px;cursor:pointer;min-height:28px}
+.lab-layers input{accent-color:var(--cyan);width:16px;height:16px}
+.diagbtn{font-size:11.5px;padding:3px 8px;margin-top:3px}
+.diag{border:1px solid var(--amber);border-radius:8px;padding:8px 10px;background:rgba(242,176,74,.06);margin-bottom:8px}
+.diag h3{color:var(--amber)!important}
 .lab-cv{background:#0b1220;border:1px solid var(--line);border-radius:8px;overflow:hidden;touch-action:none}
 #lab-cv{display:block;width:100%;height:auto;cursor:grab}
 .libitem{display:block;width:100%;text-align:left;border:1px solid var(--line-2);border-radius:8px;background:var(--panel-2);padding:7px 9px;margin-bottom:6px;cursor:pointer;font-size:12.5px;color:var(--fg-2)}
@@ -416,6 +422,36 @@ details.sect[open] > summary{margin-bottom:10px}
 .tsens{margin-top:10px;border-top:1px dashed var(--line);padding-top:10px}
 .tsens h4{margin:0 0 6px;font-size:13.5px;color:var(--fg)}
 .cmp th.grp{background:var(--panel-2);color:var(--cyan);font-size:12px;letter-spacing:.03em;text-align:left}
+/* parameter → result feedback */
+.delta{padding:9px 14px;border-bottom:1px solid var(--line);font-size:12.5px;color:var(--fg-2);background:rgba(100,201,223,.05)}
+.delta .dh{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;margin-bottom:3px}
+.delta .dh b{color:var(--cyan);font-weight:600}
+.delta ul{list-style:none;margin:2px 0;padding:0;display:grid;gap:1px}
+.delta li{font-family:var(--mono);font-size:12px}
+.delta li .flip{font-family:var(--body);font-size:11.5px;margin-left:6px}
+.delta p{margin:3px 0 0;max-width:80ch}
+/* learning path bar, review, onboarding */
+.pathbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin:-4px 0 12px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.pathbar .pb-h{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:var(--cyan)}
+.pb-steps{display:flex;flex-wrap:wrap;gap:4px;list-style:none;margin:0;padding:0}
+.pb-st{font-family:var(--mono);font-size:12px;border:1px solid var(--line-2);border-radius:999px;padding:4px 10px;min-height:30px;background:var(--panel-2);color:var(--fg-2);cursor:pointer}
+.pb-st.done{color:var(--pass);border-color:rgba(93,209,147,.5)}
+.pb-st.here{border-color:var(--amber);color:var(--amber);font-weight:600}
+.pb-next{font-size:12.5px;padding:6px 11px} .pb-help,.pb-pick{font-size:12px;padding:6px 10px} .pb-done{font-size:12.5px}
+.review summary{color:var(--cyan)!important}
+.rv{padding:0 12px 10px;display:grid;gap:10px}
+.rv-q{border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin:0}
+.rv-q legend{font-size:13px;color:var(--fg);padding:0 4px;max-width:72ch}
+.rv-o{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--fg-2);padding:4px 0;cursor:pointer;min-height:28px}
+.rv-o input{margin-top:3px;accent-color:var(--cyan);width:16px;height:16px;flex:0 0 auto}
+.rv-o.ans span{color:var(--pass)} .rv-o.ans span::after{content:"  ✓ 정답"}
+.rv-o.wrong span{color:var(--fail)} .rv-o.wrong span::after{content:"  ✕"}
+.rv-x{font-size:12.5px;margin:6px 0 0;line-height:1.6;max-width:80ch;outline:none}
+.onb{max-width:760px}
+.onb .gdlg-body{padding:6px 16px 10px}
+.onb-paths{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.onb-paths .choice{padding:10px 12px}
+.onb-f{display:flex;justify-content:space-between;gap:8px;padding:10px 16px 14px;border-top:1px solid var(--line)}
 /* save state chip, failure banner, data dialog */
 .savechip{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--panel);color:var(--fg-2);cursor:pointer}
 .savechip .sv-dot{width:8px;height:8px;border-radius:50%;background:var(--pass)}
@@ -429,6 +465,15 @@ details.sect[open] > summary{margin-bottom:10px}
 .chk input{accent-color:var(--amber);width:16px;height:16px}
 #rs-ta{height:90px}
 .rs-err{color:var(--fail)} .rs-warn{color:var(--amber)}
+/* touch: larger targets on coarse pointers (WCAG 2.5.8 ≥ 24 px; aim ≈ 40 px) */
+@media (pointer:coarse){
+  .nudge{width:44px;height:40px}
+  .seg button{min-height:38px;padding:8px 12px}
+  .btn{min-height:40px}
+  .stp{min-height:40px}
+  .lab-zoom .btn{min-width:40px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 /* phone width: tighter header and map (kept last so it overrides the base rules) */
 @media (max-width:600px){
   .top{margin-bottom:10px}
@@ -461,6 +506,7 @@ details.sect[open] > summary{margin-bottom:10px}
 
   <div id="gamewrap">
   <div class="mapwrap"><nav class="map" id="map" aria-label="캠페인 맵"></nav><button class="mapnav" id="map-l" aria-label="지도 왼쪽으로" hidden>◀</button><button class="mapnav r" id="map-r" aria-label="지도 오른쪽으로" hidden>▶</button></div>
+  <div class="pathbar" id="pathbar" role="navigation" aria-label="학습 경로"></div>
 
   <main class="game">
     <section class="card" id="mission" aria-live="polite">
@@ -481,6 +527,7 @@ details.sect[open] > summary{margin-bottom:10px}
       <div class="locked-note" id="m-locked" hidden></div>
       <div class="objs" id="objs"></div>
       <div id="m-next"></div>
+      <details class="concepts review" id="m-review" hidden></details>
       <p class="note" id="mode-note"></p>
     </section>
 
@@ -493,10 +540,11 @@ details.sect[open] > summary{margin-bottom:10px}
         </div>
       </div>
       <div class="canvas-wrap" id="cwrap">
-        <canvas id="field" aria-label="MMI 내부 광 강도 분포 |E|²"></canvas>
+        <canvas id="field" role="img" aria-label="소자 화면"></canvas>
         <div class="drcbar" id="drcbar" hidden></div>
       </div>
       <div class="coach" id="coach" aria-live="polite" hidden></div>
+      <div class="delta" id="delta" aria-live="polite" hidden></div>
       <div class="tiles" id="tiles"></div>
     </section>
 
@@ -593,14 +641,16 @@ details.sect[open] > summary{margin-bottom:10px}
       <div class="lab-prog" id="lab-prog" aria-live="polite"></div>
       <ol class="stepper" id="lab-steps" aria-label="Design Lab 미션"></ol>
       <div class="stepnote" id="lab-note" aria-live="polite"></div>
+      <details class="concepts review" id="lab-review" hidden></details>
     </div>
     <div class="lab-grid">
       <aside class="card" id="lab-lib" aria-labelledby="lab-lib-h"><h2 id="lab-lib-h"><span class="n">L</span>Design Library</h2><div id="lab-lib-list"></div></aside>
       <section class="card" id="lab-ws" aria-labelledby="lab-ws-h">
         <div class="lab-ws-h"><h2 id="lab-ws-h"><span class="n">W</span>Workspace</h2>
           <div class="seg" id="lab-view" role="radiogroup" aria-label="보기"></div>
-          <div class="lab-zoom"><button class="btn" data-z="in" aria-label="확대">＋</button><button class="btn" data-z="out" aria-label="축소">－</button><button class="btn" data-z="fit">맞춤</button></div></div>
-        <div class="lab-cv"><canvas id="lab-cv" aria-label="PIC 회로도 / 레이아웃"></canvas></div>
+          <div class="lab-zoom"><button class="btn" data-z="in" aria-label="확대">＋</button><button class="btn" data-z="out" aria-label="축소">－</button><button class="btn" data-z="fit" title="전체 설계 맞춤 (보기 초기화)">맞춤</button><button class="btn" data-z="sel" title="선택한 소자·오류 위치로">선택</button></div></div>
+        <div class="lab-layers" id="lab-layers" role="group" aria-label="보기 레이어 (보기 전용 — GDS와 무관)"></div>
+        <div class="lab-cv"><canvas id="lab-cv" role="img" aria-label="PIC 회로도 / 레이아웃 — 소자·검사 결과는 오른쪽 Inspector와 아래 결과 표에 텍스트로 있습니다"></canvas></div>
         <div class="legend" id="lab-legend"></div>
         <div class="coach" id="lab-coach" aria-live="polite" hidden></div>
       </section>
@@ -622,6 +672,13 @@ details.sect[open] > summary{margin-bottom:10px}
       </div>
       <nav class="gdlg-toc" id="guide-toc" aria-label="학습 가이드 목차"></nav>
       <div class="gdlg-body" id="guide-body" tabindex="-1"></div>
+    </div>
+  </div>
+  <div class="gdlg-back" id="onb-dlg" hidden>
+    <div class="gdlg ddlg onb" role="dialog" aria-modal="true" aria-labelledby="onb-h">
+      <div class="gdlg-h"><div><div class="eyebrow">처음 안내 · <span id="onb-n"></span></div><h2 id="onb-h"></h2></div><div class="gdlg-ctl"><button class="btn" data-close>건너뛰기</button></div></div>
+      <div class="gdlg-body" id="onb-b"></div>
+      <div class="onb-f"><button class="btn" id="onb-prev">← 이전</button><button class="btn pri" id="onb-next">다음 →</button></div>
     </div>
   </div>
   <div class="gdlg-back" id="data-dlg" hidden>

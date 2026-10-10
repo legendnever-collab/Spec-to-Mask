@@ -8,7 +8,7 @@
 :root{
   color-scheme: dark;
   --bg:#0d131c; --panel:#131b26; --panel-2:#192330; --line:#253244; --line-2:#334459;
-  --fg:#e7ecf3; --fg-2:#9eabbd; --fg-3:#6c7b90;
+  --fg:#e7ecf3; --fg-2:#9eabbd; --fg-3:#8a98ad;
   --amber:#f2b04a; --amber-ink:#2a1a02; --rose:#ff8d9c; --cyan:#64c9df;
   --pass:#5dd193; --fail:#ff6b6b;
   --display:"Chakra Petch","Arial Narrow",system-ui,sans-serif;
@@ -326,6 +326,12 @@ details.sect[open] > summary{margin-bottom:10px}
 .lab-ws-h h2{margin:0}
 .lab-zoom{display:flex;gap:4px}
 .lab-zoom .btn{padding:5px 9px}
+.lab-layers{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12px;color:var(--fg-2);margin:0 0 6px}
+.lab-layers label{display:inline-flex;align-items:center;gap:5px;cursor:pointer;min-height:28px}
+.lab-layers input{accent-color:var(--cyan);width:16px;height:16px}
+.diagbtn{font-size:11.5px;padding:3px 8px;margin-top:3px}
+.diag{border:1px solid var(--amber);border-radius:8px;padding:8px 10px;background:rgba(242,176,74,.06);margin-bottom:8px}
+.diag h3{color:var(--amber)!important}
 .lab-cv{background:#0b1220;border:1px solid var(--line);border-radius:8px;overflow:hidden;touch-action:none}
 #lab-cv{display:block;width:100%;height:auto;cursor:grab}
 .libitem{display:block;width:100%;text-align:left;border:1px solid var(--line-2);border-radius:8px;background:var(--panel-2);padding:7px 9px;margin-bottom:6px;cursor:pointer;font-size:12.5px;color:var(--fg-2)}
@@ -416,6 +422,36 @@ details.sect[open] > summary{margin-bottom:10px}
 .tsens{margin-top:10px;border-top:1px dashed var(--line);padding-top:10px}
 .tsens h4{margin:0 0 6px;font-size:13.5px;color:var(--fg)}
 .cmp th.grp{background:var(--panel-2);color:var(--cyan);font-size:12px;letter-spacing:.03em;text-align:left}
+/* parameter → result feedback */
+.delta{padding:9px 14px;border-bottom:1px solid var(--line);font-size:12.5px;color:var(--fg-2);background:rgba(100,201,223,.05)}
+.delta .dh{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;margin-bottom:3px}
+.delta .dh b{color:var(--cyan);font-weight:600}
+.delta ul{list-style:none;margin:2px 0;padding:0;display:grid;gap:1px}
+.delta li{font-family:var(--mono);font-size:12px}
+.delta li .flip{font-family:var(--body);font-size:11.5px;margin-left:6px}
+.delta p{margin:3px 0 0;max-width:80ch}
+/* learning path bar, review, onboarding */
+.pathbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin:-4px 0 12px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.pathbar .pb-h{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:var(--cyan)}
+.pb-steps{display:flex;flex-wrap:wrap;gap:4px;list-style:none;margin:0;padding:0}
+.pb-st{font-family:var(--mono);font-size:12px;border:1px solid var(--line-2);border-radius:999px;padding:4px 10px;min-height:30px;background:var(--panel-2);color:var(--fg-2);cursor:pointer}
+.pb-st.done{color:var(--pass);border-color:rgba(93,209,147,.5)}
+.pb-st.here{border-color:var(--amber);color:var(--amber);font-weight:600}
+.pb-next{font-size:12.5px;padding:6px 11px} .pb-help,.pb-pick{font-size:12px;padding:6px 10px} .pb-done{font-size:12.5px}
+.review summary{color:var(--cyan)!important}
+.rv{padding:0 12px 10px;display:grid;gap:10px}
+.rv-q{border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin:0}
+.rv-q legend{font-size:13px;color:var(--fg);padding:0 4px;max-width:72ch}
+.rv-o{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--fg-2);padding:4px 0;cursor:pointer;min-height:28px}
+.rv-o input{margin-top:3px;accent-color:var(--cyan);width:16px;height:16px;flex:0 0 auto}
+.rv-o.ans span{color:var(--pass)} .rv-o.ans span::after{content:"  ✓ 정답"}
+.rv-o.wrong span{color:var(--fail)} .rv-o.wrong span::after{content:"  ✕"}
+.rv-x{font-size:12.5px;margin:6px 0 0;line-height:1.6;max-width:80ch;outline:none}
+.onb{max-width:760px}
+.onb .gdlg-body{padding:6px 16px 10px}
+.onb-paths{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.onb-paths .choice{padding:10px 12px}
+.onb-f{display:flex;justify-content:space-between;gap:8px;padding:10px 16px 14px;border-top:1px solid var(--line)}
 /* save state chip, failure banner, data dialog */
 .savechip{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--panel);color:var(--fg-2);cursor:pointer}
 .savechip .sv-dot{width:8px;height:8px;border-radius:50%;background:var(--pass)}
@@ -429,6 +465,15 @@ details.sect[open] > summary{margin-bottom:10px}
 .chk input{accent-color:var(--amber);width:16px;height:16px}
 #rs-ta{height:90px}
 .rs-err{color:var(--fail)} .rs-warn{color:var(--amber)}
+/* touch: larger targets on coarse pointers (WCAG 2.5.8 ≥ 24 px; aim ≈ 40 px) */
+@media (pointer:coarse){
+  .nudge{width:44px;height:40px}
+  .seg button{min-height:38px;padding:8px 12px}
+  .btn{min-height:40px}
+  .stp{min-height:40px}
+  .lab-zoom .btn{min-width:40px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 /* phone width: tighter header and map (kept last so it overrides the base rules) */
 @media (max-width:600px){
   .top{margin-bottom:10px}
@@ -461,6 +506,7 @@ details.sect[open] > summary{margin-bottom:10px}
 
   <div id="gamewrap">
   <div class="mapwrap"><nav class="map" id="map" aria-label="캠페인 맵"></nav><button class="mapnav" id="map-l" aria-label="지도 왼쪽으로" hidden>◀</button><button class="mapnav r" id="map-r" aria-label="지도 오른쪽으로" hidden>▶</button></div>
+  <div class="pathbar" id="pathbar" role="navigation" aria-label="학습 경로"></div>
 
   <main class="game">
     <section class="card" id="mission" aria-live="polite">
@@ -481,6 +527,7 @@ details.sect[open] > summary{margin-bottom:10px}
       <div class="locked-note" id="m-locked" hidden></div>
       <div class="objs" id="objs"></div>
       <div id="m-next"></div>
+      <details class="concepts review" id="m-review" hidden></details>
       <p class="note" id="mode-note"></p>
     </section>
 
@@ -493,10 +540,11 @@ details.sect[open] > summary{margin-bottom:10px}
         </div>
       </div>
       <div class="canvas-wrap" id="cwrap">
-        <canvas id="field" aria-label="MMI 내부 광 강도 분포 |E|²"></canvas>
+        <canvas id="field" role="img" aria-label="소자 화면"></canvas>
         <div class="drcbar" id="drcbar" hidden></div>
       </div>
       <div class="coach" id="coach" aria-live="polite" hidden></div>
+      <div class="delta" id="delta" aria-live="polite" hidden></div>
       <div class="tiles" id="tiles"></div>
     </section>
 
@@ -593,14 +641,16 @@ details.sect[open] > summary{margin-bottom:10px}
       <div class="lab-prog" id="lab-prog" aria-live="polite"></div>
       <ol class="stepper" id="lab-steps" aria-label="Design Lab 미션"></ol>
       <div class="stepnote" id="lab-note" aria-live="polite"></div>
+      <details class="concepts review" id="lab-review" hidden></details>
     </div>
     <div class="lab-grid">
       <aside class="card" id="lab-lib" aria-labelledby="lab-lib-h"><h2 id="lab-lib-h"><span class="n">L</span>Design Library</h2><div id="lab-lib-list"></div></aside>
       <section class="card" id="lab-ws" aria-labelledby="lab-ws-h">
         <div class="lab-ws-h"><h2 id="lab-ws-h"><span class="n">W</span>Workspace</h2>
           <div class="seg" id="lab-view" role="radiogroup" aria-label="보기"></div>
-          <div class="lab-zoom"><button class="btn" data-z="in" aria-label="확대">＋</button><button class="btn" data-z="out" aria-label="축소">－</button><button class="btn" data-z="fit">맞춤</button></div></div>
-        <div class="lab-cv"><canvas id="lab-cv" aria-label="PIC 회로도 / 레이아웃"></canvas></div>
+          <div class="lab-zoom"><button class="btn" data-z="in" aria-label="확대">＋</button><button class="btn" data-z="out" aria-label="축소">－</button><button class="btn" data-z="fit" title="전체 설계 맞춤 (보기 초기화)">맞춤</button><button class="btn" data-z="sel" title="선택한 소자·오류 위치로">선택</button></div></div>
+        <div class="lab-layers" id="lab-layers" role="group" aria-label="보기 레이어 (보기 전용 — GDS와 무관)"></div>
+        <div class="lab-cv"><canvas id="lab-cv" role="img" aria-label="PIC 회로도 / 레이아웃 — 소자·검사 결과는 오른쪽 Inspector와 아래 결과 표에 텍스트로 있습니다"></canvas></div>
         <div class="legend" id="lab-legend"></div>
         <div class="coach" id="lab-coach" aria-live="polite" hidden></div>
       </section>
@@ -622,6 +672,13 @@ details.sect[open] > summary{margin-bottom:10px}
       </div>
       <nav class="gdlg-toc" id="guide-toc" aria-label="학습 가이드 목차"></nav>
       <div class="gdlg-body" id="guide-body" tabindex="-1"></div>
+    </div>
+  </div>
+  <div class="gdlg-back" id="onb-dlg" hidden>
+    <div class="gdlg ddlg onb" role="dialog" aria-modal="true" aria-labelledby="onb-h">
+      <div class="gdlg-h"><div><div class="eyebrow">처음 안내 · <span id="onb-n"></span></div><h2 id="onb-h"></h2></div><div class="gdlg-ctl"><button class="btn" data-close>건너뛰기</button></div></div>
+      <div class="gdlg-body" id="onb-b"></div>
+      <div class="onb-f"><button class="btn" id="onb-prev">← 이전</button><button class="btn pri" id="onb-next">다음 →</button></div>
     </div>
   </div>
   <div class="gdlg-back" id="data-dlg" hidden>
@@ -885,8 +942,11 @@ const CONF = {
   asm: ['△', 'Unverified Assumption', '대표값으로 둔 가정 — 검증하지 않음'],
   nv: ['○', 'NOT VERIFIED', '이 프로그램이 검사하지 않은 항목 (PASS가 아님)']
 };
-const confBadge = (k, short) => { const c = CONF[k] || CONF.asm; return `<button type="button" class="conf conf-${k}" data-conf="${k}" title="${c[1]} — ${c[2]} (누르면 학습 가이드의 모델 한계)"><span aria-hidden="true">${c[0]}</span> ${short ? c[1].split(' ')[0] : c[1]}</button>`; };
+const CONF_SHORT = { an: 'Analytical', semi: 'Surrogate', exp: 'Experimental', asm: 'Assumption', nv: 'NOT VERIFIED' };
+const confBadge = (k, short) => { const c = CONF[k] || CONF.asm; return `<button type="button" class="conf conf-${k}" data-conf="${k}" title="${c[1]} — ${c[2]} (누르면 학습 가이드의 모델 한계)" aria-label="모델 근거: ${c[1]}"><span aria-hidden="true">${c[0]}</span> ${short ? CONF_SHORT[k] || c[1] : c[1]}</button>`; };
 const confLegend = (keys) => `<div class="conf-legend" role="note" aria-label="모델 신뢰도 범례">${(keys || Object.keys(CONF)).map((k) => `<span><b aria-hidden="true">${CONF[k][0]}</b> ${CONF[k][1]}</span>`).join('')}<span class="conf-hint">PASS/FAIL은 그 모델의 조건을 만족했는지이지, 제조 가능성 검증이 아닙니다.</span></div>`;
+// scroll behaviour that honours prefers-reduced-motion
+const smqMotion = () => { try { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'; } catch (e) { return 'auto'; } };
 
 // ===== Persistence: one place that writes localStorage, reports save state, and makes / checks / restores full backups =====
 // Every write goes through SMQ_STORE.set, which returns false and flips the state to 'failed' when the browser refuses
@@ -4536,7 +4596,7 @@ KINDS.wdm = (() => {
     const row = (k, v, c, n) => `<tr><th scope="row">${k}${n ? `<br><span class="note">${n}</span>` : ''}</th><td>${v}</td><td>${confBadge(c, true)}</td></tr>`;
     const thin = r.margin < CAUTION_DB;
     return `<div class="tsens"><h4>WDM8 결과의 근거 — 광학 모델 · 제어 구조 · 시스템 견고성</h4>`
-      + (thin ? `<p class="note" style="color:var(--amber)">△ 주의: 최악 채널 마진 ${f2(r.margin, 2)} dB &lt; ${CAUTION_DB} dB — 아래 가정 하나만 나빠져도 링크가 닫힐 수 있습니다 (임계값 ${CAUTION_DB} dB는 교육용 휴리스틱이며 파운드리·표준 요구값이 아닙니다).</p>` : '')
+      + (r.margin < 0 ? `<p class="note" style="color:var(--fail)">✕ 최악 채널 마진 ${f2(r.margin, 2)} dB — 지금 설계는 링크가 닫히지 않습니다. 아래 광학 항목에서 원인을 찾으세요.</p>` : thin ? `<p class="note" style="color:var(--amber)">△ 주의: 최악 채널 마진 ${f2(r.margin, 2)} dB &lt; ${CAUTION_DB} dB — 아래 가정 하나만 나빠져도 링크가 닫힐 수 있습니다 (임계값 ${CAUTION_DB} dB는 교육용 휴리스틱이며 파운드리·표준 요구값이 아닙니다).</p>` : '')
       + `<div class="gtbl"><table class="cmp"><tr><th>항목</th><th>값</th><th>근거</th></tr>`
       + head('Optical Model — 계산된 광학')
       + row('최악 채널 마진', `${f2(r.margin, 2)} dB (λ${w.j})`, 'semi', '버스 위 링 8개의 all-pass 응답 곱 + PAM4 눈')
@@ -6764,7 +6824,13 @@ window.GAME_LEV = (id) => { if (!LMAP[id] || !state.plat) return null; const sv 
 // read-only snapshot for the Learning Guide (src/guide.js): it explains and explores, it never writes to the design or the score
 // read-only view for the PIC Design Lab (src/lab/ui.js): platform, cards, saved designs, campaign map refresh
 window.GAME_SHELL = { plat: () => state.plat, pf: () => (state.plat ? PLATFORMS[state.plat] : null), cards: () => (state.plat ? PP().cards : {}), stars: (id) => starsOf(id),
-  design: (id) => (state.plat ? { ...(DESP()[id] || {}) } : {}), refreshMap: () => renderMap(), busy: () => state.fabRunning || state.aiRunning != null };
+  design: (id) => (state.plat ? { ...(DESP()[id] || {}) } : {}), refreshMap: () => renderMap(), busy: () => state.fabRunning || state.aiRunning != null,
+  // v1.0 learning layer (src/learn.js): navigation, learning record, view prefs — never stars, scores or designs
+  curId: () => state.id, levels: () => PLAY.map((l) => ({ id: l.id, name: l.name, stage: l.stage, kind: l.kind })),
+  go: (id) => { if (!LMAP[id] || state.fabRunning || state.aiRunning != null) return; if (window.LABUI && window.LABUI.isOpen()) window.LABUI.close(); if (state.id !== id) { state.id = id; state.lastLogged = ''; persist(); } setupLevel(); },
+  review: () => (state.plat ? (PP().review = PP().review || {}) : {}), save: () => persist(), ui: () => UI, saveUI: () => store.set('smq3-ui', UI),
+  onLevel: (f) => levelHooks.push(f), progress: () => progressCount() };
+const levelHooks = [];
 window.GAME_CTX = () => {
   if (!state.plat || !state.cur) return null;
   const c = state.cur, K = kind(), S = c.S;
@@ -6836,7 +6902,7 @@ function renderMap() {
 // mouse users have no horizontal wheel: arrows page the campaign map (touch scrolls it directly)
 function mapArrows() { const m = $('#map'), max = m.scrollWidth - m.clientWidth; $('#map-l').hidden = !(max > 4 && m.scrollLeft > 4); $('#map-r').hidden = !(max > 4 && m.scrollLeft < max - 4); }
 $('#map').addEventListener('scroll', () => mapArrows(), { passive: true });
-['l', 'r'].forEach((k) => $('#map-' + k).addEventListener('click', () => { const m = $('#map'); m.scrollBy ? m.scrollBy({ left: (k === 'l' ? -1 : 1) * m.clientWidth * 0.8, behavior: 'smooth' }) : (m.scrollLeft += (k === 'l' ? -1 : 1) * m.clientWidth * 0.8); }));
+['l', 'r'].forEach((k) => $('#map-' + k).addEventListener('click', () => { const m = $('#map'); m.scrollBy ? m.scrollBy({ left: (k === 'l' ? -1 : 1) * m.clientWidth * 0.8, behavior: smqMotion() }) : (m.scrollLeft += (k === 'l' ? -1 : 1) * m.clientWidth * 0.8); }));
 window.addEventListener('resize', () => mapArrows());
 $('#map').addEventListener('click', (e) => {
   if (e.target.closest('[data-lab]')) { if (window.LABUI && !state.fabRunning && state.aiRunning == null) { window.LABUI.open(); renderMap(); } return; }
@@ -6867,6 +6933,7 @@ function setParam(k, v, fromBtn) {
   const p = params().find((x) => x.k === k); if (!p) return;
   const nv = snapP(p, v);
   if (nv === dv()[k] && !fromBtn) return;
+  noteChange(k, dv()[k], nv);
   putV(k, nv); state.fromAI[state.id] = false;
   const K = kind();
   if (!curStep() && K.onParam) K.onParam(lev(), des(), k);   // e.g. a boundary preset writes W and H
@@ -6916,7 +6983,7 @@ function evaluate() {
     if (!G.done[S.id] && S.done(l, res, mem)) { G.done[S.id] = Date.now(); ch = true; }
     state.cur = { l, d, res, sc: { perf: 0, comp: 0, total: 0 }, key: keyOf(d), robust: 0, fabHere: null, S, pr: null };
     if (ch) { persist(); renderGuided(); }
-    drawView(); renderHUD(); renderObjectives(); renderFabPanel(); renderHint(); scheduleIdle();
+    drawView(); renderHUD(); renderObjectives(); renderDelta(); renderFabPanel(); renderHint(); scheduleIdle();
     return;
   }
   const res = K.evaluate(l, d, null, { full: true });
@@ -6930,7 +6997,7 @@ function evaluate() {
     if (st && st.full && st.fullDone && !pr && !G.done[st.id] && st.fullDone(l, res, { fab: fabHere, ob: objectives() })) { G.done[st.id] = Date.now(); persist(); renderGuided(); }
   }
   if (K.landKeys && K.landKeys(l, d).includes('L') && K.land && !K.cheap) landFor('L');   // MMI coach needs the L sweep
-  drawView(); renderHUD(); renderObjectives(); renderFabPanel(); renderHint(); drawStrips(false); scheduleIdle();
+  drawView(); renderHUD(); renderObjectives(); renderDelta(); renderFabPanel(); renderHint(); drawStrips(false); scheduleIdle();
 }
 let idleT = null;
 function scheduleIdle() { clearTimeout(idleT); idleT = setTimeout(() => { computeChart(); drawStrips(true); renderCoach(); renderPanel(); renderCompare(); }, 110); }
@@ -7112,8 +7179,39 @@ $('#m-next').addEventListener('click', (e) => {
   if (lb && window.LABUI) { window.LABUI.open(); renderMap(); return; }
   if (!b || !LMAP[b.dataset.next]) return;
   state.id = b.dataset.next; state.lastLogged = ''; persist(); setupLevel();
-  const m = $('#mission'); if (m.scrollIntoView) m.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  const m = $('#mission'); if (m.scrollIntoView) m.scrollIntoView({ block: 'start', behavior: smqMotion() });
 });
+/* ---------- parameter → result feedback (v1.0 §6.3 / §7.3): what changed, which mission metrics moved, why, trade-off ---------- */
+// The "before" is taken when a burst of changes to one knob starts (a slider drag is one change); up to three objective rows
+// that moved are shown, status flips first. The physical reason and trade-off come from the Learning Guide's parameter table.
+function metricRows() {
+  const c = state.cur; if (!c) return [];
+  try {
+    const rows = c.S ? c.S.goals(c.l, c.res, stepMem(c.S)) : c.pr ? c.pr.goals(c.l, c.res) : objectives().flatMap((o) => o.items);
+    return rows.filter((x) => !x.na && !x.crit).map((x) => ({ k: String(x.k).replace(/<[^>]+>/g, ''), v: String(x.v).replace(/<[^>]+>/g, ''), ok: !!x.ok }));
+  } catch (e) { return []; }
+}
+function noteChange(k, from, to) {
+  const ch = state.chg, now = Date.now();
+  if (!ch || ch.id !== state.id || ch.k !== k || now - ch.at > 1500 || !!ch.step !== !!curStep()) state.chg = { id: state.id, k, from, to, at: now, before: metricRows(), step: !!curStep() };
+  else { ch.to = to; ch.at = now; }
+}
+const numOf = (v) => { const m = String(v).replace(/−/g, '-').match(/-?\d+(?:\.\d+)?/); return m ? +m[0] : null; };
+function renderDelta() {
+  const box = $('#delta'), ch = state.chg, c = state.cur;
+  if (!ch || !c || ch.id !== state.id || ch.from === ch.to || ch.from == null) { box.hidden = true; return; }
+  const p = params().find((x) => x.k === ch.k); if (!p) { box.hidden = true; return; }
+  const now = metricRows(), prev = new Map(ch.before.map((x) => [x.k, x]));
+  const moved = now.map((x) => { const b = prev.get(x.k); if (!b || b.v === x.v) return null; const a = numOf(b.v), z = numOf(x.v); return { k: x.k, from: b.v, to: x.v, flip: b.ok !== x.ok ? (x.ok ? 'pass' : 'fail') : null, rel: a != null && z != null ? Math.abs(z - a) / Math.max(1e-9, Math.abs(a)) : 0 }; }).filter(Boolean)
+    .sort((a, b) => (!!b.flip - !!a.flip) || b.rel - a.rel).slice(0, 3);
+  const G = window.GAME_GUIDE && window.GAME_GUIDE.content && window.GAME_GUIDE.content[LMAP[state.id].kind], row = G && G.P && G.P[ch.k];
+  const up = +ch.to > +ch.from, why = row ? (up ? row.up : row.dn) : null;
+  box.hidden = false;
+  box.innerHTML = `<div class="dh"><b>바꾼 것</b><span>${p.label}${p.sym ? ` (${p.sym})` : ''}: ${pFmt(p, ch.from)} → ${pFmt(p, ch.to)}</span></div>`
+    + (moved.length ? `<ul aria-label="미션 지표 변화">${moved.map((m) => `<li>${m.k}: ${m.from} → <b>${m.to}</b>${m.flip ? `<span class="flip ${m.flip === 'pass' ? 'st-PASS' : 'st-FAIL'}">${m.flip === 'pass' ? '✓ 이제 충족' : '✕ 이제 미달'}</span>` : ''}</li>`).join('')}</ul>` : '<p>미션 지표는 바뀌지 않았습니다 (이 손잡이는 지금 목표에 직접 걸려 있지 않거나 변화가 표시 자릿수보다 작습니다).</p>')
+    + (why ? `<p><b>물리적으로</b> ${p.sym || p.k} ${up ? '↑' : '↓'}: ${why}</p>` : '')
+    + (row && row.tr ? `<p><b>Trade-off</b> ${row.tr}${row.f ? ` · 관계식 <span style="font-family:var(--mono)">${row.f}</span>` : ''}</p>` : '');
+}
 function renderCards() {
   const slots = LEVELS.slice(), n = PLAY.filter((l) => PP().cards[l.id]).length, last = PLAY.filter((l) => PP().cards[l.id]).sort((a, b) => PP().cards[b.id].t - PP().cards[a.id].t)[0];
   $('#cards-sum').textContent = `${n} / ${PLAY.length} 보유${last ? ` · 최근 ${last.id}` : ''}`;
@@ -7132,7 +7230,7 @@ function sizeCanvas() {
   cv.width = Math.round(w * DPR); cv.height = Math.round(h * DPR); cv.style.height = h + 'px';
   if (state.cur) drawView();
 }
-function drawView() { const c = state.cur; if (!c || c.l.id !== state.id) return; ((c.S && c.S.draw) || kind().draw)($('#field'), c.l, c.res, { hintTier: state.hintTier, redraw: drawView }); }
+function drawView() { const c = state.cur; if (c) $('#field').setAttribute('aria-label', `${c.l.id} ${c.l.name} 소자 화면 — 점수·핵심 수치는 아래 타일, 목표는 미션 카드에 텍스트로 있습니다`); if (!c || c.l.id !== state.id) return; ((c.S && c.S.draw) || kind().draw)($('#field'), c.l, c.res, { hintTier: state.hintTier, redraw: drawView }); }
 function renderHUD() {
   const c = state.cur, K = kind();
   if (c.S) {
@@ -7152,6 +7250,8 @@ function renderHUD() {
 function computeChart() {
   const c = state.cur, src = c.S && c.S.chart ? c.S : kind(), out = src.chart(c.l, c.res);
   $('#chart').innerHTML = out.html; $('#legend').innerHTML = out.legend; $('#chart-title').textContent = src.chartTitle(c.l, c.res);
+  // text alternative: the chart title and its legend (the numbers behind it are in the tiles and objectives as text)
+  const svg = $('#chart svg'); if (svg) { svg.setAttribute('role', 'img'); svg.setAttribute('aria-label', `${$('#chart-title').textContent} — ${$('#legend').textContent.replace(/\s+/g, ' ').trim()}`); }
 }
 function renderHint() {
   const h = $('#hint'), c = state.cur; h.hidden = state.hintTier < 2 || !c || c.l.id !== state.id;
@@ -7214,7 +7314,7 @@ function renderCoach() {
   const go = !state.cur.S && !state.cur.pr && /Tape-out|공정 변동/.test(m.h) && !$('#btn-fab').disabled ? '<div class="row-btns" style="margin-top:6px"><button class="btn" data-go="fab">Fab Run으로 ↓</button></div>' : '';
   box.innerHTML = `<div class="coach-h"><span class="badge">코치 · ${HINTS[state.hintTier]}</span><b>${m.h}</b></div><p>${m.b}</p>${go}`;
 }
-$('#coach').addEventListener('click', (e) => { if (!e.target.closest('[data-go="fab"]')) return; const f = $('#fab'); if (f.scrollIntoView) f.scrollIntoView({ block: 'center', behavior: 'smooth' }); setTimeout(() => $('#btn-fab').focus({ preventScroll: true }), 350); });
+$('#coach').addEventListener('click', (e) => { if (!e.target.closest('[data-go="fab"]')) return; const f = $('#fab'); if (f.scrollIntoView) f.scrollIntoView({ block: 'center', behavior: smqMotion() }); setTimeout(() => $('#btn-fab').focus({ preventScroll: true }), 350); });
 /* ---------- mini status bar: score, stars and the coach headline stay in sight while the field is scrolled away ---------- */
 const mini = { off: true, dir: '▲' };
 function renderMini() {
@@ -7232,7 +7332,7 @@ let miniRaf = 0;
 function miniCheck() { miniRaf = 0; const r = $('#view').getBoundingClientRect(); const off = !r.height || r.bottom > 80; if (off !== mini.off) { mini.off = off; renderMini(); } }
 const miniSched = () => { if (!miniRaf) miniRaf = requestAnimationFrame(miniCheck); };
 window.addEventListener('scroll', miniSched, { passive: true }); window.addEventListener('resize', miniSched);
-$('#mb-go').addEventListener('click', () => { const v = $('#view'); if (v.scrollIntoView) v.scrollIntoView({ block: 'center', behavior: 'smooth' }); });
+$('#mb-go').addEventListener('click', () => { const v = $('#view'); if (v.scrollIntoView) v.scrollIntoView({ block: 'center', behavior: smqMotion() }); });
 
 /* ---------- Fab run ---------- */
 function drawWafer(dies, done) {
@@ -7565,12 +7665,13 @@ function setupLevel() {
   if (l.concepts) { const seen = (PP().seen = PP().seen || {}); cc.innerHTML = `<summary>개념 노트 · ${l.concepts.length}개 — ${l.concepts.map((c) => c[0].replace(/<[^>]+>/g, '')).join(', ')}</summary><dl>${l.concepts.map(([t, d]) => `<dt>${t}</dt><dd>${d}</dd>`).join('')}</dl>`; cc.open = !seen[l.id] && !curStep(); seen[l.id] = 1; }   // a guided step carries its own intro, so the notes start folded there
   { const rb = $('#m-rate'); rb.hidden = !RATE_LEVELS.includes(l.id); if (!rb.hidden) $('#m-rate-b').innerHTML = RATE_DEF; }
   const pf = PLATFORMS[state.plat]; $('#plat-chip').innerHTML = `${pf.short} · ${pf.band}<span>변경</span>`; $('#plat-chip').hidden = false;
-  state.land = {}; state.cur = null;
+  state.land = {}; state.cur = null; state.chg = null;
   // a guided step gives no stars, cards, AI or tape-out: those panels step aside until Full Design
   $('main.game').classList.toggle('stepping', !!curStep());
   renderMap(); renderGuided(); renderParams(); syncParamUI(); renderModeSeg(); renderHintSeg(); sizeCanvas();
   const w = state.wafer[state.id]; drawWafer(w, w ? w.length : 0);
   evaluate(); renderAI(); renderDB(); renderCards();
+  levelHooks.forEach((f) => { try { f(state.id); } catch (e) { /* learning layer must not break the level */ } });
 }
 const hot = window.claude && window.claude.hot;
 if (hot && hot.snapshot) hot.snapshot(() => ({ id: state.id, DES }));
@@ -7592,7 +7693,7 @@ function renderSave(st) {
 const DATA = smqModal($('#data-dlg'));
 function renderDataStatus(st, adv) {
   st = st || store.status(); const u = store.usage(), m = st.meta || {};
-  const name = { 'smq3-progress': '진행 기록 (별·카드·학습 기록)', 'smq3-designs': '레벨 설계', 'smq3-db': 'Design DB', 'smq3-lab': 'Design Lab 프로젝트', 'smq3-ui': '화면 설정', 'smq3-meta': '백업 메타', 'smq3-undo': '복원 직전 데이터' };
+  const name = { 'smq3-id': '현재 레벨', 'smq-mode-v1': '난이도', 'smq-hint-v1': '힌트 단계', 'smq-guide-depth': '가이드 깊이', 'smq3-progress': '진행 기록 (별·카드·학습 기록)', 'smq3-designs': '레벨 설계', 'smq3-db': 'Design DB', 'smq3-lab': 'Design Lab 프로젝트', 'smq3-ui': '화면 설정', 'smq3-meta': '백업 메타', 'smq3-undo': '복원 직전 데이터' };
   $('#data-status').innerHTML = `<table class="ltbl"><tr><th>상태</th><td>${st.state === 'failed' ? `<b class="st-FAIL">✕ 저장 실패</b> · ${st.err || ''}${st.failed.length ? ` (${st.failed.join(', ')})` : ''}` : st.state === 'saving' ? '저장 중…' : '<b class="st-PASS">✓ 저장됨</b>'}${st.lastOk ? ` · 마지막 저장 ${tstr(st.lastOk)}` : ''}</td></tr>`
     + `<tr><th>마지막 전체 백업</th><td>${m.lastBackup ? tstr(m.lastBackup) : '없음'}${adv ? ` · <span class="st-WARNING">${adv}</span>` : ''}</td></tr>`
     + `<tr><th>사용량</th><td>${kb(u.total)} (브라우저 한도 보통 ≈ 5 MB)<br><span class="note">${Object.entries(u.by).map(([k2, v]) => `${name[k2] || k2} ${kb(v)}`).join(' · ')}</span></td></tr>`
@@ -7657,7 +7758,7 @@ document.addEventListener('click', (e) => {
   const b = e.target.closest('[data-conf]'); if (!b || !window.GAME_GUIDE) return;
   const lab = window.LABUI && window.LABUI.isOpen();
   if (lab) { const g = $('#lab-guide'); if (g) g.click(); } else window.GAME_GUIDE.open();
-  setTimeout(() => { const h = document.querySelector('#g-F-h'); if (h) { h.scrollIntoView({ block: 'start' }); h.focus({ preventScroll: true }); } }, 60);
+  setTimeout(() => { const h = document.querySelector('#g-F-h'); if (h) { if (h.scrollIntoView) h.scrollIntoView({ block: 'start' }); h.focus({ preventScroll: true }); } }, 60);
 });
 
 const UI = store.get('smq3-ui', {}) || {};   // view-only preferences (which sections are open); never progress or designs
@@ -8321,7 +8422,7 @@ window.LABUI = (() => {
   const KEY = 'smq3-lab';
   const load = () => { try { const v = localStorage.getItem(KEY); return v ? JSON.parse(v) : {}; } catch (e) { return {}; } };
   const save = () => SMQ_STORE.set(KEY, LS);   // a refused write shows in the header save chip (src/persist.js)
-  let LS = load(), isOpen = false, C = null, CHK = null, MS = null, sel = null, cam = null, drag = null, timer = null;
+  let LS = load(), isOpen = false, C = null, CHK = null, MS = null, sel = null, cam = null, drag = null, timer = null, diag = null;
   const SH = () => window.GAME_SHELL;
   const S = () => { const p = SH().plat(); LS[p] = LS[p] || {}; return LS[p]; };
   const ctx = () => ({ pf: SH().pf(), lev: (id) => window.GAME_LEV(id), cards: SH().cards(), des3: Object.keys(SH().design('3A+')).length ? SH().design('3A+') : null, desW: Object.keys(SH().design('3W') || {}).length ? SH().design('3W') : null, gds: S().gds || null });
@@ -8418,7 +8519,7 @@ window.LABUI = (() => {
     const sm = { PASS: 0, WARNING: 0, FAIL: 0, 'NOT VERIFIED': 0 }; r.checks.forEach((c) => { if (sm[c.status] != null) sm[c.status]++; });   // count from the checks themselves, not the stated summary
     S().gds = { design_hash: r.design_hash, gds: r.gds, gds_sha1: r.gds_sha1, cells: r.cells, summary: sm, checks: r.checks.map(({ group, item, status, detail }) => ({ group, item, status, detail })), at: new Date().toISOString() };
   }
-  function setV(k, v) { const d = des(); if (k === 'mod' && ((v | 0) === 2) !== ((d.mod | 0) === 2)) { S().d = LAB.defaults(ctx(), { mod: v | 0, share: 0 }); save(); return; } d[k] = v; if (k === 'mod' || k === 'rf') d.stag = LAB.stagAuto(d); save(); }   // no reset: run / export validity follows the design hash
+  function setV(k, v) { diag = null; const d = des(); if (k === 'mod' && ((v | 0) === 2) !== ((d.mod | 0) === 2)) { S().d = LAB.defaults(ctx(), { mod: v | 0, share: 0 }); save(); return; } d[k] = v; if (k === 'mod' || k === 'rf') d.stag = LAB.stagAuto(d); save(); }   // no reset: run / export validity follows the design hash
 
   /* ---------------- render ---------------- */
   const pfP = () => PR(SH().pf());
@@ -8477,6 +8578,13 @@ window.LABUI = (() => {
     $('#lab-lib-list').innerHTML = it.join('') + '<p class="note">카드가 있으면 내 설계, 없으면 각 레벨의 기준 설계로 조립합니다. 항목을 누르면 그 소자들이 강조됩니다.</p>';
   }
   function renderSel() {
+    if (diag) {
+      const D = diag, mi = D.fix ? MISS.findIndex((m) => m.id === D.fix.m) : -1, P = pfP();
+      $('#lab-sel').innerHTML = `<div class="diag"><h3>진단 · ${D.item}</h3><p class="note">${stBadge(D.status)} ${D.why || ''}</p>`
+        + `<p class="note">${D.located ? `표시: ${[D.ids.length ? `소자 ${D.ids.slice(0, 6).join(', ')}${D.ids.length > 6 ? ' …' : ''}` : '', D.nets.length ? `넷 ${D.nets.length}개` : '', D.pt ? `지점 (${D.pt[0].toFixed(0)}, ${D.pt[1].toFixed(0)}) µm` : ''].filter(Boolean).join(' · ')}` : '이 검사는 위치를 계산하지 않습니다 — 캔버스에 임의의 지점을 표시하지 않습니다.'}</p>`
+        + (D.fix ? `<p class="note"><b>고칠 곳:</b> ${D.fix.t}${D.fix.keys.length ? ` (손잡이: ${D.fix.keys.map((k) => (P[k] ? P[k].label : k)).join(', ')})` : ''}</p><div class="row-btns">${mi >= 0 ? `<button class="btn" data-goto="${D.fix.m}" ${D.fix.keys.some((k) => MISS[mi].adv.includes(k)) ? 'data-adv="1"' : ''}>Mission ${mi + 1}로 가기</button>` : ''}<button class="btn" data-diag-clear="1">진단 닫기</button></div>` : '<div class="row-btns"><button class="btn" data-diag-clear="1">진단 닫기</button></div>') + '</div>';
+      return;
+    }
     const box2 = $('#lab-sel');
     if (!sel || !sel.id) { box2.innerHTML = sel && sel.type ? `<h3>${sel.type} 강조</h3><p class="note">${C.inst.filter((x) => x.type === sel.type).length}개 — 캔버스에서 하나를 누르면 상세를 봅니다.</p>` : '<p class="note">캔버스(회로도·레이아웃)에서 소자를 누르면 여기에 파라미터·포트·연결·크기·손실·DRC 상태가 나옵니다.</p>'; return; }
     const I = C.I(sel.id); if (!I) { box2.innerHTML = ''; return; }
@@ -8492,7 +8600,7 @@ window.LABUI = (() => {
   function renderOut() {
     const m = MISS[cur()], d = des(), pf = SH().pf(); let t = '', h = '';
     const chk = (re) => CHK.checks.filter((x) => re.test(x.item));
-    const ctab = (rows) => `<table class="ltbl"><tr><th>검사</th><th>상태</th><th>내용</th></tr>${rows.map((x) => `<tr><td>${x.item}</td><td>${stBadge(x.status)}</td><td>${x.detail || ''}</td></tr>`).join('')}</table>`;
+    const ctab = (rows) => `<table class="ltbl"><tr><th>검사</th><th>상태</th><th>내용</th></tr>${rows.map((x) => `<tr><td>${x.item}</td><td>${stBadge(x.status)}${x.status === 'FAIL' || x.status === 'WARNING' ? `<br><button class="btn diagbtn" data-diag="${CHK.checks.indexOf(x)}" aria-label="${String(x.item).replace(/<[^>]+>/g, '')} 위치 보기">위치 보기</button>` : ''}</td><td>${x.detail || ''}</td></tr>`).join('')}</table>`;
     if (m.id === 'schematic') {
       t = '회로 구성';
       h = `<table class="ltbl">${row(['레인', `${LAB.LANES} × ${224} Gb/s 라인 (200G 순 데이터)`])}${row(['변조기', C.mod === 'mzm' ? 'TW-MZM (2-3) + 바이어스 히터' : C.mod === 'wdm' ? `공유 버스 all-pass 링 ×8 (2-3R, 3W) · ${C.wdm.r.grid} GHz · 출력 1` : 'all-pass 링 (2-3R) + 링 히터'])}${row(['레이저 입력', `${C.nL}개 (1:${C.N})`])}${row(['분배 트리', C.depth ? `1×2 MMI ${C.depth}단 × ${C.nL} = ${C.inst.filter((x) => x.type === 'mmi1x2').length}개` : '없음'])}${row(['모니터', d.mon ? '레인마다 2 % 탭 + Ge PD' : '없음'])}${row(['소자 / 광 넷 / 전기 넷', `${C.inst.length} / ${C.onets.length} / ${C.enets.length}`])}</table>` + ctab(CHK.checks.filter((x) => x.group === 'Connectivity'));
@@ -8538,10 +8646,20 @@ window.LABUI = (() => {
     const lv = s.wdm ? '3W' : '3A+';
     return `<h4>레이아웃 결과 vs 시스템 예측 (${lv} 엔진)</h4><table class="ltbl">${row([s.wdm ? '3W 모델 (같은 링·격자·배정·링 간격)' : '3A+ 모델 (같은 변조기·레이저 공유)', `${s.src} → 최악 ${s.wdm ? '채널' : '레인'} 마진 ${s.marginModel.toFixed(2)} dB · 모듈 ${s.pw.toFixed(2)} W · ${s.pj.toFixed(2)} pJ/bit`])}${row(['레이아웃이 더한 손실 (최악 레인)', `${s.extra.toFixed(2)} dB — ${lv} 모델에 없는 칩 위 배선 전파·굽힘 + 모니터 탭${s.wdm ? ' (링 사이 버스는 3W가 이미 셈)' : ''}`])}${row(['레이아웃 반영 마진', `<b>${s.marginLayout.toFixed(2)} dB</b>`])}</table><p class="note">3A+ 모델은 SSC·결합·분배기 과잉손실을 이미 셉니다. 여기서는 레이아웃에서 생긴 길이만 더합니다 (RF 급전 손실은 위 RF 항목에서 따로 표시).</p>`;
   }
+  // baseline (v1.0 §7.4): the system numbers of a pinned Lab design next to the current one — engine values only, no single score
+  const labSnap = () => ({ margin: CHK.sys.marginLayout, pw: CHK.sys.pw, pj: CHK.sys.pj, extra: CHK.sys.extra, area: C.W * C.H / 1e6, W: C.W, H: C.H, mod: C.mod, nL: C.nL, fails: CHK.checks.filter((x) => x.status === 'FAIL').length });
+  function pinTable() {
+    const P0 = S().pin; if (!P0) return '<div class="row-btns"><button class="btn" data-la="pin">이 설계를 기준으로 고정 (비교용)</button></div>';
+    const a = P0.snap, b = labSnap(), r = (k, x, y, dec, u, better) => { const dv = y - x, tol = Math.pow(10, -dec) / 2, cls = Math.abs(dv) <= tol || !better ? 'dlt-0' : (better === 'hi') === (dv > 0) ? 'dlt-up' : 'dlt-dn'; return `<tr><td>${k}</td><td class="num">${x.toFixed(dec)} ${u}</td><td class="num">${y.toFixed(dec)} ${u}</td><td class="num ${cls}">${dv > 0 ? '+' : ''}${dv.toFixed(dec)}</td></tr>`; };
+    return `<h4>기준 설계와 비교 (고정 ${String(P0.at).slice(0, 16).replace('T', ' ')} · hash ${P0.hash}${P0.hash === C.hash ? ' — 지금과 같음' : ''})</h4><table class="ltbl"><tr><th>항목</th><th>기준</th><th>현재</th><th>Δ</th></tr>`
+      + `<tr><td>변조기 · 레이저</td><td>${a.mod.toUpperCase()} · ${a.nL}개</td><td>${b.mod.toUpperCase()} · ${b.nL}개</td><td></td></tr>`
+      + r('링크 마진 (레이아웃 반영)', a.margin, b.margin, 2, 'dB', 'hi') + r('칩 배선 손실 (최악 레인)', a.extra, b.extra, 2, 'dB', 'lo') + r('모듈 전력', a.pw, b.pw, 2, 'W', 'lo') + r('비트당 에너지', a.pj, b.pj, 2, 'pJ/bit', 'lo') + r('다이 면적', a.area, b.area, 2, 'mm²', 'lo') + r('검증 FAIL 수', a.fails, b.fails, 0, '', 'lo')
+      + `</table><p class="note">같은 Lab 엔진 값만 나란히 둡니다. 하나의 점수로 합치지 않습니다.</p><div class="row-btns"><button class="btn" data-la="pin">지금 설계를 새 기준으로</button><button class="btn" data-la="unpin">기준 해제</button></div>`;
+  }
   function summary() {
     const s = CHK.sys, n = (st) => CHK.checks.filter((x) => x.status === st).length, a3 = SH().stars('3A+') > 0;
     return `<table class="ltbl">${row(['총 데이터 속도', `${LAB.LANES} × 200 Gb/s = 1.6 Tb/s 데이터 (게임 라인 대표값 ${LAB.LANES} × 224 Gb/s = 112 GBd PAM4; 표준 라인은 FEC·부호화 포함 212.5 Gb/s/레인 — 3A+의 “1.6T 속도 정의”)`])}${row(['변조기', C.mod === 'mzm' ? 'TW-MZM ×8 (DR8)' : C.mod === 'wdm' ? 'MRR WDM8 (공유 버스 · 광섬유 1)' : 'MRR ×8 (DR8)'])}${row(['다이', `${des().W.toFixed(1)} × ${des().H.toFixed(1)} mm`])}${row(['광 손실 추정 (칩 배선, 최악 레인)', `${s.extra.toFixed(2)} dB`])}${row(['링크 마진 (레이아웃 반영)', `${s.marginLayout.toFixed(2)} dB`])}${row(['비트당 에너지 (3A+ 모듈 모델)', `${s.pj.toFixed(2)} pJ/bit`])}${row(['검증 요약', `PASS ${n('PASS')} · WARNING ${n('WARNING')} · FAIL ${n('FAIL')} · NOT VERIFIED ${n('NOT VERIFIED')}${valid().ran ? '' : S().ran ? ' (마지막 실행 이후 설계 변경 — 다시 실행)' : ' (검사 미실행)'}`])}${row(['설계 식별 (design hash)', `${C.hash}${S().exported ? ` · 마지막 내보내기 ${S().exported.hash || '(식별 없음, 이전 버전)'} ${valid().exp ? '<span class="st-PASS">현재 설계와 같음</span>' : '<span class="st-WARNING">Stale — 다시 내보내기</span>'}` : ' · 아직 내보내지 않음'}`])}${row(['Design Valid (게임 모델)', MISS.slice(0, 5).every((m) => (S().live || {})[m.id]) ? '<span class="st-PASS">✓ 충족</span>' : '<span class="st-WARNING">미충족</span>'])}${row(['Geometry Rechecked (smq2gds)', gdsMsg()])}${row(['Foundry Readiness', '<span class="st-NOT">NOT VERIFIED</span> — Generic PDK · 추상 금속 · 파운드리 DRC/LVS·RF·열 검사 없음'])}${row(['Project Completion', a3 ? (MISS.every((m) => (S().live || {})[m.id]) ? '<span class="st-PASS">완료 (현재 설계)</span>' : MISS.every((m) => (S().done || {})[m.id]) ? '<span class="st-WARNING">이전에 완료 · 현재 설계는 미충족</span>' : '진행 중') : '3A+ ★ 이후 정식 완료 (지금은 미리보기)'])}</table>`
-      + `<p class="note">GDS는 같은 smq-circuit/1 데이터를 tools/smq2gds가 읽어 같은 기본 도형으로 그리고, 다시 읽어 계층·연결·포트·길이·간격·선폭·금속 단락을 검사합니다. 이 결과는 구조 검증이 가능한 Engineering Prototype이며 Tape-out Ready Mask가 아닙니다.</p>`;
+      + `<p class="note">GDS는 같은 smq-circuit/1 데이터를 tools/smq2gds가 읽어 같은 기본 도형으로 그리고, 다시 읽어 계층·연결·포트·길이·간격·선폭·금속 단락을 검사합니다. 이 결과는 구조 검증이 가능한 Engineering Prototype이며 Tape-out Ready Mask가 아닙니다.</p>` + pinTable();
   }
   function renderCoach() {
     const m = MISS[cur()], el = $('#lab-coach'), fails = CHK.checks.filter((x) => x.status === 'FAIL');
@@ -8559,9 +8677,47 @@ window.LABUI = (() => {
     el.hidden = !msg; if (msg) el.innerHTML = `<div class="coach-h"><span class="badge">코치</span><b>${msg.h}</b></div><p>${msg.b}</p>`;
   }
   function legend() {
-    const v = S().view || 'layout';
+    const v = S().view || 'layout', LY = S().layers || { opt: 1, ele: 1, drc: 1 };
+    $('#lab-layers').innerHTML = v === 'layout' ? [['opt', '광'], ['ele', '전기 (RF·DC·패드)'], ['drc', '검사 표시 (실패·위반)']].map(([k, t]) => `<label><input type="checkbox" data-ly="${k}" ${LY[k] ? 'checked' : ''}> ${t}</label>`).join('') + '<span class="note" style="margin:0">보기 전용 — 내보내는 GDS에는 영향 없음</span>' : '';
     $('#lab-view').innerHTML = [['schematic', 'Schematic'], ['layout', 'Physical Layout']].map(([k, t]) => `<button role="radio" aria-checked="${v === k}" data-lv="${k}">${t}</button>`).join('');
     $('#lab-legend').innerHTML = v === 'layout' ? legendHTML([['#64c9df', '광 도파로'], ['#f2b04a', 'RF 전극·선 (추상)'], ['#9eabbd', 'DC 선 (M2, 추상)'], ['#b48cff', 'Ge PD'], ['#ff6b6b', '실패·위반']]) : legendHTML([['#64c9df', '광 넷'], ['#f2b04a', 'RF 포트'], ['#9eabbd', 'DC 포트'], ['#ff6b6b', '미연결·실패']]);
+  }
+
+  /* ---------------- diagnosis: a FAIL / WARNING row → the related instances, nets or point, the cause and the knob ---------------- */
+  // Only places the check itself names are marked (instance ids in its text, failed route nets, the measured min-gap point);
+  // checks without coordinates (RF / DC metal shorts, budgets) highlight the related parts, never a guessed spot.
+  const MI = { schematic: 0, floorplan: 1, routing: 2, electrical: 3 };
+  function diagOf(x) {
+    const txt = `${x.item} ${x.detail}`, pf = SH().pf(), rmin = LAB.wgModel(pf, pf.w0).Rmin, it = x.item;
+    let ids = C.inst.filter((I) => new RegExp(`(^|[^A-Za-z0-9_])${I.id}([^A-Za-z0-9_]|$)`).test(txt)).map((I) => I.id), nets = [], pt = null, fix = null, why = '';
+    const fails = (C.routes || []).filter((r) => !r.ok);
+    if (/광 배선 생성|장애물/.test(it)) { nets = fails.map((r) => r.net); const r0 = fails.find((r) => r.at); if (r0) pt = r0.at; why = fails.length ? fails.slice(0, 2).map((r) => `${r.from} → ${r.to}: ${r.why}`).join(' · ') : String(x.detail); fix = { m: 'routing', keys: ['R', 'jog'], t: '굽힘 반경·팬 간격을 줄이거나, 평면 배치에서 레인 피치·엇갈림을 늘려 공간을 만드세요.' }; }
+    else if (/배선 간격/.test(it)) { if (C.gapAt) pt = C.gapAt; why = `두 넷의 도파로 가장자리 간격이 규칙 ${pf.rules.gap} µm보다 좁습니다.`; fix = { m: 'routing', keys: ['jog'], t: 'Advanced의 팬 수직선 간격(p_j)을 늘리거나 레인 피치를 늘리세요.' }; }
+    else if (/굽힘 반경/.test(it)) { nets = (C.routes || []).map((r) => r.net); why = `모든 넷이 같은 굽힘 반경 설정을 씁니다 (R ${C.d.R} µm < ${rmin} µm).`; fix = { m: 'routing', keys: ['R'], t: `Advanced의 굽힘 반경을 ${rmin} µm 이상으로.` }; }
+    else if (/넓은 배선의 굽힘/.test(it)) { nets = (C.routes || []).filter((r) => r.ok && r.w > pf.wc).map((r) => r.net); why = '다중모드 폭의 도파로가 원호로 굽으면 고차 모드가 섞입니다.'; fix = { m: 'routing', keys: ['bend', 'wr'], t: 'Euler 굽힘을 고르거나 배선 폭을 단일모드로.' }; }
+    else if (/다이 경계|소자 겹침/.test(it)) { why = String(x.detail).replace(/<[^>]+>/g, ''); fix = { m: 'floorplan', keys: ['W', 'H'], t: '“필요 크기로 맞춤”을 누르거나 다이를 키우세요.' }; }
+    else if (/패드 배치|범프 배치/.test(it)) { why = String(x.detail).replace(/<[^>]+>/g, ''); fix = { m: 'floorplan', keys: ['W', 'H'], t: '다이 변 길이가 패드 수 × 피치보다 커야 합니다 — 다이를 키우거나 패드 피치를 줄이세요(Advanced).' }; }
+    else if (/RF 배선 교차|RF 금속|RF 급전선|링 구동선/.test(it)) { ids = ids.length ? ids : C.inst.filter((I) => I.role === 'modulator').map((I) => I.id); why = 'RF 선의 정확한 교차 좌표는 계산하지 않으므로 관련 변조기만 표시합니다.'; fix = { m: 'electrical', keys: ['rf'], t: '플립칩(3D 구동기)으로 바꾸거나 Advanced에서 레인 엇갈림을 늘리세요.' }; }
+    else if (/DC 배선 교차/.test(it)) { why = 'DC 선 교차 좌표는 계산하지 않습니다.'; fix = { m: 'electrical', keys: ['pp'], t: '패드 피치·다이 크기를 바꿔 팬아웃 트랙 공간을 만드세요.' }; }
+    else if (/파워 버짓|마진/.test(it)) { why = '시스템 예측(3A+ / 3W 엔진)에서 레이아웃 배선 손실을 뺀 마진입니다 — 특정 위치가 아니라 전체 손실의 합입니다.'; fix = { m: 'routing', keys: ['wr'], t: '긴 넷을 넓은 도파로로(배선 폭 w_r) — 산란 손실이 줄어듭니다.' }; }
+    else if (/선폭/.test(it)) { fix = { m: 'routing', keys: ['wr'], t: '배선 폭을 리소 한계 이상으로.' }; }
+    else if (/광 포트|포트 종류|레인 수|입·출력|전기 포트/.test(it)) { why = String(x.detail).replace(/<[^>]+>/g, ''); fix = { m: 'schematic', keys: ['mod', 'share'], t: '회로도(Mission 1)의 구성을 확인하세요.' }; }
+    else why = String(x.detail).replace(/<[^>]+>/g, '');
+    return { item: String(it).replace(/<[^>]+>/g, ''), status: x.status, ids, nets, pt, fix, why, located: !!(ids.length || nets.length || pt) };
+  }
+  function diagBox(D) {
+    const bs = D.ids.map((id) => C.bbox(C.I(id))).concat((C.routes || []).filter((r) => D.nets.includes(r.net)).flatMap((r) => LAB.sample(r.prims, 5).map((p) => [p[0], p[1], p[0], p[1]])));
+    if (D.pt) bs.push([D.pt[0] - 120, D.pt[1] - 120, D.pt[0] + 120, D.pt[1] + 120]);
+    if (!bs.length) return null;
+    return [Math.min(...bs.map((b) => b[0])), Math.min(...bs.map((b) => b[1])), Math.max(...bs.map((b) => b[2])), Math.max(...bs.map((b) => b[3]))];
+  }
+  function fitBox(b) { if (!b) { fit(); return; } const { w, h } = size(), pad = 60, bw = Math.max(80, b[2] - b[0] + 2 * pad), bh = Math.max(80, b[3] - b[1] + 2 * pad); cam = { s: Math.min(w / bw, h / bh), x: (b[0] + b[2]) / 2, y: (b[1] + b[3]) / 2 }; }
+  function showDiag(i) {
+    const x = CHK.checks[i]; if (!x) return;
+    diag = diagOf(x); sel = diag.ids.length === 1 ? { id: diag.ids[0] } : null;
+    if ((S().view || 'layout') !== 'layout') { S().view = 'layout'; save(); legend(); }
+    fitBox(diagBox(diag)); renderSel(); draw();
+    const ws = $('#lab-ws'); if (ws && ws.scrollIntoView) ws.scrollIntoView({ block: 'start', behavior: smqMotion() });
   }
 
   /* ---------------- canvas ---------------- */
@@ -8613,23 +8769,35 @@ window.LABUI = (() => {
     // die, edge margin
     g.strokeStyle = 'rgba(231,236,243,.7)'; g.lineWidth = 1.2 * DPR; g.strokeRect(TX(0), TY(C.H), C.W * s, C.H * s);
     g.setLineDash([4 * DPR, 4 * DPR]); g.strokeStyle = 'rgba(158,171,189,.35)'; const e = C.d.edge; g.strokeRect(TX(e), TY(C.H - e), (C.W - 2 * e) * s, (C.H - 2 * e) * s); g.setLineDash([]);
+    const LY = S().layers || { opt: 1, ele: 1, drc: 1 };   // view-only layer toggles (the exported GDS is not affected)
     // electrical lines under everything
-    (C.elines || []).forEach((l) => { g.strokeStyle = l.kind === 'rf' ? 'rgba(242,176,74,.75)' : 'rgba(158,171,189,.45)'; g.lineWidth = Math.max((l.kind === 'rf' ? 1.4 : 1) * DPR, (l.width_um || 0) * s); if (l.kind !== 'rf' && (l.width_um || 0) * s < 2 * DPR) g.setLineDash([3 * DPR, 3 * DPR]); g.beginPath(); l.pts.forEach((p, i) => (i ? g.lineTo(TX(p[0]), TY(p[1])) : g.moveTo(TX(p[0]), TY(p[1])))); g.stroke(); g.setLineDash([]); });
-    (C.pads || []).forEach((p) => { g.fillStyle = p.kind === 'rf' ? 'rgba(242,176,74,.55)' : 'rgba(158,171,189,.4)'; g.fillRect(TX(p.x - p.w / 2), TY(p.y + p.w / 2), p.w * s, p.w * s); });
+    if (LY.ele) (C.elines || []).forEach((l) => { g.strokeStyle = l.kind === 'rf' ? 'rgba(242,176,74,.75)' : 'rgba(158,171,189,.45)'; g.lineWidth = Math.max((l.kind === 'rf' ? 1.4 : 1) * DPR, (l.width_um || 0) * s); if (l.kind !== 'rf' && (l.width_um || 0) * s < 2 * DPR) g.setLineDash([3 * DPR, 3 * DPR]); g.beginPath(); l.pts.forEach((p, i) => (i ? g.lineTo(TX(p[0]), TY(p[1])) : g.moveTo(TX(p[0]), TY(p[1])))); g.stroke(); g.setLineDash([]); });
+    if (LY.ele) (C.pads || []).forEach((p) => { g.fillStyle = p.kind === 'rf' ? 'rgba(242,176,74,.55)' : 'rgba(158,171,189,.4)'; g.fillRect(TX(p.x - p.w / 2), TY(p.y + p.w / 2), p.w * s, p.w * s); });
     // components
-    const bad = new Set(); CHK.checks.filter((x) => x.status === 'FAIL').forEach((x) => C.inst.forEach((I) => { if (String(x.detail).includes(I.id)) bad.add(I.id); }));
+    const bad = new Set(); if (LY.drc) CHK.checks.filter((x) => x.status === 'FAIL').forEach((x) => C.inst.forEach((I) => { if (String(x.detail).includes(I.id)) bad.add(I.id); }));
     C.inst.forEach((I) => {
       const b = C.bbox(I), on = sel && (sel.id === I.id || sel.type === I.type);
       g.strokeStyle = bad.has(I.id) ? '#ff6b6b' : on ? '#64c9df' : 'rgba(158,171,189,.35)'; g.lineWidth = (on || bad.has(I.id) ? 2 : 1) * DPR;
+      if (on) { g.fillStyle = 'rgba(100,201,223,.12)'; g.fillRect(TX(b[0]) - 3 * DPR, TY(b[3]) - 3 * DPR, Math.max(2, (b[2] - b[0]) * s) + 6 * DPR, Math.max(2, (b[3] - b[1]) * s) + 6 * DPR); }
       g.strokeRect(TX(b[0]), TY(b[3]), Math.max(2, (b[2] - b[0]) * s), Math.max(2, (b[3] - b[1]) * s));
-      drawComp(g, I, px);
+      if (LY.opt || I.role === 'modulator') drawComp(g, I, px);
+      if (on && sel.id) { g.fillStyle = '#64c9df'; g.textAlign = 'left'; g.fillText(`▸ ${I.id}`, TX(b[0]), TY(b[3]) - 8 * DPR); }
     });
     // routes
-    C.samples.forEach(({ r, pts }) => { if (!pts.length) return; g.strokeStyle = r.ok ? '#64c9df' : '#ff6b6b'; g.lineWidth = Math.max(1.2 * DPR, (r.w || 0.5) * s); g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(TX(p[0]), TY(p[1])) : g.moveTo(TX(p[0]), TY(p[1])))); g.stroke(); });
+    if (LY.opt) C.samples.forEach(({ r, pts }) => { if (!pts.length || (!r.ok && !LY.drc)) return; g.strokeStyle = r.ok ? '#64c9df' : '#ff6b6b'; g.lineWidth = Math.max(1.2 * DPR, (r.w || 0.5) * s); g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(TX(p[0]), TY(p[1])) : g.moveTo(TX(p[0]), TY(p[1])))); g.stroke(); });
     // failure markers
     const mark = (x, y, t) => { g.strokeStyle = '#ff6b6b'; g.lineWidth = 2 * DPR; g.beginPath(); g.arc(TX(x), TY(y), 9 * DPR, 0, 2 * Math.PI); g.stroke(); g.fillStyle = '#ff6b6b'; g.textAlign = 'left'; g.fillText(t, TX(x) + 12 * DPR, TY(y)); };
-    (C.routes || []).filter((r) => !r.ok && r.at).forEach((r) => mark(r.at[0], r.at[1], `✗ ${r.code || '배선'}`));
-    if (C.gapAt && C.minGap < SH().pf().rules.gap) mark(C.gapAt[0], C.gapAt[1], `간격 ${C.minGap.toFixed(2)} µm`);
+    if (LY.drc) { (C.routes || []).filter((r) => !r.ok && r.at).forEach((r) => mark(r.at[0], r.at[1], `✗ ${r.code || '배선'}`));
+      if (C.gapAt && C.minGap < SH().pf().rules.gap) mark(C.gapAt[0], C.gapAt[1], `간격 ${C.minGap.toFixed(2)} µm`); }
+    // the selected diagnosis: its instances, nets and point in amber (drawn last, on top)
+    if (diag) {
+      g.setLineDash([6 * DPR, 4 * DPR]); g.strokeStyle = '#f2b04a'; g.lineWidth = 2.4 * DPR;
+      diag.ids.forEach((id) => { const I = C.I(id); if (!I) return; const b = C.bbox(I); g.strokeRect(TX(b[0]) - 4 * DPR, TY(b[3]) - 4 * DPR, (b[2] - b[0]) * s + 8 * DPR, (b[3] - b[1]) * s + 8 * DPR); });
+      g.setLineDash([]);
+      C.samples.filter(({ r }) => diag.nets.includes(r.net)).forEach(({ pts }) => { g.strokeStyle = 'rgba(242,176,74,.9)'; g.lineWidth = Math.max(3 * DPR, 2 * s); g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(TX(p[0]), TY(p[1])) : g.moveTo(TX(p[0]), TY(p[1])))); g.stroke(); });
+      if (diag.pt) { g.strokeStyle = '#f2b04a'; g.lineWidth = 2 * DPR; const X0 = TX(diag.pt[0]), Y0 = TY(diag.pt[1]); g.beginPath(); g.moveTo(X0 - 14 * DPR, Y0); g.lineTo(X0 + 14 * DPR, Y0); g.moveTo(X0, Y0 - 14 * DPR); g.lineTo(X0, Y0 + 14 * DPR); g.stroke(); g.beginPath(); g.arc(X0, Y0, 10 * DPR, 0, 2 * Math.PI); g.stroke(); }
+      g.fillStyle = '#f2b04a'; g.textAlign = 'left'; g.fillText(`진단: ${diag.item.slice(0, 40)}${diag.located ? '' : ' (위치 정보 없음)'}`, 8 * DPR, 28 * DPR);
+    }
     g.textAlign = 'left'; g.fillStyle = 'rgba(158,171,189,.9)'; g.fillText(`${(C.W / 1000).toFixed(2)} × ${(C.H / 1000).toFixed(2)} mm · ${C.mod.toUpperCase()} ×8 · 광 넷 ${(C.routes || []).length} (실패 ${(C.routes || []).filter((r) => !r.ok).length}) · 패드 ${(C.pads || []).length}`, 8 * DPR, 12 * DPR);
     // scale bar
     const bar = [10, 20, 50, 100, 200, 500, 1000, 2000].find((v) => v * s > 60 * DPR) || 5000; g.strokeStyle = '#e7ecf3'; g.lineWidth = 2 * DPR; g.beginPath(); g.moveTo(10 * DPR, cv().height - 12 * DPR); g.lineTo(10 * DPR + bar * s, cv().height - 12 * DPR); g.stroke(); g.fillStyle = '#e7ecf3'; g.fillText(`${bar >= 1000 ? bar / 1000 + ' mm' : bar + ' µm'}`, 14 * DPR + bar * s, cv().height - 12 * DPR);
@@ -8731,10 +8899,12 @@ window.LABUI = (() => {
     if (refit || !cam) fit(); else size();
     draw();
     if (SH() && SH().refreshMap) SH().refreshMap();
+    renderHooks.forEach((f) => { try { f(); } catch (e) { /* learning layer */ } });
   }
   const sched = (refit) => { clearTimeout(timer); timer = setTimeout(() => renderAll(refit), 90); };
   box.addEventListener('input', (e) => { const t = e.target.closest('[data-lk]'); if (!t) return; const p = pfP()[t.dataset.lk], v = +t.value; $('#lo-' + p.k).textContent = fmtV(p, v); setV(p.k, v); sched(p.k === 'W' || p.k === 'H' || p.k === 'mod' || p.k === 'share'); });
   box.addEventListener('change', (e) => {
+    const ly = e.target.closest && e.target.closest('[data-ly]'); if (ly) { const L2 = { opt: 1, ele: 1, drc: 1, ...(S().layers || {}) }; L2[ly.dataset.ly] = ly.checked ? 1 : 0; S().layers = L2; save(); draw(); return; }
     if (e.target.id !== 'lab-gds' || !e.target.files || !e.target.files[0]) return;
     const f = e.target.files[0], rd = new FileReader();
     rd.onload = () => { importGds(String(rd.result)); save(); renderAll(); };
@@ -8747,7 +8917,10 @@ window.LABUI = (() => {
     if (nx) { S().cur = Math.min(MISS.length - 1, cur() + 1); save(); renderAll(); return; }
     if (lv) { S().view = lv.dataset.lv; save(); cam = null; renderAll(true); return; }
     if (lt) { sel = sel && sel.type === lt.dataset.lt ? null : { type: lt.dataset.lt }; renderLib(); renderSel(); draw(); return; }
-    if (z) { if (z.dataset.z === 'fit') fit(); else cam.s *= z.dataset.z === 'in' ? 1.6 : 1 / 1.6; draw(); return; }
+    if (z) { if (z.dataset.z === 'fit') fit(); else if (z.dataset.z === 'sel') fitBox(diag ? diagBox(diag) : sel && sel.id && C.I(sel.id) ? C.bbox(C.I(sel.id)) : null); else cam.s *= z.dataset.z === 'in' ? 1.6 : 1 / 1.6; draw(); return; }
+    const dg = e.target.closest('[data-diag]'); if (dg) { showDiag(+dg.dataset.diag); return; }
+    if (e.target.closest('[data-diag-clear]')) { diag = null; renderSel(); draw(); return; }
+    const gm = e.target.closest('[data-goto]'); if (gm) { S().cur = MI[gm.dataset.goto] != null ? MI[gm.dataset.goto] : S().cur; if (gm.dataset.adv) S().mode = 'advanced'; save(); renderAll(); return; }
     if (e.target.closest('#lab-back')) { close(); if (SH()) SH().refreshMap(); return; }
     if (e.target.closest('#lab-guide')) { guide(); return; }
     if (la) {
@@ -8755,7 +8928,9 @@ window.LABUI = (() => {
       if (a === 'fit') { d.W = Math.ceil(C.need.W / 100) / 10; d.H = Math.ceil(C.need.H / 100) / 10; save(); renderAll(true); }
       if (a === 'auto') { const nd = LAB.defaults(ctx(), { mod: d.mod, share: d.share }); Object.assign(d, { P: nd.P, stag: nd.stag, edge: nd.edge, fp: nd.fp, W: nd.W, H: nd.H }); save(); renderAll(true); }
       if (a === 'arch') { const a3 = arch3(); d.mod = a3.mod; d.share = a3.share; d.stag = LAB.stagAuto(d); save(); renderAll(true); }
-      if (a === 'run') { S().ran = { hash: C.hash, sig: CHK.sig, at: new Date().toISOString() }; save(); renderAll(); const o = $('#lab-out'); if (o && o.scrollIntoView) o.scrollIntoView({ block: 'start', behavior: 'smooth' }); }   // the result table is below the workspace
+      if (a === 'pin') { S().pin = { hash: C.hash, at: new Date().toISOString(), snap: labSnap() }; save(); renderOut(); }
+      if (a === 'unpin') { delete S().pin; save(); renderOut(); }
+      if (a === 'run') { S().ran = { hash: C.hash, sig: CHK.sig, at: new Date().toISOString() }; save(); renderAll(); const o = $('#lab-out'); if (o && o.scrollIntoView) o.scrollIntoView({ block: 'start', behavior: smqMotion() }); }   // the result table is below the workspace
       if (a.startsWith('exp')) exportFiles(a);
     }
   });
@@ -8768,8 +8943,12 @@ window.LABUI = (() => {
   }
   // canvas: drag to pan, Ctrl/⌘ + wheel to zoom, click to select
   const c0 = $('#lab-cv');
-  c0.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, y: e.clientY, cx: cam && cam.x, cy: cam && cam.y, moved: false }; c0.setPointerCapture && c0.setPointerCapture(e.pointerId); });
-  c0.addEventListener('pointermove', (e) => { if (!drag || !cam) return; const dx = (e.clientX - drag.x) * DPR, dy = (e.clientY - drag.y) * DPR; if (Math.abs(dx) + Math.abs(dy) > 4) drag.moved = true; if (drag.moved) { cam.x = drag.cx - dx / cam.s; cam.y = drag.cy + dy / cam.s; draw(); } });
+  // two fingers pinch-zoom (touch); one finger / mouse drags; a tap selects
+  const touches = new Map(); let pinch = null;
+  const tdist = () => { const v = [...touches.values()]; return Math.hypot(v[0].x - v[1].x, v[0].y - v[1].y); };
+  c0.addEventListener('pointerdown', (e) => { touches.set(e.pointerId, { x: e.clientX, y: e.clientY }); if (touches.size === 2 && cam) { pinch = { d0: tdist(), s0: cam.s }; drag = null; return; } drag = { x: e.clientX, y: e.clientY, cx: cam && cam.x, cy: cam && cam.y, moved: false }; c0.setPointerCapture && c0.setPointerCapture(e.pointerId); });
+  ['pointerup', 'pointercancel'].forEach((ev) => c0.addEventListener(ev, (e) => { touches.delete(e.pointerId); if (touches.size < 2) pinch = null; }));
+  c0.addEventListener('pointermove', (e) => { if (touches.has(e.pointerId)) touches.set(e.pointerId, { x: e.clientX, y: e.clientY }); if (pinch && touches.size === 2 && cam) { cam.s = pinch.s0 * Math.max(0.2, Math.min(8, tdist() / Math.max(1, pinch.d0))); draw(); return; } if (!drag || !cam) return; const dx = (e.clientX - drag.x) * DPR, dy = (e.clientY - drag.y) * DPR; if (Math.abs(dx) + Math.abs(dy) > 4) drag.moved = true; if (drag.moved) { cam.x = drag.cx - dx / cam.s; cam.y = drag.cy + dy / cam.s; draw(); } });
   c0.addEventListener('pointerup', (e) => { if (!drag) return; const moved = drag.moved; drag = null; if (moved || !C) return; const r = c0.getBoundingClientRect(), I = hit((e.clientX - r.left) * DPR, (e.clientY - r.top) * DPR); sel = I ? { id: I.id, type: I.type } : null; renderLib(); renderSel(); draw(); });
   c0.addEventListener('wheel', (e) => { if (!(e.ctrlKey || e.metaKey) || !cam) return; e.preventDefault(); const r = c0.getBoundingClientRect(), px = (e.clientX - r.left) * DPR, py = (e.clientY - r.top) * DPR, wx = IX(px), wy = IY(py); cam.s *= e.deltaY < 0 ? 1.25 : 0.8; cam.x = wx - (px - c0.width / 2) / cam.s; cam.y = wy + (py - c0.height / 2) / cam.s; draw(); }, { passive: false });
   if (typeof ResizeObserver !== 'undefined') new ResizeObserver(() => { if (isOpen && C) { fit(); draw(); } }).observe(c0.parentElement);
@@ -8778,8 +8957,163 @@ window.LABUI = (() => {
   function close() { isOpen = false; box.hidden = true; const g = $('main.game'); if (g) g.hidden = false; }
   // focus(x, y, w): centre the layout view on (x, y) µm showing w µm across (inspection, screenshots)
   const focus = (x, y, w) => { if (!C || !CV) return; cam = { s: CV.width / w, x, y }; draw(); };
-  return { open, close, isOpen: () => isOpen, progress, focus, state: () => ({ C, CHK, MS, d: isOpen ? des() : null, s: SH() && SH().plat() ? S() : null }), MISS };
+  const renderHooks = [];
+  const mission = (k) => { S().cur = Math.max(0, Math.min(MISS.length - 1, k | 0)); save(); renderAll(); };
+  return { open, close, isOpen: () => isOpen, progress, focus, mission, onRender: (f) => renderHooks.push(f), state: () => ({ C, CHK, MS, d: isOpen ? des() : null, s: SH() && SH().plat() ? S() : null }), MISS };
 })();
 if (window.LABUI && window.GAME_SHELL && window.GAME_SHELL.plat()) window.GAME_SHELL.refreshMap();
+
+// ===== Learning layer (v1.0 §6–7): first-run onboarding, three learning paths over existing missions, Engineering Review =====
+// Nothing here changes a design, a score, a star, a card or a Fab result. Paths are navigation; reviews are self-checks whose
+// answers are kept as a learning record (progress.by[platform].review) and included in the full backup.
+(() => {
+  const SH = () => window.GAME_SHELL; if (!SH()) return;
+  const $ = (s) => document.querySelector(s);
+  /* ---------- learning paths: recommended order over the existing missions (free exploration stays open) ---------- */
+  const PATHS = {
+    A: { name: 'PIC Fundamentals', who: 'PIC 입문자', line: 'Waveguide → Coupler → MZI → Modulator', steps: ['1-1', '1-2', '1-5', '1-7', '2-3'] },
+    B: { name: 'Optical Engine Architect', who: 'Optical System · Packaging 엔지니어', line: 'MZM vs MRR → DR8 → WDM8 → Link Budget', steps: ['2-3', '2-3R', '3A+', '3W', '2-5'] },
+    C: { name: 'PIC Design Challenge', who: 'PIC 설계 엔지니어', line: 'Schematic → Floorplan → Routing → Verification → GDS', steps: ['LAB:0', 'LAB:1', 'LAB:2', 'LAB:3', 'LAB:4', 'LAB:5'] }
+  };
+  const LABN = ['회로도', '평면 배치', '광 배선', '전기 I/F', '검증', '내보내기'], LABK = ['schematic', 'floorplan', 'routing', 'electrical', 'verification', 'export'];
+  const ui = () => SH().ui(), lvName = (id) => (SH().levels().find((l) => l.id === id) || {}).name || id;
+  const labLive = () => { const st = window.LABUI && window.LABUI.state && window.LABUI.state(); return (st && st.s && st.s.live) || {}; };
+  const stepDone = (st) => (st.startsWith('LAB:') ? !!labLive()[LABK[+st.slice(4)]] : SH().stars(st) > 0);
+  const stepLabel = (st) => (st.startsWith('LAB:') ? `LAB M${+st.slice(4) + 1} ${LABN[+st.slice(4)]}` : `${st} ${lvName(st)}`);
+  const here = (st) => (st.startsWith('LAB:') ? window.LABUI && window.LABUI.isOpen() && window.LABUI.state().s && (window.LABUI.state().s.cur | 0) === +st.slice(4) : !(window.LABUI && window.LABUI.isOpen()) && SH().curId() === st);
+  function goStep(st) {
+    if (st.startsWith('LAB:')) { if (!window.LABUI) return; const k = +st.slice(4); if (!window.LABUI.isOpen()) window.LABUI.open(); window.LABUI.mission(k); SH().refreshMap(); return; }
+    SH().go(st); const m = $('#mission'); if (m && m.scrollIntoView) m.scrollIntoView({ block: 'start', behavior: smqMotion() });
+  }
+  function renderPath() {
+    const box = $('#pathbar'); if (!box || !SH().plat()) return;
+    const k = ui().path, P = PATHS[k];
+    if (!P) { box.innerHTML = `<span class="pb-h">학습 경로</span><span class="note" style="margin:0">자유 탐색 중 — 경로를 고르면 권장 순서와 다음 행동을 보여 줍니다 (진행 기록은 그대로).</span>${Object.entries(PATHS).map(([id, p]) => `<button class="btn pb-pick" data-path="${id}">${id} · ${p.name}</button>`).join('')}<button class="btn pb-help" data-onb="1">처음 안내</button>`; return; }
+    const nx = P.steps.find((st) => !stepDone(st));
+    box.innerHTML = `<span class="pb-h">학습 경로 ${k} · ${P.name}</span><ol class="pb-steps">${P.steps.map((st) => `<li><button class="pb-st ${stepDone(st) ? 'done' : ''} ${here(st) ? 'here' : ''}" data-step="${st}" ${here(st) ? 'aria-current="step"' : ''} aria-label="${stepLabel(st)}${stepDone(st) ? ' (완료)' : ''}">${stepDone(st) ? '✓ ' : ''}${st.startsWith('LAB:') ? 'M' + (+st.slice(4) + 1) : st}</button></li>`).join('')}</ol>`
+      + (nx ? `<button class="btn pri pb-next" data-step="${nx}">다음 권장: ${stepLabel(nx)} →</button>` : '<span class="st-PASS pb-done">✓ 이 경로를 모두 마쳤습니다</span>')
+      + `<button class="btn pb-help" data-path="">경로 바꾸기</button><button class="btn pb-help" data-onb="1">처음 안내</button>`;
+  }
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('#pathbar [data-step], #pathbar [data-path], #pathbar [data-onb]'); if (!b) return;
+    if (b.dataset.onb) { openOnb(0); return; }
+    if (b.dataset.path != null) { ui().path = b.dataset.path || null; SH().saveUI(); renderPath(); return; }
+    goStep(b.dataset.step); renderPath();
+  });
+
+  /* ---------- Engineering Review: 1–2 questions where a concept turns; every option explains itself ---------- */
+  const RV = {
+    '1-7': [
+      { q: '1단 인터리버의 지연 ΔL을 늘리면 투과 스펙트럼의 주기(FSR)는?', a: 1, o: [
+        ['늘어난다', 'FSR = λ²/(n<sub>g</sub>ΔL) — ΔL이 분모에 있어 반대입니다.'],
+        ['줄어든다', '맞습니다. FSR = λ²/(n<sub>g</sub>ΔL). 20 nm 간격 채널을 홀/짝으로 나누려면 FSR 40 nm에 맞는 ΔL이 필요합니다.'],
+        ['변하지 않고 위상만 바뀐다', '위상 트림은 통과대역의 위치를 옮기지만, 주기는 ΔL과 n<sub>g</sub>가 정합니다.']] },
+      { q: '공정에서 도파로 폭이 몇 nm 바뀐 다이에서 CWDM 채널이 어긋나는 주된 이유는?', a: 0, o: [
+        ['n<sub>eff</sub>가 바뀌어 MZI 위상 2πn<sub>eff</sub>ΔL/λ가 움직이고, 통과대역 중심이 이동한다', '맞습니다. 그래서 다이별 히터 트리밍(Stage 2의 TO 위상기)이 필요합니다 — 이 레벨이 “왜 Active가 필요한가”를 보여 주는 이유입니다.'],
+        ['FSR만 바뀌고 중심 파장은 그대로다', 'FSR은 n<sub>g</sub>에 따라 조금 바뀌지만, 훨씬 큰 효과는 n<sub>eff</sub> 변화로 인한 중심 이동입니다.'],
+        ['삽입 손실만 늘어난다', '손실보다 파장 이동이 지배적입니다 — 몇 nm의 폭 변화로 수 nm의 채널 이동이 생깁니다.']] }
+    ],
+    '2-3R': [
+      { q: '같은 112 GBd에서 링 변조기의 EO 대역을 정하는 것으로 가장 맞는 것은?', a: 1, o: [
+        ['Q 하나 — Q가 낮을수록 대역이 넓다', '광자 수명 한계는 Q로 정해지지만, 디튜닝에 따른 응답 피크와 접합 RC 극이 곱해집니다. Q만으로 대역을 말하면 틀립니다.'],
+        ['광자 수명(Q) × 레이저 디튜닝 × 접합 RC의 결합', '맞습니다. 디튜닝이 크면 Ω ≈ |Δ| 근처에 피크가 생겨 대역이 넓어지지만 정적 기울기(OMA)는 줄어듭니다. 그 위에 RC 극이 곱해집니다.'],
+        ['링 반경만', '반경은 FSR·면적·접합 C에 영향을 주지만, 대역은 Q·디튜닝·RC가 함께 정합니다.']] },
+      { q: '케이스 온도가 0→70 °C로 변할 때 MZM과 비교해 MRR에 필요한 것은?', a: 0, o: [
+        ['링 공진이 약 60–80 pm/K 움직이므로 히터와 락으로 레이저와의 간격을 유지해야 한다', '맞습니다. 70 K면 수 nm — 선폭(수십 pm)보다 훨씬 큽니다. 균형 MZI는 두 팔이 함께 움직여 온도에 둔감합니다. 이 열 제어 비용이 MRR의 작은 크기·낮은 구동 에너지와 맞바꾸는 대가입니다.'],
+        ['아무것도 — 링은 작아서 온도에 둔감하다', '작은 크기는 열 질량이 작다는 뜻이지 공진이 덜 움직인다는 뜻이 아닙니다. Si의 dn/dT로 공진은 크게 이동합니다.'],
+        ['MZM과 똑같이 바이어스 히터 하나면 된다', 'MZM 바이어스는 위상 오프셋만 잡으면 되지만, 링은 매 순간 공진을 레이저에 붙잡아 두는 락이 필요합니다.']] }
+    ],
+    '3A+': [
+      { q: 'DR8에서 링 ×8을 쓸 때, 링들을 서로 다른 파장에 배정해야 하는가?', a: 1, o: [
+        ['그렇다 — 링끼리 간섭하지 않도록 파장을 나눠야 한다', 'DR8은 레인마다 광섬유가 따로라 링들이 한 버스를 공유하지 않습니다. 파장 배정은 WDM8(3W)의 문제입니다.'],
+        ['아니다 — 레인마다 독립 경로라 같은 파장이어도 된다', '맞습니다. DR8 링의 숙제는 레인별 히터·락과 레이저 드리프트 추적입니다.'],
+        ['FSR이 8채널보다 넓을 때만 그렇다', 'FSR 별칭은 공유 버스(WDM)에서의 문제입니다.']] },
+      { q: '링 열 효율이 모델(수백 pm/mW)이 아니라 측정값(≈ 73 pm/mW, 다른 링)에 가깝다면 DR8 모듈 비교는?', a: 2, o: [
+        ['변하지 않는다 — 히터는 모듈 전력의 작은 부분이다', '열 민감도 표를 보세요: 같은 엔진에서 히터 효율을 낮추면 링 히터가 레인당 수십–백여 mW로 늘어 모듈 전력이 약 1 W 늘어납니다.'],
+        ['MZM도 같은 비율로 나빠진다', 'MZM 바이어스는 균형 팔이라 링 열 효율과 무관합니다.'],
+        ['MRR의 전력 이점이 줄거나 사라진다 — 결론이 링 열 격리에 달려 있다', '맞습니다. 그래서 비교 패널은 Nominal / Conservative / Experimental ref.를 함께 보여 줍니다. 이 값들은 이 링의 측정값이 아니라 민감도입니다.']] }
+    ],
+    '3W': [
+      { q: '링의 FSR이 8채널 폭(8·Δλ)보다 좁으면 무엇이 생길 수 있는가?', a: 0, o: [
+        ['한 링의 다음 공진 차수가 다른 채널 위에 놓여 그 채널을 깎고 변조를 섞는다 (FSR 별칭)', '맞습니다. 단 8·Δλ ≈ m·FSR처럼 차수가 채널 사이에 끼도록 배치하면(인터리브) 별칭을 피할 수 있습니다 — 그래서 FSR과 격자를 함께 고릅니다.'],
+        ['아무 문제 없다 — 링은 자기 채널만 본다', '버스의 투과는 모든 링 응답의 곱이라 다른 링의 공진도 모든 채널에 작용합니다.'],
+        ['히터 전력만 줄어든다', 'FSR이 작으면 2π 튜닝 전력(P<sub>2π</sub>)은 커지고, 별칭 위험이 생깁니다.']] },
+      { q: '이 레벨의 결과 가운데 검증되지 않은(NOT VERIFIED) 것은?', a: 2, o: [
+        ['버스 투과와 크로스토크', '이들은 2-3R 링 응답을 곱해 계산한 Physics-informed 결과입니다.'],
+        ['히터 범위 안에서 배정이 가능한지', '정적 배정과 히터 범위는 계산합니다(가정: 온도마다 즉시 최적 배정).'],
+        ['동적 락 획득, 재배정 중 링크 중단, 락 루프 상호작용', '맞습니다. 이 프로그램은 정적 락만 계산합니다 — 실제 송신기에서는 락 동역학과 링별 모니터가 별도 검증 대상입니다.']] }
+    ],
+    'LAB:4': [
+      { q: '검증 표의 PASS가 뜻하는 것은?', a: 1, o: [
+        ['파운드리 DRC/LVS를 통과했다', '이 Lab은 Generic PDK·추상 금속으로 게임 규칙을 검사합니다 — 파운드리 검사가 아닙니다.'],
+        ['이 프로그램의 모델과 규칙(연결·기하·시스템 예측)을 만족했다', '맞습니다. PASS는 “그 모델 안에서”의 판정입니다. 제조 가능성은 Foundry Readiness(NOT VERIFIED)로 따로 둡니다.'],
+        ['실제 칩에서 링크가 동작한다', '시스템 판정도 대표값 가정이 들어간 모델 예측입니다.']] },
+      { q: 'NOT VERIFIED 항목(예: RF 전자기, 레인 간 열 크로스토크)을 PASS로 바꾸려면?', a: 0, o: [
+        ['게임 밖의 검증 — 파운드리 PDK DRC/LVS, RF EM 해석, 3D 열해석 등 — 이 필요하다', '맞습니다. 검사하지 않은 항목에 PASS를 주지 않는 것이 이 Lab의 원칙입니다.'],
+        ['검사를 다시 실행하면 된다', '다시 실행해도 그 항목을 계산하는 모델이 없습니다.'],
+        ['FAIL이 0이면 자동으로 PASS가 된다', 'FAIL이 없다는 것과 검증했다는 것은 다릅니다.']] }
+    ],
+    'LAB:5': [
+      { q: '“Geometry Rechecked ✓”가 확인한 것은?', a: 1, o: [
+        ['이 GDS로 Tape-out할 수 있다', 'Generic PDK로 그린 Engineering Prototype이며 Tape-out Ready가 아닙니다.'],
+        ['smq2gds가 만든 GDS를 다시 읽어, 지금 설계(design hash)와 같은 형상·연결임을 검사했다', '맞습니다. 같은 기본 도형으로 그린 GDS의 계층·포트·연결·길이·간격·선폭·금속 단락을 다시 읽어 검사합니다.'],
+        ['GDS 파일이 열렸다', '파일이 열리는 것만으로는 PASS가 아닙니다 — 재검사 결과와 design hash가 맞아야 합니다.']] }
+    ]
+  };
+  RV['2-3'] = RV['2-3R'];   // the same MZM-vs-MRR questions from either side
+  function reviewHTML(id) {
+    const qs = RV[id]; if (!qs) return '';
+    const R = SH().review(), mine = R[id] || {};
+    const done = qs.filter((_, i) => mine[i] != null).length;
+    return `<summary>Engineering Review · ${qs.length}문항${done ? ` · ${done}개 답함` : ''} — 이해 확인용 (별·점수와 무관)</summary><div class="rv">${qs.map((q, i) => {
+      const pick = mine[i];
+      return `<fieldset class="rv-q"><legend>${i + 1}. ${q.q}</legend>${q.o.map((o, j) => `<label class="rv-o ${pick != null && j === q.a ? 'ans' : ''} ${pick === j && j !== q.a ? 'wrong' : ''}"><input type="radio" name="rv-${id}-${i}" data-rv="${id}|${i}|${j}" ${pick === j ? 'checked' : ''}> <span>${o[0]}</span></label>`).join('')}${pick != null ? `<p class="rv-x ${pick === q.a ? 'st-PASS' : 'st-WARNING'}"><b>${pick === q.a ? '✓ 맞습니다.' : '✕ 다시 생각해 보세요.'}</b> ${q.o[pick][1]}${pick !== q.a ? ` <span class="note">정답: ${q.o[q.a][0]} — ${q.o[q.a][1]}</span>` : ''}</p>` : ''}</fieldset>`;
+    }).join('')}</div>`;
+  }
+  function renderReview(id) {
+    const box = $('#m-review'); if (!box) return;
+    const h = reviewHTML(id); box.hidden = !h; if (h) { const open = box.open; box.innerHTML = h; box.open = open; }
+  }
+  function renderLabReview() {
+    const box = $('#lab-review'); if (!box || !window.LABUI || !window.LABUI.isOpen()) return;
+    const k = (window.LABUI.state().s || {}).cur | 0, h = reviewHTML('LAB:' + k);
+    box.hidden = !h; if (h) { const open = box.open; box.innerHTML = h; box.open = open; }
+  }
+  document.addEventListener('change', (e) => {
+    const r = e.target.closest('[data-rv]'); if (!r) return;
+    const [id, i, j] = r.dataset.rv.split('|'), R = SH().review(); R[id] = R[id] || {}; R[id][+i] = +j; SH().save();
+    if (id.startsWith('LAB:')) renderLabReview(); else renderReview(id);
+    const fs = document.querySelector(`[name="rv-${id}-${i}"]`); const p = fs && fs.closest('fieldset'); const x = p && p.querySelector('.rv-x'); if (x) { x.tabIndex = -1; x.focus({ preventScroll: true }); }
+  });
+
+  /* ---------- first-run onboarding (after Stage 0; skip / replay) ---------- */
+  const ONB = smqModal($('#onb-dlg'), { onClose: () => { ui().onboarded = 1; SH().saveUI(); renderPath(); } });
+  let onbStep = 0;
+  const OS = [
+    { t: '무엇을 하는 프로그램인가요?', h: () => `<p>SPEC-to-MASK는 광소자 하나에서 1.6T 광엔진, 그리고 실제 GDS 레이아웃까지 <b>설계 결정을 직접 내리며</b> 배우는 학습 플랫폼입니다. 계산은 물리 기반 모델이고, 각 결과가 무엇에 근거하는지(해석식·근사·문헌값·가정·미검증)를 함께 보여 줍니다.</p><p>어디서 시작할까요? (언제든 바꿀 수 있고, 지도에서 아무 레벨이나 자유롭게 갈 수 있습니다)</p><div class="onb-paths">${Object.entries(PATHS).map(([k, p]) => `<button class="choice" data-opath="${k}" aria-pressed="${ui().path === k}"><div class="ttl">${k} · ${p.name}</div><div class="tag">${p.who}</div><div class="note" style="margin:0">${p.line}</div></button>`).join('')}<button class="choice" data-opath="" aria-pressed="${!ui().path}"><div class="ttl">자유 탐색</div><div class="tag">경로 없이 지도에서 고르기</div></button></div>` },
+    { t: '손잡이를 움직이면', h: () => '<p>각 레벨의 <b>설계 파라미터</b>(데스크톱: 오른쪽, 휴대폰: 화면 아래) 슬라이더나 −/+ 버튼을 움직이면, 같은 물리 엔진이 즉시 다시 계산합니다.</p><ul><li><b>화면</b>: 소자 그림과 점수, 핵심 수치 타일</li><li><b>바꾼 것 → 결과</b>: 방금 바꾼 손잡이와, 미션 지표가 어떻게 움직였는지(이전 → 현재), 물리적 이유와 trade-off</li><li><b>코치</b>: 다음 한 수 제안 — 실제로 좋아지는지 계산한 뒤에만 제안합니다</li></ul>' },
+    { t: '별과 Fab Run', h: () => '<ul><li>★ 기본 스펙 · ★★ 고성능 + 크기 · ★★★ <b>Fab Run 수율</b></li><li>Fab Run은 웨이퍼 공정 변동(폭·두께·다이 랜덤)을 뽑아 다이마다 판정하는 <b>Monte Carlo 추정</b>입니다. 시드가 기록되어 같은 설계·시드면 결과가 같고, 시드를 고정해 두 설계를 같은 웨이퍼로 비교할 수 있습니다.</li><li>Guided 학습 단계는 별·카드·Tape-out이 없는 연습입니다. 마지막 단계(Full Design)에서 겨룹니다.</li><li>비교 패널의 값은 점수에 들어가지 않습니다.</li></ul>' },
+    { t: '가이드 · Design Lab · 저장', h: () => '<ul><li><b>원리 배우기 · Learning Guide</b>: 미션 카드 위 버튼. 원리·식·파라미터 표·모델 한계(F)를 봅니다. 결과 옆의 근거 표시(◆ ◇ ● △ ○)를 누르면 모델 한계로 갑니다.</li><li><b>Design Lab</b>(지도의 LAB): 1.6T Tx PIC을 회로도 → 배치 → 배선 → 전기 → 검증 → 내보내기. <b>Design Valid</b>(게임 모델 충족) · <b>Geometry Rechecked</b>(만든 GDS를 다시 읽어 검사) · <b>Foundry Readiness: NOT VERIFIED</b>(이 프로그램은 제조 준비를 검증하지 않음)를 구분합니다.</li><li><b>저장</b>: 진행 기록은 이 브라우저에만 있습니다. 머리글의 저장 표시를 눌러 <b>전체 백업</b>을 받아 두세요.</li></ul>' }
+  ];
+  function renderOnb() {
+    const S = OS[onbStep];
+    $('#onb-h').textContent = S.t; $('#onb-b').innerHTML = S.h();
+    $('#onb-n').textContent = `${onbStep + 1} / ${OS.length}`;
+    $('#onb-prev').disabled = onbStep === 0; $('#onb-next').textContent = onbStep === OS.length - 1 ? (ui().path ? `시작: ${stepLabel(PATHS[ui().path].steps.find((st) => !stepDone(st)) || PATHS[ui().path].steps[0])}` : '시작하기') : '다음 →';
+  }
+  function openOnb(k) { onbStep = k || 0; renderOnb(); ONB.open('#onb-next'); }
+  $('#onb-dlg').addEventListener('click', (e) => {
+    const p = e.target.closest('[data-opath]'); if (p) { ui().path = p.dataset.opath || null; SH().saveUI(); renderOnb(); return; }
+    if (e.target.closest('#onb-prev')) { onbStep = Math.max(0, onbStep - 1); renderOnb(); return; }
+    if (e.target.closest('#onb-next')) {
+      if (onbStep < OS.length - 1) { onbStep++; renderOnb(); $('#onb-next').focus(); return; }
+      ONB.close(); const P = PATHS[ui().path]; if (P) goStep(P.steps.find((st) => !stepDone(st)) || P.steps[0]);
+    }
+  });
+  window.GAME_LEARN = { openOnb, renderPath, paths: PATHS, reviews: RV };
+  SH().onLevel((id) => { renderPath(); renderReview(id); if (SH().plat() && !ui().onboarded && !SH().progress() && !ONB.isOpen() && $('#setup').hidden) openOnb(0); });   // first run only: existing players are not interrupted (replay: 처음 안내)
+  if (window.LABUI && window.LABUI.onRender) window.LABUI.onRender(() => { renderPath(); renderLabReview(); });
+  renderPath();
+})();
 
 </script>

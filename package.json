@@ -20,7 +20,8 @@
     "test:lab": "node test/t_lab.js && node test/e2e/lab.js si1310 && node test/e2e/lab.js sin1550 && node test/e2e/lab_state.js si1310 && node test/e2e/lab_state.js sin1550",
     "build:offline": "SMQ_OFFLINE=1 sh tools/build.sh dist/index-offline.html",
     "test:backup": "node test/e2e/backup.js",
-    "test:fab": "node test/e2e/fab.js si1310"
+    "test:fab": "node test/e2e/fab.js si1310",
+    "test:learn": "node test/e2e/learn.js"
   },
   "devDependencies": {
     "jsdom": "^24.1.3"
