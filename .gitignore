@@ -9,3 +9,16 @@ tools/smq2gds/examples/*.check.json
 .pytest_cache/
 dist/index-offline.html
 /release/
+
+# Local credentials — keep outside the public repository
+.env
+.env.*
+!.env.example
+!.env.sample
+.npmrc
+*.pem
+*.p12
+*.pfx
+*.key
+id_rsa
+id_ed25519
