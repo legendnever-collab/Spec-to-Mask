@@ -1,0 +1,13 @@
+version: 2
+updates:
+  # Dependabot opens reviewable pull requests; it does not merge changes.
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 3
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 3
