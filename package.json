@@ -15,7 +15,8 @@
     "test:flow": "node test/e2e/flow.js si1310 && node test/e2e/flow.js si1550 && node test/e2e/flow.js sin1310 && node test/e2e/flow.js sin1550",
     "test:guide": "node test/e2e/guide.js si1310 && node test/e2e/guide.js sin1550",
     "test:mrr": "node test/t_mrr.js",
-    "test:dr8": "node test/t_dr8.js"
+    "test:dr8": "node test/t_dr8.js",
+    "test:lab": "node test/t_lab.js && node test/e2e/lab.js si1310 && node test/e2e/lab.js sin1550"
   },
   "devDependencies": {
     "jsdom": "^24.1.3"

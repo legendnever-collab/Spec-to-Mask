@@ -70,6 +70,11 @@ Photonic IC 설계를 게임으로 배우는 단계별 학습 프로그램입니
 - 3A(2×FR4)는 MZM만 — 링 Tx는 WDM 링 다중화(공진 배정·크로스토크)가 필요한 별도 아키텍처(Phase E)입니다.
 - 모델·가정·결과·열 효율 민감도: [docs/arch_1p6t_dr8.md](docs/arch_1p6t_dr8.md).
 
+### PIC Design Lab (Track A 후속)
+
+캠페인 맵의 **LAB** 노드. 1.6T DR8 Tx PIC를 회로도 → Floorplan → 광 배선 → 전기 인터페이스 → 검증 → 회로 데이터 내보내기(smq-circuit/1) 여섯 미션으로 설계합니다. 부품은 카드(없으면 기준 설계)에서, 배선 형상은 직선·원호/Euler 코너·S-bend 기본 도형으로, 손실은 D-1 산란·굽힘 모델로 계산하고, 3A+ 엔진의 링크 예측에 레이아웃 손실을 더해 비교합니다. 진행은 점수가 아니라 상태(Schematic / Floorplan / Routing / Verification Complete, GDS Generated)로 표시하고, 별·카드·레벨 설계는 건드리지 않습니다(`smq3-lab`). GDS 생성은 Phase D.
+- 사용법·모델·한계: [docs/design_lab.md](docs/design_lab.md) · 데이터 형식: [docs/circuit_schema.md](docs/circuit_schema.md)
+
 ### D-1 직사각형 나선
 
 D-1 `레이아웃` 파라미터: 원형 이중 나선(Legacy, 기존과 같은 결과) / 직사각형 나선 · 원호 코너 / 직사각형 나선 · Euler 코너.
@@ -111,7 +116,9 @@ src/
   kinds/             레벨 종류별 물리·시각화·코치: wg, dc, mmi, ssc, cwdm (Stage 1) · to, pn, mzm, mrr, pd, els (Stage 2) · xcvr (Stage 3) · spiral, ttd (긴 지연선) · chirp, fpsa, lidar (Track B)
   levels.js          캠페인 텍스트·개념 노트 (수치 스펙은 data/pspec.js)
   shell.js           범용 게임 셸: 플랫폼, 점수, 목표·미션, 코치, Fab Run, AI 라이벌, Design DB, 부품 카드, Guided 단계·연습 모드
-  guide.js           레벨별 학습 가이드 모달 (A–G, 상호작용 예제는 kind 엔진 사용)
+  guide.js           레벨별 학습 가이드 모달 (A–G, 상호작용 예제는 kind 엔진 사용) · openCustom (Design Lab 미션 가이드)
+  lab/engine.js      PIC Design Lab 엔진 (LAB): 부품 조립, 배치, 배선 기본 도형, 전기 인터페이스, 검사, smq-circuit/1 내보내기
+  lab/ui.js          PIC Design Lab 화면 (LABUI): 라이브러리 · 회로도/레이아웃 · 미션·인스펙터 · 결과표
   data/
     wg_*.json        도파로 TE/TM 모드 테이블 (폭·두께·파장)
     dc_*.json        방향성 결합기 짝/홀 슈퍼모드 테이블 (갭·폭·두께·파장)
@@ -128,6 +135,7 @@ tools/
   calibrate_s2.js    Stage 2 스펙 블록 (도전 난이도에서도 ★★ 도달 가능하도록 자동 완화)
   calibrate_s4.js    긴 지연선 스펙 블록 (D-1, D-2)
   calibrate_s5.js    Track B 스펙 블록 (B-1, B-2, B-3)
+  export_circuit.js  Design Lab 예제 smq-circuit/1 (MZM DR8 · MRR DR8 × 4 플랫폼) → smq2gds/examples/circuit
   calibrate_s3.js    Stage 3 스펙 블록 (기준 부품으로 아키텍처 전수 탐색 → 전력 예산·마진 목표)
   gen_thermal.py     히터 단면 2D 유한체적 열해석 (Si/SiN × 간격 × 격리)
   build_data.py      data/*.json → tables.js, pspec.js
@@ -143,6 +151,8 @@ test/
   e2e/guide.js       jsdom: 모든 레벨 학습 가이드 (절 A–G, 파라미터 행, 예제, 포커스 복원, 설계·점수 불변)
   e2e/flow.js        jsdom: 1-7 Guided 흐름(단계·건너뛰기·값 기록·별 없음·밴드 축) + D-1 직사각형(프리셋·Infeasible·spiral_rect 내보내기)
   e2e/flow.js (2-3R) Guided 기본·1단계 R → 설계 기록·별 없음·Full Design·비교 패널·내보내기 반경 = 레이아웃 반경
+  t_lab.js           Design Lab 엔진: 연결성·포트 일치·기본 도형 연속·길이·R·간격·경계·Infeasible·RF 평면성·플립칩·내보내기 (npm run test:lab)
+  e2e/lab.js         jsdom: 맵 진입 → 6 미션 → 검증 → 내보내기 → 가이드 → 복귀, 캠페인 불변
   t_dr8.js           3A+ DR8 변조기 선택: MZM 결과 비트 동일·스펙 불변, 링 = 2-3R 엔진(모듈 입력 파워), 히터(TEC/비냉각), 공정 감도, 열 폭주, 드라이버 (npm run test:dr8)
   t_mrr.js           링 엔진: 반경↔FSR, 공진 조건, Q 관계, Critical coupling, Airy↔Lorentz, 최대 기울기 1/√3, dλ/dT, P_2π, 레이아웃 배치, Q≠대역폭, 정적/동적 OMA, 열 안정 부호, 공정 이동, SiN 이종, 단계 완료, 기존 스펙 불변 (npm run test:mrr)
   t_upgrade.js       엔진: MZI 식·FSR·위상 이동·단계 완료·Lattice 차수 / 직사각형 나선 길이 = cτ/n_g·경계·회전·Mode B·Legacy 동일성
@@ -164,6 +174,7 @@ DES='{"D-1":{"lay":2,"sb":1}}' node test/e2e/bot.js std 2 D-1 si1310   # 직사�
 node test/e2e/bot.js std 2 2-1,2-2,2-3,2-3R,2-4,2-5 sin1550   # Stage 2 회귀
 npm run test:mrr                                          # 링 변조기 물리
 npm run test:dr8                                          # 3A+ DR8 MZM/MRR
+npm run test:lab && node tools/export_circuit.js all      # PIC Design Lab + 회로 예제
 DES='{"3A+":{"mod":1}}' node test/e2e/bot.js std 2 3A+ si1310   # MRR DR8 봇
 node test/e2e/bot.js std 2 3A,3A+ si1310                  # Stage 3 회귀
 node test/e2e/bot.js std 2 D-1,D-2 sin1550                # 긴 지연선 회귀

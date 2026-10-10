@@ -591,5 +591,18 @@
     let w = null; try { w = window.open(URL.createObjectURL(new Blob([html], { type: 'text/html' })), '_blank', 'noopener'); } catch (e) { w = null; }
     if (!w) { const n = $('#guide-sub'); n.innerHTML += '<br><span style="color:var(--rose)">이 화면에서는 새 창을 열 수 없습니다 — 학습 창을 그대로 쓰세요.</span>'; }
   });
-  window.GAME_GUIDE = { open, close, content: GK, levels: GL, refs: REF, classes: CLS };
+  // same dialog, same A–G section layout for content that is not a campaign level (PIC Design Lab missions)
+  function openCustom(spec) {
+    lastFocus = document.activeElement;
+    $('#guide-title').textContent = spec.title; $('#guide-sub').innerHTML = spec.sub || '';
+    box.dataset.depth = depth; [...$('#guide-depth').querySelectorAll('button')].forEach((b) => b.setAttribute('aria-checked', String(b.dataset.depth === depth)));
+    $('#guide-toc').innerHTML = spec.secs.map(([id, title]) => `<a href="#g-${id}" data-sec="${id}">${id} · ${title.split(' · ')[1] || title}</a>`).join('');
+    body.innerHTML = spec.secs.map(([id, title, html]) => sec(id, id, title, html)).join(''); body.scrollTop = 0;
+    dlg.hidden = false; document.body.style.overflow = 'hidden';
+    ['#gamewrap', '.top', 'footer'].forEach((q) => { const e = $(q); if (e) { e.setAttribute('aria-hidden', 'true'); e.inert = true; } });
+    $('#guide-close').focus();
+  }
+  const fmtLim = (rows) => `<div class="gtbl"><table><tr><th>계산 항목</th><th>근거 분류</th><th>내용</th></tr>${rows.map(([q, k, n]) => `<tr><td>${q}</td><td><span class="badge2 ${CLS[k][1]}">${CLS[k][0]}</span><br><span class="note">${CLS[k][2]}</span></td><td>${n}</td></tr>`).join('')}</table></div>`;
+  const fmtRefs = (ids) => `<ul class="grefs">${ids.map((id) => { const r = REF[id]; return r ? `<li>${r.u ? `<a href="${r.u}" target="_blank" rel="noopener noreferrer">${r.t}</a>` : r.t}${r.n ? ` — <span class="note">${r.n}</span>` : ''}</li>` : ''; }).join('')}</ul>`;
+  window.GAME_GUIDE = { open, close, openCustom, fmt: { lim: fmtLim, refs: fmtRefs }, content: GK, levels: GL, refs: REF, classes: CLS };
 })();

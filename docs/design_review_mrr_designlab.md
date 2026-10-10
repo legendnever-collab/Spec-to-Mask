@@ -52,7 +52,7 @@
 | Phase | 내용 | 이번 PR |
 |---|---|---|
 | A | MRR 물리 엔진, Guided 5단계 + Full, UI, 학습 가이드, 카드, MZM 비교 | PR #2 (병합) |
-| B | 3A+에 MZM DR8 / MRR DR8, 카드 통합, 링크·열·전력 | **구현** — [arch_1p6t_dr8.md](arch_1p6t_dr8.md) |
-| C | PIC Design Lab (회로도·평면배치·배선·전기 인터페이스·검증) | 다음 |
+| B | 3A+에 MZM DR8 / MRR DR8, 카드 통합, 링크·열·전력 | PR #3 (병합) — [arch_1p6t_dr8.md](arch_1p6t_dr8.md) |
+| C | PIC Design Lab (회로도·평면배치·배선·전기 인터페이스·검증) + smq-circuit/1 내보내기 | **구현** — [design_lab.md](design_lab.md), [circuit_schema.md](circuit_schema.md) |
 | D | `smq-circuit/1` + PCell 조립 + GDS + 재검증 | 다음 |
 | E | MRR WDM8 | 안정화 이후 |
