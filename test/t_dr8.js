@@ -98,7 +98,7 @@ for (const pid of Object.keys(G.PLATFORMS)) {
     ok(pr && /MZM이 유리:<\/b> (?!—)/.test(pr.html) && /MRR이 유리:<\/b> (?!—)/.test(pr.html) && /Fab 수율/.test(pr.html) && ms < 4000, `${pid}: panel with Fab yields lists advantages on both sides (${ms} ms)`);
   }
 }
-/* ---- release review: the thermal numbers in the docs are the engine's, at the stated computation point (v1.0.1) ---- */
+/* ---- release review: the thermal numbers in the docs are the engine's, at the stated computation point (v1.0 final patch) ---- */
 {
   const fs = require('fs'), doc = fs.readFileSync(path.join(__dirname, '../docs/arch_1p6t_dr8.md'), 'utf8'), lim = fs.readFileSync(path.join(__dirname, '../docs/release/MODEL_LIMITATIONS-v1.0.md'), 'utf8');
   G.__pid = 'si1310'; const pf = G.PLATFORMS.si1310, l = LV('3A+', 'si1310'); G.PQ.setPlatform(pf.mat, pf.t, pf.rules);

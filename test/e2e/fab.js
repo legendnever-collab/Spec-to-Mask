@@ -51,7 +51,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const chk = w.eval(`(() => { const l = GAME_LEV('3A+'), K = GAME_KINDS.xcvr, dies = makeWafer(${fb ? fb.seed : 1}, 1), d0 = ${JSON.stringify(pin ? pin.d : {})}, d1 = { ...d0, mod: 1 }; let a = 0, b = 0; for (const die of dies) { const p = { ...die, dt: die.dt * l.pf.dt / 0.006 }; if (K.fabPass(l, K.evaluate(l, d0, p))) a++; if (K.fabPass(l, K.evaluate(l, d1, p))) b++; } return [a, b]; })()`);
   okm(fb && chk[0] === fb.pa && chk[1] === fb.pb, `independent recount on the same seed: ${chk.join(' / ')}`);
   okm(JSON.stringify({ s: P().stars, c: P().cards }) === before && $('#btn-fab').textContent === cr0, 'comparison changed no star, card or credit');
-  // ---- release review findings (v1.0.1): the result is a paired comparison, and it goes stale when any input changes ----
+  // ---- release review findings (v1.0 final patch): the result is a paired comparison, and it goes stale when any input changes ----
   const st = () => { const e = $('#cmp-body [data-fab-state]'); return e ? e.dataset.fabState : 'none'; }, txt = () => $('#cmp-body').textContent;
   okm(fb && ['plat', 'mode', 'sig', 'dt', 'spec', 'seed', 'model', 'base', 'cur'].every((k) => fb[k] != null) && fb.plat === plat && fb.mode === 'std', `result keyed on platform · difficulty · process scale · spec · seed · model · both design hashes (${fb && fb.model})`);
   okm(st() === 'current' && /쌍 비교/.test(txt()) && /정확 부호 검정 p|모든 다이에서 같아/.test(txt()) && /95 % 구간/.test(txt()) && !/설계 차이입니다/.test(txt()), 'paired wording: discordant dies, exact sign test, Wilson interval kept, no "설계 차이입니다"');

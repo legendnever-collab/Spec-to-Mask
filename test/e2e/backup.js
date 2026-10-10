@@ -86,7 +86,7 @@ function boot(seed, rawSeed) {
   const D = boot({ 'smq3-progress': { plat, by: { [plat]: { stars: { easy: {}, std: { '1-5': 1 }, hard: {} }, best: {}, ai: {}, cards: {}, missions: {} } } } }); await sleep(600);
   const pD = D.w.localStorage.getItem('smq3-progress');
   okm(D.w.SMQ_STORE.restore(bk, {}).ok && D.w.SMQ_STORE.undo().ok && D.w.localStorage.getItem('smq3-progress') === pD, 'undo returns the data from before the restore');
-  // ---- release review finding: corrupted stored data was dropped from the backup and the backup still validated (v1.0.1) ----
+  // ---- release review finding: corrupted stored data was dropped from the backup and the backup still validated (v1.0 final patch) ----
   //   before the fix: makeBackup skipped an unparsable key, the game then overwrote it with defaults, validate() → ok, no warning
   okm(bk.complete === true && !bk.problems && !bk.unreadable && w.SMQ_STORE.validate(bk).incomplete === false, 'a clean backup is complete (no problems, no unreadable)');
   { const old = JSON.parse(JSON.stringify(bk)); delete old.complete; const vo = w.SMQ_STORE.validate(old); okm(vo.ok && !vo.incomplete, 'a v1.0 backup without the completeness fields still validates (compatibility)'); }

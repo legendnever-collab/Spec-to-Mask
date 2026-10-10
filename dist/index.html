@@ -1121,7 +1121,7 @@ const SMQ_STORE = (() => {
     const d = b.data;
     Object.keys(d).forEach((k) => { if (!KEYS.includes(k) && !UI_KEYS.includes(k)) warnings.push(`알 수 없는 키 ${k}는 무시합니다.`); });
     Object.keys(d).forEach((k) => { const c = checkKey(k, d[k], ctx); errors.push(...c.errors); warnings.push(...c.warnings); });
-    // completeness (v1.0.1): unreadable raw text must be intact, and an incomplete backup is reported, not passed silently
+    // completeness (v1.0 final patch): unreadable raw text must be intact, and an incomplete backup is reported, not passed silently
     const U = b.unreadable;
     if (U != null) {
       if (!isObj(U) || Object.values(U).some((a) => !Array.isArray(a) || a.some((e) => !isObj(e) || typeof e.raw !== 'string'))) errors.push('unreadable(보관된 원문) 구조가 올바르지 않습니다.');

@@ -94,3 +94,41 @@ Design Valid / Geometry Rechecked / Foundry Readiness: NOT VERIFIED. 기존 GDS 
 | 사내 브라우저 정책(다운로드·클립보드 차단) 실환경 | 대체 경로(선택된 JSON)는 jsdom에서 확인, 실환경 미확인 |
 | WDM 동적 락, RF EM, 3D 열, 파운드리 규칙 | 모델 범위 밖 (MODEL_LIMITATIONS) |
 | localStorage 한도 | 현재 사용량 수 kB–수백 kB (Design DB 5000건 상한 ≈ 1 MB) — IndexedDB 이전은 하지 않음 |
+
+## 6. 최종 릴리스 패치 — 독립 코드 검토 5건 (PR #8, be4ce8a 이후)
+
+기능 추가 없이 검토 지적 5건만 고쳤습니다. 각 항목은 먼저 수정 전 코드에서 재현하고, 재현을 회귀 시험으로 남겼습니다. 물리 엔진 결과·스펙·`MODEL_VERSION`(smq-model-1.0)·저장 형식은 바뀌지 않았습니다(test:upgrade/mrr/dr8/wdm 동일성 검사가 실제로 실행되어 통과).
+
+| # | 문제 (심각도) | 수정 전 재현 | 수정 | 회귀 시험 |
+|---|---|---|---|---|
+| 1 | CI에서 동일성 검사가 조용히 skip될 수 있음 (P0) | `git clone --depth 1`에서 test:upgrade 344/344 · mrr 180/180 · dr8 68/68 · wdm 76/76 모두 “통과” — 기준 커밋을 못 읽어 동일성 검사 12 + 1 + 12 + 4개가 빠짐(wdm은 안내 문구도 없음). test:upgrade의 기준은 `origin/main`(이미 직사각형 나선 포함)이라 깊은 checkout에서도 자기 자신과 비교 | `test/baseline.js`: 기준 커밋 고정(5637cd9 나선 = 직사각형 나선 이전 main, f08011b, fa9f16a ×2, ad7188f), 없으면 종료 코드 1, `BASELINE <commit>:<file> blob`·`IDENTITY <test>: n/n` 출력, 개수가 다르면 실패. CI quick·matrix `fetch-depth: 0`, `tools/check_baselines.js`와 동일성 검사 수를 job summary에 기록 | `npm run test:baseline` (11): 히스토리를 숨기면(GIT_DIR=빈 폴더) test:upgrade·dr8 종료 코드 1 · `SMQ_ALLOW_NO_BASELINE=1`이면 “IDENTITY NOT RUN” 표시 · 히스토리가 있으면 12/12. 얕은 clone에서 네 시험 모두 `BASELINE MISSING`으로 실패 확인 |
+| 2 | 손상된 저장 값이 백업에서 조용히 빠지고 검증 통과 (P0) | `smq3-db`에 잘린 JSON → 수정 전 빌드: `data`에 smq3-db 없음, `validate` ok·경고 0, 복원하면 대상 브라우저의 smq3-db까지 삭제. 게임은 시작 시 기본값으로 읽고 다음 저장에서 원문을 덮어씀 | 시작 시 손상 원문을 `smq3-quarantine`에 그대로 보관. 백업: `problems`(read / parse / structure / quarantined) · `unreadable`(원문, `unreadable_checksum`) · `complete:false`; `data`·`checksum`의 의미는 그대로(이전 백업 호환). `validate` → `incomplete` + 경고(“불완전한 백업”), 원문 변조는 오류. 복원은 그 키를 지우지 않고 원문을 대상 보관함에 복사. 저장 칩·데이터 대화 상자·백업/복원 메시지에 표시, 보관 원문 삭제는 확인 후 | `npm run test:backup` (+18): 시작 시 보관 · 게임이 키를 덮어쓴 뒤에도 백업에 원문 · `complete:false` · 검증 incomplete · 원문 변조 거부 · 플래그를 지워도 incomplete · 읽기 거부(SecurityError)도 문제로 기록 · 복원 시 키 보존·원문 복사 · v1.0 백업 호환 |
+| 3 | 같은 웨이퍼 비교 결과가 조건이 바뀌어도 현재 결과처럼 보임 (P1) | 결과는 두 설계 hash만 확인 — 난이도(공정 변동 ×1.25, 스펙)·시드(새 Fab Run)·모델 버전이 바뀌어도 그대로 표시 | 결과에 플랫폼·난이도·공정 변동 크기·두께 변동·레벨 스펙 hash·시드·모델 버전·두 설계 hash를 기록(`fabCond`). 하나라도 다르면 “STALE — 바뀐 것: …”으로 표시하고 이전 값은 현재 결과가 아님을 명시, 같은 조건으로 돌아오면 다시 유효. v1.0 기록(조건 필드 없음)은 STALE(기록 없음) | `test:fab` × 4플랫폼 (+13, 4·5번 공통): 난이도 변경 → STALE, 되돌리면 current · 새 시드 → STALE(시드 a → b) → 재계산 · 설계 변경 → STALE · 다시 불러온 뒤 같은 조건 current · 다른 모델 버전 → STALE · v1.0 기록 → STALE |
+| 4 | MRR 자기 가열 97 K(arch 문서) vs 61 K(v1.0 문서) (P1) | 같은 링(R 6.099 µm, 547 pm/mW)을 **2-3R 레벨 단독 13 dBm 입력**에서 계산하면 P<sub>abs</sub> 11.38 mW → 97.4 K, 효율 비로 29 / 13 K — Phase B 문서의 값. 모듈(3A+ 기준, 70 °C P<sub>mod</sub> 10.80 dBm → 0.5 dB 격자점 11.0 dBm)에서는 P<sub>abs</sub> 7.12 mW → 61.0 K. Phase B 엔진(bb74e31)으로 다시 계산해도 61.0 K → 엔진 변화가 아니라 문서 표의 계산점 혼합 | 엔진 변경 없음. arch_1p6t_dr8.md §2.3 표를 61.0 / 17.8 / 8.1 K로 고치고 정의(링 코어 평균 ΔT = P<sub>abs</sub>/(G′·L), FCA+TPA 흡수, PAM4 평균, 정상 상태; 칩·접합 최고 온도 아님)·계산점·4플랫폼 추적 표(격자점 / 정확한 P<sub>mod</sub> / 13 dBm) 추가. MODEL_LIMITATIONS §3.1과 3A+ 열 민감도 표 설명에 같은 정의 | `test:dr8` (+6): 문서 표의 히터·ΔT·모듈 전력 = `thermalSens`, 97 K 행 없음, 4플랫폼 추적 표 = 엔진. 수정 전 문서로 돌리면 6개 FAIL 확인 |
+| 5 | 같은 시드 수율 비교를 설계 우열로 단정 (P1) | “갈린 다이 수를 보세요 — 같은 웨이퍼라 공정 운이 아니라 설계 차이입니다”, 3A+·2-3R 패널은 수율 차 3 %p 초과면 강조 | 쌍 비교로 설명: k/n 수율 + 95 % Wilson 구간(유지), 판정이 갈린 다이(기준만 / 현재만), 정확 양측 부호 검정 p. 갈림이 한쪽으로 뚜렷할 때만(p < 0.05) “이 웨이퍼·이 공정 모델에서 더 견고하다는 근거”로, 그때도 공간 상관 때문에 p가 낙관적이고 우열의 증명이 아님을 명시. 패널 강조도 같은 기준 | `test:fab`: 부호 검정 값((5,0) p = 0.0625, (0,6) p = 0.031, (3,3) p = 1), 문구, “설계 차이입니다” 없음, Wilson 구간 표시. `test:mrr`·`test:dr8` 패널 시험 통과 |
+
+자기 가열 추적 (3A+ 기준 설계, 변조기 MRR):
+
+| 플랫폼 | P<sub>mod</sub>(70 °C) → 격자점 | 모듈 표시 | 정확한 P<sub>mod</sub> | 2-3R 단독 13 dBm |
+|---|---|---|---|---|
+| Si 1310 | 10.80 → 11.0 dBm | 61.0 K | 58.1 K | 97.4 K |
+| Si 1550 | 12.75 → 12.5 dBm | 78.2 K | 82.9 K | 87.8 K |
+| SiN 1310 | 10.97 → 11.0 dBm | 42.9 K | 42.6 K | 69.5 K |
+| SiN 1550 | 12.91 → 13.0 dBm | 88.8 K | 86.9 K | 88.8 K |
+
+### 회귀 결과 (최종 패치, 로컬 — Node 22, Python 3.13, gdsfactory 9.51, KLayout 0.30.12)
+
+| 시험 | 결과 |
+|---|---|
+| build · check_syntax (64 JS 파일 + 조립 스크립트) | PASS |
+| test:upgrade 357/357 · test:mrr 182/182 · test:dr8 87/87 · test:wdm 81/81 | PASS — `IDENTITY` 12/12 (5637cd9) · 1/1 (f08011b) · 12/12 (fa9f16a) · 4/4 (ad7188f) |
+| test:baseline 11/11 · check_baselines 5/5 | PASS |
+| test:lab · migrate · guide · backup · learn | PASS |
+| test:py (test_smq2gds, test_circuit 예제 12 + 음성 시험) | PASS |
+| smoke · flow · fab · lab_state · lab · guide × 4플랫폼 | PASS (페이지 오류 0) |
+| bot std/수치 힌트, BOT_MIN=2: si1310 21레벨, si1550 · sin1310 · sin1550 9레벨 | 모든 레벨 ★★ 이상, 종료 코드 0 (게이트 통과) |
+| 화면 (1280 × 800, 400 × 860) | 가로 넘침 0. 캡처 `docs/ux/v1/{desktop,mobile}_backup_incomplete.png`, `_samewafer_stale.png`, `_samewafer_paired.png` |
+| GitHub Actions PR #8 | CI_RESULT |
+
+### 이번 패치에서 새로 발견한 문제 (고치지 않음 — 범위 밖)
+- **데스크톱(≥ 920 px)에서 sticky 파라미터 카드가 전체 폭 카드(기준 비교 · 3A+/2-3R 비교 패널)의 오른쪽 약 40 %를 덮습니다.** `#params`는 sticky라 아래로 스크롤해도 화면 오른쪽에 남고, 그 아래 행의 `xp`·`cmp` 영역은 두 열을 모두 씁니다. 기준 비교 표의 Δ·근거 열과 STALE 문장의 오른쪽 일부가 가려집니다(휴대폰 400 px에서는 문제 없음). be4ce8a에서도 같음 — v1.0에서 element 단위 캡처만 해 놓쳤습니다. 해결안: 데스크톱에서 `xp`·`cmp`를 왼쪽 열(1.6fr)에만 두거나, sticky를 `mission`·`view` 행 범위로 제한. UI 배치 변경이라 이번 패치에 넣지 않았습니다.

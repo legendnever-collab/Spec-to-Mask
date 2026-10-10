@@ -24,4 +24,7 @@ SPEC-to-MASK Quest — Photonic IC 설계 학습 게임. 사용자는 광소자 
 - v1.0 (사내 교육 릴리스): 저장은 모두 `SMQ_STORE`(src/persist.js)로 — 실패를 삼키지 않습니다(저장 칩·배너). 전체 백업 형식은 `smq-backup/1`(체크섬 포함); 게임이 쓰는 키를 추가하면 `SMQ_STORE.KEYS`와 `validate()`도 고치고 `npm run test:backup`. Lab 상태는 이전 완료(`done`)·지금 유효(`live`)·식별(`ran {hash,sig}`, `exported {hash}`)을 나눕니다(`node test/e2e/lab_state.js`).
 - 비교·민감도·리뷰·학습 경로(src/learn.js)는 별·점수·보정·설계를 바꾸지 않습니다. 엔진에 민감도 옵션을 넣을 때는 기본 경로가 비트 동일해야 합니다(`xcvr.analyse(…, {gs})`, `wdm.analyse(…, ov)` — `npm run test:dr8`, `test:wdm`). 근거 표시는 `confBadge(an|semi|exp|asm|nv)`로 통일하고 PASS/FAIL 배지와 섞지 않습니다.
 - Fab Run은 시드·플랫폼·난이도·설계 hash·다이 수·양품·수율·`MODEL_VERSION`을 `progress.by[pid].fab[id]`에 남깁니다. 물리 모델을 바꾸면 `MODEL_VERSION`을 올립니다(`npm run test:fab`).
+- 같은 웨이퍼 비교(`pins[id].fab`)는 플랫폼·난이도·공정 변동 크기·레벨 스펙·시드·`MODEL_VERSION`·두 설계 hash(`fabCond`)가 모두 같을 때만 현재 결과로 보여 주고, 하나라도 다르면 STALE로 표시합니다. 수율 비교 문구는 쌍 비교(갈린 다이 + 정확 부호 검정, Wilson 구간 유지)로 쓰고 설계 우열을 단정하지 않습니다(`pairedText`).
+- 저장 데이터가 JSON·구조 검사에 실패하면 시작할 때 원문을 `smq3-quarantine`에 보관합니다. 백업은 그런 키를 조용히 빼지 않고 `problems`·`unreadable`(+ `unreadable_checksum`)·`complete:false`로 남기며, 복원은 그 키를 지우지 않습니다(`npm run test:backup`).
+- 동일성 검사(test:upgrade·mrr·dr8·wdm)의 기준 커밋은 `test/baseline.js`의 `REQUIRED`에 고정합니다. 기준 파일이 없으면 실패이지 skip이 아닙니다(CI `fetch-depth: 0`, `npm run test:baseline`). 히스토리 없는 사본에서만 `SMQ_ALLOW_NO_BASELINE=1`(NOT RUN 표시).
 - 릴리스: `npm run release`(오프라인 HTML·ZIP·SHA256SUMS), CI `.github/workflows/ci.yml`. 봇·스모크는 CI에서 실패 시 종료 코드 1(`BOT_MIN=2`).
