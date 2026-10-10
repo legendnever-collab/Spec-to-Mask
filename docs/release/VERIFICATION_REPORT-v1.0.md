@@ -77,9 +77,10 @@ Design Valid / Geometry Rechecked / Foundry Readiness: NOT VERIFIED. 기존 GDS 
 | smoke · flow · fab · lab_state × 4플랫폼 | PASS (fab sin1310/sin1550은 Si 전용 설계를 쓰던 시험을 플랫폼 기준 설계로 고친 뒤 PASS) |
 | bot std/수치 힌트, BOT_MIN=2: si1310 21레벨 | 모두 ★★ 이상, 종료 코드 0 (★★★ 미달: 1-7·2-1·3A — Fab 시드 의존, 기준선에서도 같은 성격) |
 | bot si1550 9레벨 | 모두 ★★ 이상 (★★★ 미달 1-7·2-5) |
-| bot sin1310 / sin1550 9레벨 | 이 보고서 작성 시 진행 중 — PR의 CI release matrix 결과로 확인 |
-| GitHub Actions quick job (43e860c) | PASS — build, dist 무결성, 문법, 엔진, Lab, e2e si1310, Python GDS |
-| GitHub Actions release matrix (4플랫폼 + 봇 게이트) · 릴리스 산출물 | PR에서 실행 — PR 페이지의 CI 상태 참조 |
+| bot sin1310 9레벨 | 모두 ★★ 이상 (★★★ 미달 2-5) |
+| bot sin1550 9레벨 | 모두 ★★★ |
+| GitHub Actions quick job (push 43e860c, 8b7753b) | PASS — build, dist 무결성, 문법, 엔진, Lab, e2e si1310, Python GDS |
+| GitHub Actions PR #8 run 38051943087 (8b7753b) | **모두 PASS** — quick, release regression × 4플랫폼(smoke·flow·guide·lab·lab_state·fab + 봇 게이트 ★★), release artifacts (CI 산출물 `spec-to-mask-release`) |
 
 ### 화면 검증
 1280 × 800, 400 × 860, 1024 × 640(≈125 %), 640 × 400(≈200 %)에서 캡처로 확인: 겹침·잘림·가로 넘침 없음(넓은 비교 표는 의도적으로 표 안에서 가로 스크롤). 캡처는 `docs/ux/v1/`. 키보드: 모달 초점 이동·Esc·Tab 순환(첫 실행 안내, 백업 대화 상자, 가이드), 슬라이더 방향키, 리뷰 라디오, Lab 진단 버튼. 스크린리더 실기기 확인은 하지 않았습니다(NOT VERIFIED).
