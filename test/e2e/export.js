@@ -4,7 +4,7 @@ const {JSDOM}=require('jsdom');const fs=require('fs');const path=require('path')
 const html=fs.readFileSync(path.join(__dirname,'../../dist/index.html'),'utf8');
 const PS=new Function(fs.readFileSync(path.join(__dirname,'../../src/data/pspec.js'),'utf8')+';return PSPEC;')();
 const plats=(process.argv[2]||'all')==='all'?['si1310','si1550','sin1310','sin1550']:process.argv[2].split(',');
-const ids=(process.argv[3]||'1-3,1-4,1-5,D-1,D-1:rect,D-1:rectarc').split(',');
+const ids=(process.argv[3]||'1-3,1-4,1-5,D-1,2-3R,D-1:rect,D-1:rectarc').split(',');
 // boundary-aware rectangular spiral examples (layout mode 2 = Euler corners, 1 = arc corners), built on the calibrated D-1 cross-section
 const VARIANT={rect:(ref)=>({...ref,lay:2,bp:2,bw:10,bh:30,ec:100,port:0,dm:0,tau:2,env:0.2,sb:1}),
   rectarc:(ref,si)=>({...ref,lay:1,bp:3,bw:5,bh:15,ec:100,port:1,dm:0,tau:2,env:0.8,rc:si?200:400,sb:0})};
@@ -27,6 +27,7 @@ async function run(plat,ids,variant){
   $(`#pick-lam .choice[data-lam="${plat.endsWith('1310')?1.31:1.55}"]`).click();$(`#pick-mat .choice[data-mat="${plat.startsWith('sin')?'sin':'si'}"]`).click();$('#btn-start').click();await sleep(300);
   for(const id of ids){
     $(`.node[data-id="${id}"]`).click();await sleep(300);
+    const fm=$('[data-gm="full"]');if(fm&&!$('#m-guided').hidden&&fm.getAttribute('aria-checked')!=='true'){fm.click();await sleep(400);}  // guided levels: export the Full Design
     $('#btn-export').click();await sleep(50);
     const j=JSON.parse($('#jsonOut').value);
     if(j.schema!=='smq-design/1'||j.level.id!==id||j.platform.id!==plat)throw new Error('bad export '+plat+id);

@@ -100,6 +100,8 @@ def check(d: dict, info: dict) -> dict:
     g, pf = d["geometry"], d["platform"]
     if g["pcell"] == "spiral_rect":
         return _check_rect(d, info)
+    if g["pcell"] == "ring_allpass":
+        return {"status": "NOT VERIFIED", "summary": ["ring_allpass: no solver check yet (geometry checks only: radius, gap, ports in test_smq2gds)"]}
     if g["pcell"] != "spiral":
         return _check_mmi_ports(d)
     mat, lam, t, w = pf["mat"], pf["lam_um"], pf["core_t_um"], g["w_um"]

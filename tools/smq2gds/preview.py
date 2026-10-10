@@ -5,7 +5,8 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.collections import PolyCollection
+from matplotlib.collections import PathCollection, PolyCollection
+from matplotlib.path import Path
 
 
 def _polys(comp):
@@ -13,7 +14,15 @@ def _polys(comp):
     out = {}
     for li, ps in comp.get_polygons().items():
         info = comp.kcl.layer_infos()[li]
-        out[(info.layer, info.datatype)] = [[(p.x * dbu, p.y * dbu) for p in poly.each_point_hull()] for poly in ps]
+        out[(info.layer, info.datatype)] = [[[(p.x * dbu, p.y * dbu) for p in poly.each_point_hull()]] + [[(p.x * dbu, p.y * dbu) for p in poly.each_point_hole(h)] for h in range(poly.holes())] for poly in ps]
+    return out
+
+
+def _paths(rings):
+    """One compound path per polygon (hull + holes) so annuli render with their holes."""
+    out = []
+    for loops in rings:
+        out.append(Path.make_compound_path(*[Path(lp + [lp[0]], closed=True) for lp in loops]))
     return out
 
 
@@ -22,15 +31,20 @@ def png(comp, d: dict, path: str) -> None:
     g = d["geometry"]
     rect = g["pcell"] == "spiral_rect"
     spiral = g["pcell"] == "spiral" or rect
-    fig, axs = plt.subplots(1, 2 if spiral else 1, figsize=(11 if spiral else 8, 5.2), squeeze=False)
-    colors = {(1, 0): "#2b6cb0", (34, 0): "#c05621", (64, 0): "none"}
+    ring = g["pcell"] == "ring_allpass"
+    two = spiral or ring
+    fig, axs = plt.subplots(1, 2 if two else 1, figsize=(11 if two else 8, 5.2), squeeze=False)
+    colors = {(1, 0): "#2b6cb0", (34, 0): "#c05621", (64, 0): "none", (3, 0): "#bee3f8", (20, 0): "#9ae6b4", (21, 0): "#fbb6ce", (47, 0): "#f6ad55", (41, 0): "#cbd5e0"}
+    order = [(64, 0), (41, 0), (3, 0), (21, 0), (20, 0), (1, 0), (34, 0), (47, 0)]  # back to front
+    polys = dict(sorted(polys.items(), key=lambda kv: order.index(kv[0]) if kv[0] in order else 99))
+    alpha = {(47, 0): 0.55, (20, 0): 0.6, (21, 0): 0.6}
     for k, ax in enumerate(axs[0]):
         for lay, ps in polys.items():
             fc = colors.get(lay, "#888")
             if fc == "none":
-                ax.add_collection(PolyCollection(ps, facecolors="none", edgecolors="#aaa", linewidths=0.5, linestyles="--"))
+                ax.add_collection(PolyCollection([p[0] for p in ps], facecolors="none", edgecolors="#aaa", linewidths=0.5, linestyles="--"))
             else:
-                ax.add_collection(PolyCollection(ps, facecolors=fc, edgecolors=fc, linewidths=0.2))
+                ax.add_collection(PathCollection(_paths(ps), facecolors=fc, edgecolors=fc, linewidths=0.2, alpha=alpha.get(lay, 1.0)))
         bb = comp.bbox()
         dbu = 1.0
         if k == 0 and rect:  # the whole usable rectangle (floorplan layer) at true aspect
@@ -40,6 +54,11 @@ def png(comp, d: dict, path: str) -> None:
         elif k == 0:
             ax.set_xlim(bb.left * dbu - 2, bb.right * dbu + 2)
             ax.set_ylim(bb.bottom * dbu - 2, bb.top * dbu + 2)
+        elif ring:  # zoom on the coupling gap
+            yb = -(g["R_um"] + g["w_um"] / 2 + g["gap_um"])
+            z = max(1.5, 4 * g["gap_um"] + 2 * g["w_um"])
+            ax.set_xlim(-2.5 * z, 2.5 * z)
+            ax.set_ylim(yb - z, yb + z)
         elif rect:  # zoom on the centre S-bend and the first loops
             B = g["boundary"]
             z = 2.6 * g["Ht_um"] + 4 * g["pitch_um"]
@@ -62,6 +81,11 @@ def png(comp, d: dict, path: str) -> None:
         B = g["boundary"]
         t += f"\n{g['topology']} in {B['W_um'] / 1000:g} × {B['H_um'] / 1000:g} mm (clearance {B['clearance_um']} µm, ports {B['port_edges']}) · τ {g['tau_ns']:.3f} ns, W {g['w_um']} µm, pitch {g['pitch_um']} µm, R {g['R_um']} µm, {g['loops_per_arm']} loops/arm"
         axs[0][1].set_title("centre S-bend + first loops (zoom)", fontsize=9)
+    elif ring:
+        P = g["predicted"]
+        t += (f"\nR {g['R_um']} µm (order m {g['order_m']}, λ {g['lambda_design_um']} µm), gap {g['gap_um']} µm, w {g['w_um']} µm, rib {g['rib']['t_um']}/{g['rib']['slab_um']} µm"
+              f" · FSR {P['fsr_nm']} nm, Q_L {P['QL']} · implants/heater/pads = annotation" + (" · heterogeneous Si on SiN" if g.get("heterogeneous_si") else ""))
+        axs[0][1].set_title("coupling gap (zoom)", fontsize=9)
     elif spiral:
         t += f"\nτ {g['tau_ns']} ns, W {g['w_um']} µm, pitch {g['pitch_um']} µm, r_in {g['rin_um']} µm, S-bend {g['sbend']}"
         axs[0][1].set_title("centre S-bend (zoom)", fontsize=9)

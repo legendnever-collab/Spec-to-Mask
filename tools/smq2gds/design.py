@@ -43,7 +43,7 @@ def load(path: str | Path) -> dict:
         if k not in d:
             raise DesignError(f"missing field {k!r}")
     if not d.get("geometry"):
-        raise DesignError(f"level {d['level'].get('id')} ({d['level'].get('kind')}) has no layout geometry yet — only MMI and delay-spiral PCells exist")
+        raise DesignError(f"level {d['level'].get('id')} ({d['level'].get('kind')}) has no layout geometry yet — PCells exist for MMI, delay spirals and the all-pass microring")
     pf = d["platform"]
     if pf.get("mat") not in ("si", "sin"):
         raise DesignError(f"unknown core material {pf.get('mat')!r}")

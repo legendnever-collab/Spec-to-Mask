@@ -8,6 +8,11 @@ spiral  — double Archimedean delay spiral, r = r_in + (p/π)θ per arm (arms i
 spiral_rect — boundary-aware rectangular double spiral (game layout modes 1/2): the game exports arm A as straight lines and
           90° corners (arc, or Euler clothoid pair, offset outward by d), arm B = −A, the centre S-bend is re-derived here from
           H_t (two semicircles, or two Euler 180° U-turns), and the whole path is mapped into the chip boundary (0,0)–(W,H).
+ring_allpass — all-pass microring modulator (level 2-3R): ring annulus at the game's resonance-aligned layout radius R
+          (centred at the origin), straight bus at edge-to-edge gap g, rib slab, lateral P (inside) / N (outside) junction
+          arcs centred opposite the coupler, heater arc with its opening at the coupler (metal kept off the bus), leads and pads.
+          Ring and bus are drawn on the Si core layer (SiN platforms: heterogeneous Si active layer, as in the game).
+          Implants, heater and pads are ANNOTATION layers (generic PDK) — not foundry implant / metal rules.
 """
 from __future__ import annotations
 
@@ -320,6 +325,96 @@ def spiral_rect(g: dict, layer, label_layer=None) -> tuple[gf.Component, dict]:
     return c, info
 
 
+# ---------------------------------------------------------------- microring (all-pass)
+def _nseg(r: float, tol: float = 2.5e-4) -> int:
+    """Segments for a circle of radius r with sagitta < tol µm, a multiple of 8 (vertices at 0°, 90°, … so the bbox is exact)."""
+    n = math.pi / math.acos(max(1 - tol / r, -1.0))
+    return int(math.ceil(n / 8) * 8)
+
+
+def _arc_pts(r: float, a0: float, a1: float, n: int) -> np.ndarray:
+    t = np.linspace(a0, a1, n)
+    return np.stack([r * np.cos(t), r * np.sin(t)], axis=1)
+
+
+def _sector(c: gf.Component, r0: float, r1: float, a0_deg: float, a1_deg: float, layer) -> None:
+    """Annular sector r0..r1 between angles a0..a1 (degrees, CCW) as one polygon (sub-360°)."""
+    a0, a1 = math.radians(a0_deg), math.radians(a1_deg)
+    n = max(8, int(_nseg(r1) * (a1 - a0) / (2 * math.pi)) + 1)
+    poly = np.vstack([_arc_pts(r1, a0, a1, n), _arc_pts(r0, a1, a0, n)])
+    c.add_polygon(poly, layer=tuple(layer))
+
+
+def _annulus(c: gf.Component, r0: float, r1: float, layer) -> None:
+    """Full annulus as one polygon with a hole (exact vertices on both circles)."""
+    import klayout.db as kdb
+
+    n = _nseg(r1)
+    t = np.arange(n) * 2 * math.pi / n
+    outer = [kdb.DPoint(r1 * math.cos(a), r1 * math.sin(a)) for a in t]
+    inner = [kdb.DPoint(r0 * math.cos(a), r0 * math.sin(a)) for a in t]
+    p = kdb.DPolygon(outer)
+    p.insert_hole(inner)
+    c.add_polygon(p, layer=tuple(layer))
+
+
+def ring_allpass(g: dict, lay: dict, label_layer=None):
+    R, w, gap = g["R_um"], g["w_um"], g["gap_um"]
+    wb, Lb = g.get("bus_w_um", w), g.get("bus_len_um", 2 * R + 20)
+    core = lay["core"][g.get("core_mat", "si")]
+    ann = lay.get("annotation", {})
+    e = g["rib"].get("slab_ext_um", 2.0)
+    yb = -(R + w / 2 + gap + wb / 2)  # bus centre line
+    h = hashlib.sha1(json.dumps(g, sort_keys=True).encode()).hexdigest()[:6]
+    c = gf.Component(f"smq_ring_R{R:g}_g{gap:g}_w{w:g}_{h}".replace(".", "p"))
+    _annulus(c, R - w / 2, R + w / 2, core)
+    c.add_polygon([(-Lb / 2, yb - wb / 2), (Lb / 2, yb - wb / 2), (Lb / 2, yb + wb / 2), (-Lb / 2, yb + wb / 2)], layer=tuple(core))
+    if ann.get("slab"):  # rib slab: ring ± e and the bus ± e (one merged partial-etch region)
+        _annulus(c, max(R - w / 2 - e, 0.2), R + w / 2 + e, ann["slab"])
+        c.add_polygon([(-Lb / 2, yb - wb / 2 - e), (Lb / 2, yb - wb / 2 - e), (Lb / 2, yb + wb / 2 + e), (-Lb / 2, yb + wb / 2 + e)], layer=tuple(ann["slab"]))
+    J, Hh = g["junction"], g["heater"]
+    if ann.get("p") and ann.get("n"):  # lateral junction at the rib centre, arc centred opposite the coupler (+y)
+        a = J["arc_deg"] / 2
+        _sector(c, max(R - w / 2 - e, 0.2), R, 90 - a, 90 + a, ann["p"])
+        _sector(c, R, R + w / 2 + e, 90 - a, 90 + a, ann["n"])
+    hw, yh = Hh.get("w_um", 2.0), R + 8.0
+    bus_top = yb + wb / 2
+    # heater arc with its opening at the coupler (like the junction): the metal must not cover the bus. The opening is the model's
+    # (1 − coverage)·360°, widened only if the arc's outer corner would come closer than 0.3 µm to the bus in plan view.
+    a_mod = (360 - Hh["arc_deg"]) / 2
+    a_min = math.degrees(math.acos(min(1.0, (-(bus_top + 0.3)) / (R + hw / 2)))) if -(bus_top + 0.3) < R + hw / 2 else 0.0
+    a = max(a_mod, a_min)
+    heat = {"arc_deg_model": Hh["arc_deg"], "arc_deg_drawn": 360 - 2 * a}
+    if ann.get("heater"):
+        _sector(c, R - hw / 2, R + hw / 2, 270 + a, 270 - a + 360, ann["heater"])
+        for s in (-1, 1):  # leads: horizontally out of each arc end (kept ≥ 0.5 µm above the bus), then up to two pads
+            ang = math.radians(270 + s * a)
+            xm, ym = R * math.cos(ang), R * math.sin(ang)
+            y0 = max(ym - hw / 2, bus_top + 0.5)
+            xo = s * (R + hw / 2 + 3.0)
+            xs = sorted([xm, xo + s * hw / 2])
+            c.add_polygon([(xs[0], y0), (xs[1], y0), (xs[1], y0 + hw), (xs[0], y0 + hw)], layer=tuple(ann["heater"]))
+            c.add_polygon([(xo - hw / 2, y0), (xo + hw / 2, y0), (xo + hw / 2, yh), (xo - hw / 2, yh)], layer=tuple(ann["heater"]))
+            if ann.get("pad"):
+                c.add_polygon([(xo - 5, yh), (xo + 5, yh), (xo + 5, yh + 10), (xo - 5, yh + 10)], layer=tuple(ann["pad"]))
+    for name, x, o in (("o1", -Lb / 2, 180), ("o2", Lb / 2, 0)):
+        c.add_port(name, center=(x, yb), width=wb, orientation=o, layer=tuple(core))
+    import klayout.db as kdb
+
+    reg = kdb.Region(c.begin_shapes_rec(c.kcl.layer(*core))).merged()
+    dbu = c.kcl.dbu
+    pieces = sorted(([p.bbox().left * dbu, p.bbox().bottom * dbu, p.bbox().right * dbu, p.bbox().top * dbu] for p in reg.each()), key=lambda b: b[2] - b[0])
+    ring_bb = [b for b in pieces if abs((b[2] - b[0]) - 2 * (R + w / 2)) < 0.01]
+    info = {"R_um": R, "R_outer_measured_um": (ring_bb[0][2] - ring_bb[0][0]) / 2 if ring_bb else None,
+            "gap_measured_um": (ring_bb[0][1] - (yb + wb / 2)) if ring_bb else None, "bus_y_um": yb, "order_m": g["order_m"],
+            "core_pieces": reg.count(), "heterogeneous_si": bool(g.get("heterogeneous_si")),
+            "ports": {p.name: [float(p.center[0]), float(p.center[1]), float(p.orientation)] for p in c.ports},
+            "heater": heat, "annotations": sorted(k for k in ("slab", "p", "n", "heater", "pad") if ann.get(k))}
+    if label_layer:
+        _label(c, f"SMQ ring_allpass R={R} g={gap} w={w} m={g['order_m']} lam={g['lambda_design_um']}um", (-Lb / 2, yb - 6), label_layer)
+    return c, info
+
+
 def build(d: dict, lay: dict) -> tuple[gf.Component, dict]:
     g, mat = d["geometry"], d["platform"]["mat"]
     core, lab = lay["core"][mat], lay.get("label")
@@ -329,6 +424,8 @@ def build(d: dict, lay: dict) -> tuple[gf.Component, dict]:
         c, info = spiral(g, core, lab)
     elif g["pcell"] == "spiral_rect":
         c, info = spiral_rect(g, core, lab)
+    elif g["pcell"] == "ring_allpass":
+        c, info = ring_allpass(g, lay, lab)
     else:
         raise ValueError(f"no PCell for {g['pcell']!r}")
     h = hashlib.sha1(json.dumps(g, sort_keys=True).encode()).hexdigest()[:6]  # unique per geometry (several builds per process)

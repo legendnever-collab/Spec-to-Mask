@@ -9,3 +9,10 @@ floorplan: [64, 0] # FLOORPLAN: bounding box of the device
 stack:
   box_um: 2.0
   clad_um: 2.0
+# annotation layers (gdsfactory generic numbers). Drawn for the microring (2-3R); NOT foundry implant/metal rules.
+annotation:
+  slab: [3, 0]     # SLAB90 — rib partial etch region
+  n: [20, 0]       # N implant (outside of the ring)
+  p: [21, 0]       # P implant (inside of the ring)
+  heater: [47, 0]  # HEATER — TiN arc + leads
+  pad: [41, 0]     # M1 pad (abstract)

@@ -8,7 +8,7 @@ Photonic IC 설계를 게임으로 배우는 단계별 학습 프로그램입니
 |---|---|
 | Stage 0 · 플랫폼 | 파장(1310 O-band / 1550 C-band) → 코어 물질(Si 220 nm / SiN 400 nm, SiO₂ 클래딩) 선택. 진행 기록·부품 카드는 플랫폼별로 저장 |
 | Stage 1 · Passive | 1-1 도파로(TE/TM, 단일/멀티모드) → 1-2 방향성 결합기 → 1-3~1-5 MMI(1×2, 광대역, 2×2) → 1-6 Spot-Size Converter → 1-7 CWDM Demux (Stage 1 피날레 · Active 맛보기) |
-| Stage 2 · Active | 2-1 TO 위상기(★★★ = 1-7 CWDM 다이별 히터 트리밍) → 2-2 PN 공핍 위상기 → 2-3 224G TW-MZM(112 GBd PAM4 눈) → 2-4 Ge PD + TIA → 2-5 외부 광원과 링크 버짓(Stage 2 피날레, 부품 카드로 링크 구성) |
+| Stage 2 · Active | 2-1 TO 위상기(★★★ = 1-7 CWDM 다이별 히터 트리밍) → 2-2 PN 공핍 위상기 → 2-3 224G TW-MZM(112 GBd PAM4 눈) → 2-3R 링 변조기(Guided 5단계, MZM과 같은 조건 비교) → 2-4 Ge PD + TIA → 2-5 외부 광원과 링크 버짓(Stage 2 피날레, 부품 카드로 링크 구성) |
 | Stage 3 · System | 3A 1.6T 2×FR4(8×200G, CWDM4 × 2 그룹, 0–70 °C 코너, ★★★ = 다이별 Demux 트리밍 + 산포 수율) → 3A+ 1.6T DR8 / LPO / CPO(비트당 에너지). 손잡이는 아키텍처: 레이저 수·출력·냉각, Mux 열 추적, DSP·패키징. Stage 1·2 부품 카드(또는 각 레벨 기준 설계)로 조립 |
 | Track B 준비 · 긴 지연선 | D-1 저손실 지연 나선(2 ns; 넓힌 아르키메데스 나선 + 테이퍼 Euler S-bend, Hong et al., Photon. Res. 10, 1 (2022)) → D-2 N-bit 스위치형 실시간 지연선(0–5 ns, 10 ps; Hong 2022의 10-bit 칩, Xie et al., Opto-Electron. Adv. 6, 220030 (2023)의 2 µm 암 MZ 스위치). 같은 지연을 Si와 SiN에서 비교 |
 | Stage 3 · System (Track B) | 스위치 기반 FMCW LiDAR: B-1 처프 + 칩 위 기준 간섭계(D-1 나선; 선폭·비선형·데드타임·온도 보정) → B-2 초점면 스위치 어레이(1×N MZ 트리 + 그레이팅 방출기 + 렌즈; FOV·분해능·커버리지·유령 빔) → B-3 시스템 캡스톤(코히어런트 링크 버짓, 반사율 10% 최대 거리·점 속도·전력) |
@@ -45,6 +45,23 @@ Photonic IC 설계를 게임으로 배우는 단계별 학습 프로그램입니
 
 2–4단계의 값은 실제 1-7 설계에 기록됩니다. 단계 중에는 별·카드·AI·Tape-out이 없습니다. 스펙트럼 축은 플랫폼 밴드(O/C)를 따르며, 각 단계 화면은 MZI 개략도·팔 위상·Bar/Cross 막대·FSR 표시·공정 코너(CD +8 nm, 두께 +Δt/2) 점선을 보여 줍니다. 위상 트림 φ는 설계 단계의 이상적 위상 오프셋이고, 실제 칩에서는 2-1의 TO 히터가 다이별로 이를 맞춥니다.
 
+### 2-3R 링 변조기 (Microring Modulator — Resonance to 200G PAM4)
+
+2-3 바로 뒤의 새 레벨(기존 ID 재번호 없음). 2-2 PN 접합 모델과 2-1 히터 단면을 그대로 써서 all-pass 링 변조기를 설계합니다. 처음 오는 플레이어는 Guided, 별·카드가 있으면 Full Design.
+
+| 단계 | 다루는 변수 | 완료 조건 (엔진 계산) |
+|---|---|---|
+| 1 공진 · FSR | 반경 R | FSR이 목표 ±0.5 nm (FSR = λ²/(n<sub>g</sub>·2πR)) |
+| 2 결합 · Q | 간격 g | Under / Critical / Over 세 영역 관찰 + 공진 골 ≥ 15 dB |
+| 3 EO 변조 (DC) | 바이어스, 도핑, 디튜닝 | 공진 이동(pm/V)과 정적 ER·OMA — 고속 성능과 구분 |
+| 4 200G PAM4 | g, V<sub>pp</sub>, 디튜닝, 바이어스, 도핑 | 112 GBd PAM4(224 Gb/s 라인) 눈 페널티·OMA, 광자 수명 × RC 응답 |
+| 5 온도 · 히터 | 온도, 히터, 레이저 파장 (단계 로컬) | 차가움 / 중간 / 뜨거움에서 히터로 동작 복구 |
+| 6 Full Design | 전체 + 공진 배치 여유 | ★ 기본 / ★★ 페널티·OMA·히터 예산·열 안정(빨강 쪽 자기 가열 금지) / ★★★ Fab 수율 |
+
+- 레이아웃: 설정 반경 → 1 nm 격자에서 차수 m의 공진을 설계 파장(히터 여유 포함)에 맞춘 **레이아웃 반경**. 내보내기·GDS는 이 반경을 그립니다.
+- MZM vs MRR 비교 패널: ★ 또는 2-3R 카드가 있으면 열림. 같은 112 GBd PAM4, 13 dBm 입력, 0–70 °C, 2-3 ★★ 링크 요구에서 광 대역·EO 대역·면적·IL·OMA·페널티·구동/열 에너지·비트당 에너지·수율을 항목별로 비교(점수 미반영, 충실도 배지 표시).
+- 물리·식·문헌 비교: [docs/mrr_physics.md](docs/mrr_physics.md). 설계 방향 검토와 단계 계획: [docs/design_review_mrr_designlab.md](docs/design_review_mrr_designlab.md).
+
 ### D-1 직사각형 나선
 
 D-1 `레이아웃` 파라미터: 원형 이중 나선(Legacy, 기존과 같은 결과) / 직사각형 나선 · 원호 코너 / 직사각형 나선 · Euler 코너.
@@ -59,7 +76,7 @@ D-1 `레이아웃` 파라미터: 원형 이중 나선(Legacy, 기존과 같은 �
 ## 게임 밖으로: 설계 → GDS → 솔버
 
 모든 레벨의 **설계 내보내기 (JSON)** 버튼이 `smq-design/1` 파일을 줍니다.
-- 파일 내용: 플랫폼, 파라미터, 게임 예측값, 목표 달성 여부, (MMI·지연 나선은) 레이아웃 형상.
+- 파일 내용: 플랫폼, 파라미터, 게임 예측값, 목표 달성 여부, (MMI·지연 나선·링 변조기는) 레이아웃 형상. 링(`ring_allpass`)은 링·버스·결합 간격·포트를 실제 형상으로, 리브 슬랩·P/N 주입·히터·패드는 주석 레이어로 그립니다(파운드리 규칙 아님).
 - `tools/smq2gds`가 이 파일을 다음으로 바꿉니다 (자세한 내용은 [tools/smq2gds/README.md](tools/smq2gds/README.md)).
   - GDS (gdsfactory, 레이어 맵 교체 가능)
   - 로컬 모드 솔버·3D EME 검사
@@ -83,7 +100,7 @@ src/
   ui_util.js         캔버스·SVG 차트 헬퍼
   engine_mmi.js      MMI 엔진: 유효굴절률법 + 유한차분 고유모드 전개 (Si/SiN)
   platforms.js       Stage 0 플랫폼 정의 (λ × 물질, DRC 규칙, CWDM 채널) + 선택 화면 설명
-  kinds/             레벨 종류별 물리·시각화·코치: wg, dc, mmi, ssc, cwdm (Stage 1) · to, pn, mzm, pd, els (Stage 2) · xcvr (Stage 3) · spiral, ttd (긴 지연선) · chirp, fpsa, lidar (Track B)
+  kinds/             레벨 종류별 물리·시각화·코치: wg, dc, mmi, ssc, cwdm (Stage 1) · to, pn, mzm, mrr, pd, els (Stage 2) · xcvr (Stage 3) · spiral, ttd (긴 지연선) · chirp, fpsa, lidar (Track B)
   levels.js          캠페인 텍스트·개념 노트 (수치 스펙은 data/pspec.js)
   shell.js           범용 게임 셸: 플랫폼, 점수, 목표·미션, 코치, Fab Run, AI 라이벌, Design DB, 부품 카드, Guided 단계·연습 모드
   guide.js           레벨별 학습 가이드 모달 (A–G, 상호작용 예제는 kind 엔진 사용)
@@ -117,8 +134,10 @@ test/
   e2e/export.js      jsdom: 참조 설계로 "설계 내보내기" → tools/smq2gds/examples/*.json
   e2e/guide.js       jsdom: 모든 레벨 학습 가이드 (절 A–G, 파라미터 행, 예제, 포커스 복원, 설계·점수 불변)
   e2e/flow.js        jsdom: 1-7 Guided 흐름(단계·건너뛰기·값 기록·별 없음·밴드 축) + D-1 직사각형(프리셋·Infeasible·spiral_rect 내보내기)
+  e2e/flow.js (2-3R) Guided 기본·1단계 R → 설계 기록·별 없음·Full Design·비교 패널·내보내기 반경 = 레이아웃 반경
+  t_mrr.js           링 엔진: 반경↔FSR, 공진 조건, Q 관계, Critical coupling, Airy↔Lorentz, 최대 기울기 1/√3, dλ/dT, P_2π, 레이아웃 배치, Q≠대역폭, 정적/동적 OMA, 열 안정 부호, 공정 이동, SiN 이종, 단계 완료, 기존 스펙 불변 (npm run test:mrr)
   t_upgrade.js       엔진: MZI 식·FSR·위상 이동·단계 완료·Lattice 차수 / 직사각형 나선 길이 = cτ/n_g·경계·회전·Mode B·Legacy 동일성
-  py/test_smq2gds.py 예제 전부 GDS 생성 + 연결성·폭·간격 DRC·길이·포트 위치 (솔버 없이; spiral_rect는 bbox ⊂ 경계−여유, 포트, S-bend R<sub>min</sub>)
+  py/test_smq2gds.py 예제 전부 GDS 생성 + 연결성·폭·간격 DRC·길이·포트 위치 (솔버 없이; spiral_rect는 bbox ⊂ 경계−여유, 포트, S-bend R<sub>min</sub>; ring_allpass는 링 반경·간격 1 nm, 링+버스 2조각, 포트, 히터가 버스 위에 없음, 주석 레이어)
 ```
 
 ## 데이터 재생성 순서
@@ -133,7 +152,8 @@ node test/e2e/export.js all                               # 참조 설계 JSON (
 npm run test:smoke && npm run test:bot
 npm run test:upgrade && npm run test:flow && npm run test:guide
 DES='{"D-1":{"lay":2,"sb":1}}' node test/e2e/bot.js std 2 D-1 si1310   # 직사각형 나선 봇
-node test/e2e/bot.js std 2 2-1,2-2,2-3,2-4,2-5 sin1550   # Stage 2 회귀
+node test/e2e/bot.js std 2 2-1,2-2,2-3,2-3R,2-4,2-5 sin1550   # Stage 2 회귀
+npm run test:mrr                                          # 링 변조기 물리
 node test/e2e/bot.js std 2 3A,3A+ si1310                  # Stage 3 회귀
 node test/e2e/bot.js std 2 D-1,D-2 sin1550                # 긴 지연선 회귀
 node test/e2e/bot.js std 2 B-1,B-2,B-3 si1550             # Track B 회귀
@@ -150,4 +170,4 @@ node test/e2e/bot.js std 2 B-1,B-2,B-3 si1550             # Track B 회귀
 
 ## 모델 범위
 
-모든 수치는 학습용 surrogate입니다. 직사각형 나선의 원호 코너 접합 모드 변환은 곡률 점프마다 가우시안 이동 a = convA/2를 비간섭으로 더한 공학적 추정이며, Euler 코너·U-turn은 곡률이 연속이라 접합 변환을 0으로 둡니다(방사 손실은 국소 반경으로 적분). 반사, 3D 방사, 벤드 구간 결합, 편광 혼합은 포함하지 않아 FDTD·벡터 솔버보다 낙관적입니다 (예: 500×220 nm Si @1550 TE0 n<sub>eff</sub> 2.49 vs 벡터 해 ≈ 2.44). 각 보스 레벨의 최종 검증은 Tidy3D FDTD, Ansys(CHARGE/HEAT/INTERCONNECT)로 넘기는 것을 전제로 합니다.
+모든 수치는 학습용 surrogate입니다. 2-3R 링 변조기의 단순화(3D 열 퍼짐 무시로 낙관적인 히터 효율, Si 리브 EIM, 결합 슬랩 κ, SiN 플랫폼은 이종 Si 가정, 주입·히터·패드는 GDS에서 주석 레이어)는 [docs/mrr_physics.md](docs/mrr_physics.md)의 "한계" 절에 정리했습니다. 직사각형 나선의 원호 코너 접합 모드 변환은 곡률 점프마다 가우시안 이동 a = convA/2를 비간섭으로 더한 공학적 추정이며, Euler 코너·U-turn은 곡률이 연속이라 접합 변환을 0으로 둡니다(방사 손실은 국소 반경으로 적분). 반사, 3D 방사, 벤드 구간 결합, 편광 혼합은 포함하지 않아 FDTD·벡터 솔버보다 낙관적입니다 (예: 500×220 nm Si @1550 TE0 n<sub>eff</sub> 2.49 vs 벡터 해 ≈ 2.44). 각 보스 레벨의 최종 검증은 Tidy3D FDTD, Ansys(CHARGE/HEAT/INTERCONNECT)로 넘기는 것을 전제로 합니다.

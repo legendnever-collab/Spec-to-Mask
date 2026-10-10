@@ -3,7 +3,7 @@
 // node test/e2e/guide.js [platform] [ids]
 const {JSDOM}=require('jsdom');const fs=require('fs');
 const html=fs.readFileSync(require('path').join(__dirname,'../../dist/index.html'),'utf8');
-const plat=process.argv[2]||'si1310', ids=(process.argv[3]||'1-1,1-2,1-3,1-4,1-5,1-6,1-7,2-1,2-2,2-3,2-4,2-5,3A,3A+,D-1,D-2,B-1,B-2,B-3').split(',');
+const plat=process.argv[2]||'si1310', ids=(process.argv[3]||'1-1,1-2,1-3,1-4,1-5,1-6,1-7,2-1,2-2,2-3,2-3R,2-4,2-5,3A,3A+,D-1,D-2,B-1,B-2,B-3').split(',');
 const dom=new JSDOM('<!doctype html><html><head></head><body>'+html+'</body></html>',{runScripts:'outside-only',pretendToBeVisual:true,url:'https://g'+Date.now()+'.test/'});
 const w=dom.window;
 const mkCtx=()=>{const g=()=>({addColorStop(){}});return new Proxy({},{get:(t,k)=>{if(k==='measureText')return()=>({width:30});if(k==='createImageData')return(a,b)=>({data:new Uint8ClampedArray(a*b*4)});if(k==='createLinearGradient'||k==='createRadialGradient')return g;if(k in t)return t[k];return typeof k==='string'?(()=>{}):undefined},set:(t,k,v)=>{t[k]=v;return true}});};
@@ -49,6 +49,9 @@ let fail=0;const bad=(m)=>{fail++;console.log('  FAIL',m);};
  }
  if(ids.includes('1-7')){ // guided step guide
   $('.node[data-id="1-7"]').click(); await sleep(300); const s=$('.stp[data-step="0"]'); if(s){s.click(); await sleep(700); await runOne('1-7','1-7 (Guided step 1)');}
+ }
+ if(ids.includes('2-3R')){ // microring: the Full Design guide must have a row for every parameter (Guided step 1 shows only R)
+  $('.node[data-id="2-3R"]').click(); await sleep(300); const f=$('[data-gm="full"]'); if(f){f.click(); await sleep(700); await runOne('2-3R','2-3R (Full Design)');}
  }
  console.log(fail?`FAILED ${fail}`:'guide checks passed','errors',errs.slice(0,5));process.exit(fail||errs.length?1:0);
 })();

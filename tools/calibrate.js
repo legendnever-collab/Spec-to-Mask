@@ -1,7 +1,7 @@
 // Derive per-platform level specs (start designs, thresholds, reference designs, yield targets)
 // from the same physics the game runs. Output: src/data/pspec.js
 const fs = require('fs');
-const G = require('../test/load')(['util.js', 'ui_util.js', 'engine_mmi.js', 'data/tables.js', 'platforms.js', 'kinds/wg.js', 'kinds/dc.js', 'kinds/mmi.js', 'kinds/ssc.js', 'kinds/cwdm.js', 'kinds/to.js', 'kinds/pn.js', 'kinds/mzm.js', 'kinds/pd.js', 'kinds/els.js', 'kinds/xcvr.js', 'kinds/spiral.js', 'kinds/ttd.js', 'kinds/chirp.js', 'kinds/fpsa.js', 'kinds/lidar.js', 'levels.js']);
+const G = require('../test/load')(['util.js', 'ui_util.js', 'engine_mmi.js', 'data/tables.js', 'platforms.js', 'kinds/wg.js', 'kinds/dc.js', 'kinds/mmi.js', 'kinds/ssc.js', 'kinds/cwdm.js', 'kinds/to.js', 'kinds/pn.js', 'kinds/mzm.js', 'kinds/mrr.js', 'kinds/pd.js', 'kinds/els.js', 'kinds/xcvr.js', 'kinds/spiral.js', 'kinds/ttd.js', 'kinds/chirp.js', 'kinds/fpsa.js', 'kinds/lidar.js', 'levels.js']);
 const { PLATFORMS, KINDS, PQ, makeWafer, snapP, nelderMead, clamp, band } = G;
 const only = process.argv[2] && process.argv[2] !== 'all' ? process.argv[2].split(',') : Object.keys(PLATFORMS);
 const stages = (process.argv[3] || '1,2,3,4,5').split(','), doS1 = stages.includes('1'), doS2 = stages.includes('2'), doS3 = stages.includes('3'), doS4 = stages.includes('4'), doS5 = stages.includes('5');
