@@ -16,11 +16,13 @@
   --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html{height:100%}
 body{
   background-color:var(--bg); color:var(--fg); font-family:var(--body); font-size:14px; line-height:1.55;
   background-image:linear-gradient(rgba(120,150,190,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(120,150,190,.045) 1px,transparent 1px);
   background-size:24px 24px;
+  word-break:keep-all; overflow-wrap:break-word;
 }
 .wrap{max-width:1140px;margin:0 auto;padding-inline:16px;padding-block:18px 48px}
 button{font:inherit;color:inherit}
@@ -46,8 +48,12 @@ button{font:inherit;color:inherit}
   grid-template-areas:"mission" "view" "params" "spec" "xp" "fab" "ai" "db" "cards"}
 @media (min-width:920px){
   .game{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);
-    grid-template-areas:"mission params" "view params" "spec fab" "xp xp" "db ai" "cards cards"}
+    grid-template-areas:"mission params" "view params" "spec fab" "xp xp" "ai db" "cards cards"}
+  /* the controls stay beside the field while the mission text and the view scroll */
+  .game.stepping{grid-template-areas:"mission params" "view params" "spec spec" "xp xp" "cards cards"}
+  #params{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
 }
+.game.stepping #fab,.game.stepping #ai,.game.stepping #db{display:none}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;min-width:0}
 .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-3)}
 .card h2{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.04em;margin:0 0 10px;color:var(--fg);text-wrap:balance}
@@ -91,11 +97,24 @@ button{font:inherit;color:inherit}
 .tile .v{font-family:var(--mono);font-size:17px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .tile .v small{font-size:11px;color:var(--fg-3);margin-left:2px}
 
+/* next level / mini status */
+.nextlv{display:flex;align-items:center;justify-content:space-between;gap:8px 12px;flex-wrap:wrap;margin-top:10px;padding:9px 11px;border-radius:8px;border:1px solid rgba(93,209,147,.45);background:rgba(93,209,147,.07);font-size:13px;color:var(--fg-2)}
+.nextlv b{color:var(--pass);font-weight:600}
+.minibar{position:fixed;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:40;display:flex;align-items:center;gap:10px;max-width:calc(100vw - 24px);padding:7px 8px 7px 12px;border-radius:999px;border:1px solid var(--line-2);background:rgba(19,27,38,.96);box-shadow:0 6px 24px rgba(0,0,0,.45);font-size:12.5px;color:var(--fg-2)}
+.minibar .mb-s{font-family:var(--display);font-weight:700;font-size:17px;color:var(--amber);font-variant-numeric:tabular-nums;white-space:nowrap}
+.minibar .mb-s small{font-size:11px;color:var(--fg-3);margin-left:2px}
+.minibar .mb-st{letter-spacing:1px;color:var(--fg-3);white-space:nowrap} .minibar .mb-st b{color:var(--amber);font-weight:400}
+.minibar .mb-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:46vw}
+.minibar .mb-t.bad{color:var(--fail)}
+.minibar button{flex:0 0 auto;border:1px solid var(--line-2);background:var(--panel-2);border-radius:999px;padding:5px 10px;font-size:12px;cursor:pointer;white-space:nowrap}
+@media (max-width:360px){.minibar .mb-t{display:none}}
+
 /* params */
 #params{grid-area:params}
 .prm{padding:9px 0;border-bottom:1px dashed var(--line)}
 .prm:last-of-type{border-bottom:0}
-.prm-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.prm-h{display:flex;justify-content:space-between;align-items:baseline;gap:2px 8px;flex-wrap:wrap}
+.prm-h output{margin-left:auto;text-align:right}
 .prm-h label{font-size:13px;color:var(--fg-2)}
 .prm-h label i{font-family:var(--mono);font-style:normal;color:var(--fg);margin-left:4px}
 .prm-h output{font-family:var(--mono);font-size:15px;font-variant-numeric:tabular-nums;color:var(--fg)}
@@ -155,8 +174,21 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .db-stats{font-family:var(--mono);font-size:12px;color:var(--fg-2);margin-bottom:6px}
 .db-stats b{color:var(--fg);font-weight:500}
 #csvOut,.jsonout{width:100%;height:120px;margin-top:8px;background:var(--panel-2);color:var(--fg);border:1px solid var(--line-2);border-radius:8px;font-family:var(--mono);font-size:11px;padding:8px}
-footer{margin-top:16px;color:var(--fg-3);font-size:12px;line-height:1.7;max-width:90ch}
+footer{margin-top:16px;color:var(--fg-3);font-size:12px;line-height:1.7}
 footer b{color:var(--fg-2);font-weight:500}
+footer details{border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+footer summary{cursor:pointer;padding:10px 14px;font-size:13px;color:var(--fg-2)}
+footer summary b{color:var(--fg);font-weight:600}
+footer .scope{padding:0 14px 6px;max-width:96ch}
+footer .scope p{margin:0 0 10px}
+/* collapsible card sections */
+details.sect > summary{cursor:pointer;list-style:none;display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap}
+details.sect > summary::-webkit-details-marker{display:none}
+details.sect > summary h2{margin:0}
+details.sect > summary .sum{font-family:var(--mono);font-size:12px;color:var(--fg-2)}
+details.sect > summary .sum::after{content:" ▸";color:var(--fg-3)}
+details.sect[open] > summary .sum::after{content:" ▾"}
+details.sect[open] > summary{margin-bottom:10px}
 /* difficulty / hint segmented controls */
 .mode-row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 .seg{display:inline-flex;border:1px solid var(--line-2);border-radius:8px;overflow:hidden;background:var(--panel-2)}
@@ -176,6 +208,11 @@ footer b{color:var(--fg-2);font-weight:500}
 /* campaign map */
 .cardcount{font-family:var(--mono);font-size:12px;color:var(--fg-2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--panel)}
 .cardcount b{color:var(--amber);font-weight:500}
+.mapwrap{position:relative}
+.mapnav{display:none;position:absolute;top:22px;left:-6px;width:30px;height:62px;border-radius:8px;border:1px solid var(--line-2);background:rgba(19,27,38,.94);color:var(--fg-2);cursor:pointer;font-size:12px;box-shadow:0 2px 10px rgba(0,0,0,.4)}
+.mapnav.r{left:auto;right:-6px}
+.mapnav:hover{color:var(--amber);border-color:var(--amber)}
+@media (hover:hover) and (pointer:fine){.mapnav{display:block}}
 .map{display:flex;gap:14px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;scrollbar-width:thin}
 .stage{flex:0 0 auto;display:flex;flex-direction:column;gap:6px}
 .stage-h{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-3)}
@@ -267,7 +304,9 @@ footer b{color:var(--fg-2);font-weight:500}
 .lab-prog span.ok{border-color:rgba(93,209,147,.6);color:var(--pass)}
 .lab-prog span.pend{border-style:dashed}
 .lab-grid{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
-@media (min-width:1000px){.lab-grid{grid-template-columns:220px minmax(0,1fr) 300px}}
+@media (min-width:1000px){.lab-grid{grid-template-columns:220px minmax(0,1fr) 300px}
+  #lab-lib-list{max-height:calc(100vh - 120px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;padding-right:2px}
+}
 .lab-grid > *{align-self:start}
 @media (max-width:999px){#lab-ws{order:1}#lab-insp{order:2}#lab-lib{order:3}}
 .lab-ws-h{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
@@ -355,13 +394,20 @@ footer b{color:var(--fg-2);font-weight:500}
 .roles div b{display:block;color:var(--fg);font-size:12.5px}
 @media (max-width:600px){.gdlg-back{padding:0}.gdlg{height:100vh;height:100dvh;border-radius:0;border:0}.gdlg-h h2{font-size:19px}}
 @media (prefers-reduced-motion:reduce){.bar > i{transition:none}}
+/* phone width: tighter header and map (kept last so it overrides the base rules) */
+@media (max-width:600px){
+  .top{margin-bottom:10px}
+  .hdr-r{gap:6px} .platchip,.cardcount{font-size:11px;padding:5px 8px} .cardcount .wide{display:none}
+  .map{gap:10px;margin-bottom:10px} .node{width:104px;padding:6px 8px 7px}
+  .lab-prog span{font-size:10.5px;padding:2px 7px}
+}
 </style>
 
 <div class="wrap">
   <header class="top">
     <div class="brand">
       <h1>SPEC-to-MASK <span>Quest</span></h1>
-      <p>Track A · 1.6T 트랜시버 · SOI 220 nm · O-band</p>
+      <p id="brand-sub">Photonic IC 설계 학습 · Spec → Device → System → Layout → GDS</p>
     </div>
     <div class="hdr-r"><button class="platchip" id="plat-chip" hidden></button><div class="cardcount" id="cardcount"></div></div>
   </header>
@@ -377,7 +423,7 @@ footer b{color:var(--fg-2);font-weight:500}
   </section>
 
   <div id="gamewrap">
-  <nav class="map" id="map" aria-label="캠페인 맵"></nav>
+  <div class="mapwrap"><nav class="map" id="map" aria-label="캠페인 맵"></nav><button class="mapnav" id="map-l" aria-label="지도 왼쪽으로" hidden>◀</button><button class="mapnav r" id="map-r" aria-label="지도 오른쪽으로" hidden>▶</button></div>
 
   <main class="game">
     <section class="card" id="mission" aria-live="polite">
@@ -396,6 +442,7 @@ footer b{color:var(--fg-2);font-weight:500}
       <details class="concepts" id="m-concepts" hidden></details>
       <div class="locked-note" id="m-locked" hidden></div>
       <div class="objs" id="objs"></div>
+      <div id="m-next"></div>
       <p class="note" id="mode-note"></p>
     </section>
 
@@ -427,7 +474,7 @@ footer b{color:var(--fg-2);font-weight:500}
       <textarea id="jsonOut" class="jsonout" hidden readonly aria-label="설계 JSON"></textarea>
       <details class="valid" id="valid" hidden><summary>오프라인 솔버 검증 · 참조 설계</summary><div class="vb" id="valid-body"></div></details>
       <div class="hint" id="hint" hidden></div>
-      <p class="note">힌트 단계: 방향 = 코치가 다음 수를 알려줌 · 수치 = 목표값과 L<sub>π</sub> 가이드선 · 지형도 = L·s를 훑은 성능 곡선(탭하면 그 값으로 이동). −/+ 버튼은 길게 누르면 연속으로 움직입니다.</p>
+      <p class="note">힌트 단계: 방향 = 코치가 다음 한 수를 알려줌 · 수치 = 목표값과 가이드선 · 지형도 = 주요 파라미터를 훑은 성능 곡선(탭하면 그 값으로 이동). −/+ 버튼은 길게 누르면 연속으로 움직이고, 슬라이더에 초점을 두면 방향키로 한 칸씩 움직입니다.</p>
     </section>
 
     <section class="card" id="spec">
@@ -472,11 +519,6 @@ footer b{color:var(--fg-2);font-weight:500}
       </div>
     </section>
 
-    <section class="card" id="cards">
-      <h2><span class="n">06</span>부품 카드 인벤토리</h2>
-      <p class="note" style="margin:-4px 0 10px">★ 이상으로 클리어한 설계는 S-파라미터·손실·수율이 담긴 카드로 저장됩니다. Stage 3에서 1.6T 트랜시버는 이 카드들만으로 조립합니다. 같은 레벨은 설계 점수가 더 높은 카드로 교체됩니다.</p>
-      <div class="cardgrid" id="cardgrid"></div>
-    </section>
 
     <section class="card" id="db">
       <h2><span class="n">05</span>Design DB</h2>
@@ -489,7 +531,14 @@ footer b{color:var(--fg-2);font-weight:500}
       <textarea id="csvOut" hidden readonly aria-label="CSV"></textarea>
       <p class="note">플레이할 때마다 (설계 파라미터) → (성능, 크기) 레코드가 레벨별로 쌓입니다. 사람이 둔 수와 AI의 탐색이 같은 DB에 들어가 다음 모델 학습 데이터가 되는 구조를 보여줍니다.</p>
     </section>
+
+    <details class="card sect" id="cards">
+      <summary><h2><span class="n">06</span>부품 카드 인벤토리</h2><span class="sum" id="cards-sum"></span></summary>
+      <p class="note" style="margin:-4px 0 10px">★ 이상으로 클리어한 설계는 S-파라미터·손실·수율이 담긴 카드로 저장됩니다. Stage 3에서 1.6T 트랜시버는 이 카드들만으로 조립합니다. 같은 레벨은 설계 점수가 더 높은 카드로 교체됩니다.</p>
+      <div class="cardgrid" id="cardgrid"></div>
+    </details>
   </main>
+  <div class="minibar" id="minibar" hidden role="status" aria-live="off"><span class="mb-st" id="mb-st"></span><span class="mb-s" id="mb-s"></span><span class="mb-t" id="mb-t"></span><button id="mb-go">▲ 화면</button></div>
 
   <section id="lab" hidden aria-labelledby="lab-h">
     <div class="card lab-head">
@@ -532,6 +581,16 @@ footer b{color:var(--fg-2);font-weight:500}
     </div>
   </div>
   <footer>
-    <b>모델 범위.</b> 플랫폼 4종(Si 220 nm / SiN 400 nm × 1310 / 1550 nm, SiO₂ 클래딩)의 모드는 semi-vectorial 2D 유한차분 솔버(quasi-TE Ex, quasi-TM Ey)로 사전계산한 테이블입니다: 도파로 TE/TM 모드와 n<sub>eff</sub>(폭·두께·파장), 방향성 결합기의 짝/홀 슈퍼모드, SSC 팁 모드와 광섬유 overlap. MMI는 2D 유효굴절률법 + 고유모드 전개, CWDM은 같은 n<sub>eff</sub>·n<sub>g</sub> 테이블로 만든 회로 S-matrix입니다. 측벽 산란 손실은 (∂n<sub>eff</sub>/∂w)²에 비례하는 근사, 기판 누설은 BOX 터널링 근사. 반사, 3D 방사, 벤드 구간 결합, 편광 혼합은 포함하지 않아 FDTD·벡터 솔버보다 낙관적입니다 (500×220 nm Si @1550 TE0 n<sub>eff</sub> 2.49 vs 벡터 해 ≈ 2.44). <b>Stage 2.</b> TO: 히터 단면 2D 유한체적 열해석 테이블(트렌치·언더컷; 언더컷은 2D에서 볼 수 없는 팔 끝·테더 누설 0.5 W/m·K를 더함) + EIM dn<sub>eff</sub>/dT, τ는 국소 적층 에너지법. PN: 리브 EIM + 1D 모드, 계단 접합 공핍 근사, Soref–Bennett(1.31/1.55 µm), Caughey–Thomas 이동도. TW-MZM: CPW 등각사상(Hilberg) + 접합 부하 전신방정식, 양끝 반사, 광 진행 좌표계 적분, 112 GBd PAM4 눈은 5-tap FFE 기준 수신기(TDECQ 방식 근사, 잡음 증폭 √Σc²). Ge PD: 흡수 1−e<sup>−ΓαL</sup>, 전이(0.45v/d)×RC 1차 극, TIA 잡음은 입력 C에 비례하는 근사. 2-3R 링 변조기: Si 리브(220/90 nm) EIM, 결합은 휜 간격 위 Marcuse 결합 슬랩 κ 적분, 굽힘 방사 Marcuse, 링 손실 = 2-2 접합 흡수(덮개 75%) + 측벽 0.15 dB/mm + 히터 금속 + TPA·FCA. 투과는 all-pass Airy 식, 고속은 결합 모드 방정식(CMT) 시간영역 적분(광자 수명) × 접합 RC 극 — Q만으로 대역폭을 정하지 않습니다. OMA는 정착 레벨(정적, TDECQ 방식 점수)과 파형 극값(동적)을 분리합니다. 열: 2-1 단면 열해석의 G′를 링 둘레에 그대로 적용(링의 3D 열 퍼짐 무시 → 히터 효율 낙관적), 자기 가열 개루프 이득으로 빨강 쪽 디튜닝의 열 불안정을 판정. 공정: 폭·두께 산포로 공진 이동, 레이아웃 반경은 1 nm 격자에서 공진을 레이저 파장에 맞춘 값(GDS 반경과 같음). SiN 플랫폼의 링은 이종 집적 Si 활성층 가정입니다. MZM 비교의 구동 에너지는 부하 C·V²(PAM4) 대 정합 선로 V²/R이며 드라이버 효율·DSP는 포함하지 않습니다. 링크: 부품 카드의 대표값을 dB로 더한 버짓, 광 궤환은 파셋 Fresnel × 가우시안 overlap과 RIN 페널티 로지스틱 근사. <b>Stage 3.</b> 모듈 = 부품 카드(또는 기준 설계)의 대표값을 dB·W로 조립. 3A+의 링 변조기(MRR ×8): 레인 링마다 2-3R 엔진을 모듈의 변조기 입력 파워에서 다시 계산(0.5 dB 격자 보간), 히터 락으로 설계 디튜닝 유지, 히터 = (링 드리프트 − 레이저 드리프트)·ΔT mod FSR의 0–70 °C 최악값, 비냉각 DFB 0.085/0.10 nm/K·파장 산포 σ 0.5 nm·락 2 mW/레인·드라이버(= MZM 등급 − 부하 에너지 차)는 대표값 가정, 링 열 효율은 2D 단면 × 둘레라 낙관적(문헌 비교는 docs/arch_1p6t_dr8.md). 레인 마진은 4채널 × 케이스 0/70 °C 코너의 최솟값이며, Demux는 1-7 lattice를 dn<sub>eff</sub>/dT만큼 굴절률을 옮겨 다시 계산(밴드 ±6.5 nm 최악). 비냉각 DFB: −0.02 dB/K(25 °C 이상), WPE −0.5%/K. TEC: 0.3 W + 레이저 발열/COP 0.6. 크로스토크 페널티 −10log(1−3·XT). 전력 상수(1.6T DSP 10 W, MLSE +1.5 W, 드라이버 0.35/0.15 W·레인, TIA 0.12 W·레인, DC-DC 90%)와 LPO/CPO 페널티(전기 +1.5/+0.5 dB, 감도 +0.5/+0.3 dB, CPO FAU +1 dB)는 학습용 대표값입니다. <b>3W 링 WDM8.</b> 한 버스의 링 8개는 2-3R 엔진(반경만 바꿈)의 all-pass Airy 투과를 곱해 통과 손실·변조 크로스토크(−10log(1−3ε))·FSR 별칭을 같은 식으로 계산하고, 히터는 빨강 쪽으로만 밀며 (목표 − 가열 전 공진) mod FSR, 배정은 고정 또는 순환(배럴 시프트, 온도마다 최소 전력), 열 결합은 2-1 2D 단면 프로파일(상한)입니다. 링 간 불일치 σ 0.15 nm, 콤 가장자리 −2 dB·WPE 12 %, DFB+MUX 2.5 dB, Rx Demux 1.5 dB·XT, 히터 범위 1.2·P<sub>2π</sub>는 가정입니다. <b>긴 지연선.</b> 단면은 EIM, 산란 손실은 σ²·(n₁²−n₂²)·∂n<sub>eff</sub>/∂w(측벽)와 ∂n<sub>eff</sub>/∂t(상하면)에 비례하는 근사로, 상수는 Hong 2022의 Si 측정값(0.45/1.6/2 µm: 5.5/0.38/0.28 dB/cm, σ 4.6/0.42 nm)에 한 번 맞춘 뒤 SiN(σ 5/0.4 nm 가정, 재료 흡수 0.06 dB/cm @1550, 0.02 @1310)에 그대로 적용합니다. 굽힘 방사는 EIM 횡방향 슬랩의 Marcuse 식이라 SiN 임계 반경을 실제보다 작게 예측하는 경향이 있습니다. S-bend 모드 변환은 n²w³/(λ²R) 스케일을 논문의 원호 −2.3 dB에 맞춘 근사, 이웃 회전 결합은 결합 슬랩 κ(동방향 가정, 보수적)입니다. MZ 스위치 위상 오차는 국소 폭 요동 2 nm·√(L·3 µm) 가정, 보정 후 잔차는 초기 오차의 15%로 둡니다. 직사각형 나선은 경계 안에 생성한 실제 형상(직선·원호/Euler 코너·중앙 S-bend)의 길이와 국소 반경으로 손실·지연을 계산하며, 원호 코너의 곡률 점프 모드 변환은 접합마다 가우시안 이동을 비간섭으로 더한 공학적 추정입니다. 1-7 Guided 단계의 MZI는 같은 n<sub>eff</sub>·n<sub>g</sub> 테이블과 커플러 과잉손실 0.05 dB를 쓰며, 단계 3의 "출력 전력의 95%"는 과잉손실을 뺀 포트 분배 비율입니다. <b>Track B.</b> 처프: 분해능 c/2B, 비트 f<sub>b</sub> = 2Rγ/c ≤ ADC 500 MHz, 코히어런스 손실 exp(−2πΔν·2R/c), 잔류 처프 오차 √(지터² + Δν/(2πτ<sub>ref</sub>M) + 측정²)로 비트 위상 오차 2π(2R/c)e → exp(−σφ²); 레이저 선폭·튜닝 범위·지터와 예왜곡 평균 M = 1000은 대표값 가정. 거리 눈금 오차 = R·(1/n<sub>g</sub>)dn<sub>g</sub>/dT·ΔT. 스캐너: 가우시안 방출 모드 → 렌즈 뒤 w<sub>b</sub> = λf/(πw<sub>e</sub>), 퍼짐 w<sub>e</sub>/f(FWHM 1.18배), 수차는 NA·시야각에 대한 경험식, 스위치 손실·소광비는 대표값(열광학 0.3 dB/−27 dB, PIN 0.9 dB/−19 dB). 시스템: 모노스태틱 코히어런트, 람베르트 ρ = 0.1, P<sub>rx</sub> = P<sub>out</sub>ρD²/(4R²)·η<sub>het</sub>(0.4, 스펙클), 왕복 칩 손실, 균형 검출 SNR = ℜP<sub>rx</sub>T<sub>int</sub>/q × 샷잡음 비율(TIA 10 pA/√Hz), 처프 N<sub>av</sub>개 비코히어런트 적산 √N<sub>av</sub>, 임계 13 dB; Si는 TPA/FCA 손실 0.6·(P/100 mW)² dB 근사. 도플러·다중 반사·눈 안전은 다루지 않습니다. 공정 변동: 웨이퍼 CD 오프셋 + 두께 bowl + 다이 랜덤(CD σ ≈ 8 nm, 두께 σ ≈ Si 3 nm / SiN 5 nm). <b>PIC Design Lab.</b> 부품은 카드 또는 기준 설계의 레벨 엔진 값, 배선은 직선·원호/Euler 코너·S-bend 기하로 길이·굽힘·간격을 계산하고, 전파 손실은 D-1 산란 모델, 테이퍼 길이·패드/범프 크기·MZM 접지 폭은 대표값 가정입니다. 시스템 예측은 3A+ 엔진 마진에서 레이아웃 배선 손실을 뺀 값이며, 금속은 RF(M1)·DC(M2) 각 한 층의 추상 선(폭 10/5 µm)으로 그려 같은 층 접촉만 검사합니다. RF 전자기·레인 간 열 크로스토크·파운드리 규칙은 검사하지 않습니다(NOT VERIFIED). GDS는 tools/smq2gds(circuit)가 같은 기본 도형으로 그리고 다시 읽어 검사합니다. 결과는 Engineering Prototype이며 Tape-out Ready가 아닙니다. <b>게임 밖 검증.</b> 설계 내보내기(smq-design/1) → tools/smq2gds가 GDS(gdsfactory)와 솔버 입력을 만듭니다. MMI는 GDS를 그대로 자른 3D EME(국소 Tidy3D FDE 모드, 테이퍼 포함), 지연 나선은 같은 단면의 벡터 모드 해석(직선: 두 격자 Richardson, 굽힘: PML·등각 변환)과 곡률 반전 모드 겹침으로 검사하고, 참조 설계의 결과를 "오프라인 솔버 검증" 패널에 게임 예측과 나란히 보여 줍니다. 각 보스의 최종 검증은 3D FDTD(MEEP 스크립트 생성, Tidy3D)·Ansys(CHARGE/HEAT/INTERCONNECT)로 넘기는 것을 전제로 합니다.
+    <details id="scope"><summary><b>모델 범위</b> — 게임이 계산하는 것, 단순화와 가정 (플랫폼·Stage 1–3·Track B·Design Lab·게임 밖 검증)</summary>
+    <div class="scope">
+      <p><b>플랫폼 · Stage 1.</b> 플랫폼 4종(Si 220 nm / SiN 400 nm × 1310 / 1550 nm, SiO₂ 클래딩)의 모드는 semi-vectorial 2D 유한차분 솔버(quasi-TE Ex, quasi-TM Ey)로 사전계산한 테이블입니다: 도파로 TE/TM 모드와 n<sub>eff</sub>(폭·두께·파장), 방향성 결합기의 짝/홀 슈퍼모드, SSC 팁 모드와 광섬유 overlap. MMI는 2D 유효굴절률법 + 고유모드 전개, CWDM은 같은 n<sub>eff</sub>·n<sub>g</sub> 테이블로 만든 회로 S-matrix입니다. 측벽 산란 손실은 (∂n<sub>eff</sub>/∂w)²에 비례하는 근사, 기판 누설은 BOX 터널링 근사. 반사, 3D 방사, 벤드 구간 결합, 편광 혼합은 포함하지 않아 FDTD·벡터 솔버보다 낙관적입니다 (500×220 nm Si @1550 TE0 n<sub>eff</sub> 2.49 vs 벡터 해 ≈ 2.44).</p>
+      <p><b>Stage 2.</b> TO: 히터 단면 2D 유한체적 열해석 테이블(트렌치·언더컷; 언더컷은 2D에서 볼 수 없는 팔 끝·테더 누설 0.5 W/m·K를 더함) + EIM dn<sub>eff</sub>/dT, τ는 국소 적층 에너지법. PN: 리브 EIM + 1D 모드, 계단 접합 공핍 근사, Soref–Bennett(1.31/1.55 µm), Caughey–Thomas 이동도. TW-MZM: CPW 등각사상(Hilberg) + 접합 부하 전신방정식, 양끝 반사, 광 진행 좌표계 적분, 112 GBd PAM4 눈은 5-tap FFE 기준 수신기(TDECQ 방식 근사, 잡음 증폭 √Σc²). Ge PD: 흡수 1−e<sup>−ΓαL</sup>, 전이(0.45v/d)×RC 1차 극, TIA 잡음은 입력 C에 비례하는 근사. 2-3R 링 변조기: Si 리브(220/90 nm) EIM, 결합은 휜 간격 위 Marcuse 결합 슬랩 κ 적분, 굽힘 방사 Marcuse, 링 손실 = 2-2 접합 흡수(덮개 75%) + 측벽 0.15 dB/mm + 히터 금속 + TPA·FCA. 투과는 all-pass Airy 식, 고속은 결합 모드 방정식(CMT) 시간영역 적분(광자 수명) × 접합 RC 극 — Q만으로 대역폭을 정하지 않습니다. OMA는 정착 레벨(정적, TDECQ 방식 점수)과 파형 극값(동적)을 분리합니다. 열: 2-1 단면 열해석의 G′를 링 둘레에 그대로 적용(링의 3D 열 퍼짐 무시 → 히터 효율 낙관적), 자기 가열 개루프 이득으로 빨강 쪽 디튜닝의 열 불안정을 판정. 공정: 폭·두께 산포로 공진 이동, 레이아웃 반경은 1 nm 격자에서 공진을 레이저 파장에 맞춘 값(GDS 반경과 같음). SiN 플랫폼의 링은 이종 집적 Si 활성층 가정입니다. MZM 비교의 구동 에너지는 부하 C·V²(PAM4) 대 정합 선로 V²/R이며 드라이버 효율·DSP는 포함하지 않습니다. 링크: 부품 카드의 대표값을 dB로 더한 버짓, 광 궤환은 파셋 Fresnel × 가우시안 overlap과 RIN 페널티 로지스틱 근사.</p>
+      <p><b>Stage 3.</b> 모듈 = 부품 카드(또는 기준 설계)의 대표값을 dB·W로 조립. 3A+의 링 변조기(MRR ×8): 레인 링마다 2-3R 엔진을 모듈의 변조기 입력 파워에서 다시 계산(0.5 dB 격자 보간), 히터 락으로 설계 디튜닝 유지, 히터 = (링 드리프트 − 레이저 드리프트)·ΔT mod FSR의 0–70 °C 최악값, 비냉각 DFB 0.085/0.10 nm/K·파장 산포 σ 0.5 nm·락 2 mW/레인·드라이버(= MZM 등급 − 부하 에너지 차)는 대표값 가정, 링 열 효율은 2D 단면 × 둘레라 낙관적(문헌 비교는 docs/arch_1p6t_dr8.md). 레인 마진은 4채널 × 케이스 0/70 °C 코너의 최솟값이며, Demux는 1-7 lattice를 dn<sub>eff</sub>/dT만큼 굴절률을 옮겨 다시 계산(밴드 ±6.5 nm 최악). 비냉각 DFB: −0.02 dB/K(25 °C 이상), WPE −0.5%/K. TEC: 0.3 W + 레이저 발열/COP 0.6. 크로스토크 페널티 −10log(1−3·XT). 전력 상수(1.6T DSP 10 W, MLSE +1.5 W, 드라이버 0.35/0.15 W·레인, TIA 0.12 W·레인, DC-DC 90%)와 LPO/CPO 페널티(전기 +1.5/+0.5 dB, 감도 +0.5/+0.3 dB, CPO FAU +1 dB)는 학습용 대표값입니다.</p>
+      <p><b>3W 링 WDM8.</b> 한 버스의 링 8개는 2-3R 엔진(반경만 바꿈)의 all-pass Airy 투과를 곱해 통과 손실·변조 크로스토크(−10log(1−3ε))·FSR 별칭을 같은 식으로 계산하고, 히터는 빨강 쪽으로만 밀며 (목표 − 가열 전 공진) mod FSR, 배정은 고정 또는 순환(배럴 시프트, 온도마다 최소 전력), 열 결합은 2-1 2D 단면 프로파일(상한)입니다. 링 간 불일치 σ 0.15 nm, 콤 가장자리 −2 dB·WPE 12 %, DFB+MUX 2.5 dB, Rx Demux 1.5 dB·XT, 히터 범위 1.2·P<sub>2π</sub>는 가정입니다.</p>
+      <p><b>긴 지연선.</b> 단면은 EIM, 산란 손실은 σ²·(n₁²−n₂²)·∂n<sub>eff</sub>/∂w(측벽)와 ∂n<sub>eff</sub>/∂t(상하면)에 비례하는 근사로, 상수는 Hong 2022의 Si 측정값(0.45/1.6/2 µm: 5.5/0.38/0.28 dB/cm, σ 4.6/0.42 nm)에 한 번 맞춘 뒤 SiN(σ 5/0.4 nm 가정, 재료 흡수 0.06 dB/cm @1550, 0.02 @1310)에 그대로 적용합니다. 굽힘 방사는 EIM 횡방향 슬랩의 Marcuse 식이라 SiN 임계 반경을 실제보다 작게 예측하는 경향이 있습니다. S-bend 모드 변환은 n²w³/(λ²R) 스케일을 논문의 원호 −2.3 dB에 맞춘 근사, 이웃 회전 결합은 결합 슬랩 κ(동방향 가정, 보수적)입니다. MZ 스위치 위상 오차는 국소 폭 요동 2 nm·√(L·3 µm) 가정, 보정 후 잔차는 초기 오차의 15%로 둡니다. 직사각형 나선은 경계 안에 생성한 실제 형상(직선·원호/Euler 코너·중앙 S-bend)의 길이와 국소 반경으로 손실·지연을 계산하며, 원호 코너의 곡률 점프 모드 변환은 접합마다 가우시안 이동을 비간섭으로 더한 공학적 추정입니다. 1-7 Guided 단계의 MZI는 같은 n<sub>eff</sub>·n<sub>g</sub> 테이블과 커플러 과잉손실 0.05 dB를 쓰며, 단계 3의 "출력 전력의 95%"는 과잉손실을 뺀 포트 분배 비율입니다.</p>
+      <p><b>Track B.</b> 처프: 분해능 c/2B, 비트 f<sub>b</sub> = 2Rγ/c ≤ ADC 500 MHz, 코히어런스 손실 exp(−2πΔν·2R/c), 잔류 처프 오차 √(지터² + Δν/(2πτ<sub>ref</sub>M) + 측정²)로 비트 위상 오차 2π(2R/c)e → exp(−σφ²); 레이저 선폭·튜닝 범위·지터와 예왜곡 평균 M = 1000은 대표값 가정. 거리 눈금 오차 = R·(1/n<sub>g</sub>)dn<sub>g</sub>/dT·ΔT. 스캐너: 가우시안 방출 모드 → 렌즈 뒤 w<sub>b</sub> = λf/(πw<sub>e</sub>), 퍼짐 w<sub>e</sub>/f(FWHM 1.18배), 수차는 NA·시야각에 대한 경험식, 스위치 손실·소광비는 대표값(열광학 0.3 dB/−27 dB, PIN 0.9 dB/−19 dB). 시스템: 모노스태틱 코히어런트, 람베르트 ρ = 0.1, P<sub>rx</sub> = P<sub>out</sub>ρD²/(4R²)·η<sub>het</sub>(0.4, 스펙클), 왕복 칩 손실, 균형 검출 SNR = ℜP<sub>rx</sub>T<sub>int</sub>/q × 샷잡음 비율(TIA 10 pA/√Hz), 처프 N<sub>av</sub>개 비코히어런트 적산 √N<sub>av</sub>, 임계 13 dB; Si는 TPA/FCA 손실 0.6·(P/100 mW)² dB 근사. 도플러·다중 반사·눈 안전은 다루지 않습니다. 공정 변동: 웨이퍼 CD 오프셋 + 두께 bowl + 다이 랜덤(CD σ ≈ 8 nm, 두께 σ ≈ Si 3 nm / SiN 5 nm).</p>
+      <p><b>PIC Design Lab.</b> 부품은 카드 또는 기준 설계의 레벨 엔진 값, 배선은 직선·원호/Euler 코너·S-bend 기하로 길이·굽힘·간격을 계산하고, 전파 손실은 D-1 산란 모델, 테이퍼 길이·패드/범프 크기·MZM 접지 폭은 대표값 가정입니다. 시스템 예측은 3A+ 엔진 마진에서 레이아웃 배선 손실을 뺀 값이며, 금속은 RF(M1)·DC(M2) 각 한 층의 추상 선(폭 10/5 µm)으로 그려 같은 층 접촉만 검사합니다. RF 전자기·레인 간 열 크로스토크·파운드리 규칙은 검사하지 않습니다(NOT VERIFIED). GDS는 tools/smq2gds(circuit)가 같은 기본 도형으로 그리고 다시 읽어 검사합니다. 결과는 Engineering Prototype이며 Tape-out Ready가 아닙니다.</p>
+      <p><b>게임 밖 검증.</b> 설계 내보내기(smq-design/1) → tools/smq2gds가 GDS(gdsfactory)와 솔버 입력을 만듭니다. MMI는 GDS를 그대로 자른 3D EME(국소 Tidy3D FDE 모드, 테이퍼 포함), 지연 나선은 같은 단면의 벡터 모드 해석(직선: 두 격자 Richardson, 굽힘: PML·등각 변환)과 곡률 반전 모드 겹침으로 검사하고, 참조 설계의 결과를 "오프라인 솔버 검증" 패널에 게임 예측과 나란히 보여 줍니다. 각 보스의 최종 검증은 3D FDTD(MEEP 스크립트 생성, Tidy3D)·Ansys(CHARGE/HEAT/INTERCONNECT)로 넘기는 것을 전제로 합니다.</p>
+    </div></details>
   </footer>
 </div>

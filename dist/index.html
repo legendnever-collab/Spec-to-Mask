@@ -16,11 +16,13 @@
   --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html{height:100%}
 body{
   background-color:var(--bg); color:var(--fg); font-family:var(--body); font-size:14px; line-height:1.55;
   background-image:linear-gradient(rgba(120,150,190,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(120,150,190,.045) 1px,transparent 1px);
   background-size:24px 24px;
+  word-break:keep-all; overflow-wrap:break-word;
 }
 .wrap{max-width:1140px;margin:0 auto;padding-inline:16px;padding-block:18px 48px}
 button{font:inherit;color:inherit}
@@ -46,8 +48,12 @@ button{font:inherit;color:inherit}
   grid-template-areas:"mission" "view" "params" "spec" "xp" "fab" "ai" "db" "cards"}
 @media (min-width:920px){
   .game{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);
-    grid-template-areas:"mission params" "view params" "spec fab" "xp xp" "db ai" "cards cards"}
+    grid-template-areas:"mission params" "view params" "spec fab" "xp xp" "ai db" "cards cards"}
+  /* the controls stay beside the field while the mission text and the view scroll */
+  .game.stepping{grid-template-areas:"mission params" "view params" "spec spec" "xp xp" "cards cards"}
+  #params{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
 }
+.game.stepping #fab,.game.stepping #ai,.game.stepping #db{display:none}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;min-width:0}
 .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-3)}
 .card h2{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.04em;margin:0 0 10px;color:var(--fg);text-wrap:balance}
@@ -91,11 +97,24 @@ button{font:inherit;color:inherit}
 .tile .v{font-family:var(--mono);font-size:17px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .tile .v small{font-size:11px;color:var(--fg-3);margin-left:2px}
 
+/* next level / mini status */
+.nextlv{display:flex;align-items:center;justify-content:space-between;gap:8px 12px;flex-wrap:wrap;margin-top:10px;padding:9px 11px;border-radius:8px;border:1px solid rgba(93,209,147,.45);background:rgba(93,209,147,.07);font-size:13px;color:var(--fg-2)}
+.nextlv b{color:var(--pass);font-weight:600}
+.minibar{position:fixed;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:40;display:flex;align-items:center;gap:10px;max-width:calc(100vw - 24px);padding:7px 8px 7px 12px;border-radius:999px;border:1px solid var(--line-2);background:rgba(19,27,38,.96);box-shadow:0 6px 24px rgba(0,0,0,.45);font-size:12.5px;color:var(--fg-2)}
+.minibar .mb-s{font-family:var(--display);font-weight:700;font-size:17px;color:var(--amber);font-variant-numeric:tabular-nums;white-space:nowrap}
+.minibar .mb-s small{font-size:11px;color:var(--fg-3);margin-left:2px}
+.minibar .mb-st{letter-spacing:1px;color:var(--fg-3);white-space:nowrap} .minibar .mb-st b{color:var(--amber);font-weight:400}
+.minibar .mb-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:46vw}
+.minibar .mb-t.bad{color:var(--fail)}
+.minibar button{flex:0 0 auto;border:1px solid var(--line-2);background:var(--panel-2);border-radius:999px;padding:5px 10px;font-size:12px;cursor:pointer;white-space:nowrap}
+@media (max-width:360px){.minibar .mb-t{display:none}}
+
 /* params */
 #params{grid-area:params}
 .prm{padding:9px 0;border-bottom:1px dashed var(--line)}
 .prm:last-of-type{border-bottom:0}
-.prm-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.prm-h{display:flex;justify-content:space-between;align-items:baseline;gap:2px 8px;flex-wrap:wrap}
+.prm-h output{margin-left:auto;text-align:right}
 .prm-h label{font-size:13px;color:var(--fg-2)}
 .prm-h label i{font-family:var(--mono);font-style:normal;color:var(--fg);margin-left:4px}
 .prm-h output{font-family:var(--mono);font-size:15px;font-variant-numeric:tabular-nums;color:var(--fg)}
@@ -155,8 +174,21 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .db-stats{font-family:var(--mono);font-size:12px;color:var(--fg-2);margin-bottom:6px}
 .db-stats b{color:var(--fg);font-weight:500}
 #csvOut,.jsonout{width:100%;height:120px;margin-top:8px;background:var(--panel-2);color:var(--fg);border:1px solid var(--line-2);border-radius:8px;font-family:var(--mono);font-size:11px;padding:8px}
-footer{margin-top:16px;color:var(--fg-3);font-size:12px;line-height:1.7;max-width:90ch}
+footer{margin-top:16px;color:var(--fg-3);font-size:12px;line-height:1.7}
 footer b{color:var(--fg-2);font-weight:500}
+footer details{border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+footer summary{cursor:pointer;padding:10px 14px;font-size:13px;color:var(--fg-2)}
+footer summary b{color:var(--fg);font-weight:600}
+footer .scope{padding:0 14px 6px;max-width:96ch}
+footer .scope p{margin:0 0 10px}
+/* collapsible card sections */
+details.sect > summary{cursor:pointer;list-style:none;display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap}
+details.sect > summary::-webkit-details-marker{display:none}
+details.sect > summary h2{margin:0}
+details.sect > summary .sum{font-family:var(--mono);font-size:12px;color:var(--fg-2)}
+details.sect > summary .sum::after{content:" ▸";color:var(--fg-3)}
+details.sect[open] > summary .sum::after{content:" ▾"}
+details.sect[open] > summary{margin-bottom:10px}
 /* difficulty / hint segmented controls */
 .mode-row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 .seg{display:inline-flex;border:1px solid var(--line-2);border-radius:8px;overflow:hidden;background:var(--panel-2)}
@@ -176,6 +208,11 @@ footer b{color:var(--fg-2);font-weight:500}
 /* campaign map */
 .cardcount{font-family:var(--mono);font-size:12px;color:var(--fg-2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--panel)}
 .cardcount b{color:var(--amber);font-weight:500}
+.mapwrap{position:relative}
+.mapnav{display:none;position:absolute;top:22px;left:-6px;width:30px;height:62px;border-radius:8px;border:1px solid var(--line-2);background:rgba(19,27,38,.94);color:var(--fg-2);cursor:pointer;font-size:12px;box-shadow:0 2px 10px rgba(0,0,0,.4)}
+.mapnav.r{left:auto;right:-6px}
+.mapnav:hover{color:var(--amber);border-color:var(--amber)}
+@media (hover:hover) and (pointer:fine){.mapnav{display:block}}
 .map{display:flex;gap:14px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;scrollbar-width:thin}
 .stage{flex:0 0 auto;display:flex;flex-direction:column;gap:6px}
 .stage-h{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-3)}
@@ -267,7 +304,9 @@ footer b{color:var(--fg-2);font-weight:500}
 .lab-prog span.ok{border-color:rgba(93,209,147,.6);color:var(--pass)}
 .lab-prog span.pend{border-style:dashed}
 .lab-grid{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
-@media (min-width:1000px){.lab-grid{grid-template-columns:220px minmax(0,1fr) 300px}}
+@media (min-width:1000px){.lab-grid{grid-template-columns:220px minmax(0,1fr) 300px}
+  #lab-lib-list{max-height:calc(100vh - 120px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;padding-right:2px}
+}
 .lab-grid > *{align-self:start}
 @media (max-width:999px){#lab-ws{order:1}#lab-insp{order:2}#lab-lib{order:3}}
 .lab-ws-h{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
@@ -355,13 +394,20 @@ footer b{color:var(--fg-2);font-weight:500}
 .roles div b{display:block;color:var(--fg);font-size:12.5px}
 @media (max-width:600px){.gdlg-back{padding:0}.gdlg{height:100vh;height:100dvh;border-radius:0;border:0}.gdlg-h h2{font-size:19px}}
 @media (prefers-reduced-motion:reduce){.bar > i{transition:none}}
+/* phone width: tighter header and map (kept last so it overrides the base rules) */
+@media (max-width:600px){
+  .top{margin-bottom:10px}
+  .hdr-r{gap:6px} .platchip,.cardcount{font-size:11px;padding:5px 8px} .cardcount .wide{display:none}
+  .map{gap:10px;margin-bottom:10px} .node{width:104px;padding:6px 8px 7px}
+  .lab-prog span{font-size:10.5px;padding:2px 7px}
+}
 </style>
 
 <div class="wrap">
   <header class="top">
     <div class="brand">
       <h1>SPEC-to-MASK <span>Quest</span></h1>
-      <p>Track A · 1.6T 트랜시버 · SOI 220 nm · O-band</p>
+      <p id="brand-sub">Photonic IC 설계 학습 · Spec → Device → System → Layout → GDS</p>
     </div>
     <div class="hdr-r"><button class="platchip" id="plat-chip" hidden></button><div class="cardcount" id="cardcount"></div></div>
   </header>
@@ -377,7 +423,7 @@ footer b{color:var(--fg-2);font-weight:500}
   </section>
 
   <div id="gamewrap">
-  <nav class="map" id="map" aria-label="캠페인 맵"></nav>
+  <div class="mapwrap"><nav class="map" id="map" aria-label="캠페인 맵"></nav><button class="mapnav" id="map-l" aria-label="지도 왼쪽으로" hidden>◀</button><button class="mapnav r" id="map-r" aria-label="지도 오른쪽으로" hidden>▶</button></div>
 
   <main class="game">
     <section class="card" id="mission" aria-live="polite">
@@ -396,6 +442,7 @@ footer b{color:var(--fg-2);font-weight:500}
       <details class="concepts" id="m-concepts" hidden></details>
       <div class="locked-note" id="m-locked" hidden></div>
       <div class="objs" id="objs"></div>
+      <div id="m-next"></div>
       <p class="note" id="mode-note"></p>
     </section>
 
@@ -427,7 +474,7 @@ footer b{color:var(--fg-2);font-weight:500}
       <textarea id="jsonOut" class="jsonout" hidden readonly aria-label="설계 JSON"></textarea>
       <details class="valid" id="valid" hidden><summary>오프라인 솔버 검증 · 참조 설계</summary><div class="vb" id="valid-body"></div></details>
       <div class="hint" id="hint" hidden></div>
-      <p class="note">힌트 단계: 방향 = 코치가 다음 수를 알려줌 · 수치 = 목표값과 L<sub>π</sub> 가이드선 · 지형도 = L·s를 훑은 성능 곡선(탭하면 그 값으로 이동). −/+ 버튼은 길게 누르면 연속으로 움직입니다.</p>
+      <p class="note">힌트 단계: 방향 = 코치가 다음 한 수를 알려줌 · 수치 = 목표값과 가이드선 · 지형도 = 주요 파라미터를 훑은 성능 곡선(탭하면 그 값으로 이동). −/+ 버튼은 길게 누르면 연속으로 움직이고, 슬라이더에 초점을 두면 방향키로 한 칸씩 움직입니다.</p>
     </section>
 
     <section class="card" id="spec">
@@ -472,11 +519,6 @@ footer b{color:var(--fg-2);font-weight:500}
       </div>
     </section>
 
-    <section class="card" id="cards">
-      <h2><span class="n">06</span>부품 카드 인벤토리</h2>
-      <p class="note" style="margin:-4px 0 10px">★ 이상으로 클리어한 설계는 S-파라미터·손실·수율이 담긴 카드로 저장됩니다. Stage 3에서 1.6T 트랜시버는 이 카드들만으로 조립합니다. 같은 레벨은 설계 점수가 더 높은 카드로 교체됩니다.</p>
-      <div class="cardgrid" id="cardgrid"></div>
-    </section>
 
     <section class="card" id="db">
       <h2><span class="n">05</span>Design DB</h2>
@@ -489,7 +531,14 @@ footer b{color:var(--fg-2);font-weight:500}
       <textarea id="csvOut" hidden readonly aria-label="CSV"></textarea>
       <p class="note">플레이할 때마다 (설계 파라미터) → (성능, 크기) 레코드가 레벨별로 쌓입니다. 사람이 둔 수와 AI의 탐색이 같은 DB에 들어가 다음 모델 학습 데이터가 되는 구조를 보여줍니다.</p>
     </section>
+
+    <details class="card sect" id="cards">
+      <summary><h2><span class="n">06</span>부품 카드 인벤토리</h2><span class="sum" id="cards-sum"></span></summary>
+      <p class="note" style="margin:-4px 0 10px">★ 이상으로 클리어한 설계는 S-파라미터·손실·수율이 담긴 카드로 저장됩니다. Stage 3에서 1.6T 트랜시버는 이 카드들만으로 조립합니다. 같은 레벨은 설계 점수가 더 높은 카드로 교체됩니다.</p>
+      <div class="cardgrid" id="cardgrid"></div>
+    </details>
   </main>
+  <div class="minibar" id="minibar" hidden role="status" aria-live="off"><span class="mb-st" id="mb-st"></span><span class="mb-s" id="mb-s"></span><span class="mb-t" id="mb-t"></span><button id="mb-go">▲ 화면</button></div>
 
   <section id="lab" hidden aria-labelledby="lab-h">
     <div class="card lab-head">
@@ -532,7 +581,17 @@ footer b{color:var(--fg-2);font-weight:500}
     </div>
   </div>
   <footer>
-    <b>모델 범위.</b> 플랫폼 4종(Si 220 nm / SiN 400 nm × 1310 / 1550 nm, SiO₂ 클래딩)의 모드는 semi-vectorial 2D 유한차분 솔버(quasi-TE Ex, quasi-TM Ey)로 사전계산한 테이블입니다: 도파로 TE/TM 모드와 n<sub>eff</sub>(폭·두께·파장), 방향성 결합기의 짝/홀 슈퍼모드, SSC 팁 모드와 광섬유 overlap. MMI는 2D 유효굴절률법 + 고유모드 전개, CWDM은 같은 n<sub>eff</sub>·n<sub>g</sub> 테이블로 만든 회로 S-matrix입니다. 측벽 산란 손실은 (∂n<sub>eff</sub>/∂w)²에 비례하는 근사, 기판 누설은 BOX 터널링 근사. 반사, 3D 방사, 벤드 구간 결합, 편광 혼합은 포함하지 않아 FDTD·벡터 솔버보다 낙관적입니다 (500×220 nm Si @1550 TE0 n<sub>eff</sub> 2.49 vs 벡터 해 ≈ 2.44). <b>Stage 2.</b> TO: 히터 단면 2D 유한체적 열해석 테이블(트렌치·언더컷; 언더컷은 2D에서 볼 수 없는 팔 끝·테더 누설 0.5 W/m·K를 더함) + EIM dn<sub>eff</sub>/dT, τ는 국소 적층 에너지법. PN: 리브 EIM + 1D 모드, 계단 접합 공핍 근사, Soref–Bennett(1.31/1.55 µm), Caughey–Thomas 이동도. TW-MZM: CPW 등각사상(Hilberg) + 접합 부하 전신방정식, 양끝 반사, 광 진행 좌표계 적분, 112 GBd PAM4 눈은 5-tap FFE 기준 수신기(TDECQ 방식 근사, 잡음 증폭 √Σc²). Ge PD: 흡수 1−e<sup>−ΓαL</sup>, 전이(0.45v/d)×RC 1차 극, TIA 잡음은 입력 C에 비례하는 근사. 2-3R 링 변조기: Si 리브(220/90 nm) EIM, 결합은 휜 간격 위 Marcuse 결합 슬랩 κ 적분, 굽힘 방사 Marcuse, 링 손실 = 2-2 접합 흡수(덮개 75%) + 측벽 0.15 dB/mm + 히터 금속 + TPA·FCA. 투과는 all-pass Airy 식, 고속은 결합 모드 방정식(CMT) 시간영역 적분(광자 수명) × 접합 RC 극 — Q만으로 대역폭을 정하지 않습니다. OMA는 정착 레벨(정적, TDECQ 방식 점수)과 파형 극값(동적)을 분리합니다. 열: 2-1 단면 열해석의 G′를 링 둘레에 그대로 적용(링의 3D 열 퍼짐 무시 → 히터 효율 낙관적), 자기 가열 개루프 이득으로 빨강 쪽 디튜닝의 열 불안정을 판정. 공정: 폭·두께 산포로 공진 이동, 레이아웃 반경은 1 nm 격자에서 공진을 레이저 파장에 맞춘 값(GDS 반경과 같음). SiN 플랫폼의 링은 이종 집적 Si 활성층 가정입니다. MZM 비교의 구동 에너지는 부하 C·V²(PAM4) 대 정합 선로 V²/R이며 드라이버 효율·DSP는 포함하지 않습니다. 링크: 부품 카드의 대표값을 dB로 더한 버짓, 광 궤환은 파셋 Fresnel × 가우시안 overlap과 RIN 페널티 로지스틱 근사. <b>Stage 3.</b> 모듈 = 부품 카드(또는 기준 설계)의 대표값을 dB·W로 조립. 3A+의 링 변조기(MRR ×8): 레인 링마다 2-3R 엔진을 모듈의 변조기 입력 파워에서 다시 계산(0.5 dB 격자 보간), 히터 락으로 설계 디튜닝 유지, 히터 = (링 드리프트 − 레이저 드리프트)·ΔT mod FSR의 0–70 °C 최악값, 비냉각 DFB 0.085/0.10 nm/K·파장 산포 σ 0.5 nm·락 2 mW/레인·드라이버(= MZM 등급 − 부하 에너지 차)는 대표값 가정, 링 열 효율은 2D 단면 × 둘레라 낙관적(문헌 비교는 docs/arch_1p6t_dr8.md). 레인 마진은 4채널 × 케이스 0/70 °C 코너의 최솟값이며, Demux는 1-7 lattice를 dn<sub>eff</sub>/dT만큼 굴절률을 옮겨 다시 계산(밴드 ±6.5 nm 최악). 비냉각 DFB: −0.02 dB/K(25 °C 이상), WPE −0.5%/K. TEC: 0.3 W + 레이저 발열/COP 0.6. 크로스토크 페널티 −10log(1−3·XT). 전력 상수(1.6T DSP 10 W, MLSE +1.5 W, 드라이버 0.35/0.15 W·레인, TIA 0.12 W·레인, DC-DC 90%)와 LPO/CPO 페널티(전기 +1.5/+0.5 dB, 감도 +0.5/+0.3 dB, CPO FAU +1 dB)는 학습용 대표값입니다. <b>3W 링 WDM8.</b> 한 버스의 링 8개는 2-3R 엔진(반경만 바꿈)의 all-pass Airy 투과를 곱해 통과 손실·변조 크로스토크(−10log(1−3ε))·FSR 별칭을 같은 식으로 계산하고, 히터는 빨강 쪽으로만 밀며 (목표 − 가열 전 공진) mod FSR, 배정은 고정 또는 순환(배럴 시프트, 온도마다 최소 전력), 열 결합은 2-1 2D 단면 프로파일(상한)입니다. 링 간 불일치 σ 0.15 nm, 콤 가장자리 −2 dB·WPE 12 %, DFB+MUX 2.5 dB, Rx Demux 1.5 dB·XT, 히터 범위 1.2·P<sub>2π</sub>는 가정입니다. <b>긴 지연선.</b> 단면은 EIM, 산란 손실은 σ²·(n₁²−n₂²)·∂n<sub>eff</sub>/∂w(측벽)와 ∂n<sub>eff</sub>/∂t(상하면)에 비례하는 근사로, 상수는 Hong 2022의 Si 측정값(0.45/1.6/2 µm: 5.5/0.38/0.28 dB/cm, σ 4.6/0.42 nm)에 한 번 맞춘 뒤 SiN(σ 5/0.4 nm 가정, 재료 흡수 0.06 dB/cm @1550, 0.02 @1310)에 그대로 적용합니다. 굽힘 방사는 EIM 횡방향 슬랩의 Marcuse 식이라 SiN 임계 반경을 실제보다 작게 예측하는 경향이 있습니다. S-bend 모드 변환은 n²w³/(λ²R) 스케일을 논문의 원호 −2.3 dB에 맞춘 근사, 이웃 회전 결합은 결합 슬랩 κ(동방향 가정, 보수적)입니다. MZ 스위치 위상 오차는 국소 폭 요동 2 nm·√(L·3 µm) 가정, 보정 후 잔차는 초기 오차의 15%로 둡니다. 직사각형 나선은 경계 안에 생성한 실제 형상(직선·원호/Euler 코너·중앙 S-bend)의 길이와 국소 반경으로 손실·지연을 계산하며, 원호 코너의 곡률 점프 모드 변환은 접합마다 가우시안 이동을 비간섭으로 더한 공학적 추정입니다. 1-7 Guided 단계의 MZI는 같은 n<sub>eff</sub>·n<sub>g</sub> 테이블과 커플러 과잉손실 0.05 dB를 쓰며, 단계 3의 "출력 전력의 95%"는 과잉손실을 뺀 포트 분배 비율입니다. <b>Track B.</b> 처프: 분해능 c/2B, 비트 f<sub>b</sub> = 2Rγ/c ≤ ADC 500 MHz, 코히어런스 손실 exp(−2πΔν·2R/c), 잔류 처프 오차 √(지터² + Δν/(2πτ<sub>ref</sub>M) + 측정²)로 비트 위상 오차 2π(2R/c)e → exp(−σφ²); 레이저 선폭·튜닝 범위·지터와 예왜곡 평균 M = 1000은 대표값 가정. 거리 눈금 오차 = R·(1/n<sub>g</sub>)dn<sub>g</sub>/dT·ΔT. 스캐너: 가우시안 방출 모드 → 렌즈 뒤 w<sub>b</sub> = λf/(πw<sub>e</sub>), 퍼짐 w<sub>e</sub>/f(FWHM 1.18배), 수차는 NA·시야각에 대한 경험식, 스위치 손실·소광비는 대표값(열광학 0.3 dB/−27 dB, PIN 0.9 dB/−19 dB). 시스템: 모노스태틱 코히어런트, 람베르트 ρ = 0.1, P<sub>rx</sub> = P<sub>out</sub>ρD²/(4R²)·η<sub>het</sub>(0.4, 스펙클), 왕복 칩 손실, 균형 검출 SNR = ℜP<sub>rx</sub>T<sub>int</sub>/q × 샷잡음 비율(TIA 10 pA/√Hz), 처프 N<sub>av</sub>개 비코히어런트 적산 √N<sub>av</sub>, 임계 13 dB; Si는 TPA/FCA 손실 0.6·(P/100 mW)² dB 근사. 도플러·다중 반사·눈 안전은 다루지 않습니다. 공정 변동: 웨이퍼 CD 오프셋 + 두께 bowl + 다이 랜덤(CD σ ≈ 8 nm, 두께 σ ≈ Si 3 nm / SiN 5 nm). <b>PIC Design Lab.</b> 부품은 카드 또는 기준 설계의 레벨 엔진 값, 배선은 직선·원호/Euler 코너·S-bend 기하로 길이·굽힘·간격을 계산하고, 전파 손실은 D-1 산란 모델, 테이퍼 길이·패드/범프 크기·MZM 접지 폭은 대표값 가정입니다. 시스템 예측은 3A+ 엔진 마진에서 레이아웃 배선 손실을 뺀 값이며, 금속은 RF(M1)·DC(M2) 각 한 층의 추상 선(폭 10/5 µm)으로 그려 같은 층 접촉만 검사합니다. RF 전자기·레인 간 열 크로스토크·파운드리 규칙은 검사하지 않습니다(NOT VERIFIED). GDS는 tools/smq2gds(circuit)가 같은 기본 도형으로 그리고 다시 읽어 검사합니다. 결과는 Engineering Prototype이며 Tape-out Ready가 아닙니다. <b>게임 밖 검증.</b> 설계 내보내기(smq-design/1) → tools/smq2gds가 GDS(gdsfactory)와 솔버 입력을 만듭니다. MMI는 GDS를 그대로 자른 3D EME(국소 Tidy3D FDE 모드, 테이퍼 포함), 지연 나선은 같은 단면의 벡터 모드 해석(직선: 두 격자 Richardson, 굽힘: PML·등각 변환)과 곡률 반전 모드 겹침으로 검사하고, 참조 설계의 결과를 "오프라인 솔버 검증" 패널에 게임 예측과 나란히 보여 줍니다. 각 보스의 최종 검증은 3D FDTD(MEEP 스크립트 생성, Tidy3D)·Ansys(CHARGE/HEAT/INTERCONNECT)로 넘기는 것을 전제로 합니다.
+    <details id="scope"><summary><b>모델 범위</b> — 게임이 계산하는 것, 단순화와 가정 (플랫폼·Stage 1–3·Track B·Design Lab·게임 밖 검증)</summary>
+    <div class="scope">
+      <p><b>플랫폼 · Stage 1.</b> 플랫폼 4종(Si 220 nm / SiN 400 nm × 1310 / 1550 nm, SiO₂ 클래딩)의 모드는 semi-vectorial 2D 유한차분 솔버(quasi-TE Ex, quasi-TM Ey)로 사전계산한 테이블입니다: 도파로 TE/TM 모드와 n<sub>eff</sub>(폭·두께·파장), 방향성 결합기의 짝/홀 슈퍼모드, SSC 팁 모드와 광섬유 overlap. MMI는 2D 유효굴절률법 + 고유모드 전개, CWDM은 같은 n<sub>eff</sub>·n<sub>g</sub> 테이블로 만든 회로 S-matrix입니다. 측벽 산란 손실은 (∂n<sub>eff</sub>/∂w)²에 비례하는 근사, 기판 누설은 BOX 터널링 근사. 반사, 3D 방사, 벤드 구간 결합, 편광 혼합은 포함하지 않아 FDTD·벡터 솔버보다 낙관적입니다 (500×220 nm Si @1550 TE0 n<sub>eff</sub> 2.49 vs 벡터 해 ≈ 2.44).</p>
+      <p><b>Stage 2.</b> TO: 히터 단면 2D 유한체적 열해석 테이블(트렌치·언더컷; 언더컷은 2D에서 볼 수 없는 팔 끝·테더 누설 0.5 W/m·K를 더함) + EIM dn<sub>eff</sub>/dT, τ는 국소 적층 에너지법. PN: 리브 EIM + 1D 모드, 계단 접합 공핍 근사, Soref–Bennett(1.31/1.55 µm), Caughey–Thomas 이동도. TW-MZM: CPW 등각사상(Hilberg) + 접합 부하 전신방정식, 양끝 반사, 광 진행 좌표계 적분, 112 GBd PAM4 눈은 5-tap FFE 기준 수신기(TDECQ 방식 근사, 잡음 증폭 √Σc²). Ge PD: 흡수 1−e<sup>−ΓαL</sup>, 전이(0.45v/d)×RC 1차 극, TIA 잡음은 입력 C에 비례하는 근사. 2-3R 링 변조기: Si 리브(220/90 nm) EIM, 결합은 휜 간격 위 Marcuse 결합 슬랩 κ 적분, 굽힘 방사 Marcuse, 링 손실 = 2-2 접합 흡수(덮개 75%) + 측벽 0.15 dB/mm + 히터 금속 + TPA·FCA. 투과는 all-pass Airy 식, 고속은 결합 모드 방정식(CMT) 시간영역 적분(광자 수명) × 접합 RC 극 — Q만으로 대역폭을 정하지 않습니다. OMA는 정착 레벨(정적, TDECQ 방식 점수)과 파형 극값(동적)을 분리합니다. 열: 2-1 단면 열해석의 G′를 링 둘레에 그대로 적용(링의 3D 열 퍼짐 무시 → 히터 효율 낙관적), 자기 가열 개루프 이득으로 빨강 쪽 디튜닝의 열 불안정을 판정. 공정: 폭·두께 산포로 공진 이동, 레이아웃 반경은 1 nm 격자에서 공진을 레이저 파장에 맞춘 값(GDS 반경과 같음). SiN 플랫폼의 링은 이종 집적 Si 활성층 가정입니다. MZM 비교의 구동 에너지는 부하 C·V²(PAM4) 대 정합 선로 V²/R이며 드라이버 효율·DSP는 포함하지 않습니다. 링크: 부품 카드의 대표값을 dB로 더한 버짓, 광 궤환은 파셋 Fresnel × 가우시안 overlap과 RIN 페널티 로지스틱 근사.</p>
+      <p><b>Stage 3.</b> 모듈 = 부품 카드(또는 기준 설계)의 대표값을 dB·W로 조립. 3A+의 링 변조기(MRR ×8): 레인 링마다 2-3R 엔진을 모듈의 변조기 입력 파워에서 다시 계산(0.5 dB 격자 보간), 히터 락으로 설계 디튜닝 유지, 히터 = (링 드리프트 − 레이저 드리프트)·ΔT mod FSR의 0–70 °C 최악값, 비냉각 DFB 0.085/0.10 nm/K·파장 산포 σ 0.5 nm·락 2 mW/레인·드라이버(= MZM 등급 − 부하 에너지 차)는 대표값 가정, 링 열 효율은 2D 단면 × 둘레라 낙관적(문헌 비교는 docs/arch_1p6t_dr8.md). 레인 마진은 4채널 × 케이스 0/70 °C 코너의 최솟값이며, Demux는 1-7 lattice를 dn<sub>eff</sub>/dT만큼 굴절률을 옮겨 다시 계산(밴드 ±6.5 nm 최악). 비냉각 DFB: −0.02 dB/K(25 °C 이상), WPE −0.5%/K. TEC: 0.3 W + 레이저 발열/COP 0.6. 크로스토크 페널티 −10log(1−3·XT). 전력 상수(1.6T DSP 10 W, MLSE +1.5 W, 드라이버 0.35/0.15 W·레인, TIA 0.12 W·레인, DC-DC 90%)와 LPO/CPO 페널티(전기 +1.5/+0.5 dB, 감도 +0.5/+0.3 dB, CPO FAU +1 dB)는 학습용 대표값입니다.</p>
+      <p><b>3W 링 WDM8.</b> 한 버스의 링 8개는 2-3R 엔진(반경만 바꿈)의 all-pass Airy 투과를 곱해 통과 손실·변조 크로스토크(−10log(1−3ε))·FSR 별칭을 같은 식으로 계산하고, 히터는 빨강 쪽으로만 밀며 (목표 − 가열 전 공진) mod FSR, 배정은 고정 또는 순환(배럴 시프트, 온도마다 최소 전력), 열 결합은 2-1 2D 단면 프로파일(상한)입니다. 링 간 불일치 σ 0.15 nm, 콤 가장자리 −2 dB·WPE 12 %, DFB+MUX 2.5 dB, Rx Demux 1.5 dB·XT, 히터 범위 1.2·P<sub>2π</sub>는 가정입니다.</p>
+      <p><b>긴 지연선.</b> 단면은 EIM, 산란 손실은 σ²·(n₁²−n₂²)·∂n<sub>eff</sub>/∂w(측벽)와 ∂n<sub>eff</sub>/∂t(상하면)에 비례하는 근사로, 상수는 Hong 2022의 Si 측정값(0.45/1.6/2 µm: 5.5/0.38/0.28 dB/cm, σ 4.6/0.42 nm)에 한 번 맞춘 뒤 SiN(σ 5/0.4 nm 가정, 재료 흡수 0.06 dB/cm @1550, 0.02 @1310)에 그대로 적용합니다. 굽힘 방사는 EIM 횡방향 슬랩의 Marcuse 식이라 SiN 임계 반경을 실제보다 작게 예측하는 경향이 있습니다. S-bend 모드 변환은 n²w³/(λ²R) 스케일을 논문의 원호 −2.3 dB에 맞춘 근사, 이웃 회전 결합은 결합 슬랩 κ(동방향 가정, 보수적)입니다. MZ 스위치 위상 오차는 국소 폭 요동 2 nm·√(L·3 µm) 가정, 보정 후 잔차는 초기 오차의 15%로 둡니다. 직사각형 나선은 경계 안에 생성한 실제 형상(직선·원호/Euler 코너·중앙 S-bend)의 길이와 국소 반경으로 손실·지연을 계산하며, 원호 코너의 곡률 점프 모드 변환은 접합마다 가우시안 이동을 비간섭으로 더한 공학적 추정입니다. 1-7 Guided 단계의 MZI는 같은 n<sub>eff</sub>·n<sub>g</sub> 테이블과 커플러 과잉손실 0.05 dB를 쓰며, 단계 3의 "출력 전력의 95%"는 과잉손실을 뺀 포트 분배 비율입니다.</p>
+      <p><b>Track B.</b> 처프: 분해능 c/2B, 비트 f<sub>b</sub> = 2Rγ/c ≤ ADC 500 MHz, 코히어런스 손실 exp(−2πΔν·2R/c), 잔류 처프 오차 √(지터² + Δν/(2πτ<sub>ref</sub>M) + 측정²)로 비트 위상 오차 2π(2R/c)e → exp(−σφ²); 레이저 선폭·튜닝 범위·지터와 예왜곡 평균 M = 1000은 대표값 가정. 거리 눈금 오차 = R·(1/n<sub>g</sub>)dn<sub>g</sub>/dT·ΔT. 스캐너: 가우시안 방출 모드 → 렌즈 뒤 w<sub>b</sub> = λf/(πw<sub>e</sub>), 퍼짐 w<sub>e</sub>/f(FWHM 1.18배), 수차는 NA·시야각에 대한 경험식, 스위치 손실·소광비는 대표값(열광학 0.3 dB/−27 dB, PIN 0.9 dB/−19 dB). 시스템: 모노스태틱 코히어런트, 람베르트 ρ = 0.1, P<sub>rx</sub> = P<sub>out</sub>ρD²/(4R²)·η<sub>het</sub>(0.4, 스펙클), 왕복 칩 손실, 균형 검출 SNR = ℜP<sub>rx</sub>T<sub>int</sub>/q × 샷잡음 비율(TIA 10 pA/√Hz), 처프 N<sub>av</sub>개 비코히어런트 적산 √N<sub>av</sub>, 임계 13 dB; Si는 TPA/FCA 손실 0.6·(P/100 mW)² dB 근사. 도플러·다중 반사·눈 안전은 다루지 않습니다. 공정 변동: 웨이퍼 CD 오프셋 + 두께 bowl + 다이 랜덤(CD σ ≈ 8 nm, 두께 σ ≈ Si 3 nm / SiN 5 nm).</p>
+      <p><b>PIC Design Lab.</b> 부품은 카드 또는 기준 설계의 레벨 엔진 값, 배선은 직선·원호/Euler 코너·S-bend 기하로 길이·굽힘·간격을 계산하고, 전파 손실은 D-1 산란 모델, 테이퍼 길이·패드/범프 크기·MZM 접지 폭은 대표값 가정입니다. 시스템 예측은 3A+ 엔진 마진에서 레이아웃 배선 손실을 뺀 값이며, 금속은 RF(M1)·DC(M2) 각 한 층의 추상 선(폭 10/5 µm)으로 그려 같은 층 접촉만 검사합니다. RF 전자기·레인 간 열 크로스토크·파운드리 규칙은 검사하지 않습니다(NOT VERIFIED). GDS는 tools/smq2gds(circuit)가 같은 기본 도형으로 그리고 다시 읽어 검사합니다. 결과는 Engineering Prototype이며 Tape-out Ready가 아닙니다.</p>
+      <p><b>게임 밖 검증.</b> 설계 내보내기(smq-design/1) → tools/smq2gds가 GDS(gdsfactory)와 솔버 입력을 만듭니다. MMI는 GDS를 그대로 자른 3D EME(국소 Tidy3D FDE 모드, 테이퍼 포함), 지연 나선은 같은 단면의 벡터 모드 해석(직선: 두 격자 Richardson, 굽힘: PML·등각 변환)과 곡률 반전 모드 겹침으로 검사하고, 참조 설계의 결과를 "오프라인 솔버 검증" 패널에 게임 예측과 나란히 보여 줍니다. 각 보스의 최종 검증은 3D FDTD(MEEP 스크립트 생성, Tidy3D)·Ansys(CHARGE/HEAT/INTERCONNECT)로 넘기는 것을 전제로 합니다.</p>
+    </div></details>
   </footer>
 </div>
 <script>
@@ -2934,9 +2993,11 @@ KINDS.mrr = (() => {
     ctx.strokeStyle = 'rgba(242,176,74,0.7)'; ctx.setLineDash([3 * DPR, 3 * DPR]); ctx.beginPath(); ctx.moveTo(X(eye.sps / 2), y0); ctx.lineTo(X(eye.sps / 2), y0 + h); ctx.stroke(); ctx.setLineDash([]);
     cvPill(ctx, label, x0, y0 - 8 * DPR, 'left', good ? '#5dd193' : '#f2b04a');
   }
-  function numbers(ctx, rows, x, y, w) {
-    ctx.font = `${10 * DPR}px "IBM Plex Mono", monospace`; ctx.textBaseline = 'top';
-    rows.forEach(([k, v], i) => { const yy = y + i * 17 * DPR; ctx.fillStyle = 'rgba(158,171,189,0.95)'; ctx.textAlign = 'left'; ctx.fillText(k, x, yy); ctx.fillStyle = '#e7ecf3'; ctx.textAlign = 'right'; ctx.fillText(v, x + w, yy); });
+  function numbers(ctx, rows, x, y, w) {   // label left, value right; on a narrow canvas the font shrinks, then the value drops under its label
+    let fs = 10; const fit = () => { ctx.font = `${fs * DPR}px "IBM Plex Mono", monospace`; return rows.every(([k, v]) => ctx.measureText(k).width + ctx.measureText(v).width + 8 * DPR <= w); };
+    while (!fit() && fs > 8) fs -= 0.5;
+    const two = !fit(), lh = (two ? 2 * (fs + 2.5) : 17) * DPR; ctx.textBaseline = 'top';
+    rows.forEach(([k, v], i) => { const yy = y + i * lh; ctx.fillStyle = 'rgba(158,171,189,0.95)'; ctx.textAlign = 'left'; ctx.fillText(k, x, yy); ctx.fillStyle = '#e7ecf3'; ctx.textAlign = 'right'; ctx.fillText(v, x + w, two ? yy + (fs + 2.5) * DPR : yy); });
     ctx.textAlign = 'left';
   }
 
@@ -6437,10 +6498,22 @@ function renderMap() {
     return `<button class="node" data-id="${l.id}" aria-current="${l.id === state.id}" ${l.locked ? 'disabled title="준비 중"' : ''}>
       <span class="t1">${l.id}${PP().cards[l.id] ? '<span class="card-dot" title="카드 보유"></span>' : ''}</span><span class="t2">${l.name}</span><span class="stars">${l.locked ? '준비 중' : st}</span></button>`;
   }).join('')}</div></div>`).join('') + (window.LABUI ? `<div class="stage"><div class="stage-h">Design Lab (Track A 후속)</div><div class="stage-n"><button class="node lab-node" data-lab="1" aria-current="${window.LABUI.isOpen()}"><span class="t1">LAB</span><span class="t2">1.6T Tx PIC 설계</span><span class="stars">${window.LABUI.progress()}</span></button></div></div>` : '');
-  const n = PLAY.filter((l) => PP().cards[l.id]).length;
+  const n = PLAY.filter((l) => PP().cards[l.id]).length, inLab = !!(window.LABUI && window.LABUI.isOpen()), st = LMAP[state.id].stage;
   $('#cardcount').hidden = false;
-  $('#cardcount').innerHTML = `부품 카드 <b>${n}</b> / ${PLAY.length} · Stage ${LMAP[state.id].stage}`;
+  $('#cardcount').innerHTML = `<span class="wide">부품 </span>카드 <b>${n}</b> / ${PLAY.length} · ${inLab ? 'Design Lab' : STAGES[st].split(' · ')[0]}`;
+  const pf = PLATFORMS[state.plat];
+  $('#brand-sub').textContent = `${inLab ? 'Design Lab · 1.6T Tx PIC' : st >= 4 ? 'Track B · FMCW LiDAR' : 'Track A · 1.6T 트랜시버'} · ${MATS[pf.mat].full} · ${pf.band}`;
+  // keep the current chapter in sight on the horizontally scrolling map (the page itself does not move)
+  const map = $('#map'), cur = map.querySelector(inLab ? '.lab-node' : '.node[aria-current="true"]');
+  if (cur && map.clientWidth) { const x = cur.offsetLeft - map.offsetLeft, w = cur.offsetWidth; if (x < map.scrollLeft || x + w > map.scrollLeft + map.clientWidth) map.scrollLeft = Math.max(0, x - (map.clientWidth - w) / 2); }
+  mapArrows();
+  if (typeof miniCheck === 'function') miniCheck();
 }
+// mouse users have no horizontal wheel: arrows page the campaign map (touch scrolls it directly)
+function mapArrows() { const m = $('#map'), max = m.scrollWidth - m.clientWidth; $('#map-l').hidden = !(max > 4 && m.scrollLeft > 4); $('#map-r').hidden = !(max > 4 && m.scrollLeft < max - 4); }
+$('#map').addEventListener('scroll', () => mapArrows(), { passive: true });
+['l', 'r'].forEach((k) => $('#map-' + k).addEventListener('click', () => { const m = $('#map'); m.scrollBy ? m.scrollBy({ left: (k === 'l' ? -1 : 1) * m.clientWidth * 0.8, behavior: 'smooth' }) : (m.scrollLeft += (k === 'l' ? -1 : 1) * m.clientWidth * 0.8); }));
+window.addEventListener('resize', () => mapArrows());
 $('#map').addEventListener('click', (e) => {
   if (e.target.closest('[data-lab]')) { if (window.LABUI && !state.fabRunning && state.aiRunning == null) { window.LABUI.open(); renderMap(); } return; }
   const b0 = e.target.closest('.node'); if (b0 && window.LABUI && window.LABUI.isOpen()) { window.LABUI.close(); renderMap(); if (b0.dataset.id === state.id) return; }
@@ -6642,15 +6715,34 @@ function renderObjectives() {
     const g = c.S ? c.S.goals(c.l, c.res, stepMem(c.S)) : c.pr.goals(c.l, c.res), done = c.S && guideNS(state.id).done[c.S.id];
     $('#objs').innerHTML = `<div class="obj goals ${done ? 'got live' : g.every((x) => x.ok) ? 'live' : ''}"><div class="obj-h"><span class="st">${c.S ? `STEP ${stepIdx() + 1} 목표` : '연습 모드'}</span><span class="tag">${c.S ? (done ? '단계 완료 ✓' : '물리 엔진 결과로 판정') : '별·카드·AI 없음'}</span></div>
       <ul>${g.map((x) => `<li class="${x.na ? 'na' : x.ok ? 'ok' : 'no'}"><span class="k">${x.k}</span><span class="v">${x.v}</span></li>`).join('')}</ul></div>`;
+    $('#m-next').innerHTML = '';
     return;
   }
   const ob = objectives(), got = starsOf(state.id);
+  renderNext(got);
   $('#objs').innerHTML = ob.map((o, i) => `<div class="obj ${got & (1 << i) ? 'got' : ''} ${o.pass ? 'live' : ''}">
       <div class="obj-h"><span class="st">${'★'.repeat(o.t) + '☆'.repeat(3 - o.t)}</span><span class="tag">${o.pass ? '현재 설계 달성' : o.tag}</span></div>
       <ul>${o.items.map((x) => `<li class="${x.na ? 'na' : x.ok ? 'ok' : 'no'}${x.crit ? ' crit' : ''}"><span class="k">${x.k}</span><span class="v">${x.v}</span></li>`).join('')}</ul></div>`).join('');
 }
+// once a level has a star, offer the way forward right under the objectives (the map stays the free route)
+function renderNext(got) {
+  const box = $('#m-next'), i = PLAY.findIndex((l) => l.id === state.id), nx = PLAY[i + 1], l = LMAP[state.id];
+  if (!got || i < 0) { box.innerHTML = ''; return; }
+  const lab = window.LABUI && (state.id === '3A+' || state.id === '3W'), newStage = nx && nx.stage !== l.stage;
+  const what = nx ? `다음${newStage ? ' Stage' : ''}: <b>${nx.id}</b> ${nx.name}${newStage ? ` <span class="eyebrow">${STAGES[nx.stage]}</span>` : ''}` : '마지막 레벨입니다 — 지도에서 다른 트랙이나 Design Lab으로 갈 수 있습니다.';
+  box.innerHTML = `<div class="nextlv"><span><b>${'★'.repeat(popcount(got))} 획득</b> · ${what}</span><span class="row-btns" style="margin:0">${lab ? '<button class="btn" data-open-lab="1">Design Lab에서 PIC 그리기</button>' : ''}${nx ? `<button class="btn pri" data-next="${nx.id}">다음 레벨 →</button>` : ''}</span></div>`;
+}
+$('#m-next').addEventListener('click', (e) => {
+  if (state.fabRunning || state.aiRunning != null) return;
+  const b = e.target.closest('[data-next]'), lb = e.target.closest('[data-open-lab]');
+  if (lb && window.LABUI) { window.LABUI.open(); renderMap(); return; }
+  if (!b || !LMAP[b.dataset.next]) return;
+  state.id = b.dataset.next; state.lastLogged = ''; persist(); setupLevel();
+  const m = $('#mission'); if (m.scrollIntoView) m.scrollIntoView({ block: 'start', behavior: 'smooth' });
+});
 function renderCards() {
-  const slots = LEVELS.slice();
+  const slots = LEVELS.slice(), n = PLAY.filter((l) => PP().cards[l.id]).length, last = PLAY.filter((l) => PP().cards[l.id]).sort((a, b) => PP().cards[b.id].t - PP().cards[a.id].t)[0];
+  $('#cards-sum').textContent = `${n} / ${PLAY.length} 보유${last ? ` · 최근 ${last.id}` : ''}`;
   $('#cardgrid').innerHTML = slots.map((l) => {
     const c = PP().cards[l.id];
     if (!c) return `<div class="pcard empty"><div class="h"><span class="id">${l.id}</span><span class="sc">${l.locked ? '준비 중' : '미획득'}</span></div><div class="nm">${l.name}</div><div class="role">${l.role}</div></div>`;
@@ -6681,6 +6773,7 @@ function renderHUD() {
   $('#hud-meta').innerHTML = K.meta(c.l, c.res) + (state.fromAI[state.id] ? ' · <b style="color:var(--cyan)">AI 설계 표시 중</b>' : '');
   const drc = $('#drcbar'); if (c.res.drc && c.res.drc.length) { drc.hidden = false; drc.textContent = 'DRC 위반: ' + c.res.drc.join(' · '); } else drc.hidden = true;
   $('#tiles').innerHTML = K.tiles(c.l, c.res).map(([l, v]) => `<div class="tile"><div class="l">${l}</div><div class="v">${v}</div></div>`).join('');
+  renderMini();
 }
 function computeChart() {
   const c = state.cur, src = c.S && c.S.chart ? c.S : kind(), out = src.chart(c.l, c.res);
@@ -6743,9 +6836,29 @@ function coachMsg() {
   return { h: got === 7 ? '세 별 모두 달성' : '이 설계로 목표를 모두 넘었습니다', b: '카드가 인벤토리에 저장되었습니다. AI 라이벌보다 높은 설계 점수에 도전하거나 다음 레벨로 가세요.' };
 }
 function renderCoach() {
-  const box = $('#coach'), m = coachMsg(); box.hidden = !m; if (!m) return;
-  box.innerHTML = `<div class="coach-h"><span class="badge">코치 · ${HINTS[state.hintTier]}</span><b>${m.h}</b></div><p>${m.b}</p>`;
+  const box = $('#coach'), m = coachMsg(); box.hidden = !m; state.coachH = m ? m.h : ''; renderMini(); if (!m) return;
+  const go = !state.cur.S && !state.cur.pr && /Tape-out|공정 변동/.test(m.h) && !$('#btn-fab').disabled ? '<div class="row-btns" style="margin-top:6px"><button class="btn" data-go="fab">Fab Run으로 ↓</button></div>' : '';
+  box.innerHTML = `<div class="coach-h"><span class="badge">코치 · ${HINTS[state.hintTier]}</span><b>${m.h}</b></div><p>${m.b}</p>${go}`;
 }
+$('#coach').addEventListener('click', (e) => { if (!e.target.closest('[data-go="fab"]')) return; const f = $('#fab'); if (f.scrollIntoView) f.scrollIntoView({ block: 'center', behavior: 'smooth' }); setTimeout(() => $('#btn-fab').focus({ preventScroll: true }), 350); });
+/* ---------- mini status bar: score, stars and the coach headline stay in sight while the field is scrolled away ---------- */
+const mini = { off: true, dir: '▲' };
+function renderMini() {
+  const bar = $('#minibar'), c = state.cur, lab = window.LABUI && window.LABUI.isOpen();
+  bar.hidden = mini.off || !c || lab || !$('#setup').hidden || $('main.game').hidden; if (bar.hidden) return;
+  $('#mb-s').innerHTML = $('#score-big').innerHTML;
+  if (c.S || c.pr) { const g = c.S ? c.S.goals(c.l, c.res, stepMem(c.S)) : c.pr.goals(c.l, c.res), ok = g.filter((x) => x.ok).length; $('#mb-st').textContent = `목표 ${ok}/${g.length}`; }
+  else { const m = starsOf(state.id); $('#mb-st').innerHTML = [1, 2, 4].map((b) => (m & b ? '<b>★</b>' : '☆')).join(''); }
+  const drc = c.res && c.res.drc && c.res.drc.length, t = $('#mb-t'); t.className = 'mb-t' + (drc ? ' bad' : ''); t.textContent = drc ? 'DRC 위반' : state.coachH || '';
+  $('#mb-go').textContent = `${mini.dir} 화면`;
+}
+// shown only once the field has scrolled away above (e.g. while working the controls below it on a phone).
+// A scroll check, not an IntersectionObserver: a jump from below the field to above it crosses no threshold.
+let miniRaf = 0;
+function miniCheck() { miniRaf = 0; const r = $('#view').getBoundingClientRect(); const off = !r.height || r.bottom > 80; if (off !== mini.off) { mini.off = off; renderMini(); } }
+const miniSched = () => { if (!miniRaf) miniRaf = requestAnimationFrame(miniCheck); };
+window.addEventListener('scroll', miniSched, { passive: true }); window.addEventListener('resize', miniSched);
+$('#mb-go').addEventListener('click', () => { const v = $('#view'); if (v.scrollIntoView) v.scrollIntoView({ block: 'center', behavior: 'smooth' }); });
 
 /* ---------- Fab run ---------- */
 function drawWafer(dies, done) {
@@ -6984,6 +7097,7 @@ function showSetup(on) {
   $('#setup').hidden = !on; $('#gamewrap').hidden = on;
   $('#plat-chip').hidden = on || !state.plat; $('#btn-cancel').hidden = !state.plat; $('#cardcount').hidden = on;
   if (on) renderSetup();
+  miniCheck();
 }
 function renderSetup() {
   $('#pick-lam').innerHTML = [1.31, 1.55].map((lm) => { const B = BANDS[lm]; return `<button class="choice" data-lam="${lm}" aria-pressed="${pick.lam === lm}"><div class="ttl">${B.name}</div><div class="tag">${B.track}</div><ul>${B.pros.map((x) => `<li>${x}</li>`).join('')}${B.cons.map((x) => `<li class="c">${x}</li>`).join('')}</ul></button>`; }).join('');
@@ -7044,15 +7158,20 @@ function setupLevel() {
   $('#m-eyebrow').textContent = `${l.id} · ${l.dev} · ${l.bandLabel}`; $('#m-name').textContent = l.name; $('#m-brief').innerHTML = l.brief;
   const pre = $('#m-preface'); pre.hidden = !l.preface; pre.innerHTML = l.preface || '';
   const cc = $('#m-concepts'); cc.hidden = !l.concepts;
-  if (l.concepts) { const seen = (PP().seen = PP().seen || {}); cc.innerHTML = `<summary>개념 노트 · ${l.concepts.length}개 — ${l.concepts.map((c) => c[0].replace(/<[^>]+>/g, '')).join(', ')}</summary><dl>${l.concepts.map(([t, d]) => `<dt>${t}</dt><dd>${d}</dd>`).join('')}</dl>`; cc.open = !seen[l.id]; seen[l.id] = 1; }
+  if (l.concepts) { const seen = (PP().seen = PP().seen || {}); cc.innerHTML = `<summary>개념 노트 · ${l.concepts.length}개 — ${l.concepts.map((c) => c[0].replace(/<[^>]+>/g, '')).join(', ')}</summary><dl>${l.concepts.map(([t, d]) => `<dt>${t}</dt><dd>${d}</dd>`).join('')}</dl>`; cc.open = !seen[l.id] && !curStep(); seen[l.id] = 1; }   // a guided step carries its own intro, so the notes start folded there
   const pf = PLATFORMS[state.plat]; $('#plat-chip').innerHTML = `${pf.short} · ${pf.band}<span>변경</span>`; $('#plat-chip').hidden = false;
   state.land = {}; state.cur = null;
+  // a guided step gives no stars, cards, AI or tape-out: those panels step aside until Full Design
+  $('main.game').classList.toggle('stepping', !!curStep());
   renderMap(); renderGuided(); renderParams(); syncParamUI(); renderModeSeg(); renderHintSeg(); sizeCanvas();
   const w = state.wafer[state.id]; drawWafer(w, w ? w.length : 0);
   evaluate(); renderAI(); renderDB(); renderCards();
 }
 const hot = window.claude && window.claude.hot;
 if (hot && hot.snapshot) hot.snapshot(() => ({ id: state.id, DES }));
+const UI = store.get('smq3-ui', {}) || {};   // view-only preferences (which sections are open); never progress or designs
+$('#cards').open = !!UI.cards; $('#cards').addEventListener('toggle', () => { UI.cards = $('#cards').open; store.set('smq3-ui', UI); });
+$('#scope').addEventListener('toggle', () => { UI.scope = $('#scope').open; store.set('smq3-ui', UI); }); $('#scope').open = !!UI.scope;
 function start(data) {
   if (data && data.DES) { DES = data.DES; if (LMAP[data.id] && !LMAP[data.id].locked) state.id = data.id; }
   if (!state.plat) { showSetup(true); } else { applyPlatform(); showSetup(false); setupLevel(); }
@@ -7805,7 +7924,8 @@ window.LABUI = (() => {
     $('#lab-steps').innerHTML = MISS.map((m, j) => `<li><button class="stp ${(s.done || {})[m.id] ? 'done' : ''}" data-ms="${j}" aria-current="${j === cur() ? 'step' : 'false'}" aria-label="미션 ${j + 1} ${m.title}${(s.done || {})[m.id] ? ' (완료)' : ''}"><span class="num">${(s.done || {})[m.id] ? '✓' : j + 1}</span><span class="t">${m.short}</span></button></li>`).join('');
     const m = MISS[cur()], ok = m.done(MS, s), nx = MISS[cur() + 1];
     $('#lab-note').innerHTML = `<div class="sn-h"><b>${m.title}</b>${ok ? '<span class="ok">완료 ✓</span>' : ''}</div><div class="sn-b">${m.intro}</div>`
-      + (nx ? `<div class="row-btns"><button class="btn ${ok ? 'pri' : ''}" id="lab-next">다음 미션 → ${nx.short}</button></div>` : '');
+      + `<div class="row-btns">${m.id === 'verification' ? `<button class="btn ${ok && s.ran ? '' : 'pri'}" data-la="run">${s.ran ? '검사 다시 실행' : '검사 실행'}</button>` : m.id === 'export' ? `<button class="btn ${s.exported ? '' : 'pri'}" data-la="exp-all">smq-circuit/1 내보내기 (3개 파일)</button>` : ''}`
+      + (nx ? `<button class="btn ${ok ? 'pri' : ''}" id="lab-next">다음 미션 → ${nx.short}</button>` : '') + '</div>';
   }
   function renderParams() {
     const s = S(), m = MISS[cur()], P = pfP(), d = des(), wdm = (d.mod | 0) === 2, skipW = ['share', 'P', 'stag', 'fp', 'rf', 'rfSide', 'pp'];
@@ -7926,7 +8046,7 @@ window.LABUI = (() => {
 
   /* ---------------- canvas ---------------- */
   const CV = $('#lab-cv'), cv = () => CV;   // cached: TX/TY run per drawn point
-  function size() { const c = cv(), w = Math.max(280, c.parentElement.clientWidth || 600), h = Math.round(Math.min(520, Math.max(260, w * 0.56))); c.width = w * DPR; c.height = h * DPR; c.style.height = h + 'px'; return { w: c.width, h: c.height }; }
+  function size() { const c = cv(), w = Math.max(280, c.parentElement.clientWidth || 600), h = Math.round(Math.min(640, Math.max(280, w * 0.62))); c.width = w * DPR; c.height = h * DPR; c.style.height = h + 'px'; return { w: c.width, h: c.height }; }
   function world() { return (S().view || 'layout') === 'layout' ? { x0: 0, y0: 0, x1: C.W, y1: C.H } : schemBox(); }
   function fit() { const { w, h } = size(), b = world(), s = Math.min(w / (b.x1 - b.x0), h / (b.y1 - b.y0)) * 0.94; cam = { s, x: (b.x0 + b.x1) / 2, y: (b.y0 + b.y1) / 2 }; }
   const TX = (x) => (x - cam.x) * cam.s + CV.width / 2, TY = (y) => CV.height / 2 - (y - cam.y) * cam.s;
@@ -8115,7 +8235,7 @@ window.LABUI = (() => {
       if (a === 'fit') { d.W = Math.ceil(C.need.W / 100) / 10; d.H = Math.ceil(C.need.H / 100) / 10; S().ran = false; save(); renderAll(true); }
       if (a === 'auto') { const nd = LAB.defaults(ctx(), { mod: d.mod, share: d.share }); Object.assign(d, { P: nd.P, stag: nd.stag, edge: nd.edge, fp: nd.fp, W: nd.W, H: nd.H }); S().ran = false; save(); renderAll(true); }
       if (a === 'arch') { const a3 = arch3(); d.mod = a3.mod; d.share = a3.share; d.stag = LAB.stagAuto(d); S().ran = false; save(); renderAll(true); }
-      if (a === 'run') { S().ran = true; save(); renderAll(); }
+      if (a === 'run') { S().ran = true; save(); renderAll(); const o = $('#lab-out'); if (o && o.scrollIntoView) o.scrollIntoView({ block: 'start', behavior: 'smooth' }); }   // the result table is below the workspace
       if (a.startsWith('exp')) exportFiles(a);
     }
   });
