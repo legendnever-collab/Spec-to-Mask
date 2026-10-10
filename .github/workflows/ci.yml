@@ -56,6 +56,7 @@ jobs:
           for t in upgrade mrr dr8 wdm; do npm run test:$t 2>&1 | tee -a identity.log; done
           { echo '### Identity checks run'; echo; echo '```'; grep -E 'BASELINE|IDENTITY|checks passed' identity.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
           test "$(grep -c '^  IDENTITY test:' identity.log)" -eq 4
+          grep -E '^  (BASELINE|IDENTITY) ' identity.log | sed 's/^  /::notice title=identity evidence::/'
       - name: Missing-baseline regression (no history → fail, never a silent skip)
         run: npm run test:baseline
       - name: Design Lab (engine, e2e, state integrity)
@@ -105,7 +106,13 @@ jobs:
           BOT_MIN: '2'
         run: |
           if [ "${{ matrix.platform }}" = si1310 ]; then IDS=1-1,1-2,1-3,1-4,1-5,1-6,1-7,2-1,2-2,2-3,2-3R,2-4,2-5,3A,3A+,3W,D-1,D-2,B-1,B-2,B-3; else IDS=1-7,2-3,2-3R,2-5,3A,3A+,3W,D-1,B-3; fi
-          node test/e2e/bot.js std 2 "$IDS" ${{ matrix.platform }}
+          # the log stays in the job; a failing level is also raised as an annotation (readable through the checks API)
+          if node test/e2e/bot.js std 2 "$IDS" ${{ matrix.platform }} > bot.log 2>&1; then cat bot.log; else
+            cat bot.log
+            grep -E '^BELOW|^errors' bot.log | sed 's/^/::error title=bot gate::/'
+            for id in $(grep '^BELOW' bot.log | sed 's/^BELOW ★★: //; s/,/ /g'); do grep -F " $id final " bot.log | cut -c1-600 | sed 's/^/::error title=bot level::/'; done
+            exit 1
+          fi
 
   release-artifacts:
     name: Release artifacts
