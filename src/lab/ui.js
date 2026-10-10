@@ -103,7 +103,8 @@ window.LABUI = (() => {
     $('#lab-steps').innerHTML = MISS.map((m, j) => `<li><button class="stp ${(s.done || {})[m.id] ? 'done' : ''}" data-ms="${j}" aria-current="${j === cur() ? 'step' : 'false'}" aria-label="미션 ${j + 1} ${m.title}${(s.done || {})[m.id] ? ' (완료)' : ''}"><span class="num">${(s.done || {})[m.id] ? '✓' : j + 1}</span><span class="t">${m.short}</span></button></li>`).join('');
     const m = MISS[cur()], ok = m.done(MS, s), nx = MISS[cur() + 1];
     $('#lab-note').innerHTML = `<div class="sn-h"><b>${m.title}</b>${ok ? '<span class="ok">완료 ✓</span>' : ''}</div><div class="sn-b">${m.intro}</div>`
-      + (nx ? `<div class="row-btns"><button class="btn ${ok ? 'pri' : ''}" id="lab-next">다음 미션 → ${nx.short}</button></div>` : '');
+      + `<div class="row-btns">${m.id === 'verification' ? `<button class="btn ${ok && s.ran ? '' : 'pri'}" data-la="run">${s.ran ? '검사 다시 실행' : '검사 실행'}</button>` : m.id === 'export' ? `<button class="btn ${s.exported ? '' : 'pri'}" data-la="exp-all">smq-circuit/1 내보내기 (3개 파일)</button>` : ''}`
+      + (nx ? `<button class="btn ${ok ? 'pri' : ''}" id="lab-next">다음 미션 → ${nx.short}</button>` : '') + '</div>';
   }
   function renderParams() {
     const s = S(), m = MISS[cur()], P = pfP(), d = des(), wdm = (d.mod | 0) === 2, skipW = ['share', 'P', 'stag', 'fp', 'rf', 'rfSide', 'pp'];
@@ -224,7 +225,7 @@ window.LABUI = (() => {
 
   /* ---------------- canvas ---------------- */
   const CV = $('#lab-cv'), cv = () => CV;   // cached: TX/TY run per drawn point
-  function size() { const c = cv(), w = Math.max(280, c.parentElement.clientWidth || 600), h = Math.round(Math.min(520, Math.max(260, w * 0.56))); c.width = w * DPR; c.height = h * DPR; c.style.height = h + 'px'; return { w: c.width, h: c.height }; }
+  function size() { const c = cv(), w = Math.max(280, c.parentElement.clientWidth || 600), h = Math.round(Math.min(640, Math.max(280, w * 0.62))); c.width = w * DPR; c.height = h * DPR; c.style.height = h + 'px'; return { w: c.width, h: c.height }; }
   function world() { return (S().view || 'layout') === 'layout' ? { x0: 0, y0: 0, x1: C.W, y1: C.H } : schemBox(); }
   function fit() { const { w, h } = size(), b = world(), s = Math.min(w / (b.x1 - b.x0), h / (b.y1 - b.y0)) * 0.94; cam = { s, x: (b.x0 + b.x1) / 2, y: (b.y0 + b.y1) / 2 }; }
   const TX = (x) => (x - cam.x) * cam.s + CV.width / 2, TY = (y) => CV.height / 2 - (y - cam.y) * cam.s;
@@ -413,7 +414,7 @@ window.LABUI = (() => {
       if (a === 'fit') { d.W = Math.ceil(C.need.W / 100) / 10; d.H = Math.ceil(C.need.H / 100) / 10; S().ran = false; save(); renderAll(true); }
       if (a === 'auto') { const nd = LAB.defaults(ctx(), { mod: d.mod, share: d.share }); Object.assign(d, { P: nd.P, stag: nd.stag, edge: nd.edge, fp: nd.fp, W: nd.W, H: nd.H }); S().ran = false; save(); renderAll(true); }
       if (a === 'arch') { const a3 = arch3(); d.mod = a3.mod; d.share = a3.share; d.stag = LAB.stagAuto(d); S().ran = false; save(); renderAll(true); }
-      if (a === 'run') { S().ran = true; save(); renderAll(); }
+      if (a === 'run') { S().ran = true; save(); renderAll(); const o = $('#lab-out'); if (o && o.scrollIntoView) o.scrollIntoView({ block: 'start', behavior: 'smooth' }); }   // the result table is below the workspace
       if (a.startsWith('exp')) exportFiles(a);
     }
   });

@@ -126,10 +126,22 @@ function renderMap() {
     return `<button class="node" data-id="${l.id}" aria-current="${l.id === state.id}" ${l.locked ? 'disabled title="준비 중"' : ''}>
       <span class="t1">${l.id}${PP().cards[l.id] ? '<span class="card-dot" title="카드 보유"></span>' : ''}</span><span class="t2">${l.name}</span><span class="stars">${l.locked ? '준비 중' : st}</span></button>`;
   }).join('')}</div></div>`).join('') + (window.LABUI ? `<div class="stage"><div class="stage-h">Design Lab (Track A 후속)</div><div class="stage-n"><button class="node lab-node" data-lab="1" aria-current="${window.LABUI.isOpen()}"><span class="t1">LAB</span><span class="t2">1.6T Tx PIC 설계</span><span class="stars">${window.LABUI.progress()}</span></button></div></div>` : '');
-  const n = PLAY.filter((l) => PP().cards[l.id]).length;
+  const n = PLAY.filter((l) => PP().cards[l.id]).length, inLab = !!(window.LABUI && window.LABUI.isOpen()), st = LMAP[state.id].stage;
   $('#cardcount').hidden = false;
-  $('#cardcount').innerHTML = `부품 카드 <b>${n}</b> / ${PLAY.length} · Stage ${LMAP[state.id].stage}`;
+  $('#cardcount').innerHTML = `<span class="wide">부품 </span>카드 <b>${n}</b> / ${PLAY.length} · ${inLab ? 'Design Lab' : STAGES[st].split(' · ')[0]}`;
+  const pf = PLATFORMS[state.plat];
+  $('#brand-sub').textContent = `${inLab ? 'Design Lab · 1.6T Tx PIC' : st >= 4 ? 'Track B · FMCW LiDAR' : 'Track A · 1.6T 트랜시버'} · ${MATS[pf.mat].full} · ${pf.band}`;
+  // keep the current chapter in sight on the horizontally scrolling map (the page itself does not move)
+  const map = $('#map'), cur = map.querySelector(inLab ? '.lab-node' : '.node[aria-current="true"]');
+  if (cur && map.clientWidth) { const x = cur.offsetLeft - map.offsetLeft, w = cur.offsetWidth; if (x < map.scrollLeft || x + w > map.scrollLeft + map.clientWidth) map.scrollLeft = Math.max(0, x - (map.clientWidth - w) / 2); }
+  mapArrows();
+  if (typeof miniCheck === 'function') miniCheck();
 }
+// mouse users have no horizontal wheel: arrows page the campaign map (touch scrolls it directly)
+function mapArrows() { const m = $('#map'), max = m.scrollWidth - m.clientWidth; $('#map-l').hidden = !(max > 4 && m.scrollLeft > 4); $('#map-r').hidden = !(max > 4 && m.scrollLeft < max - 4); }
+$('#map').addEventListener('scroll', () => mapArrows(), { passive: true });
+['l', 'r'].forEach((k) => $('#map-' + k).addEventListener('click', () => { const m = $('#map'); m.scrollBy ? m.scrollBy({ left: (k === 'l' ? -1 : 1) * m.clientWidth * 0.8, behavior: 'smooth' }) : (m.scrollLeft += (k === 'l' ? -1 : 1) * m.clientWidth * 0.8); }));
+window.addEventListener('resize', () => mapArrows());
 $('#map').addEventListener('click', (e) => {
   if (e.target.closest('[data-lab]')) { if (window.LABUI && !state.fabRunning && state.aiRunning == null) { window.LABUI.open(); renderMap(); } return; }
   const b0 = e.target.closest('.node'); if (b0 && window.LABUI && window.LABUI.isOpen()) { window.LABUI.close(); renderMap(); if (b0.dataset.id === state.id) return; }
@@ -331,15 +343,34 @@ function renderObjectives() {
     const g = c.S ? c.S.goals(c.l, c.res, stepMem(c.S)) : c.pr.goals(c.l, c.res), done = c.S && guideNS(state.id).done[c.S.id];
     $('#objs').innerHTML = `<div class="obj goals ${done ? 'got live' : g.every((x) => x.ok) ? 'live' : ''}"><div class="obj-h"><span class="st">${c.S ? `STEP ${stepIdx() + 1} 목표` : '연습 모드'}</span><span class="tag">${c.S ? (done ? '단계 완료 ✓' : '물리 엔진 결과로 판정') : '별·카드·AI 없음'}</span></div>
       <ul>${g.map((x) => `<li class="${x.na ? 'na' : x.ok ? 'ok' : 'no'}"><span class="k">${x.k}</span><span class="v">${x.v}</span></li>`).join('')}</ul></div>`;
+    $('#m-next').innerHTML = '';
     return;
   }
   const ob = objectives(), got = starsOf(state.id);
+  renderNext(got);
   $('#objs').innerHTML = ob.map((o, i) => `<div class="obj ${got & (1 << i) ? 'got' : ''} ${o.pass ? 'live' : ''}">
       <div class="obj-h"><span class="st">${'★'.repeat(o.t) + '☆'.repeat(3 - o.t)}</span><span class="tag">${o.pass ? '현재 설계 달성' : o.tag}</span></div>
       <ul>${o.items.map((x) => `<li class="${x.na ? 'na' : x.ok ? 'ok' : 'no'}${x.crit ? ' crit' : ''}"><span class="k">${x.k}</span><span class="v">${x.v}</span></li>`).join('')}</ul></div>`).join('');
 }
+// once a level has a star, offer the way forward right under the objectives (the map stays the free route)
+function renderNext(got) {
+  const box = $('#m-next'), i = PLAY.findIndex((l) => l.id === state.id), nx = PLAY[i + 1], l = LMAP[state.id];
+  if (!got || i < 0) { box.innerHTML = ''; return; }
+  const lab = window.LABUI && (state.id === '3A+' || state.id === '3W'), newStage = nx && nx.stage !== l.stage;
+  const what = nx ? `다음${newStage ? ' Stage' : ''}: <b>${nx.id}</b> ${nx.name}${newStage ? ` <span class="eyebrow">${STAGES[nx.stage]}</span>` : ''}` : '마지막 레벨입니다 — 지도에서 다른 트랙이나 Design Lab으로 갈 수 있습니다.';
+  box.innerHTML = `<div class="nextlv"><span><b>${'★'.repeat(popcount(got))} 획득</b> · ${what}</span><span class="row-btns" style="margin:0">${lab ? '<button class="btn" data-open-lab="1">Design Lab에서 PIC 그리기</button>' : ''}${nx ? `<button class="btn pri" data-next="${nx.id}">다음 레벨 →</button>` : ''}</span></div>`;
+}
+$('#m-next').addEventListener('click', (e) => {
+  if (state.fabRunning || state.aiRunning != null) return;
+  const b = e.target.closest('[data-next]'), lb = e.target.closest('[data-open-lab]');
+  if (lb && window.LABUI) { window.LABUI.open(); renderMap(); return; }
+  if (!b || !LMAP[b.dataset.next]) return;
+  state.id = b.dataset.next; state.lastLogged = ''; persist(); setupLevel();
+  const m = $('#mission'); if (m.scrollIntoView) m.scrollIntoView({ block: 'start', behavior: 'smooth' });
+});
 function renderCards() {
-  const slots = LEVELS.slice();
+  const slots = LEVELS.slice(), n = PLAY.filter((l) => PP().cards[l.id]).length, last = PLAY.filter((l) => PP().cards[l.id]).sort((a, b) => PP().cards[b.id].t - PP().cards[a.id].t)[0];
+  $('#cards-sum').textContent = `${n} / ${PLAY.length} 보유${last ? ` · 최근 ${last.id}` : ''}`;
   $('#cardgrid').innerHTML = slots.map((l) => {
     const c = PP().cards[l.id];
     if (!c) return `<div class="pcard empty"><div class="h"><span class="id">${l.id}</span><span class="sc">${l.locked ? '준비 중' : '미획득'}</span></div><div class="nm">${l.name}</div><div class="role">${l.role}</div></div>`;
@@ -370,6 +401,7 @@ function renderHUD() {
   $('#hud-meta').innerHTML = K.meta(c.l, c.res) + (state.fromAI[state.id] ? ' · <b style="color:var(--cyan)">AI 설계 표시 중</b>' : '');
   const drc = $('#drcbar'); if (c.res.drc && c.res.drc.length) { drc.hidden = false; drc.textContent = 'DRC 위반: ' + c.res.drc.join(' · '); } else drc.hidden = true;
   $('#tiles').innerHTML = K.tiles(c.l, c.res).map(([l, v]) => `<div class="tile"><div class="l">${l}</div><div class="v">${v}</div></div>`).join('');
+  renderMini();
 }
 function computeChart() {
   const c = state.cur, src = c.S && c.S.chart ? c.S : kind(), out = src.chart(c.l, c.res);
@@ -432,9 +464,29 @@ function coachMsg() {
   return { h: got === 7 ? '세 별 모두 달성' : '이 설계로 목표를 모두 넘었습니다', b: '카드가 인벤토리에 저장되었습니다. AI 라이벌보다 높은 설계 점수에 도전하거나 다음 레벨로 가세요.' };
 }
 function renderCoach() {
-  const box = $('#coach'), m = coachMsg(); box.hidden = !m; if (!m) return;
-  box.innerHTML = `<div class="coach-h"><span class="badge">코치 · ${HINTS[state.hintTier]}</span><b>${m.h}</b></div><p>${m.b}</p>`;
+  const box = $('#coach'), m = coachMsg(); box.hidden = !m; state.coachH = m ? m.h : ''; renderMini(); if (!m) return;
+  const go = !state.cur.S && !state.cur.pr && /Tape-out|공정 변동/.test(m.h) && !$('#btn-fab').disabled ? '<div class="row-btns" style="margin-top:6px"><button class="btn" data-go="fab">Fab Run으로 ↓</button></div>' : '';
+  box.innerHTML = `<div class="coach-h"><span class="badge">코치 · ${HINTS[state.hintTier]}</span><b>${m.h}</b></div><p>${m.b}</p>${go}`;
 }
+$('#coach').addEventListener('click', (e) => { if (!e.target.closest('[data-go="fab"]')) return; const f = $('#fab'); if (f.scrollIntoView) f.scrollIntoView({ block: 'center', behavior: 'smooth' }); setTimeout(() => $('#btn-fab').focus({ preventScroll: true }), 350); });
+/* ---------- mini status bar: score, stars and the coach headline stay in sight while the field is scrolled away ---------- */
+const mini = { off: true, dir: '▲' };
+function renderMini() {
+  const bar = $('#minibar'), c = state.cur, lab = window.LABUI && window.LABUI.isOpen();
+  bar.hidden = mini.off || !c || lab || !$('#setup').hidden || $('main.game').hidden; if (bar.hidden) return;
+  $('#mb-s').innerHTML = $('#score-big').innerHTML;
+  if (c.S || c.pr) { const g = c.S ? c.S.goals(c.l, c.res, stepMem(c.S)) : c.pr.goals(c.l, c.res), ok = g.filter((x) => x.ok).length; $('#mb-st').textContent = `목표 ${ok}/${g.length}`; }
+  else { const m = starsOf(state.id); $('#mb-st').innerHTML = [1, 2, 4].map((b) => (m & b ? '<b>★</b>' : '☆')).join(''); }
+  const drc = c.res && c.res.drc && c.res.drc.length, t = $('#mb-t'); t.className = 'mb-t' + (drc ? ' bad' : ''); t.textContent = drc ? 'DRC 위반' : state.coachH || '';
+  $('#mb-go').textContent = `${mini.dir} 화면`;
+}
+// shown only once the field has scrolled away above (e.g. while working the controls below it on a phone).
+// A scroll check, not an IntersectionObserver: a jump from below the field to above it crosses no threshold.
+let miniRaf = 0;
+function miniCheck() { miniRaf = 0; const r = $('#view').getBoundingClientRect(); const off = !r.height || r.bottom > 80; if (off !== mini.off) { mini.off = off; renderMini(); } }
+const miniSched = () => { if (!miniRaf) miniRaf = requestAnimationFrame(miniCheck); };
+window.addEventListener('scroll', miniSched, { passive: true }); window.addEventListener('resize', miniSched);
+$('#mb-go').addEventListener('click', () => { const v = $('#view'); if (v.scrollIntoView) v.scrollIntoView({ block: 'center', behavior: 'smooth' }); });
 
 /* ---------- Fab run ---------- */
 function drawWafer(dies, done) {
@@ -673,6 +725,7 @@ function showSetup(on) {
   $('#setup').hidden = !on; $('#gamewrap').hidden = on;
   $('#plat-chip').hidden = on || !state.plat; $('#btn-cancel').hidden = !state.plat; $('#cardcount').hidden = on;
   if (on) renderSetup();
+  miniCheck();
 }
 function renderSetup() {
   $('#pick-lam').innerHTML = [1.31, 1.55].map((lm) => { const B = BANDS[lm]; return `<button class="choice" data-lam="${lm}" aria-pressed="${pick.lam === lm}"><div class="ttl">${B.name}</div><div class="tag">${B.track}</div><ul>${B.pros.map((x) => `<li>${x}</li>`).join('')}${B.cons.map((x) => `<li class="c">${x}</li>`).join('')}</ul></button>`; }).join('');
@@ -733,15 +786,20 @@ function setupLevel() {
   $('#m-eyebrow').textContent = `${l.id} · ${l.dev} · ${l.bandLabel}`; $('#m-name').textContent = l.name; $('#m-brief').innerHTML = l.brief;
   const pre = $('#m-preface'); pre.hidden = !l.preface; pre.innerHTML = l.preface || '';
   const cc = $('#m-concepts'); cc.hidden = !l.concepts;
-  if (l.concepts) { const seen = (PP().seen = PP().seen || {}); cc.innerHTML = `<summary>개념 노트 · ${l.concepts.length}개 — ${l.concepts.map((c) => c[0].replace(/<[^>]+>/g, '')).join(', ')}</summary><dl>${l.concepts.map(([t, d]) => `<dt>${t}</dt><dd>${d}</dd>`).join('')}</dl>`; cc.open = !seen[l.id]; seen[l.id] = 1; }
+  if (l.concepts) { const seen = (PP().seen = PP().seen || {}); cc.innerHTML = `<summary>개념 노트 · ${l.concepts.length}개 — ${l.concepts.map((c) => c[0].replace(/<[^>]+>/g, '')).join(', ')}</summary><dl>${l.concepts.map(([t, d]) => `<dt>${t}</dt><dd>${d}</dd>`).join('')}</dl>`; cc.open = !seen[l.id] && !curStep(); seen[l.id] = 1; }   // a guided step carries its own intro, so the notes start folded there
   const pf = PLATFORMS[state.plat]; $('#plat-chip').innerHTML = `${pf.short} · ${pf.band}<span>변경</span>`; $('#plat-chip').hidden = false;
   state.land = {}; state.cur = null;
+  // a guided step gives no stars, cards, AI or tape-out: those panels step aside until Full Design
+  $('main.game').classList.toggle('stepping', !!curStep());
   renderMap(); renderGuided(); renderParams(); syncParamUI(); renderModeSeg(); renderHintSeg(); sizeCanvas();
   const w = state.wafer[state.id]; drawWafer(w, w ? w.length : 0);
   evaluate(); renderAI(); renderDB(); renderCards();
 }
 const hot = window.claude && window.claude.hot;
 if (hot && hot.snapshot) hot.snapshot(() => ({ id: state.id, DES }));
+const UI = store.get('smq3-ui', {}) || {};   // view-only preferences (which sections are open); never progress or designs
+$('#cards').open = !!UI.cards; $('#cards').addEventListener('toggle', () => { UI.cards = $('#cards').open; store.set('smq3-ui', UI); });
+$('#scope').addEventListener('toggle', () => { UI.scope = $('#scope').open; store.set('smq3-ui', UI); }); $('#scope').open = !!UI.scope;
 function start(data) {
   if (data && data.DES) { DES = data.DES; if (LMAP[data.id] && !LMAP[data.id].locked) state.id = data.id; }
   if (!state.plat) { showSetup(true); } else { applyPlatform(); showSetup(false); setupLevel(); }

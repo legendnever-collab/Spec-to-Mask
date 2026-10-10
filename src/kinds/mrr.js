@@ -306,9 +306,11 @@ KINDS.mrr = (() => {
     ctx.strokeStyle = 'rgba(242,176,74,0.7)'; ctx.setLineDash([3 * DPR, 3 * DPR]); ctx.beginPath(); ctx.moveTo(X(eye.sps / 2), y0); ctx.lineTo(X(eye.sps / 2), y0 + h); ctx.stroke(); ctx.setLineDash([]);
     cvPill(ctx, label, x0, y0 - 8 * DPR, 'left', good ? '#5dd193' : '#f2b04a');
   }
-  function numbers(ctx, rows, x, y, w) {
-    ctx.font = `${10 * DPR}px "IBM Plex Mono", monospace`; ctx.textBaseline = 'top';
-    rows.forEach(([k, v], i) => { const yy = y + i * 17 * DPR; ctx.fillStyle = 'rgba(158,171,189,0.95)'; ctx.textAlign = 'left'; ctx.fillText(k, x, yy); ctx.fillStyle = '#e7ecf3'; ctx.textAlign = 'right'; ctx.fillText(v, x + w, yy); });
+  function numbers(ctx, rows, x, y, w) {   // label left, value right; on a narrow canvas the font shrinks, then the value drops under its label
+    let fs = 10; const fit = () => { ctx.font = `${fs * DPR}px "IBM Plex Mono", monospace`; return rows.every(([k, v]) => ctx.measureText(k).width + ctx.measureText(v).width + 8 * DPR <= w); };
+    while (!fit() && fs > 8) fs -= 0.5;
+    const two = !fit(), lh = (two ? 2 * (fs + 2.5) : 17) * DPR; ctx.textBaseline = 'top';
+    rows.forEach(([k, v], i) => { const yy = y + i * lh; ctx.fillStyle = 'rgba(158,171,189,0.95)'; ctx.textAlign = 'left'; ctx.fillText(k, x, yy); ctx.fillStyle = '#e7ecf3'; ctx.textAlign = 'right'; ctx.fillText(v, x + w, two ? yy + (fs + 2.5) * DPR : yy); });
     ctx.textAlign = 'left';
   }
 
