@@ -947,6 +947,25 @@ const confBadge = (k, short) => { const c = CONF[k] || CONF.asm; return `<button
 const confLegend = (keys) => `<div class="conf-legend" role="note" aria-label="모델 신뢰도 범례">${(keys || Object.keys(CONF)).map((k) => `<span><b aria-hidden="true">${CONF[k][0]}</b> ${CONF[k][1]}</span>`).join('')}<span class="conf-hint">PASS/FAIL은 그 모델의 조건을 만족했는지이지, 제조 가능성 검증이 아닙니다.</span></div>`;
 // scroll behaviour that honours prefers-reduced-motion
 const smqMotion = () => { try { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'; } catch (e) { return 'auto'; } };
+// ---- paired yield comparison on one simulated wafer (same seed = the same die-by-die process variation for both designs) ----
+// Only the dies where the two verdicts differ carry information: aOnly (A passes, B fails) and bOnly. Exact two-sided sign
+// (McNemar exact) test on those k = aOnly + bOnly dies. The dies of one wafer are spatially correlated, so p is optimistic —
+// it describes evidence strength on this wafer and process model, not a proof that one design is better.
+function pairedSign(aOnly, bOnly) {
+  const k = aOnly + bOnly; if (!k) return { k: 0, p: 1, dir: 0 };
+  let s = 0, c = 1; const m = Math.min(aOnly, bOnly);
+  for (let i = 0; i <= m; i++) { s += c; c = c * (k - i) / (i + 1); }
+  return { k, p: Math.min(1, 2 * s / Math.pow(2, k)), dir: bOnly > aOnly ? 1 : bOnly < aOnly ? -1 : 0 };
+}
+const fmtP = (p) => (p >= 0.995 ? '= 1.00' : p >= 0.01 ? '= ' + p.toFixed(2) : p >= 0.001 ? '= ' + p.toFixed(3) : '&lt; 0.001');   // with its relation sign
+// one sentence for the paired result; A / B are the display names of the two designs
+function pairedText(A, B, aOnly, bOnly, short) {
+  const t = pairedSign(aOnly, bOnly), lead = short ? '쌍 비교:' : '같은 시드는 두 설계에 같은 공정 변동을 주는 공정한 쌍 비교이고, 차이는 판정이 갈린 다이에서만 나옵니다.';
+  if (!t.k) return `${lead} 이 웨이퍼에서는 두 설계의 판정이 모든 다이에서 같아 수율 차이가 드러나지 않습니다.`;
+  const pre = `${lead} 갈린 다이 ${t.k}개(${A}만 양품 ${aOnly} · ${B}만 양품 ${bOnly}), 정확 부호 검정 p ${fmtP(t.p)}`;
+  if (t.p >= 0.05) return `${pre} — 방향이 뚜렷하지 않아 이 표본으로 수율 차이를 결론 내릴 수 없습니다.`;
+  return `${pre} — 이 웨이퍼·이 공정 모델에서는 ${t.dir > 0 ? B : A} 쪽이 공정 변동에 더 견고하다는 근거입니다.${short ? ' 한 웨이퍼의 공간 상관된 다이라 p는 낙관적입니다(우열의 증명 아님).' : ' 한 웨이퍼의 다이는 공간 상관이 있어 p는 낙관적이므로, 다른 시드에서도 같은 방향인지 확인하세요 (설계 우열의 증명은 아닙니다).'}`;
+}
 
 // ===== Persistence: one place that writes localStorage, reports save state, and makes / checks / restores full backups =====
 // Every write goes through SMQ_STORE.set, which returns false and flips the state to 'failed' when the browser refuses
@@ -3712,7 +3731,8 @@ KINDS.mrr = (() => {
     const d5 = Math.min(drift(5), drift(-5)) - o0;
     const areaM = d23.L * 1000 * (2 * d23.g + 15 + 100);
     const req = l23.s2, pass = (pen, oma) => pen <= req.pen && oma >= req.oma;
-    const out = { m, d23, src23, Emzm, EthM, EthR, yM: yM.filter(Boolean).length / yM.length, yR: yR.filter(Boolean).length / yR.length, obw: (lo + hi), d5, areaM, req, passM: pass(m.pen, m.oma), passR: pass(r.pen, r.oma), PpiB };
+    // the same dies for both modulators → paired counts (dies whose verdicts differ)
+    const out = { m, d23, src23, Emzm, EthM, EthR, yM: yM.filter(Boolean).length / yM.length, yR: yR.filter(Boolean).length / yR.length, nY: yM.length, okM: yM.filter(Boolean).length, okR: yR.filter(Boolean).length, mOnly: yM.filter((f, i) => f && !yR[i]).length, rOnly: yM.filter((f, i) => !f && yR[i]).length, obw: (lo + hi), d5, areaM, req, passM: pass(m.pen, m.oma), passR: pass(r.pen, r.oma), PpiB };
     if (CMP.size > 20) CMP.clear(); CMP.set(key, out);
     return out;
   }
@@ -3735,7 +3755,7 @@ KINDS.mrr = (() => {
       ['열 제어 에너지 (평균)', `${fmt(c.EthM, 1)} fJ/bit`, `${fmt(c.EthR, 1)} fJ/bit`, win(c.EthM, c.EthR, 'lo'), 'semi', `MZM 바이어스 히터 평균 P<sub>π</sub>/4 (P<sub>π</sub> ${fmt(c.PpiB, 1)} mW, 균형 팔: 온도 무관) · MRR: 0–70 °C × 공정 몬테카를로 평균`],
       ['비트당 에너지 합계', `${fmt(c.Emzm + c.EthM, 1)} fJ/bit`, `${fmt(r.Ebit + c.EthR, 1)} fJ/bit`, win(c.Emzm + c.EthM, r.Ebit + c.EthR, 'lo'), 'semi', '레이저(같은 13 dBm 입력)·DSP 제외'],
       ['±5 K 드리프트 (락 꺼짐) OMA 손실', '≈ 0 dB (균형 팔)', `${fmt(c.d5, 1)} dB`, c.d5 < -0.1 ? 0 : -1, 'semi', '열 견고성'],
-      ['Fab 수율 (같은 웨이퍼 · 시드 1067 · 69 다이, Monte Carlo 추정)', `${fmt(c.yM * 100, 0)} %`, `${fmt(c.yR * 100, 0)} %`, win(c.yM, c.yR, 'hi', 0.03), 'semi', '각 레벨 자신의 ★★★ 판정 (MRR은 히터 예산·온도 포함)'],
+      ['Fab 수율 (같은 웨이퍼 쌍 비교 · 시드 1067 · 69 다이, Monte Carlo 추정)', `${c.okM}/${c.nY} = ${fmt(c.yM * 100, 0)} %`, `${c.okR}/${c.nY} = ${fmt(c.yR * 100, 0)} %`, (() => { const t = pairedSign(c.mOnly, c.rOnly); return t.k && t.p < 0.05 ? (t.dir > 0 ? 1 : 0) : -1; })(), 'semi', `각 레벨 자신의 ★★★ 판정 (MRR은 히터 예산·온도 포함) · ${pairedText('MZM', 'MRR', c.mOnly, c.rOnly, true)}`],
       [`공통 링크 요구 (2-3 ★★: 페널티 ≤ ${fmtT(c.req.pen)} dB, OMA ≥ ${dbm(c.req.oma)} dBm)`, c.passM ? '충족' : '미달', c.passR ? '충족' : '미달', c.passM && !c.passR ? 0 : c.passR && !c.passM ? 1 : -1, 'semi', '']
     ];
     const B = { an: 'Analytical', semi: 'Physics-informed Surrogate', asm: 'Unverified Assumption' };
@@ -3744,7 +3764,7 @@ KINDS.mrr = (() => {
     const nm = (w) => rows.filter((x) => x[3] === w).map((x) => x[0].replace(/<[^>]+>/g, '').replace(/ \(.*$/, '')), mz = nm(0), mr = nm(1), tie = nm(-1).filter((x) => !/공통 링크/.test(x));
     return { title, html: `<p class="note" style="margin:0 0 8px">MZM: ${c.src23} (L ${c.d23.L} mm) · MRR: 지금 설계 (R ${r.Rlay.toFixed(2)} µm). 점수 합산이 아니라 항목별로 어느 쪽이 유리한지 보여 줍니다 — 어느 하나가 항상 이기지 않습니다.</p>
       <div class="gtbl"><table class="cmp"><tr><th>항목</th><th>2-3 TW-MZM</th><th>2-3R MRR</th><th>근거</th></tr>${tb}</table></div>
-      <p class="note"><b>MZM이 유리:</b> ${mz.join(' · ') || '—'}<br><b>MRR이 유리:</b> ${mr.join(' · ') || '—'}${tie.length ? `<br><b>비슷 (모델 분해능 이내):</b> ${tie.join(' · ')}` : ''}<br>MZM은 광대역·온도 견고성, MRR은 면적·구동 에너지가 본질적 장점이고, MRR의 대가는 온도·공정 추적에 드는 히터 전력과 제어입니다.</p>` };
+      <p class="note"><b>MZM이 유리:</b> ${mz.join(' · ') || '—'}<br><b>MRR이 유리:</b> ${mr.join(' · ') || '—'}${tie.length ? `<br><b>비슷 (모델 분해능 이내, 수율은 쌍 비교로 구분되지 않음):</b> ${tie.join(' · ')}` : ''}<br>MZM은 광대역·온도 견고성, MRR은 면적·구동 에너지가 본질적 장점이고, MRR의 대가는 온도·공정 추적에 드는 히터 전력과 제어입니다.</p>` };
   }
   function exportRing(l, r) {
     const c = r.c, rd = (v) => +(+v).toFixed(4);
@@ -4241,7 +4261,9 @@ KINDS.xcvr = (() => {
     const key = l.pf.id + JSON.stringify(d) + JSON.stringify(l.fab) + JSON.stringify(Object.keys(cards()));
     if (XPC.has(key)) return XPC.get(key);
     const dies = makeWafer(11 * 97, 1), out = {};
-    for (const mod of [0, 1]) { let n = 0, ok = 0, hs = []; for (const die of dies) { const r = analyse(l, { ...d, mod }, die); n++; if (K.fabPass(l, r)) ok++; if (r.ringH) hs.push(r.ringH.max); } out[mod] = { y: ok / n, hmax: hs.length ? Math.max(...hs) : 0, hmin: hs.length ? Math.min(...hs) : 0 }; }
+    const pv = {};   // per-die verdicts: the same dies for both modulators → a paired comparison
+    for (const mod of [0, 1]) { let n = 0, ok = 0, hs = []; pv[mod] = []; for (const die of dies) { const r = analyse(l, { ...d, mod }, die); n++; const f = K.fabPass(l, r); pv[mod].push(f); if (f) ok++; if (r.ringH) hs.push(r.ringH.max); } out[mod] = { y: ok / n, n, ok, hmax: hs.length ? Math.max(...hs) : 0, hmin: hs.length ? Math.min(...hs) : 0 }; }
+    out.aOnly = pv[0].filter((f, i) => f && !pv[1][i]).length; out.bOnly = pv[0].filter((f, i) => !f && pv[1][i]).length;
     if (XPC.size > 20) XPC.clear(); XPC.set(key, out); return out;
   }
   /* ---------- MRR thermal-model sensitivity (v1.0 §4.1): the same engine with the ring's thermal conductance G′ re-scaled ----------
@@ -4282,6 +4304,8 @@ KINDS.xcvr = (() => {
     const title = `같은 DR8 아키텍처에서 MZM ×8 vs MRR ×8 — 레이저 ${a.nLas}개 · ${d.P} dBm · ${d.tc ? 'TEC' : '비냉각'} · ${a.pk.short}`;
     const y = ctx.run ? yields(l, d) : XPC.get(l.pf.id + JSON.stringify(d) + JSON.stringify(l.fab) + JSON.stringify(Object.keys(cards()))) || null;
     const win = (x, z, hi, tol) => (Math.abs(x - z) <= tol ? -1 : hi ? (x > z ? 0 : 1) : (x < z ? 0 : 1));
+    // paired yield: highlighted only when the dies whose verdicts differ lean one way (exact sign test p < 0.05); otherwise "비슷"
+    const pairWin = (aOnly, bOnly) => { const t = pairedSign(aOnly, bOnly); return t.k && t.p < 0.05 ? (t.dir > 0 ? 1 : 0) : -1; };
     const B = { an: 'Analytical', semi: 'Physics-informed Surrogate', asm: 'Unverified Assumption' };
     const rows = [
       ['변조기 입력 P<sub>mod</sub> (최악 코너)', `${f2(wa.Pmod, 1)} dBm`, `${f2(wb.Pmod, 1)} dBm`, -1, 'an', '같은 레이저·분기·결합 — 두 변조기가 같은 빛을 받습니다'],
@@ -4297,7 +4321,7 @@ KINDS.xcvr = (() => {
       ['레이저 파장 허용', '넓음 (균형 MZI)', `히터가 한 FSR 안에서 추적 (P<sub>2π</sub> ${f2(b.ringH.P2pi, 1)} mW)`, 0, 'semi', `Fab: 다이 공정 이동 + 레이저 파장 σ ${LAS_SIG} nm 가정`],
       [`★ (마진 ≥ ${f2(l.s1.margin, 1)} dB · ≤ ${fmtT(l.s1.pw)} W)`, r1(l, a) <= 1 ? '충족' : '미달', r1(l, b) <= 1 ? '충족' : '미달', -1, 'semi', ''],
       [`★★ (마진 ≥ ${f2(l.s2.margin, 1)} dB · ≤ ${fmtT(l.s2.pw)} W)`, r2(l, a) <= 1 ? '충족' : '미달', r2(l, b) <= 1 ? '충족' : '미달', r2(l, a) <= 1 && r2(l, b) > 1 ? 0 : r2(l, b) <= 1 && r2(l, a) > 1 ? 1 : -1, 'semi', ''],
-      ['Fab 수율 (같은 웨이퍼 · 시드 1067 · 69 다이, Monte Carlo 추정)', y ? `${Math.round(y[0].y * 100)} %` : '—', y ? `${Math.round(y[1].y * 100)} %${y[1].hmax ? ` · 히터 ${f2(y[1].hmin, 1)}–${f2(y[1].hmax, 1)} mW` : ''}` : '—', y ? win(y[0].y, y[1].y, true, 0.03) : -1, 'semi', '이 레벨의 ★★★ 판정']
+      ['Fab 수율 (같은 웨이퍼 쌍 비교 · 시드 1067 · 69 다이, Monte Carlo 추정)', y ? `${y[0].ok}/${y[0].n} = ${Math.round(y[0].y * 100)} %` : '—', y ? `${y[1].ok}/${y[1].n} = ${Math.round(y[1].y * 100)} %${y[1].hmax ? ` · 히터 ${f2(y[1].hmin, 1)}–${f2(y[1].hmax, 1)} mW` : ''}` : '—', y ? pairWin(y.aOnly, y.bOnly) : -1, 'semi', `이 레벨의 ★★★ 판정${y ? ` · ${pairedText('MZM', 'MRR', y.aOnly, y.bOnly, true)}` : ''}`]
     ];
     const td = (v, w) => `<td class="${w ? 'win' : ''}">${v}</td>`;
     const tb = rows.map(([k, x, z, w, f, note]) => `<tr><th scope="row">${k}${note ? `<br><span class="note">${note}</span>` : ''}</th>${td(x, w === 0)}${td(z, w === 1)}<td>${confBadge(f, true)}</td></tr>`).join('');
@@ -7090,12 +7114,21 @@ function renderCompare(runFab) {
     return `<tr><th scope="row">${k}</th><td>${fmt(a)} ${u}</td><td>${fmt(v)} ${u}</td><td class="${cls}">${dv == null ? '—' : (dv > 0 ? '+' : '') + fmt(dv)}${cls === 'dlt-up' ? ' ▲좋아짐' : cls === 'dlt-dn' ? ' ▼나빠짐' : ''}</td><td>${confBadge(conf, true)}</td></tr>`;
   }).join('');
   const changed = params().filter((p) => pin.d[p.k] != null && +pin.d[p.k] !== +c.d[p.k]).map((p) => `${p.sym || p.k} ${pFmt(p, pin.d[p.k])} → ${pFmt(p, c.d[p.k])}`);
-  const fab = pin.fab && pin.fab.cur === dhash(c.d) && pin.fab.base === dhash(pin.d) ? pin.fab : null;
-  const seed = state.seedFix[state.id] != null ? state.seedFix[state.id] : (fabLog(state.id)[0] ? fabLog(state.id)[0].seed : 1067);
+  const seed = cmpSeed();
+  // a same-wafer result is shown only while every input that made it is unchanged; otherwise it is marked stale
+  let fab = null, stale = null;
+  if (pin.fab) {
+    const want = fabCond(l, seed, pin, c.d), diff = FAB_COND.filter(([k]) => pin.fab[k] !== want[k]);
+    if (!diff.length) fab = pin.fab;
+    else stale = diff.map(([k, n, show]) => (pin.fab[k] == null ? `${n} (기록 없음)` : show ? `${n} ${show(pin.fab[k])} → ${show(want[k])}` : n));
+  }
   let fh = '';
   if (fab) {
     const ca = wilson(fab.pa, fab.n), cb = wilson(fab.pb, fab.n);
-    fh = `<p class="note" style="margin:8px 0 4px"><b>같은 웨이퍼 (시드 ${fab.seed}, ${fab.n} 다이 — 두 설계에 같은 다이별 공정 변동)</b>: 기준 ${pct(fab.pa / fab.n)} % (${pct(ca[0])}–${pct(ca[1])}) · 현재 ${pct(fab.pb / fab.n)} % (${pct(cb[0])}–${pct(cb[1])}). 다이별로: 둘 다 양품 ${fab.both} · 기준만 ${fab.aOnly} · 현재만 ${fab.bOnly} · 둘 다 불량 ${fab.none}. ${fab.aOnly + fab.bOnly <= 3 ? '차이를 만든 다이가 몇 개뿐이라 의미 있는 차이로 보기 어렵습니다.' : '갈린 다이 수를 보세요 — 같은 웨이퍼라 공정 운이 아니라 설계 차이입니다(다른 웨이퍼에서는 달라질 수 있음).'} 크레딧·별에는 반영하지 않습니다.</p>`;
+    fh = `<p class="note" style="margin:8px 0 4px" data-fab-state="current"><b>같은 웨이퍼 쌍 비교 (시드 ${fab.seed}, ${fab.n} 다이 · ${MODES[fab.mode].label} · ${fab.model})</b>: 기준 ${fab.pa}/${fab.n} = ${pct(fab.pa / fab.n)} % (95 % 구간 ${pct(ca[0])}–${pct(ca[1])}) · 현재 ${fab.pb}/${fab.n} = ${pct(fab.pb / fab.n)} % (${pct(cb[0])}–${pct(cb[1])}). 다이별로: 둘 다 양품 ${fab.both} · 기준만 ${fab.aOnly} · 현재만 ${fab.bOnly} · 둘 다 불량 ${fab.none}. ${pairedText('기준', '현재', fab.aOnly, fab.bOnly)} 크레딧·별에는 반영하지 않습니다.</p>`;
+  } else if (stale) {
+    const o = pin.fab;
+    fh = `<p class="note st-WARNING" style="margin:8px 0 4px" data-fab-state="stale"><b>⚠ 이전 같은 웨이퍼 결과는 지금 조건과 맞지 않습니다 (STALE)</b> — 바뀐 것: ${stale.join(' · ')}. 이전 값(시드 ${o.seed}: 기준 ${o.pa}/${o.n} · 현재 ${o.pb}/${o.n})은 지금 설계·조건의 결과가 아닙니다. 아래 버튼으로 다시 계산하세요.</p>`;
   }
   $('#cmp-body').innerHTML = `<p class="note" style="margin:0 0 8px">기준: ${changed.length ? `바뀐 파라미터 ${changed.join(' · ')}` : '지금 설계와 같음'} · 고정 ${String(pin.t).slice(0, 16).replace('T', ' ')}</p>`
     + `<div class="gtbl"><table class="cmp"><tr><th>항목</th><th>기준</th><th>현재</th><th>Δ</th><th>근거</th></tr>${rows}</table></div>`
@@ -7103,6 +7136,12 @@ function renderCompare(runFab) {
     + fh + `<div class="row-btns"><button class="btn" data-pin="fab">같은 웨이퍼로 수율 비교 (시드 ${seed}${fabLog(state.id)[0] || state.seedFix[state.id] != null ? '' : ', 기본'})</button><button class="btn" data-pin="set">지금 설계를 새 기준으로</button><button class="btn" data-pin="load">기준 설계로 되돌리기</button><button class="btn" data-pin="clear">기준 해제</button></div>`;
   if (runFab) sameWafer(seed, pin);
 }
+// the seed the comparison button uses: a fixed seed, else the last Fab Run's, else the panel default
+const cmpSeed = () => (state.seedFix[state.id] != null ? state.seedFix[state.id] : (fabLog(state.id)[0] ? fabLog(state.id)[0].seed : 1067));
+// everything that decides the dies or the verdicts of a same-wafer comparison (Platform, Difficulty, process scale, level
+// spec, Seed, Model Version, both design hashes); a stored result counts only while all of them are equal
+const fabCond = (l, seed, pin, d) => ({ plat: state.plat, mode: state.mode, sig: MODES[state.mode].sig, dt: l.pf.dt, spec: SMQ_STORE.fnv(JSON.stringify(l)), seed, model: MODEL_VERSION, base: dhash(pin.d), cur: dhash(d) });
+const FAB_COND = [['plat', '플랫폼', (x) => x], ['mode', '난이도', (x) => (MODES[x] ? MODES[x].label : x)], ['sig', '공정 변동 크기', (x) => `×${x}`], ['dt', '두께 변동', null], ['spec', '레벨 스펙', null], ['seed', '시드', (x) => x], ['model', '모델 버전', (x) => x], ['base', '기준 설계', null], ['cur', '현재 설계', null]];
 function sameWafer(seed, pin) {
   const c = state.cur, K = kind(), l = c.l, dies = makeWafer(seed, MODES[state.mode].sig);
   let pa = 0, pb = 0, both = 0, aOnly = 0, bOnly = 0, none = 0;
@@ -7110,7 +7149,7 @@ function sameWafer(seed, pin) {
     const prc = { ...die, dt: die.dt * l.pf.dt / 0.006 }, a = K.fabPass(l, K.evaluate(l, pin.d, prc)), b = K.fabPass(l, K.evaluate(l, c.d, prc));
     if (a) pa++; if (b) pb++; if (a && b) both++; else if (a) aOnly++; else if (b) bOnly++; else none++;
   }
-  pin.fab = { seed, n: dies.length, pa, pb, both, aOnly, bOnly, none, base: dhash(pin.d), cur: dhash(c.d), model: MODEL_VERSION };
+  pin.fab = { ...fabCond(l, seed, pin, c.d), n: dies.length, pa, pb, both, aOnly, bOnly, none, t: new Date().toISOString() };
   persist(); renderCompare();
 }
 $('#cmp-body').addEventListener('click', (e) => {

@@ -262,12 +262,21 @@ function renderCompare(runFab) {
     return `<tr><th scope="row">${k}</th><td>${fmt(a)} ${u}</td><td>${fmt(v)} ${u}</td><td class="${cls}">${dv == null ? '—' : (dv > 0 ? '+' : '') + fmt(dv)}${cls === 'dlt-up' ? ' ▲좋아짐' : cls === 'dlt-dn' ? ' ▼나빠짐' : ''}</td><td>${confBadge(conf, true)}</td></tr>`;
   }).join('');
   const changed = params().filter((p) => pin.d[p.k] != null && +pin.d[p.k] !== +c.d[p.k]).map((p) => `${p.sym || p.k} ${pFmt(p, pin.d[p.k])} → ${pFmt(p, c.d[p.k])}`);
-  const fab = pin.fab && pin.fab.cur === dhash(c.d) && pin.fab.base === dhash(pin.d) ? pin.fab : null;
-  const seed = state.seedFix[state.id] != null ? state.seedFix[state.id] : (fabLog(state.id)[0] ? fabLog(state.id)[0].seed : 1067);
+  const seed = cmpSeed();
+  // a same-wafer result is shown only while every input that made it is unchanged; otherwise it is marked stale
+  let fab = null, stale = null;
+  if (pin.fab) {
+    const want = fabCond(l, seed, pin, c.d), diff = FAB_COND.filter(([k]) => pin.fab[k] !== want[k]);
+    if (!diff.length) fab = pin.fab;
+    else stale = diff.map(([k, n, show]) => (pin.fab[k] == null ? `${n} (기록 없음)` : show ? `${n} ${show(pin.fab[k])} → ${show(want[k])}` : n));
+  }
   let fh = '';
   if (fab) {
     const ca = wilson(fab.pa, fab.n), cb = wilson(fab.pb, fab.n);
-    fh = `<p class="note" style="margin:8px 0 4px"><b>같은 웨이퍼 (시드 ${fab.seed}, ${fab.n} 다이 — 두 설계에 같은 다이별 공정 변동)</b>: 기준 ${pct(fab.pa / fab.n)} % (${pct(ca[0])}–${pct(ca[1])}) · 현재 ${pct(fab.pb / fab.n)} % (${pct(cb[0])}–${pct(cb[1])}). 다이별로: 둘 다 양품 ${fab.both} · 기준만 ${fab.aOnly} · 현재만 ${fab.bOnly} · 둘 다 불량 ${fab.none}. ${fab.aOnly + fab.bOnly <= 3 ? '차이를 만든 다이가 몇 개뿐이라 의미 있는 차이로 보기 어렵습니다.' : '갈린 다이 수를 보세요 — 같은 웨이퍼라 공정 운이 아니라 설계 차이입니다(다른 웨이퍼에서는 달라질 수 있음).'} 크레딧·별에는 반영하지 않습니다.</p>`;
+    fh = `<p class="note" style="margin:8px 0 4px" data-fab-state="current"><b>같은 웨이퍼 쌍 비교 (시드 ${fab.seed}, ${fab.n} 다이 · ${MODES[fab.mode].label} · ${fab.model})</b>: 기준 ${fab.pa}/${fab.n} = ${pct(fab.pa / fab.n)} % (95 % 구간 ${pct(ca[0])}–${pct(ca[1])}) · 현재 ${fab.pb}/${fab.n} = ${pct(fab.pb / fab.n)} % (${pct(cb[0])}–${pct(cb[1])}). 다이별로: 둘 다 양품 ${fab.both} · 기준만 ${fab.aOnly} · 현재만 ${fab.bOnly} · 둘 다 불량 ${fab.none}. ${pairedText('기준', '현재', fab.aOnly, fab.bOnly)} 크레딧·별에는 반영하지 않습니다.</p>`;
+  } else if (stale) {
+    const o = pin.fab;
+    fh = `<p class="note st-WARNING" style="margin:8px 0 4px" data-fab-state="stale"><b>⚠ 이전 같은 웨이퍼 결과는 지금 조건과 맞지 않습니다 (STALE)</b> — 바뀐 것: ${stale.join(' · ')}. 이전 값(시드 ${o.seed}: 기준 ${o.pa}/${o.n} · 현재 ${o.pb}/${o.n})은 지금 설계·조건의 결과가 아닙니다. 아래 버튼으로 다시 계산하세요.</p>`;
   }
   $('#cmp-body').innerHTML = `<p class="note" style="margin:0 0 8px">기준: ${changed.length ? `바뀐 파라미터 ${changed.join(' · ')}` : '지금 설계와 같음'} · 고정 ${String(pin.t).slice(0, 16).replace('T', ' ')}</p>`
     + `<div class="gtbl"><table class="cmp"><tr><th>항목</th><th>기준</th><th>현재</th><th>Δ</th><th>근거</th></tr>${rows}</table></div>`
@@ -275,6 +284,12 @@ function renderCompare(runFab) {
     + fh + `<div class="row-btns"><button class="btn" data-pin="fab">같은 웨이퍼로 수율 비교 (시드 ${seed}${fabLog(state.id)[0] || state.seedFix[state.id] != null ? '' : ', 기본'})</button><button class="btn" data-pin="set">지금 설계를 새 기준으로</button><button class="btn" data-pin="load">기준 설계로 되돌리기</button><button class="btn" data-pin="clear">기준 해제</button></div>`;
   if (runFab) sameWafer(seed, pin);
 }
+// the seed the comparison button uses: a fixed seed, else the last Fab Run's, else the panel default
+const cmpSeed = () => (state.seedFix[state.id] != null ? state.seedFix[state.id] : (fabLog(state.id)[0] ? fabLog(state.id)[0].seed : 1067));
+// everything that decides the dies or the verdicts of a same-wafer comparison (Platform, Difficulty, process scale, level
+// spec, Seed, Model Version, both design hashes); a stored result counts only while all of them are equal
+const fabCond = (l, seed, pin, d) => ({ plat: state.plat, mode: state.mode, sig: MODES[state.mode].sig, dt: l.pf.dt, spec: SMQ_STORE.fnv(JSON.stringify(l)), seed, model: MODEL_VERSION, base: dhash(pin.d), cur: dhash(d) });
+const FAB_COND = [['plat', '플랫폼', (x) => x], ['mode', '난이도', (x) => (MODES[x] ? MODES[x].label : x)], ['sig', '공정 변동 크기', (x) => `×${x}`], ['dt', '두께 변동', null], ['spec', '레벨 스펙', null], ['seed', '시드', (x) => x], ['model', '모델 버전', (x) => x], ['base', '기준 설계', null], ['cur', '현재 설계', null]];
 function sameWafer(seed, pin) {
   const c = state.cur, K = kind(), l = c.l, dies = makeWafer(seed, MODES[state.mode].sig);
   let pa = 0, pb = 0, both = 0, aOnly = 0, bOnly = 0, none = 0;
@@ -282,7 +297,7 @@ function sameWafer(seed, pin) {
     const prc = { ...die, dt: die.dt * l.pf.dt / 0.006 }, a = K.fabPass(l, K.evaluate(l, pin.d, prc)), b = K.fabPass(l, K.evaluate(l, c.d, prc));
     if (a) pa++; if (b) pb++; if (a && b) both++; else if (a) aOnly++; else if (b) bOnly++; else none++;
   }
-  pin.fab = { seed, n: dies.length, pa, pb, both, aOnly, bOnly, none, base: dhash(pin.d), cur: dhash(c.d), model: MODEL_VERSION };
+  pin.fab = { ...fabCond(l, seed, pin, c.d), n: dies.length, pa, pb, both, aOnly, bOnly, none, t: new Date().toISOString() };
   persist(); renderCompare();
 }
 $('#cmp-body').addEventListener('click', (e) => {

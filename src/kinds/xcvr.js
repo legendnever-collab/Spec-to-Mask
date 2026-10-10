@@ -272,7 +272,9 @@ KINDS.xcvr = (() => {
     const key = l.pf.id + JSON.stringify(d) + JSON.stringify(l.fab) + JSON.stringify(Object.keys(cards()));
     if (XPC.has(key)) return XPC.get(key);
     const dies = makeWafer(11 * 97, 1), out = {};
-    for (const mod of [0, 1]) { let n = 0, ok = 0, hs = []; for (const die of dies) { const r = analyse(l, { ...d, mod }, die); n++; if (K.fabPass(l, r)) ok++; if (r.ringH) hs.push(r.ringH.max); } out[mod] = { y: ok / n, hmax: hs.length ? Math.max(...hs) : 0, hmin: hs.length ? Math.min(...hs) : 0 }; }
+    const pv = {};   // per-die verdicts: the same dies for both modulators → a paired comparison
+    for (const mod of [0, 1]) { let n = 0, ok = 0, hs = []; pv[mod] = []; for (const die of dies) { const r = analyse(l, { ...d, mod }, die); n++; const f = K.fabPass(l, r); pv[mod].push(f); if (f) ok++; if (r.ringH) hs.push(r.ringH.max); } out[mod] = { y: ok / n, n, ok, hmax: hs.length ? Math.max(...hs) : 0, hmin: hs.length ? Math.min(...hs) : 0 }; }
+    out.aOnly = pv[0].filter((f, i) => f && !pv[1][i]).length; out.bOnly = pv[0].filter((f, i) => !f && pv[1][i]).length;
     if (XPC.size > 20) XPC.clear(); XPC.set(key, out); return out;
   }
   /* ---------- MRR thermal-model sensitivity (v1.0 §4.1): the same engine with the ring's thermal conductance G′ re-scaled ----------
@@ -313,6 +315,8 @@ KINDS.xcvr = (() => {
     const title = `같은 DR8 아키텍처에서 MZM ×8 vs MRR ×8 — 레이저 ${a.nLas}개 · ${d.P} dBm · ${d.tc ? 'TEC' : '비냉각'} · ${a.pk.short}`;
     const y = ctx.run ? yields(l, d) : XPC.get(l.pf.id + JSON.stringify(d) + JSON.stringify(l.fab) + JSON.stringify(Object.keys(cards()))) || null;
     const win = (x, z, hi, tol) => (Math.abs(x - z) <= tol ? -1 : hi ? (x > z ? 0 : 1) : (x < z ? 0 : 1));
+    // paired yield: highlighted only when the dies whose verdicts differ lean one way (exact sign test p < 0.05); otherwise "비슷"
+    const pairWin = (aOnly, bOnly) => { const t = pairedSign(aOnly, bOnly); return t.k && t.p < 0.05 ? (t.dir > 0 ? 1 : 0) : -1; };
     const B = { an: 'Analytical', semi: 'Physics-informed Surrogate', asm: 'Unverified Assumption' };
     const rows = [
       ['변조기 입력 P<sub>mod</sub> (최악 코너)', `${f2(wa.Pmod, 1)} dBm`, `${f2(wb.Pmod, 1)} dBm`, -1, 'an', '같은 레이저·분기·결합 — 두 변조기가 같은 빛을 받습니다'],
@@ -328,7 +332,7 @@ KINDS.xcvr = (() => {
       ['레이저 파장 허용', '넓음 (균형 MZI)', `히터가 한 FSR 안에서 추적 (P<sub>2π</sub> ${f2(b.ringH.P2pi, 1)} mW)`, 0, 'semi', `Fab: 다이 공정 이동 + 레이저 파장 σ ${LAS_SIG} nm 가정`],
       [`★ (마진 ≥ ${f2(l.s1.margin, 1)} dB · ≤ ${fmtT(l.s1.pw)} W)`, r1(l, a) <= 1 ? '충족' : '미달', r1(l, b) <= 1 ? '충족' : '미달', -1, 'semi', ''],
       [`★★ (마진 ≥ ${f2(l.s2.margin, 1)} dB · ≤ ${fmtT(l.s2.pw)} W)`, r2(l, a) <= 1 ? '충족' : '미달', r2(l, b) <= 1 ? '충족' : '미달', r2(l, a) <= 1 && r2(l, b) > 1 ? 0 : r2(l, b) <= 1 && r2(l, a) > 1 ? 1 : -1, 'semi', ''],
-      ['Fab 수율 (같은 웨이퍼 · 시드 1067 · 69 다이, Monte Carlo 추정)', y ? `${Math.round(y[0].y * 100)} %` : '—', y ? `${Math.round(y[1].y * 100)} %${y[1].hmax ? ` · 히터 ${f2(y[1].hmin, 1)}–${f2(y[1].hmax, 1)} mW` : ''}` : '—', y ? win(y[0].y, y[1].y, true, 0.03) : -1, 'semi', '이 레벨의 ★★★ 판정']
+      ['Fab 수율 (같은 웨이퍼 쌍 비교 · 시드 1067 · 69 다이, Monte Carlo 추정)', y ? `${y[0].ok}/${y[0].n} = ${Math.round(y[0].y * 100)} %` : '—', y ? `${y[1].ok}/${y[1].n} = ${Math.round(y[1].y * 100)} %${y[1].hmax ? ` · 히터 ${f2(y[1].hmin, 1)}–${f2(y[1].hmax, 1)} mW` : ''}` : '—', y ? pairWin(y.aOnly, y.bOnly) : -1, 'semi', `이 레벨의 ★★★ 판정${y ? ` · ${pairedText('MZM', 'MRR', y.aOnly, y.bOnly, true)}` : ''}`]
     ];
     const td = (v, w) => `<td class="${w ? 'win' : ''}">${v}</td>`;
     const tb = rows.map(([k, x, z, w, f, note]) => `<tr><th scope="row">${k}${note ? `<br><span class="note">${note}</span>` : ''}</th>${td(x, w === 0)}${td(z, w === 1)}<td>${confBadge(f, true)}</td></tr>`).join('');

@@ -646,7 +646,8 @@ KINDS.mrr = (() => {
     const d5 = Math.min(drift(5), drift(-5)) - o0;
     const areaM = d23.L * 1000 * (2 * d23.g + 15 + 100);
     const req = l23.s2, pass = (pen, oma) => pen <= req.pen && oma >= req.oma;
-    const out = { m, d23, src23, Emzm, EthM, EthR, yM: yM.filter(Boolean).length / yM.length, yR: yR.filter(Boolean).length / yR.length, obw: (lo + hi), d5, areaM, req, passM: pass(m.pen, m.oma), passR: pass(r.pen, r.oma), PpiB };
+    // the same dies for both modulators → paired counts (dies whose verdicts differ)
+    const out = { m, d23, src23, Emzm, EthM, EthR, yM: yM.filter(Boolean).length / yM.length, yR: yR.filter(Boolean).length / yR.length, nY: yM.length, okM: yM.filter(Boolean).length, okR: yR.filter(Boolean).length, mOnly: yM.filter((f, i) => f && !yR[i]).length, rOnly: yM.filter((f, i) => !f && yR[i]).length, obw: (lo + hi), d5, areaM, req, passM: pass(m.pen, m.oma), passR: pass(r.pen, r.oma), PpiB };
     if (CMP.size > 20) CMP.clear(); CMP.set(key, out);
     return out;
   }
@@ -669,7 +670,7 @@ KINDS.mrr = (() => {
       ['열 제어 에너지 (평균)', `${fmt(c.EthM, 1)} fJ/bit`, `${fmt(c.EthR, 1)} fJ/bit`, win(c.EthM, c.EthR, 'lo'), 'semi', `MZM 바이어스 히터 평균 P<sub>π</sub>/4 (P<sub>π</sub> ${fmt(c.PpiB, 1)} mW, 균형 팔: 온도 무관) · MRR: 0–70 °C × 공정 몬테카를로 평균`],
       ['비트당 에너지 합계', `${fmt(c.Emzm + c.EthM, 1)} fJ/bit`, `${fmt(r.Ebit + c.EthR, 1)} fJ/bit`, win(c.Emzm + c.EthM, r.Ebit + c.EthR, 'lo'), 'semi', '레이저(같은 13 dBm 입력)·DSP 제외'],
       ['±5 K 드리프트 (락 꺼짐) OMA 손실', '≈ 0 dB (균형 팔)', `${fmt(c.d5, 1)} dB`, c.d5 < -0.1 ? 0 : -1, 'semi', '열 견고성'],
-      ['Fab 수율 (같은 웨이퍼 · 시드 1067 · 69 다이, Monte Carlo 추정)', `${fmt(c.yM * 100, 0)} %`, `${fmt(c.yR * 100, 0)} %`, win(c.yM, c.yR, 'hi', 0.03), 'semi', '각 레벨 자신의 ★★★ 판정 (MRR은 히터 예산·온도 포함)'],
+      ['Fab 수율 (같은 웨이퍼 쌍 비교 · 시드 1067 · 69 다이, Monte Carlo 추정)', `${c.okM}/${c.nY} = ${fmt(c.yM * 100, 0)} %`, `${c.okR}/${c.nY} = ${fmt(c.yR * 100, 0)} %`, (() => { const t = pairedSign(c.mOnly, c.rOnly); return t.k && t.p < 0.05 ? (t.dir > 0 ? 1 : 0) : -1; })(), 'semi', `각 레벨 자신의 ★★★ 판정 (MRR은 히터 예산·온도 포함) · ${pairedText('MZM', 'MRR', c.mOnly, c.rOnly, true)}`],
       [`공통 링크 요구 (2-3 ★★: 페널티 ≤ ${fmtT(c.req.pen)} dB, OMA ≥ ${dbm(c.req.oma)} dBm)`, c.passM ? '충족' : '미달', c.passR ? '충족' : '미달', c.passM && !c.passR ? 0 : c.passR && !c.passM ? 1 : -1, 'semi', '']
     ];
     const B = { an: 'Analytical', semi: 'Physics-informed Surrogate', asm: 'Unverified Assumption' };
@@ -678,7 +679,7 @@ KINDS.mrr = (() => {
     const nm = (w) => rows.filter((x) => x[3] === w).map((x) => x[0].replace(/<[^>]+>/g, '').replace(/ \(.*$/, '')), mz = nm(0), mr = nm(1), tie = nm(-1).filter((x) => !/공통 링크/.test(x));
     return { title, html: `<p class="note" style="margin:0 0 8px">MZM: ${c.src23} (L ${c.d23.L} mm) · MRR: 지금 설계 (R ${r.Rlay.toFixed(2)} µm). 점수 합산이 아니라 항목별로 어느 쪽이 유리한지 보여 줍니다 — 어느 하나가 항상 이기지 않습니다.</p>
       <div class="gtbl"><table class="cmp"><tr><th>항목</th><th>2-3 TW-MZM</th><th>2-3R MRR</th><th>근거</th></tr>${tb}</table></div>
-      <p class="note"><b>MZM이 유리:</b> ${mz.join(' · ') || '—'}<br><b>MRR이 유리:</b> ${mr.join(' · ') || '—'}${tie.length ? `<br><b>비슷 (모델 분해능 이내):</b> ${tie.join(' · ')}` : ''}<br>MZM은 광대역·온도 견고성, MRR은 면적·구동 에너지가 본질적 장점이고, MRR의 대가는 온도·공정 추적에 드는 히터 전력과 제어입니다.</p>` };
+      <p class="note"><b>MZM이 유리:</b> ${mz.join(' · ') || '—'}<br><b>MRR이 유리:</b> ${mr.join(' · ') || '—'}${tie.length ? `<br><b>비슷 (모델 분해능 이내, 수율은 쌍 비교로 구분되지 않음):</b> ${tie.join(' · ')}` : ''}<br>MZM은 광대역·온도 견고성, MRR은 면적·구동 에너지가 본질적 장점이고, MRR의 대가는 온도·공정 추적에 드는 히터 전력과 제어입니다.</p>` };
   }
   function exportRing(l, r) {
     const c = r.c, rd = (v) => +(+v).toFixed(4);
