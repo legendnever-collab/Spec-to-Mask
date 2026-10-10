@@ -1,0 +1,365 @@
+{
+ "schema": "smq-circuit/1#verification",
+ "platform": "si1310",
+ "design_hash": "70283dfd",
+ "checks": [
+  {
+   "group": "Connectivity",
+   "item": "광 포트 연결 (모든 광 포트 정확히 한 번)",
+   "status": "PASS",
+   "detail": "48개 포트, 24개 광 넷"
+  },
+  {
+   "group": "Connectivity",
+   "item": "포트 종류 (광↔광, 전기↔패드)",
+   "status": "PASS",
+   "detail": "광 넷은 광 포트끼리만 연결"
+  },
+  {
+   "group": "Connectivity",
+   "item": "레인 수 = 8 (입력 → 변조기 → 출력)",
+   "status": "PASS",
+   "detail": "8/8 레인이 입력 광섬유까지 이어짐"
+  },
+  {
+   "group": "Connectivity",
+   "item": "입·출력 일관성",
+   "status": "PASS",
+   "detail": "입력 8 (레이저 8개, 1:1) · 출력 8"
+  },
+  {
+   "group": "Connectivity",
+   "item": "전기 포트 → 패드 매핑",
+   "status": "PASS",
+   "detail": "48개 전기 포트 → 48개 패드"
+  },
+  {
+   "group": "Geometry",
+   "item": "최소 선폭 (0.36 µm ≥ 0.15 µm, 일반 리소 가정)",
+   "status": "PASS",
+   "detail": "게임의 rules.wmin은 MMI 테이퍼 등 다중모드 구조용 — 단일모드 배선에는 리소 한계를 적용 (Unverified Assumption)"
+  },
+  {
+   "group": "Geometry",
+   "item": "넓은 배선의 굽힘 (w > wc 0.394 µm)",
+   "status": "WARNING",
+   "detail": "다중모드 폭 1 µm 배선 16개, 굽힘 0곳 — Euler 굽힘(곡률 연속)이라 모드 변환은 작지만 계산하지 않음 · 짧은 넷 8개는 w0"
+  },
+  {
+   "group": "Geometry",
+   "item": "최소 굽힘 반경 R ≥ 2 µm (w0, 90° 방사 < 0.005 dB)",
+   "status": "PASS",
+   "detail": "설정 R 10 µm (Euler: Rmin) · 작은 S-bend 원호 포함"
+  },
+  {
+   "group": "Geometry",
+   "item": "광 배선 생성",
+   "status": "PASS",
+   "detail": "24개 넷 모두 배선"
+  },
+  {
+   "group": "Geometry",
+   "item": "배선 간격 ≥ 0.18 µm",
+   "status": "PASS",
+   "detail": "서로 다른 넷이 4.0 µm 안에 오지 않음"
+  },
+  {
+   "group": "Geometry",
+   "item": "다이 경계 (0.70 × 1.20 mm, 여유 50 µm)",
+   "status": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "Geometry",
+   "item": "소자 겹침",
+   "status": "PASS",
+   "detail": "32개 소자"
+  },
+  {
+   "group": "Geometry",
+   "item": "배선–소자 간섭 (장애물)",
+   "status": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "Geometry",
+   "item": "범프 배치 (다이 안, 간격 ≥ 15 µm)",
+   "status": "PASS",
+   "detail": "48개 범프"
+  },
+  {
+   "group": "Geometry",
+   "item": "RF 배선 교차 (같은 금속층)",
+   "status": "PASS",
+   "detail": "M1 선폭 10 µm · 패드·범프 포함"
+  },
+  {
+   "group": "Geometry",
+   "item": "DC 배선 교차 (같은 금속층)",
+   "status": "PASS",
+   "detail": "M2 한 층, 선폭 5 µm · 평면 팬아웃 (트랙 10 µm 간격)"
+  },
+  {
+   "group": "Geometry",
+   "item": "RF 금속 – 광 도파로 교차",
+   "status": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "System",
+   "item": "레인 속도 224 Gb/s 라인 (200G 순 데이터, 112 GBd PAM4)",
+   "status": "PASS",
+   "detail": "모든 레인 같은 변조기"
+  },
+  {
+   "group": "System",
+   "item": "총 용량 8 × 200G = 1.6 Tb/s",
+   "status": "PASS",
+   "detail": "8개 레인 연결"
+  },
+  {
+   "group": "System",
+   "item": "변조기 종류 ↔ 3A+ 아키텍처",
+   "status": "WARNING",
+   "detail": "3A+ 기준 설계: MZM, 1:1 ↔ Lab: MRR, 1:1 — 아래 예측은 Lab 구성으로 다시 계산"
+  },
+  {
+   "group": "System",
+   "item": "광 파워 버짓 (레이아웃 배선 손실 포함)",
+   "status": "PASS",
+   "detail": "3A+ 모델 마진 3.68 dB − 배선 손실(최악 레인) 0.16 dB = 3.52 dB"
+  },
+  {
+   "group": "System",
+   "item": "링 구동선 길이 (집중 소자 조건 ≪ λRF/10)",
+   "status": "PASS",
+   "detail": "최장 101 µm vs λ/10 = 212 µm @56 GHz — 넘으면 반사·공진, 구동기를 링 옆에(플립칩)"
+  },
+  {
+   "group": "Model validity",
+   "item": "RF 전극·급전선 전자기 해석",
+   "status": "NOT VERIFIED",
+   "detail": "CPW·패드·종단은 추상 형상 — EM 시뮬레이션 필요"
+  },
+  {
+   "group": "Model validity",
+   "item": "레인 간 열 크로스토크 · 링 락 상호작용",
+   "status": "NOT VERIFIED",
+   "detail": "레인 간 거리만 표시, 열해석 없음"
+  },
+  {
+   "group": "Model validity",
+   "item": "파운드리 DRC (주입·금속·비아 규칙)",
+   "status": "NOT VERIFIED",
+   "detail": "일반 규칙만: 선폭·간격·굽힘·경계·겹침"
+  },
+  {
+   "group": "Model validity",
+   "item": "GDS 재검사",
+   "status": "PASS",
+   "detail": "smq2gds.circuit: 19개 검사, FAIL 0 (engine_layout.gds)"
+  }
+ ],
+ "summary": {
+  "PASS": 21,
+  "WARNING": 2,
+  "FAIL": 0,
+  "NOT VERIFIED": 3
+ },
+ "performance": {
+  "model": "3A+ engine (3A+ 기준 설계)",
+  "margin_model_dB": 3.6834,
+  "layout_route_loss_dB_worst": 0.1608,
+  "margin_with_layout_dB": 3.5225,
+  "module_W": 4.4991,
+  "pJ_per_bit": 2.812,
+  "lanes": [
+   {
+    "lane": 0,
+    "before_mod_dB": 0.0276,
+    "after_mod_dB": 0.0455,
+    "tap_dB": 0.0877,
+    "total_dB": 0.1608
+   },
+   {
+    "lane": 1,
+    "before_mod_dB": 0.0276,
+    "after_mod_dB": 0.0455,
+    "tap_dB": 0.0877,
+    "total_dB": 0.1608
+   },
+   {
+    "lane": 2,
+    "before_mod_dB": 0.0276,
+    "after_mod_dB": 0.0455,
+    "tap_dB": 0.0877,
+    "total_dB": 0.1608
+   },
+   {
+    "lane": 3,
+    "before_mod_dB": 0.0276,
+    "after_mod_dB": 0.0455,
+    "tap_dB": 0.0877,
+    "total_dB": 0.1608
+   },
+   {
+    "lane": 4,
+    "before_mod_dB": 0.0276,
+    "after_mod_dB": 0.0455,
+    "tap_dB": 0.0877,
+    "total_dB": 0.1608
+   },
+   {
+    "lane": 5,
+    "before_mod_dB": 0.0276,
+    "after_mod_dB": 0.0455,
+    "tap_dB": 0.0877,
+    "total_dB": 0.1608
+   },
+   {
+    "lane": 6,
+    "before_mod_dB": 0.0276,
+    "after_mod_dB": 0.0455,
+    "tap_dB": 0.0877,
+    "total_dB": 0.1608
+   },
+   {
+    "lane": 7,
+    "before_mod_dB": 0.0276,
+    "after_mod_dB": 0.0455,
+    "tap_dB": 0.0877,
+    "total_dB": 0.1608
+   }
+  ]
+ },
+ "gds_recheck": {
+  "schema": "smq-circuit/1#gds-recheck",
+  "design_hash": "70283dfd",
+  "gds": "engine_layout.gds",
+  "gds_sha1": "522b6f5b8de18eb9f5ea5a9719758890f1429a24",
+  "cells": 3,
+  "checks": [
+   {
+    "group": "GDS",
+    "item": "입력 일치 (layout ↔ verification design_hash)",
+    "status": "PASS",
+    "detail": "70283dfd / 70283dfd"
+   },
+   {
+    "group": "GDS",
+    "item": "파일 다시 읽기 (top cell 1개)",
+    "status": "PASS",
+    "detail": "engine_layout.gds: 49 KB, top ['SMQ_PIC_si1310_MRR_DR8_70283dfd']"
+   },
+   {
+    "group": "GDS",
+    "item": "계층 셀 (소자마다 참조, 같은 소자는 같은 셀)",
+    "status": "PASS",
+    "detail": "참조 34 = 소자 32 + routes + metal · 서로 다른 소자 셀 3개 · {'ssc': 16, 'mrr': 8, 'tap_pd': 8}"
+   },
+   {
+    "group": "Connectivity",
+    "item": "광 코어 연결 조각 수",
+    "status": "PASS",
+    "detail": "24조각 = 레이저 8 (트리+레인) + 링 8 + 탭 암 8 기대 24"
+   },
+   {
+    "group": "Connectivity",
+    "item": "레인 경로 (입력 광섬유 단면 ↔ 출력 단면, 같은 도파로 조각)",
+    "status": "PASS",
+    "detail": "8/8 레인"
+   },
+   {
+    "group": "Geometry",
+    "item": "포트 위치에 도파로 (모든 광 포트)",
+    "status": "PASS",
+    "detail": "64개 포트"
+   },
+   {
+    "group": "Geometry",
+    "item": "배선 끝점 = 포트 (1 nm)",
+    "status": "PASS",
+    "detail": "24개 넷"
+   },
+   {
+    "group": "Geometry",
+    "item": "배선 길이 = 게임 예측 (0.1 %)",
+    "status": "PASS",
+    "detail": "GDS 중심선 독립 계산"
+   },
+   {
+    "group": "Geometry",
+    "item": "소자 형상이 게임의 외곽(bbox) 안",
+    "status": "PASS",
+    "detail": "32개 소자"
+   },
+   {
+    "group": "DRC",
+    "item": "도파로 간격 ≥ 규칙 (코어 층별)",
+    "status": "PASS",
+    "detail": "(1, 0): 위반 0 (≥ 0.18 µm)"
+   },
+   {
+    "group": "DRC",
+    "item": "최소 선폭 (층별, SSC 끝 제외)",
+    "status": "PASS",
+    "detail": "(1, 0) ≥ 0.15 µm: 위반 0"
+   },
+   {
+    "group": "DRC",
+    "item": "SSC 끝 폭 (역테이퍼 팁)",
+    "status": "WARNING",
+    "detail": "팁 [0.106] µm vs 리소 가정 0.15 µm — 팁은 1-6 설계값, 공정 능력 확인 필요"
+   },
+   {
+    "group": "DRC",
+    "item": "굽힘 반경 ≥ 2 µm",
+    "status": "PASS",
+    "detail": ""
+   },
+   {
+    "group": "DRC",
+    "item": "다이 경계 (광 코어)",
+    "status": "PASS",
+    "detail": "코어 bbox [0.0, 146.0, 700.0, 1057.6] in 700×1200 µm"
+   },
+   {
+    "group": "Connectivity",
+    "item": "출력 단면 수 = 8 (동쪽 가장자리)",
+    "status": "PASS",
+    "detail": "8"
+   },
+   {
+    "group": "Electrical",
+    "item": "RF 금속 (M1): 넷마다 한 조각 (끊김 없음), 넷끼리 분리 (단락 없음)",
+    "status": "PASS",
+    "detail": "16개 넷 · 16조각"
+   },
+   {
+    "group": "Electrical",
+    "item": "DC 금속 (M2): 넷마다 한 조각 (끊김 없음), 넷끼리 분리 (단락 없음)",
+    "status": "PASS",
+    "detail": "32개 넷 · 32조각"
+   },
+   {
+    "group": "Electrical",
+    "item": "패드·범프 수",
+    "status": "PASS",
+    "detail": "48"
+   },
+   {
+    "group": "Model validity",
+    "item": "능동층·금속·패드 추상화",
+    "status": "NOT VERIFIED",
+    "detail": "주입·히터·Ge·금속·종단은 주석 레이어 (Generic PDK) — 파운드리 규칙 검증 아님, Tape-out Ready 아님"
+   }
+  ],
+  "summary": {
+   "PASS": 17,
+   "WARNING": 1,
+   "FAIL": 0,
+   "NOT VERIFIED": 1
+  },
+  "generator": "tools/smq2gds/circuit.py (gdsfactory + KLayout re-read)"
+ }
+}

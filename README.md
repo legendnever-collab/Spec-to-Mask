@@ -72,8 +72,8 @@ Photonic IC 설계를 게임으로 배우는 단계별 학습 프로그램입니
 
 ### PIC Design Lab (Track A 후속)
 
-캠페인 맵의 **LAB** 노드. 1.6T DR8 Tx PIC를 회로도 → Floorplan → 광 배선 → 전기 인터페이스 → 검증 → 회로 데이터 내보내기(smq-circuit/1) 여섯 미션으로 설계합니다. 부품은 카드(없으면 기준 설계)에서, 배선 형상은 직선·원호/Euler 코너·S-bend 기본 도형으로, 손실은 D-1 산란·굽힘 모델로 계산하고, 3A+ 엔진의 링크 예측에 레이아웃 손실을 더해 비교합니다. 진행은 점수가 아니라 상태(Schematic / Floorplan / Routing / Verification Complete, GDS Generated)로 표시하고, 별·카드·레벨 설계는 건드리지 않습니다(`smq3-lab`). GDS 생성은 Phase D.
-- 사용법·모델·한계: [docs/design_lab.md](docs/design_lab.md) · 데이터 형식: [docs/circuit_schema.md](docs/circuit_schema.md)
+캠페인 맵의 **LAB** 노드. 1.6T DR8 Tx PIC를 회로도 → Floorplan → 광 배선 → 전기 인터페이스 → 검증 → 회로 데이터 내보내기(smq-circuit/1) 여섯 미션으로 설계합니다. 부품은 카드(없으면 기준 설계)에서, 배선 형상은 직선·원호/Euler 코너·S-bend 기본 도형으로, 손실은 D-1 산란·굽힘 모델로 계산하고, 3A+ 엔진의 링크 예측에 레이아웃 손실을 더해 비교합니다. 진행은 점수가 아니라 상태(Schematic / Floorplan / Routing / Verification Complete, GDS Generated)로 표시하고, 별·카드·레벨 설계는 건드리지 않습니다(`smq3-lab`). GDS는 `tools/smq2gds/circuit.py`가 같은 기본 도형으로 그리고 KLayout으로 다시 읽어 검사하며(연결·포트·길이·간격·선폭·금속 단락), 그 결과를 Mission 6에서 불러오면 GDS Generated가 됩니다.
+- 사용법·모델·한계: [docs/design_lab.md](docs/design_lab.md) · 데이터 형식: [docs/circuit_schema.md](docs/circuit_schema.md) · GDS 내보내기: [docs/gds_export.md](docs/gds_export.md) · 예제 GDS: [docs/gds/](docs/gds/)
 
 ### D-1 직사각형 나선
 
@@ -141,6 +141,7 @@ tools/
   build_data.py      data/*.json → tables.js, pspec.js
   build.sh           단일 HTML 빌드
   smq2gds/           설계 JSON → GDS(gdsfactory PCell) · 모드/EME 검사 · MEEP 스크립트 · 참조 설계 검증 (python -m smq2gds)
+                     circuit.py: Design Lab smq-circuit/1 → 계층 GDS + 미리보기 + 재검사 (python -m smq2gds.circuit)
 test/
   load.js            node VM에서 엔진·kind 로드
   t_*.js             레벨 난이도·수율 탐색 스크립트
@@ -151,12 +152,13 @@ test/
   e2e/guide.js       jsdom: 모든 레벨 학습 가이드 (절 A–G, 파라미터 행, 예제, 포커스 복원, 설계·점수 불변)
   e2e/flow.js        jsdom: 1-7 Guided 흐름(단계·건너뛰기·값 기록·별 없음·밴드 축) + D-1 직사각형(프리셋·Infeasible·spiral_rect 내보내기)
   e2e/flow.js (2-3R) Guided 기본·1단계 R → 설계 기록·별 없음·Full Design·비교 패널·내보내기 반경 = 레이아웃 반경
-  t_lab.js           Design Lab 엔진: 연결성·포트 일치·기본 도형 연속·길이·R·간격·경계·Infeasible·RF 평면성·플립칩·내보내기 (npm run test:lab)
+  t_lab.js           Design Lab 엔진: 연결성·포트 일치·기본 도형 연속·길이·R·간격·경계·Infeasible·RF/DC 평면성·플립칩·내보내기·1 nm 격자·GDS 재검사 불러오기 (npm run test:lab)
   e2e/lab.js         jsdom: 맵 진입 → 6 미션 → 검증 → 내보내기 → 가이드 → 복귀, 캠페인 불변
   t_dr8.js           3A+ DR8 변조기 선택: MZM 결과 비트 동일·스펙 불변, 링 = 2-3R 엔진(모듈 입력 파워), 히터(TEC/비냉각), 공정 감도, 열 폭주, 드라이버 (npm run test:dr8)
   t_mrr.js           링 엔진: 반경↔FSR, 공진 조건, Q 관계, Critical coupling, Airy↔Lorentz, 최대 기울기 1/√3, dλ/dT, P_2π, 레이아웃 배치, Q≠대역폭, 정적/동적 OMA, 열 안정 부호, 공정 이동, SiN 이종, 단계 완료, 기존 스펙 불변 (npm run test:mrr)
   t_upgrade.js       엔진: MZI 식·FSR·위상 이동·단계 완료·Lattice 차수 / 직사각형 나선 길이 = cτ/n_g·경계·회전·Mode B·Legacy 동일성
   py/test_smq2gds.py 예제 전부 GDS 생성 + 연결성·폭·간격 DRC·길이·포트 위치 (솔버 없이; spiral_rect는 bbox ⊂ 경계−여유, 포트, S-bend R<sub>min</sub>; ring_allpass는 링 반경·간격 1 nm, 링+버스 2조각, 포트, 히터가 버스 위에 없음, 주석 레이어)
+  py/test_circuit.py 회로 GDS: 8개 예제 재검사 FAIL 0, 경로 면적 = ∫w ds, hash·sha1, 부정 테스트(끝점·삭제·이동·RF 단락·입력 불일치)
 ```
 
 ## 데이터 재생성 순서
@@ -175,6 +177,8 @@ node test/e2e/bot.js std 2 2-1,2-2,2-3,2-3R,2-4,2-5 sin1550   # Stage 2 회귀
 npm run test:mrr                                          # 링 변조기 물리
 npm run test:dr8                                          # 3A+ DR8 MZM/MRR
 npm run test:lab && node tools/export_circuit.js all      # PIC Design Lab + 회로 예제
+npm run test:py                                           # smq2gds: 소자 GDS + 회로 GDS 재검사·부정 테스트
+(cd tools && python -m smq2gds.circuit smq2gds/examples/circuit/si1310_mzm_dr8_engine_layout.json -o ../docs/gds/si1310_mzm_dr8)   # 예제 GDS
 DES='{"3A+":{"mod":1}}' node test/e2e/bot.js std 2 3A+ si1310   # MRR DR8 봇
 node test/e2e/bot.js std 2 3A,3A+ si1310                  # Stage 3 회귀
 node test/e2e/bot.js std 2 D-1,D-2 sin1550                # 긴 지연선 회귀

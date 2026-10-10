@@ -56,6 +56,19 @@ for (const pid of Object.keys(G.PLATFORMS)) {
     /* export */
     const ex = L.exportCircuit(c, chk, { time: 'T' });
     ok(ex.schematic.schema === 'smq-circuit/1' && ex.layout.routing.optical.length === c.routes.length && ex.layout.instances.length === c.inst.length && ex.verification.summary.FAIL === chk.checks.filter((x) => x.status === 'FAIL').length && ex.layout.abstraction.not_tape_out_ready, `${tag}: smq-circuit/1 export (schematic, layout prims, verification)`);
+    /* Phase D: what the GDS backend draws */
+    { const g1 = (v) => Math.abs(v * 1000 - Math.round(v * 1000)) < 1e-6;
+      ok(c.inst.every((I) => g1(I.x) && g1(I.y) && I.ports.every((q) => g1(q.x) && g1(q.y))), `${tag}: placements and local ports on the 1 nm GDS grid`);
+      let lc = true, lp = true;
+      c.inst.filter((I) => I.params.local && I.params.local.prims.length).forEach((I) => {
+        const pr = I.params.local.prims, by = {}; pr.forEach((p) => { (by[p.layer || 'core'] = by[p.layer || 'core'] || []).push(p); });
+        const ends = []; Object.values(by).forEach((ps) => { let chain = [ps[0]]; for (let k = 1; k < ps.length; k++) { const a = L.sample([ps[k - 1]], 1), b = L.sample([ps[k]], 1), j = Math.hypot(a[a.length - 1][0] - b[0][0], a[a.length - 1][1] - b[0][1]); if (j > 1e-6 && j < 1e-3) lc = false; if (j > 1e-6) { ends.push(chain); chain = []; } chain.push(ps[k]); } ends.push(chain); });
+        if (I.type === 'mzm') { const m = c.P.mmi, ss = I.params.mmi.s_um / 2, want = [[m.Ltot, ss], [m.Ltot, -ss], [I.L - m.Ltot, ss], [I.L - m.Ltot, -ss]], pts = ends.flatMap((ch) => { const a = L.sample([ch[0]], 1), b = L.sample([ch[ch.length - 1]], 1); return [a[0], b[b.length - 1]]; }); if (!want.every((w) => pts.some((q) => Math.hypot(q[0] - w[0], q[1] - w[1]) < 1e-6))) lp = false; }
+        if (I.type === 'tap_pd' || I.type === 'mrr') { const io = I.ports.filter((q) => q.k === 'o'), pts = pr.flatMap((p) => { const a = L.sample([p], 1); return [a[0], a[a.length - 1]]; }); if (!io.every((q) => pts.some((r) => Math.hypot(r[0] - q.x, r[1] - q.y) < 1e-6))) lp = false; }
+      });
+      ok(lc && lp, `${tag}: device-local primitives (MZM arms, tap, ring transitions) are continuous and meet the MMI / instance ports`);
+      ok(ex.layout.routing.electrical.every((l) => l.width_um === L.MW[l.kind]) && ex.layout.design_hash === L.designHash(c) && /^[0-9a-f]{8}$/.test(ex.layout.design_hash), `${tag}: export carries metal widths and design_hash ${ex.layout.design_hash}`);
+      ok(st(chk, /DC 배선 교차/)[0] === 'PASS', `${tag}: DC fan-out is planar on one metal layer`); }
     if (mod === 1) { const ring = ex.layout.instances.find((x) => x.type === 'mrr'); ok(ring && ring.params.ring.pcell === 'ring_allpass' && near(ring.params.ring.R_um, L.parts(ctx).mrr.R, 1e-12), `${tag}: ring instances carry the 2-3R layout radius ${ring && ring.params.ring.R_um} µm`); }
   }
   /* infeasible / rule violations */
@@ -75,6 +88,20 @@ for (const pid of Object.keys(G.PLATFORMS)) {
     const cf = L.build(ctx, df), kf = L.checks(cf, ctx);
     ok(st(ke, /링 구동선/)[0] === 'WARNING' && st(kf, /링 구동선/)[0] === 'PASS' && df.W * df.H < dm.W * dm.H, `${pid}: ring drive line ${Math.max(...ce.inst.filter((x) => x.rfLen != null).map((x) => x.rfLen)).toFixed(0)} µm (edge) → ${Math.max(...cf.inst.filter((x) => x.rfLen != null).map((x) => x.rfLen)).toFixed(0)} µm (flip-chip), die ${dm.W}×${dm.H} → ${df.W}×${df.H} mm`);
     ok(st(kf, /범프 배치|광 배선 생성|배선 간격|다이 경계|소자 겹침/).every((s) => s === 'PASS'), `${pid}: flip-chip MRR layout is clean`); }
+  { // Phase D: imported GDS re-check (engine_verification.json gds_recheck) → GDS 재검사 PASS / FAIL / stale
+    const c = L.build(ctx, d0), h = L.designHash(c), gi = (gds) => L.checks(c, { ...ctx, gds }).checks.find((x) => x.item === 'GDS 재검사');
+    const sm = { PASS: 17, WARNING: 1, FAIL: 0, 'NOT VERIFIED': 1 };
+    ok(gi(null).status === 'NOT VERIFIED' && gi({ design_hash: h, summary: sm, gds_sha1: 'ab' }).status === 'PASS' && gi({ design_hash: h, summary: { ...sm, FAIL: 2 } }).status === 'FAIL' && gi({ design_hash: 'deadbeef', summary: sm }).status === 'NOT VERIFIED',
+      `${pid}: GDS 재검사 = NOT VERIFIED until imported, PASS / FAIL for this design's hash, NOT VERIFIED for another design`);
+    const c2 = L.build(ctx, { ...d0, W: d0.W + 0.1 }); ok(L.designHash(c2) !== h, `${pid}: design hash changes with the design`); }
+  { // DC fan-out stays planar over staggers, route widths, pad styles and architectures
+    let bad = [];
+    for (const mod of [0, 1]) for (const rf of [0, 1]) for (const wr of [pf.w0, pf.mat === 'si' ? 1 : 2]) for (const ds of [0, 7, 13, 111]) {
+      if (rf === 1 && ds) continue;
+      const d = { ...L.defaults(ctx, { mod, share: 0 }), rf, wr }; d.stag = L.stagAuto(d) + ds; const f = L.minDie(ctx, d); d.W = Math.ceil(f.W / 100) / 10; d.H = Math.ceil(f.H / 100) / 10;
+      const k = L.checks(L.build(ctx, d), ctx); if (st(k, /DC 배선 교차|RF 배선 교차|범프 배치|패드 배치/).some((x) => x !== 'PASS')) bad.push(`${mod}/${rf}/${wr}/${d.stag}`);
+    }
+    ok(!bad.length, `${pid}: DC river fan-out and RF metal planar in 24 variants${bad.length ? ' — ' + bad.join(', ') : ''}`); }
   { // geometry is deterministic (same design → same export)
     const a = JSON.stringify(L.exportCircuit(L.build(ctx, d0), L.checks(L.build(ctx, d0), ctx), { time: 'T' }).layout), b = JSON.stringify(L.exportCircuit(L.build(ctx, d0), L.checks(L.build(ctx, d0), ctx), { time: 'T' }).layout);
     ok(a === b, `${pid}: layout export is deterministic`); }

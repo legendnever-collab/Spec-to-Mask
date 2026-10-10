@@ -16,3 +16,7 @@ annotation:
   p: [21, 0]       # P implant (inside of the ring)
   heater: [47, 0]  # HEATER — TiN arc + leads
   pad: [41, 0]     # M1 pad (abstract)
+  m1: [41, 0]      # M1 — RF CPW / circuit-level metal (abstract, same as pad)
+  m2: [45, 0]      # M2 — DC lines (abstract 2nd metal)
+  ge: [5, 0]       # Ge photodiode absorber (abstract)
+  term: [49, 0]    # on-chip termination resistor placeholder (abstract)

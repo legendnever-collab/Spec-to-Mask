@@ -12,6 +12,12 @@ const LAB = (() => {
   const SCHEMA = 'smq-circuit/1', LANES = 8, LANE_GBPS = 224, NET_GBPS = 200;
   const PAD = { w: 80, rfPitch: 100 };   // abstract wire-bond pads (µm)
   const BUMP = { w: 30, pitch: 45 };     // abstract flip-chip micro-bumps (µm, Cu-pillar class)
+  const RING_BX = 50;                   // ring RF bumps: nearer (G) bump centre this far west of the ring (clear of the next lane's DC bump row)
+  const MW = { rf: 10, dc: 5 };
+  const DC_TP = 10;                      // DC fan-out track pitch (µm) = line 5 + space 5          // abstract metal line widths (µm) — the same widths are drawn in the GDS (smq2gds)
+  const LITHO = { si: 0.15, sin: 0.3 };  // generic minimum printable width (µm)
+  const XT_HET = 60;                     // SiN↔Si co-taper length (µm) for a heterogeneous Si ring on SiN — Unverified Assumption
+  const r3 = (v) => Math.round(v * 1000) / 1000;   // 1 nm GDS grid
   const SW = 15, GW = 50;                // CPW signal / ground width of the TW-MZM (2-3 engine: signal 15 µm; ground width abstract)
   const TAP = 0.02;                      // monitor tap power ratio (−17 dB)
   const SH = [1, 2, 4, 8];
@@ -60,7 +66,7 @@ const LAB = (() => {
     const d = { mod, share, edge: 50, fp: 127, rf: 0, rfSide: 0, pp: 100, bend: 1, R: Math.max(wm.Rmin, si ? 10 : 100), wr: pf.w0, jog: si ? 4 : 8, mon: 1, W: 6, H: 4 };
     const lb = laneBox(ctx, d, P);
     d.P = Math.max(d.fp, Math.ceil((lb.h + 40) / 5) * 5);
-    d.stag = stagAuto(d, P);
+    d.stag = stagAuto(d);
     const fit = minDie(ctx, d);
     d.W = Math.ceil(fit.W / 500) * 0.5; d.H = Math.ceil(fit.H / 500) * 0.5;   // smallest 0.5-mm die that fits the auto placement
     return d;
@@ -68,13 +74,14 @@ const LAB = (() => {
   // RF pad group width per lane on the die edge (GSG for the TW-MZM, GS for the lumped ring) and the lane stagger it needs
   const rfPads = (d) => ((d.mod | 0) === 1 ? 2 : 3);
   const groupW = (d) => (rfPads(d) - 1) * d.pp + PAD.w;
+  const DC_SEP = MW.dc + 5;   // centre spacing of parallel DC verticals (line + 5 µm space)
   const stagAuto = (d) => ((d.rf | 0) === 1 ? 0 : Math.ceil((groupW(d) + 40) / 10) * 10);
 
   /* ---------------- component footprints (local frame: optical input at the origin, flow +x) ---------------- */
   function mzmGeom(ctx, d, P) {
     const pf = ctx.pf, m = P.mmi, z = P.mzm, h = P.heater, R = d.R, da = SW + z.g, dy = (da - m.s) / 2;
     const sb = sBend(dy, R, d.bend ? 'euler' : 'arc'), Lsb = sb.len;
-    const x0 = m.Ltot, xe0 = x0 + Lsb + 20, xe1 = xe0 + z.Le, xh0 = xe1 + 30, xh1 = xh0 + h.L, xa1 = xh1 + 20, x1 = xa1 + Lsb, Ltot = x1 + m.Ltot;
+    const x0 = m.Ltot, xe0 = x0 + Lsb + 20, xe1 = xe0 + z.Le, xh0 = xe1 + 30, xh1 = xh0 + h.L, xa1 = xh1 + 20, x1 = Math.ceil((xa1 + Lsb) * 1000 - 1e-6) / 1000, Ltot = r3(x1 + m.Ltot);   // output MMI and length on the 1 nm grid (arms end ≤ 1 nm straight later)
     const half = SW / 2 + z.g + GW;
     return { kind: 'mzm', L: Ltot, h: 2 * half, y0: -half, y1: half, da, xe0, xe1, xh0, xh1, sb, arms: { x0, xa0: x0 + Lsb, xa1, x1 },
       ports: [{ n: 'in', k: 'o', x: 0, y: 0, a: 180 }, { n: 'out', k: 'o', x: Ltot, y: 0, a: 0 },
@@ -82,18 +89,25 @@ const LAB = (() => {
         { n: 'term', k: 'int', x: xe1, y: 0 }, { n: 'h_p', k: 'dc', x: xh0, y: da / 2 }, { n: 'h_n', k: 'dc', x: xh1, y: da / 2 }] };
   }
   function mrrGeom(ctx, d, P) {
-    const g = P.mrr.geom, R = g.R_um, w = g.w_um, gap = g.gap_um, Lb = 2 * R + 20, yc = R + gap + w;   // ring centre above the bus
+    const g = P.mrr.geom, R = g.R_um, w = g.w_um, gap = g.gap_um, Lb = g.bus_len_um || 2 * R + 20, yc = R + gap + w;   // ring centre above the bus
+    // bus ↔ route port (w0): same core → linear taper; Si ring on a SiN platform → SiN/Si co-taper (vertical transition, plan view)
+    const pf = ctx.pf, wb = g.bus_w_um || w, het = pf.mat !== 'si';
+    const Lt = het ? XT_HET : Math.abs(wb - pf.w0) > 1e-9 ? r3(taperLen(pf, pf.w0, wb)) : 0, L = Lb + 2 * Lt, xc = Lt + Lb / 2;
+    const tp = (a, b, w0, w1, layer) => ({ t: 'L', a: [a, 0], b: [b, 0], w0, w1, w: Math.max(w0, w1), layer });
+    const prims = !Lt ? [] : het
+      ? [tp(0, Lt, pf.w0, LITHO.sin, 'core'), tp(0, Lt, LITHO.si, wb, 'si'), tp(L - Lt, L, wb, LITHO.si, 'si'), tp(L - Lt, L, LITHO.sin, pf.w0, 'core')]
+      : [tp(0, Lt, pf.w0, wb, 'core'), tp(L - Lt, L, wb, pf.w0, 'core')];
     // contacts: P (inside, ring centre) and N (outside, above the ring) of the lateral junction; heater lead ends as drawn by
     // tools/smq2gds ring_allpass (leads leave the arc ends beside the coupler and run up to R + 8 µm above the ring centre)
-    const y0 = -(w / 2 + 3), y1 = yc + R + 10;
-    return { kind: 'mrr', L: Lb, h: y1 - y0, y0, y1, R, w, gap, yc, xc: Lb / 2,
-      ports: [{ n: 'in', k: 'o', x: 0, y: 0, a: 180 }, { n: 'out', k: 'o', x: Lb, y: 0, a: 0 },
-        { n: 'rf_s', k: 'rf', x: Lb / 2, y: yc }, { n: 'rf_g', k: 'rf', x: Lb / 2, y: yc + R + 5 },
-        { n: 'h_p', k: 'dc', x: Lb / 2 - (R + 4), y: yc + R + 8 }, { n: 'h_n', k: 'dc', x: Lb / 2 + (R + 4), y: yc + R + 8 }] };
+    const y0 = -(Math.max(w, pf.w0) / 2 + 3), y1 = yc + R + 10;
+    return { kind: 'mrr', L, h: y1 - y0, y0, y1, R, w, gap, yc, xc, Lt, Lb, het, local: { prims, ring_x_um: xc, ring_y_um: yc, transition: !Lt ? 'none' : het ? `SiN ${pf.w0}→${LITHO.sin} / Si ${LITHO.si}→${wb} µm co-taper ${XT_HET} µm (vertical SiN–Si transition, plan view; loss not computed)` : `linear taper ${pf.w0}→${wb} µm` },
+      ports: [{ n: 'in', k: 'o', x: 0, y: 0, a: 180 }, { n: 'out', k: 'o', x: L, y: 0, a: 0 },
+        { n: 'rf_s', k: 'rf', x: xc, y: yc }, { n: 'rf_g', k: 'rf', x: xc, y: yc + R + 5 },
+        { n: 'h_p', k: 'dc', x: xc - (R + 4), y: yc + R + 8 }, { n: 'h_n', k: 'dc', x: xc + (R + 4), y: yc + R + 8 }] };
   }
   function tapGeom(ctx, d, P) {
     const pf = ctx.pf, w = d.wr, gap = Math.max(pf.rules.gap * 2, pf.mat === 'si' ? 0.3 : 0.6), Lc = tapLen(pf, w, gap), pd = P.pd;
-    const yt = -(w + gap), sb = sBend(Math.max(8, 4 * w) , d.R, d.bend ? 'euler' : 'arc'), Lpd = pd.L, L = 10 + Lc + sb.len + Lpd + 10;
+    const yt = -(w + gap), sb = sBend(Math.max(8, 4 * w) , d.R, d.bend ? 'euler' : 'arc'), Lpd = pd.L, L = r3(10 + Lc + sb.len + Lpd + 10);
     return { kind: 'tap', L, h: 20 + sb.dy, y0: yt - sb.dy - pd.w / 2 - 4, y1: 4, Lc, gap, yt, sb, xpd: 10 + Lc + sb.len, Lpd, pdw: pd.w,
       ports: [{ n: 'in', k: 'o', x: 0, y: 0, a: 180 }, { n: 'out', k: 'o', x: L, y: 0, a: 0 },
         { n: 'pd_a', k: 'dc', x: 10 + Lc + sb.len + Lpd * 0.25, y: yt - sb.dy }, { n: 'pd_k', k: 'dc', x: 10 + Lc + sb.len + Lpd * 0.75, y: yt - sb.dy }] };
@@ -112,8 +126,8 @@ const LAB = (() => {
   function sBend(dy, R, shape) {
     const a = a0Of(shape, R), ady = Math.abs(dy);
     if (ady < 1e-9) return { kind: 'none', len: 0, dx: 0, dy: 0 };
-    if (ady >= 2 * a) return { kind: 'corners', len: 2 * a, dx: 2 * a, dy: ady, a, shape };
-    if (ady >= 2 * R) return { kind: 'corners', len: 2 * R, dx: 2 * R, dy: ady, a: R, shape: 'arc', mixed: shape === 'euler' };   // Euler footprint too large: circular corners
+    if (ady >= 2 * a) return { kind: 'corners', len: 2 * a, dx: 2 * a, dy: ady, a, shape, R };
+    if (ady >= 2 * R) return { kind: 'corners', len: 2 * R, dx: 2 * R, dy: ady, a: R, shape: 'arc', mixed: shape === 'euler', R };   // Euler footprint too large: circular corners
     const th = Math.acos(1 - ady / (2 * R));   // circular arcs for small offsets (Euler footprint too large)
     return { kind: 'arcs', len: 2 * R * Math.sin(th), dx: 2 * R * Math.sin(th), dy: ady, th, R };
   }
@@ -186,6 +200,27 @@ const LAB = (() => {
     return { L, prop, bend, total: prop + bend };
   }
 
+  // local-frame geometry of composite cells, exported so the GDS backend draws exactly these primitives
+  const prw = (prims, w) => prims.map((p) => ({ ...p, w }));
+  function mzmLocal(m, P, pf) {
+    const mm = P.mmi, a = m.arms, h = m.da / 2, prims = [], Rb = m.sb.R, sh = m.sb.kind === 'corners' && !m.sb.mixed ? m.sb.shape : 'euler';
+    for (const sg of [1, -1]) {
+      prims.push(...jogRoute([mm.Ltot, sg * mm.s / 2], [a.xa0, sg * h], mm.Ltot + m.sb.dx / 2, Rb, sh).prims);
+      prims.push({ t: 'L', a: [a.xa0, sg * h], b: [a.xa1, sg * h] });
+      prims.push(...jogRoute([a.xa1, sg * h], [a.x1, sg * mm.s / 2], a.xa1 + m.sb.dx / 2, Rb, sh).prims);
+    }
+    const g = P.mzm.g, rects = [
+      { layer: 'm1', role: 'G1', x0: m.xe0, x1: m.xe1, y0: SW / 2 + g, y1: SW / 2 + g + GW }, { layer: 'm1', role: 'S', x0: m.xe0, x1: m.xe1, y0: -SW / 2, y1: SW / 2 },
+      { layer: 'm1', role: 'G2', x0: m.xe0, x1: m.xe1, y0: -(SW / 2 + g + GW), y1: -(SW / 2 + g) },
+      { layer: 'heater', role: 'bias heater', x0: m.xh0, x1: m.xh1, y0: h - 1, y1: h + 1 }, { layer: 'term', role: `R_T ${P.mzm.RT} Ω (placeholder)`, x0: m.xe1, x1: m.xe1 + 20, y0: -SW / 2, y1: SW / 2 }];
+    return { local: { prims: prw(prims, pf.w0), mmi_in: { x_um: 0, mirror: false }, mmi_out: { x_um: m.L, mirror: true }, rects } };
+  }
+  function tapLocal(t, d, pf) {
+    const w = pf.w0, xe = 10 + t.Lc, yp = t.yt - t.sb.dy, prims = [{ t: 'L', a: [0, 0], b: [t.L, 0] }, { t: 'L', a: [10, t.yt], b: [xe, t.yt] }];
+    prims.push(...jogRoute([xe, t.yt], [t.xpd, yp], xe + t.sb.dx / 2, d.R, d.bend ? 'euler' : 'arc').prims);
+    prims.push({ t: 'L', a: [t.xpd, yp], b: [t.xpd + t.Lpd, yp] });   // waveguide under the Ge absorber
+    return { local: { prims: prw(prims, w), rects: [{ layer: 'ge', role: 'Ge PD', x0: t.xpd, x1: t.xpd + t.Lpd, y0: yp - t.pdw / 2, y1: yp + t.pdw / 2 }] } };
+  }
   // horizontal room a fan needs (same ordering as route(): corners share the jog pitch, arc S-bends are laid side by side)
   function fanWidth(moves, R, shape, jog, compress) {
     const w = (g) => { if (!g.length) return 0; g = g.slice().sort((p, q) => Math.abs(p) - Math.abs(q)); if (!compress) g.reverse(); let lastV = -Infinity, lastEnd = -jog, end = 0; g.forEach((dy) => { const sb = sBend(dy, R, shape), xj = Math.max(lastV + jog, lastEnd + jog + sb.dx / 2, sb.dx / 2); lastV = xj; lastEnd = Math.max(lastEnd, xj + sb.dx / 2); end = Math.max(end, xj + sb.dx / 2); }); return end; };
@@ -199,18 +234,19 @@ const LAB = (() => {
     const flip = (d.rf | 0) === 1;
     (c.pads || []).forEach((p) => { if (flip) ys.push(p.y - p.w / 2, p.y + p.w / 2); });
     const xr = Math.max(0, ...(c.pads || []).map((p) => p.x + p.w / 2 + e)), span = Math.max(...ys) - Math.min(...ys);
-    return { W: Math.max(c.need.W, xr), H: flip ? span + 2 * e + 20 : Math.max(c.need.H, span + 2 * (PAD.w + 30 + e) + 20) };
+    return { W: Math.max(c.need.W, xr), H: flip ? span + 2 * e + 20 : c.need.H };
   }
   function build(ctx, d, opt) {
     opt = opt || {};
     const pf = ctx.pf, P = parts(ctx), mod = (d.mod | 0) === 1 ? 'mrr' : 'mzm', N = SH[d.share | 0], nL = LANES / N, depth = Math.log2(N);
     const W = d.W * 1000, H = d.H * 1000, e = d.edge, shape = d.bend ? 'euler' : 'arc', R = d.R, wm = wgModel(pf, Math.max(d.wr, pf.w0)), a = a0Of(shape, R);
     const lb = laneBox(ctx, d, P), inst = [], onets = [], enets = [], issues = [];
-    const add = (o) => { inst.push(o); return o; };
+    const add = (o) => { o.x = r3(o.x); o.y = r3(o.y); o.ports = o.ports.map((p) => ({ ...p, x: r3(p.x), y: r3(p.y) })); inst.push(o); return o; };   // placement and ports on the 1 nm grid
     const portAbs = (I, n) => { const p = I.ports.find((q) => q.n === n); return { ...p, X: I.x + p.x * (I.rot === 180 ? -1 : 1), Y: I.y + p.y * (I.rot === 180 ? -1 : 1), A: I.rot === 180 ? (p.a + 180) % 360 : p.a }; };
     const bbox = (I) => (I.rot === 180 ? [I.x - I.L, I.y - I.y1, I.x, I.y - I.y0] : [I.x, I.y + I.y0, I.x + I.L, I.y + I.y1]);
     // vertical stack: lanes centred between the two pad rows
-    const rfH = (d.rf | 0) === 1 ? 0 : PAD.w + 30, yc = H / 2, yL = (i) => yc + (i - (LANES - 1) / 2) * d.P;
+    const rfH = (d.rf | 0) === 1 ? 0 : PAD.w + 30, yL = (i) => yc + (i - (LANES - 1) / 2) * d.P;
+    let yc = H / 2, dcH = rfH;   // yc is moved below once the DC fan-out channel height is known
     // x columns
     const ssc = P.ssc, mmi = P.mmi, rootY = (k) => (yL(k * N) + yL(k * N + N - 1)) / 2, finY = (k) => yc + (k - (nL - 1) / 2) * d.fp;
     const fanIn = fanWidth(Array.from({ length: nL }, (_, k) => rootY(k) - finY(k)), R, shape, d.jog, d.fp > N * d.P);
@@ -218,11 +254,18 @@ const LAB = (() => {
     const lvlLen = []; for (let j = 0; j < depth; j++) { const dyj = d.P * Math.pow(2, depth - j - 2) - mmi.s / 2; lvlLen.push(mmi.Ltot + sBend(Math.max(dyj, 0), R, shape).len + 20); }
     let xMod0 = xTree0 + lvlLen.reduce((s, v) => s + v, 0) + (N === 1 ? 0 : 10) + 20;
     if ((d.rf | 0) === 0) { const xf = lb.m.ports.find((p) => p.n === 'rf_s').x; xMod0 = Math.max(xMod0, e + PAD.w / 2 + 30 + (rfPads(d) - 1) * d.pp + 10 - xf); }
-    else if (lb.m.kind === 'mrr') xMod0 = Math.max(xMod0, e + BUMP.w / 2 + 30 + (rfPads(d) - 1) * BUMP.pitch + lb.m.R - lb.m.xc + 5);   // bump row west of the ring
+    else if (lb.m.kind === 'mrr') xMod0 = Math.max(xMod0, e + BUMP.w / 2 + RING_BX + (rfPads(d) - 1) * BUMP.pitch + lb.m.R - lb.m.xc + 5);   // bump row west of the ring
     else xMod0 = Math.max(xMod0, e + BUMP.w / 2 + 40 - lb.m.xe0 + 5);
     const stag = (i) => ((d.rfSide | 0) === 1 ? (LANES - 1 - i) : i) * d.stag;
+    // edge pads: DC lines fan out planar to the pad row through a channel of one track per line (dcPlan) — the channel sets the
+    // margin on the DC side; lanes are centred between the RF pad margin and the DC margin
+    if ((d.rf | 0) === 0) {
+      const its = []; for (let i = 0; i < LANES; i++) { const xm = r3(xMod0 + stag(i)), y = (i - (LANES - 1) / 2) * d.P; lb.m.ports.filter((p) => p.k === 'dc').forEach((p) => its.push({ X: r3(xm + p.x), Y: y + p.y })); if (lb.t) lb.t.ports.filter((p) => p.k === 'dc').forEach((p) => its.push({ X: r3(r3(xm + lb.m.L + 10) + p.x), Y: y + p.y })); }
+      dcH = PAD.w + 30 + dcPlan(its, d.pp, e + PAD.w / 2 + 10, W - e - PAD.w / 2 - 10).n * DC_TP;
+      yc = (d.rfSide | 0) === 0 ? (e + dcH + H - e - rfH) / 2 : (e + rfH + H - e - dcH) / 2;
+    }
     // ---- instances ----
-    const ins = []; for (let k = 0; k < nL; k++) ins.push(add({ id: `IN${k}`, type: 'ssc', role: 'input', lane: null, x: 0, y: yc + (k - (nL - 1) / 2) * d.fp, rot: 0, L: ssc.Lt, y0: -2, y1: 2, params: { Lt_um: ssc.Lt, tip_um: ssc.tw, w_um: d.wr }, src: ssc.src,
+    const ins = []; for (let k = 0; k < nL; k++) ins.push(add({ id: `IN${k}`, type: 'ssc', role: 'input', lane: null, x: 0, y: yc + (k - (nL - 1) / 2) * d.fp, rot: 0, L: ssc.Lt, y0: -2, y1: 2, params: { Lt_um: ssc.Lt, tip_um: ssc.tw, w_um: pf.w0 }, src: ssc.src,
       ports: [{ n: 'fib', k: 'fib', x: 0, y: 0, a: 180 }, { n: 'out', k: 'o', x: ssc.Lt, y: 0, a: 0 }] }));
     // splitter tree: node (k, j, idx) covers lanes [k·N + idx·N/2^j, … + N/2^j)
     const tree = [];
@@ -244,20 +287,20 @@ const LAB = (() => {
       const m = lb.m, x = xMod0 + stag(i), y = yL(i);
       const src = mod === 'mrr' ? P.mrr.src : `${P.mzm.src} + ${P.mmi.src} + ${P.heater.src}`;
       mods.push(add({ id: `MOD${i}`, type: mod, role: 'modulator', lane: i, x, y, rot: 0, L: m.L, y0: m.y0, y1: m.y1, geom: m, src,
-        params: mod === 'mrr' ? { ring: P.mrr.geom } : { L_e_um: P.mzm.Le, gap_um: P.mzm.g, signal_um: SW, ground_um: GW, arm_sep_um: m.da, RT_ohm: P.mzm.RT, mmi: { W_um: mmi.W, L_um: mmi.L, wt_um: mmi.wt, s_um: mmi.s, taper_len_um: mmi.tl },
-          heater: { L_um: P.heater.L, w_um: 2, h_um: P.heater.h, x0_um: m.xh0 }, sbend: m.sb },
+        params: mod === 'mrr' ? { ring: { ...P.mrr.geom, local_pads: false }, local: m.local } : { L_e_um: P.mzm.Le, gap_um: P.mzm.g, signal_um: SW, ground_um: GW, arm_sep_um: m.da, RT_ohm: P.mzm.RT, mmi: { W_um: mmi.W, L_um: mmi.L, wt_um: mmi.wt, s_um: mmi.s, taper_len_um: mmi.tl, w_io_um: pf.w0 },
+          heater: { L_um: P.heater.L, w_um: 2, h_um: P.heater.h, x0_um: m.xh0 }, sbend: m.sb, ...mzmLocal(m, P, pf) },
         ports: m.ports }));
       if (lb.t) { const t = lb.t; taps.push(add({ id: `MON${i}`, type: 'tap_pd', role: 'monitor', lane: i, x: x + m.L + 10, y, rot: 0, L: t.L, y0: t.y0, y1: t.y1, geom: t, src: `${P.pd.src} (Ge ${P.pd.L}×${P.pd.w} µm) · 2 % 방향성 결합기`,
-        params: { Lc_um: r4(t.Lc), gap_um: t.gap, ratio: TAP, pd_L_um: t.Lpd, pd_w_um: t.pdw }, ports: t.ports })); }
+        params: { Lc_um: r4(t.Lc), gap_um: t.gap, ratio: TAP, pd_L_um: t.Lpd, pd_w_um: t.pdw, ...tapLocal(t, d, pf) }, ports: t.ports })); }
     }
     const lastX = Math.max(...(lb.t ? taps : mods).map((I) => I.x + I.L));
     const fanOut = fanWidth(Array.from({ length: LANES }, (_, i) => yc + (i - (LANES - 1) / 2) * d.fp - yL(i)), R, shape, d.jog, d.P > d.fp) + 20, xOutFacet = W;
     const outs = []; for (let i = 0; i < LANES; i++) outs.push(add({ id: `OUT${i}`, type: 'ssc', role: 'output', lane: i, x: xOutFacet, y: yc + (i - (LANES - 1) / 2) * d.fp, rot: 180, L: ssc.Lt, y0: -2, y1: 2,
-      params: { Lt_um: ssc.Lt, tip_um: ssc.tw, w_um: d.wr }, src: ssc.src, ports: [{ n: 'fib', k: 'fib', x: 0, y: 0, a: 180 }, { n: 'in', k: 'o', x: ssc.Lt, y: 0, a: 0 }] }));
+      params: { Lt_um: ssc.Lt, tip_um: ssc.tw, w_um: pf.w0 }, src: ssc.src, ports: [{ n: 'fib', k: 'fib', x: 0, y: 0, a: 180 }, { n: 'in', k: 'o', x: ssc.Lt, y: 0, a: 0 }] }));
     // die size actually needed
     const nDC = (lb.m.ports.filter((p) => p.k === 'dc').length + (lb.t ? 2 : 0)) * LANES;
     const needW = Math.max(lastX + fanOut + ssc.Lt + e, (d.rf | 0) === 1 ? 0 : 2 * e + PAD.w + 20 + nDC * d.pp), ys = inst.flatMap((I) => { const b = bbox(I); return [b[1], b[3]]; });
-    const needH = (Math.max(...ys) - Math.min(...ys)) + 2 * (rfH + e) + 20;
+    const needH = (Math.max(...ys) - Math.min(...ys)) + rfH + dcH + 2 * e + 20;
     // ---- optical nets ----
     const net = (from, to, lane, kind) => onets.push({ id: `n${onets.length}`, from, to, lane, kind });
     for (let k = 0; k < nL; k++) {
@@ -328,8 +371,8 @@ const LAB = (() => {
     c.pads = []; c.elines = []; c.enets.length = 0;
     const yRF = N_side ? H - e - PAD.w / 2 : e + PAD.w / 2, yDC = N_side ? e + PAD.w / 2 : H - e - PAD.w / 2;
     const pad = (id, kind, x, y, net, w) => { const p = { id, kind, x, y, w: w || (flip ? BUMP.w : PAD.w), net }; c.pads.push(p); return p; };
-    const line = (net, kind, pts, layer) => { let L = 0; for (let i = 1; i < pts.length; i++) L += Math.abs(pts[i][0] - pts[i - 1][0]) + Math.abs(pts[i][1] - pts[i - 1][1]); c.elines.push({ net, kind, pts, layer, length_um: L }); return L; };
-    let dcX = e + PAD.w / 2 + 10;
+    const line = (net, kind, pts, layer) => { let L = 0; for (let i = 1; i < pts.length; i++) L += Math.abs(pts[i][0] - pts[i - 1][0]) + Math.abs(pts[i][1] - pts[i - 1][1]); c.elines.push({ net, kind, pts, layer, width_um: MW[kind], length_um: L }); return L; };
+    const dcAll = [];
     for (const M of c.inst.filter((x) => x.role === 'modulator')) {
       const i = M.lane, P = (n) => c.portAbs(M, n), rf = M.ports.filter((p) => p.k === 'rf').map((p) => p.n);
       // RF: GSG (TW-MZM) or GS (ring). Edge pads: pads in a row at the feed x, lines go west then straight to the edge (planar by the
@@ -342,7 +385,8 @@ const LAB = (() => {
         const p = P(n), id = `RF${i}_${n.slice(3)}`;
         if (flip) {   // bump column 50 µm west of the feed point, 55 µm pitch (3D-stacked driver right above)
           const kk = k - (order2.length - 1) / 2, g = M.geom;
-          const b = c.mod === 'mrr' ? pad(id, 'rf', M.x + g.xc - g.R - 30 - (order2.length - 1 - k) * BUMP.pitch, p.Y, `${M.id}.${n}`)   // row west of the ring, each at its contact height
+          const xr = M.x + g.xc - g.R - RING_BX, sY = P('rf_s').Y;   // ring: S bump west at the junction height, G bump nearer and raised so the S line passes below it
+          const b = c.mod === 'mrr' ? (n === 'rf_s' ? pad(id, 'rf', xr - BUMP.pitch, p.Y, `${M.id}.${n}`) : pad(id, 'rf', xr, Math.max(p.Y, sY + MW.rf / 2 + 5 + BUMP.w / 2), `${M.id}.${n}`))
             : pad(id, 'rf', s.X - 40, s.Y + kk * BUMP.pitch * dir, `${M.id}.${n}`);                                                    // column at the electrode start
           rfLen = Math.max(rfLen, line(`${M.id}.${n}`, 'rf', [[p.X, p.Y], [b.x, p.Y], [b.x, b.y]], 'M1'));
         }
@@ -356,14 +400,53 @@ const LAB = (() => {
       if (c.mod === 'mzm') c.enets.push({ id: `${M.id}.term`, kind: 'rf_term', lane: i, from: `${M.id}.term`, to: `R_T ${M.params.RT_ohm} Ω (온칩, 추상)` });
       // DC: heater ± and monitor PD ± → pads on the opposite edge (or local bumps)
       const dcp = M.ports.filter((p) => p.k === 'dc').map((p) => ({ n: p.n, I: M })).concat(c.inst.filter((x) => x.role === 'monitor' && x.lane === i).flatMap((T) => T.ports.filter((p) => p.k === 'dc').map((p) => ({ n: p.n, I: T }))));
-      const xs0 = Math.min(...dcp.map((q) => c.portAbs(q.I, q.n).X));
-      dcp.forEach((q, kq) => {
-        const p = c.portAbs(q.I, q.n), id = `DC${i}_${q.n}`;
-        if (flip) { const b = pad(id, 'dc', xs0 + kq * BUMP.pitch, M.y + lbY0(c) - 35, `${q.I.id}.${q.n}`); line(`${q.I.id}.${q.n}`, 'dc', [[p.X, p.Y], [p.X, b.y], [b.x, b.y]], 'M2'); }   // row under the lane
-        else { const b = pad(id, 'dc', dcX, yDC, `${q.I.id}.${q.n}`); dcX += d.pp; line(`${q.I.id}.${q.n}`, 'dc', [[p.X, p.Y], [p.X, b.y + dir * 40], [b.x, b.y + dir * 40], [b.x, b.y]], 'M2'); }
-        c.enets.push({ id: `${q.I.id}.${q.n}`, kind: 'dc', lane: i, from: `${q.I.id}.${q.n}`, to: `pad:${id}` });
-      });
+      dcp.forEach((q) => { const p = c.portAbs(q.I, q.n); dcAll.push({ ...q, i, X: p.X, Y: p.Y, id: `DC${i}_${q.n}`, net: `${q.I.id}.${q.n}`, laneY0: M.y + lbY0(c) }); });
     }
+    // DC: planar fan-out (dcPlan) — flip-chip: a bump row under each lane; edge: one pad row on the DC edge for the whole die
+    const dcDraw = (grp, py, tdir, t0, pitch, lo, hi) => {
+      const pl = dcPlan(grp, pitch, lo, hi);
+      grp.forEach((q, k) => {
+        const b = pad(q.id, 'dc', pl.px[k], py, q.net), t = r3(py + tdir * (t0 + pl.tr[k] * DC_TP)), x = pl.col[k];
+        const head = x !== q.X ? [[q.X, q.Y], [x, q.Y]] : [[q.X, q.Y]];   // stub at the port height to the line's own column
+        line(q.net, 'dc', pl.tr[k] < 0 ? [...head, [x, b.y]] : [...head, [x, t], [b.x, t], [b.x, b.y]], 'M2');
+        c.enets.push({ id: q.net, kind: 'dc', lane: q.i, from: q.net, to: `pad:${q.id}` });
+      });
+      return pl;
+    };
+    if (flip) for (let i = 0; i < LANES; i++) {
+      const grp = dcAll.filter((q) => q.i === i); if (!grp.length) continue;
+      const M = c.inst.find((x) => x.id === `MOD${i}`), g = M.geom;
+      const lo = c.mod === 'mrr' ? M.x + g.xc - g.R - RING_BX + BUMP.pitch : -Infinity;   // ring: DC bumps east of the RF bump column (clear of it at any height)
+      const n = dcPlan(grp, BUMP.pitch, lo, Infinity).n, t0 = BUMP.w / 2 + 8;
+      dcDraw(grp, r3(grp[0].laneY0 - 5 - Math.max(n - 1, 0) * DC_TP - t0), 1, t0, BUMP.pitch, lo, Infinity);   // top track 5 µm under the lane box
+    }
+    else { const dir = N_side ? 1 : -1; c.dcPlan = dcDraw(dcAll, yDC, dir, PAD.w / 2 + 20, d.pp, e + PAD.w / 2 + 10, c.W - e - PAD.w / 2 - 10); }
+  }
+  // planar ("river") fan-out of DC lines (ports {X, Y} above a pad row) on one metal layer:
+  // 1. columns — lines are taken from the lowest port up; a line keeps its port x unless a column already taken (or a stub
+  //    already drawn below it) is closer than DC_SEP, then it runs a short stub at its own port height to the nearest free column
+  //    (the stub may not pass a column whose port is within DC_SEP of this height);
+  // 2. pads in column order, centred under the columns (clamped to [lo, hi] when the row fits), one horizontal track per line:
+  //    lines going left — the larger column takes the track nearer the pads; going right — mirrored. No vertical then crosses
+  //    another line's track, and left / right groups never overlap.
+  function dcPlan(items, pitch, lo, hi) {
+    const n = items.length, col = new Array(n), px = new Array(n), tr = new Array(n).fill(-1);
+    if (!n) return { px, tr, col, n: 0 };
+    const fixed = [];   // { x: column, top, sx0, sx1, sy } — vertical from top down; stub [sx0, sx1] at height sy
+    const free = (x, h, x0) => fixed.every((f) => Math.abs(f.x - x) >= DC_SEP - 1e-9 && !(f.sx1 > f.sx0 && f.sy < h + DC_SEP && x > f.sx0 - DC_SEP && x < f.sx1 + DC_SEP))
+      && (x === x0 || fixed.every((f) => { const dir = Math.sign(x - x0), a = (f.x - x0) * dir, b = (f.x - x) * dir; return !(f.top > h - DC_SEP && a >= 0 && b < DC_SEP); }));   // the stub may not run over or past a column reaching this height (columns behind the stub start are fine)
+    items.map((q, k) => k).sort((a, b) => items[a].Y - items[b].Y || items[a].X - items[b].X).forEach((k) => {
+      const { X, Y } = items[k]; let x = X;
+      if (!free(X, Y, X)) for (let s = 1; s <= 400; s++) { const c1 = r3(X + s * 0.5), c2 = r3(X - s * 0.5); if (free(c1, Y, X)) { x = c1; break; } if (free(c2, Y, X)) { x = c2; break; } }
+      col[k] = x; fixed.push({ x, top: Y, sx0: Math.min(X, x), sx1: Math.max(X, x), sy: Y });
+    });
+    const ord = col.map((x, k) => k).sort((a, b) => col[a] - col[b]);
+    let x0 = col.reduce((s, v) => s + v, 0) / n - (n - 1) / 2 * pitch;
+    if (hi - (n - 1) * pitch >= lo) x0 = Math.min(Math.max(x0, lo), hi - (n - 1) * pitch);
+    ord.forEach((k, r) => { px[k] = r3(x0 + r * pitch); });
+    const left = ord.filter((k) => px[k] < col[k] - 1e-6), right = ord.filter((k) => px[k] > col[k] + 1e-6);
+    left.forEach((k, r) => { tr[k] = left.length - 1 - r; }); right.forEach((k, r) => { tr[k] = r; });
+    return { px, tr, col, n: Math.max(left.length, right.length) };
   }
 
   const lbY0 = (c) => c.lb.y0;   // lane bottom incl. the monitor tap (DC bumps sit below it, away from the RF bumps)
@@ -424,12 +507,22 @@ const LAB = (() => {
       const pOut = c.pads.filter((p) => p.x - p.w / 2 < e || p.x + p.w / 2 > c.W - e || p.y - p.w / 2 < e - 1e-6 || p.y + p.w / 2 > H - e + 1e-6);
       let pov = 0; for (let i = 0; i < c.pads.length; i++) for (let j = i + 1; j < c.pads.length; j++) { const A = c.pads[i], B = c.pads[j]; const sp = (d.rf | 0) === 1 ? BUMP.pitch - BUMP.w : 10; if (Math.abs(A.x - B.x) < (A.w + B.w) / 2 + sp - 1e-6 && Math.abs(A.y - B.y) < (A.w + B.w) / 2 + sp - 1e-6) pov++; }
       add('Geometry', (d.rf | 0) === 1 ? `범프 배치 (다이 안, 간격 ≥ ${BUMP.pitch - BUMP.w} µm)` : '패드 배치 (다이 안, 간격 ≥ 10 µm)', pOut.length || pov ? ST.F : ST.P, `${c.pads.length}개 ${(d.rf | 0) === 1 ? '범프' : '패드'}${pOut.length ? ` · 경계 밖 ${pOut.length}` : ''}${pov ? ` · 겹침 ${pov}` : ''}`);
-      // RF lines on one metal layer must not cross
+      // RF metal (lines drawn MW.rf wide + RF pads / bumps) of different nets on one layer must not touch — the GDS draws the same rectangles
       const rf = c.elines.filter((l) => l.kind === 'rf'); let cross = 0;
       const segs = (l) => l.pts.slice(1).map((p, k) => [l.pts[k], p]);
       const hit = (s, t) => { const [a, b] = s, [p, q] = t; const ax0 = Math.min(a[0], b[0]), ax1 = Math.max(a[0], b[0]), ay0 = Math.min(a[1], b[1]), ay1 = Math.max(a[1], b[1]), bx0 = Math.min(p[0], q[0]), bx1 = Math.max(p[0], q[0]), by0 = Math.min(p[1], q[1]), by1 = Math.max(p[1], q[1]); return ax0 <= bx1 + 1 && bx0 <= ax1 + 1 && ay0 <= by1 + 1 && by0 <= ay1 + 1; };
-      for (let i = 0; i < rf.length; i++) for (let j = i + 1; j < rf.length; j++) if (segs(rf[i]).some((s) => segs(rf[j]).some((t) => hit(s, t)))) cross++;
-      add('Geometry', 'RF 배선 교차 (같은 금속층)', cross ? ST.F : ST.P, cross ? `${cross}쌍 교차 — 레인 엇갈림(stagger)을 늘리거나 플립칩` : '');
+      const box = (s, h) => [Math.min(s[0][0], s[1][0]) - h, Math.min(s[0][1], s[1][1]) - h, Math.max(s[0][0], s[1][0]) + h, Math.max(s[0][1], s[1][1]) + h];
+      const ov = (A, B) => A[0] < B[2] && B[0] < A[2] && A[1] < B[3] && B[1] < A[3];
+      const shorts = (kind) => {   // pairs of nets whose drawn metal (lines MW[kind] wide + pads) touch on the one layer of that kind
+        const ls = c.elines.filter((l) => l.kind === kind), nets = [...new Set(ls.map((l) => l.net))];
+        const mt = nets.map((net) => ls.filter((l) => l.net === net).flatMap((l) => segs(l).map((s) => box(s, MW[kind] / 2))).concat(c.pads.filter((p) => p.kind === kind && p.net === net).map((p) => [p.x - p.w / 2, p.y - p.w / 2, p.x + p.w / 2, p.y + p.w / 2])));
+        let n = 0; for (let i = 0; i < nets.length; i++) for (let j = i + 1; j < nets.length; j++) if (mt[i].some((A) => mt[j].some((B) => ov(A, B)))) n++;
+        return n;
+      };
+      cross = shorts('rf');
+      add('Geometry', 'RF 배선 교차 (같은 금속층)', cross ? ST.F : ST.P, cross ? `${cross}쌍 교차·접촉 (M1, 선폭 ${MW.rf} µm, 패드 포함) — 레인 엇갈림(stagger)을 늘리거나 플립칩` : `M1 선폭 ${MW.rf} µm · 패드·범프 포함`);
+      const dcx = shorts('dc');
+      add('Geometry', 'DC 배선 교차 (같은 금속층)', dcx ? ST.F : ST.P, dcx ? `${dcx}쌍 교차·접촉 (M2, 선폭 ${MW.dc} µm)` : `M2 한 층, 선폭 ${MW.dc} µm · 평면 팬아웃 (트랙 ${DC_TP} µm 간격${c.dcPlan ? ` × ${c.dcPlan.n}` : ''})`);
       // RF over optical waveguide crossings (information)
       const wgSeg = (c.routes || []).filter((r) => r.ok).flatMap((r) => r.prims.filter((p) => p.t === 'L').map((p) => [p.a, p.b]));
       let ox = 0; rf.forEach((l) => segs(l).forEach((s) => { ox += wgSeg.filter((t) => hit(s, t)).length; }));
@@ -450,8 +543,10 @@ const LAB = (() => {
     add('Model validity', 'RF 전극·급전선 전자기 해석', ST.N, 'CPW·패드·종단은 추상 형상 — EM 시뮬레이션 필요');
     add('Model validity', '레인 간 열 크로스토크 · 링 락 상호작용', ST.N, '레인 간 거리만 표시, 열해석 없음');
     add('Model validity', '파운드리 DRC (주입·금속·비아 규칙)', ST.N, '일반 규칙만: 선폭·간격·굽힘·경계·겹침');
-    add('Model validity', 'DC 배선 교차 (2층 금속 가정)', ST.N, 'DC는 M2로 가정 — 교차 검사 안 함');
-    add('Model validity', 'GDS 재검사', ST.N, 'Phase D: smq2gds가 GDS를 만들고 다시 읽어 검사');
+    { const gr = ctx && ctx.gds, cur = gr ? designHash(c) : null, sm = gr && gr.summary;   // imported tools/smq2gds re-check (engine_verification.json gds_recheck)
+      if (!gr) add('Model validity', 'GDS 재검사', ST.N, 'tools/smq2gds.circuit로 GDS를 만들고 다시 읽어 검사한 결과(engine_verification.json)를 Mission 6에서 불러오면 반영');
+      else if (gr.design_hash !== cur) add('Model validity', 'GDS 재검사', ST.N, `불러온 결과는 다른 설계 (hash ${String(gr.design_hash).replace(/[^0-9a-f]/g, '')} ≠ 지금 ${cur}) — 다시 내보내고 GDS를 다시 만드세요`);
+      else add('Model validity', 'GDS 재검사', sm.FAIL ? ST.F : ST.P, `smq2gds: PASS ${sm.PASS} · WARNING ${sm.WARNING} · FAIL ${sm.FAIL}${sm['NOT VERIFIED'] != null ? ` · NOT VERIFIED ${sm['NOT VERIFIED']}` : ''} · GDS sha1 ${String(gr.gds_sha1 || '').replace(/[^0-9a-f]/g, '').slice(0, 10)} (hash ${cur})`); }
     return { checks: out, sys };
   }
 
@@ -481,35 +576,46 @@ const LAB = (() => {
     const sch = noFail(by('Connectivity', /광 포트|포트 종류|레인 수|입·출력/));
     const fp = noFail(by('Geometry', /다이 경계|소자 겹침/)) && noFail(by('Geometry', /패드 배치/));
     const rt = noFail(by('Geometry', /광 배선 생성|배선 간격|굽힘 반경|장애물|최소 선폭/));
-    const el = noFail(by('Connectivity', /전기 포트/)) && noFail(by('Geometry', /RF 배선 교차|패드 배치/));
+    const el = noFail(by('Connectivity', /전기 포트/)) && noFail(by('Geometry', /RF 배선 교차|DC 배선 교차|패드 배치/));
     const vf = chk.checks.every((x) => x.status !== 'FAIL');
     return { schematic: sch, floorplan: fp, routing: rt, electrical: el, verification: vf };
   }
 
   /* ---------------- export: smq-circuit/1 ---------------- */
+  // design identity of a built circuit (same as engine_layout.json design_hash)
+  function designHash(c) { return layoutData(c, '').layout.design_hash; }
   function exportCircuit(c, chk, meta) {
+    const { schematic, layout } = layoutData(c, (meta && meta.time) || new Date().toISOString()), pf = c.platform;
+    const sys = chk.sys;
+    const verification = { schema: SCHEMA + '#verification', platform: pf.id, design_hash: layout.design_hash, checks: chk.checks.map(({ group, item, status, detail }) => ({ group, item: item.replace(/<[^>]+>/g, ''), status, detail: String(detail || '').replace(/<[^>]+>/g, '') })),
+      summary: ['PASS', 'WARNING', 'FAIL', 'NOT VERIFIED'].reduce((o, s) => ({ ...o, [s]: chk.checks.filter((x) => x.status === s).length }), {}),
+      performance: { model: '3A+ engine (' + sys.src + ')', margin_model_dB: r4(sys.marginModel), layout_route_loss_dB_worst: r4(sys.extra), margin_with_layout_dB: r4(sys.marginLayout), module_W: r4(sys.pw), pJ_per_bit: r4(sys.pj),
+        lanes: sys.lanes.map((x) => ({ lane: x.lane, before_mod_dB: r4(x.before), after_mod_dB: r4(x.after), tap_dB: r4(x.tap), total_dB: r4(x.total) })) } };
+    return { schematic, layout, verification };
+  }
+  function layoutData(c, time) {
     const pf = c.platform, inst = c.inst.map((I) => ({ id: I.id, type: I.type, role: I.role, lane: I.lane, source: I.src, params: I.params,
       placement: { x_um: r4(I.x), y_um: r4(I.y), rot_deg: I.rot }, bbox_um: c.bbox(I).map(r4), size_um: [r4(I.L), r4(I.y1 - I.y0)],
       ports: I.ports.map((p) => { const q = c.portAbs(I, p.n); return { name: p.n, kind: p.k === 'o' || p.k === 'fib' ? 'optical' : p.k === 'int' ? 'internal' : 'electrical', sub: p.k, xy_um: [r4(q.X), r4(q.Y)], angle_deg: q.A != null ? q.A : null }; }) }));
-    const base = { schema: SCHEMA, generator: 'SPEC-to-MASK Quest · PIC Design Lab', exported: (meta && meta.time) || new Date().toISOString(),
+    const base = { schema: SCHEMA, generator: 'SPEC-to-MASK Quest · PIC Design Lab', exported: time,
       platform: { id: pf.id, mat: pf.mat, lam_um: pf.lam, core_t_um: pf.t, w0_um: pf.w0, wc_um: pf.wc, clad: 'SiO2', box: 'SiO2', rules_um: pf.rules,
         route_rules: { port_width_um: pf.w0, body_width_um: Math.max(c.d.wr, pf.w0), taper: 'linear on the first / last straight (short nets stay at the port width)', bend: c.shape, R_um: c.d.R, R_min_rule_um: wgModel(pf, pf.w0).Rmin, alpha_body_dB_cm: r4(c.wm.alpha), alpha_port_dB_cm: r4(wgModel(pf, pf.w0).alpha), litho_min_width_um: pf.mat === 'si' ? 0.15 : 0.3 } },
       architecture: { name: '1.6T DR8 Tx PIC', lanes: LANES, lane_rate_gbps: LANE_GBPS, net_rate_gbps: NET_GBPS, baud_gbd: 112, format: 'PAM4', modulator: c.mod, laser_share: c.N, lasers: c.nL, splitter_depth: c.depth, monitor_pd: !!c.d.mon },
       die: { W_um: c.W, H_um: c.H, edge_um: c.d.edge, optical_io: { input: 'W', output: 'E', fiber_pitch_um: c.d.fp }, electrical_io: (c.d.rf | 0) === 1 ? { type: 'flip-chip bumps (abstract)', side: 'local' } : { type: 'edge wire-bond pads (abstract)', rf_side: (c.d.rfSide | 0) === 0 ? 'N' : 'S', dc_side: (c.d.rfSide | 0) === 0 ? 'S' : 'N', pad_pitch_um: c.d.pp, pad_um: PAD.w }, lane_pitch_um: c.d.P, lane_stagger_um: c.d.stag },
       instances: inst };
     const schematic = { ...base, nets: { optical: c.onets, electrical: c.enets } };
+    const fnv = (str) => { let h = 0x811c9dc5; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, '0'); };
     const layout = { ...base, nets: { optical: c.onets, electrical: c.enets },
       routing: { optical: (c.routes || []).map((r) => ({ net: r.net, from: r.from, to: r.to, lane: r.lane, ok: r.ok, reason: r.why || null, body_width_um: r.w, length_um: r4(r.length_um), loss_dB: r4(r.loss_dB), prims: r.prims.map((p) => JSON.parse(JSON.stringify(p, (k, v) => (typeof v === 'number' ? r4(v) : v)))) })),
-        electrical: (c.elines || []).map((l) => ({ net: l.net, kind: l.kind, layer: l.layer, length_um: r4(l.length_um), pts: l.pts.map((p) => p.map(r4)) })), pads: (c.pads || []).map((p) => ({ ...p, x: r4(p.x), y: r4(p.y) })) },
+        electrical: (c.elines || []).map((l) => ({ net: l.net, kind: l.kind, layer: l.layer, width_um: l.width_um, length_um: r4(l.length_um), pts: l.pts.map((p) => p.map(r4)) })), pads: (c.pads || []).map((p) => ({ ...p, x: r4(p.x), y: r4(p.y) })) },
       abstraction: { implants: 'annotation layers (generic PDK)', rf_metal: 'abstract CPW / pads, not foundry RF rules', termination: 'on-chip resistor placeholder', not_tape_out_ready: true } };
-    const sys = chk.sys;
-    const verification = { schema: SCHEMA + '#verification', platform: pf.id, checks: chk.checks.map(({ group, item, status, detail }) => ({ group, item: item.replace(/<[^>]+>/g, ''), status, detail: String(detail || '').replace(/<[^>]+>/g, '') })),
-      summary: ['PASS', 'WARNING', 'FAIL', 'NOT VERIFIED'].reduce((o, s) => ({ ...o, [s]: chk.checks.filter((x) => x.status === s).length }), {}),
-      performance: { model: '3A+ engine (' + sys.src + ')', margin_model_dB: r4(sys.marginModel), layout_route_loss_dB_worst: r4(sys.extra), margin_with_layout_dB: r4(sys.marginLayout), module_W: r4(sys.pw), pJ_per_bit: r4(sys.pj),
-        lanes: sys.lanes.map((x) => ({ lane: x.lane, before_mod_dB: r4(x.before), after_mod_dB: r4(x.after), tap_dB: r4(x.tap), total_dB: r4(x.total) })) } };
-    return { schematic, layout, verification };
+    // design identity: hash of the layout content (without the export time); the GDS backend echoes it so the Lab can tell
+    // whether a GDS re-check belongs to the design on screen
+    const hash = fnv(JSON.stringify({ ...layout, exported: '' }));
+    layout.design_hash = hash; schematic.design_hash = hash;
+    return { schematic, layout };
   }
 
-  return { SCHEMA, LANES, SH, SW, GW, parts, wgModel, defaults, laneBox, stagAuto, minDie, build, checks, missions, system, exportCircuit, sample, sBend, jogRoute, routeLoss, primLen, a0Of, PAD, BUMP, tapLen };
+  return { SCHEMA, LANES, SH, SW, GW, MW, DC_TP, parts, wgModel, defaults, laneBox, stagAuto, minDie, build, checks, missions, system, exportCircuit, designHash, sample, sBend, jogRoute, routeLoss, primLen, a0Of, PAD, BUMP, tapLen };
 })();
 if (typeof module !== 'undefined') module.exports = LAB;

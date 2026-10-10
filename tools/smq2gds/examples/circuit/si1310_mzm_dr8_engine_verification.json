@@ -1,6 +1,7 @@
 {
  "schema": "smq-circuit/1#verification",
  "platform": "si1310",
+ "design_hash": "6873d219",
  "checks": [
   {
    "group": "Connectivity",
@@ -64,7 +65,7 @@
   },
   {
    "group": "Geometry",
-   "item": "다이 경계 (5.80 × 2.50 mm, 여유 50 µm)",
+   "item": "다이 경계 (5.80 × 2.70 mm, 여유 50 µm)",
    "status": "PASS",
    "detail": ""
   },
@@ -90,7 +91,13 @@
    "group": "Geometry",
    "item": "RF 배선 교차 (같은 금속층)",
    "status": "PASS",
-   "detail": ""
+   "detail": "M1 선폭 10 µm · 패드·범프 포함"
+  },
+  {
+   "group": "Geometry",
+   "item": "DC 배선 교차 (같은 금속층)",
+   "status": "PASS",
+   "detail": "M2 한 층, 선폭 5 µm · 평면 팬아웃 (트랙 10 µm 간격 × 16)"
   },
   {
    "group": "Geometry",
@@ -126,7 +133,7 @@
    "group": "System",
    "item": "RF 급전선 손실 (56 GHz, CPW 도체 손실)",
    "status": "WARNING",
-   "detail": "최장 2445 µm → 0.73 dB (2-3 CPW 손실식, 반사·분산 미포함)"
+   "detail": "최장 2465 µm → 0.74 dB (2-3 CPW 손실식, 반사·분산 미포함)"
   },
   {
    "group": "Model validity",
@@ -148,22 +155,16 @@
   },
   {
    "group": "Model validity",
-   "item": "DC 배선 교차 (2층 금속 가정)",
-   "status": "NOT VERIFIED",
-   "detail": "DC는 M2로 가정 — 교차 검사 안 함"
-  },
-  {
-   "group": "Model validity",
    "item": "GDS 재검사",
    "status": "NOT VERIFIED",
-   "detail": "Phase D: smq2gds가 GDS를 만들고 다시 읽어 검사"
+   "detail": "tools/smq2gds.circuit로 GDS를 만들고 다시 읽어 검사한 결과(engine_verification.json)를 Mission 6에서 불러오면 반영"
   }
  ],
  "summary": {
-  "PASS": 18,
+  "PASS": 19,
   "WARNING": 3,
   "FAIL": 0,
-  "NOT VERIFIED": 5
+  "NOT VERIFIED": 4
  },
  "performance": {
   "model": "3A+ engine (3A+ 기준 설계)",

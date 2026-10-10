@@ -532,7 +532,7 @@ footer b{color:var(--fg-2);font-weight:500}
     </div>
   </div>
   <footer>
-    <b>모델 범위.</b> 플랫폼 4종(Si 220 nm / SiN 400 nm × 1310 / 1550 nm, SiO₂ 클래딩)의 모드는 semi-vectorial 2D 유한차분 솔버(quasi-TE Ex, quasi-TM Ey)로 사전계산한 테이블입니다: 도파로 TE/TM 모드와 n<sub>eff</sub>(폭·두께·파장), 방향성 결합기의 짝/홀 슈퍼모드, SSC 팁 모드와 광섬유 overlap. MMI는 2D 유효굴절률법 + 고유모드 전개, CWDM은 같은 n<sub>eff</sub>·n<sub>g</sub> 테이블로 만든 회로 S-matrix입니다. 측벽 산란 손실은 (∂n<sub>eff</sub>/∂w)²에 비례하는 근사, 기판 누설은 BOX 터널링 근사. 반사, 3D 방사, 벤드 구간 결합, 편광 혼합은 포함하지 않아 FDTD·벡터 솔버보다 낙관적입니다 (500×220 nm Si @1550 TE0 n<sub>eff</sub> 2.49 vs 벡터 해 ≈ 2.44). <b>Stage 2.</b> TO: 히터 단면 2D 유한체적 열해석 테이블(트렌치·언더컷; 언더컷은 2D에서 볼 수 없는 팔 끝·테더 누설 0.5 W/m·K를 더함) + EIM dn<sub>eff</sub>/dT, τ는 국소 적층 에너지법. PN: 리브 EIM + 1D 모드, 계단 접합 공핍 근사, Soref–Bennett(1.31/1.55 µm), Caughey–Thomas 이동도. TW-MZM: CPW 등각사상(Hilberg) + 접합 부하 전신방정식, 양끝 반사, 광 진행 좌표계 적분, 112 GBd PAM4 눈은 5-tap FFE 기준 수신기(TDECQ 방식 근사, 잡음 증폭 √Σc²). Ge PD: 흡수 1−e<sup>−ΓαL</sup>, 전이(0.45v/d)×RC 1차 극, TIA 잡음은 입력 C에 비례하는 근사. 2-3R 링 변조기: Si 리브(220/90 nm) EIM, 결합은 휜 간격 위 Marcuse 결합 슬랩 κ 적분, 굽힘 방사 Marcuse, 링 손실 = 2-2 접합 흡수(덮개 75%) + 측벽 0.15 dB/mm + 히터 금속 + TPA·FCA. 투과는 all-pass Airy 식, 고속은 결합 모드 방정식(CMT) 시간영역 적분(광자 수명) × 접합 RC 극 — Q만으로 대역폭을 정하지 않습니다. OMA는 정착 레벨(정적, TDECQ 방식 점수)과 파형 극값(동적)을 분리합니다. 열: 2-1 단면 열해석의 G′를 링 둘레에 그대로 적용(링의 3D 열 퍼짐 무시 → 히터 효율 낙관적), 자기 가열 개루프 이득으로 빨강 쪽 디튜닝의 열 불안정을 판정. 공정: 폭·두께 산포로 공진 이동, 레이아웃 반경은 1 nm 격자에서 공진을 레이저 파장에 맞춘 값(GDS 반경과 같음). SiN 플랫폼의 링은 이종 집적 Si 활성층 가정입니다. MZM 비교의 구동 에너지는 부하 C·V²(PAM4) 대 정합 선로 V²/R이며 드라이버 효율·DSP는 포함하지 않습니다. 링크: 부품 카드의 대표값을 dB로 더한 버짓, 광 궤환은 파셋 Fresnel × 가우시안 overlap과 RIN 페널티 로지스틱 근사. <b>Stage 3.</b> 모듈 = 부품 카드(또는 기준 설계)의 대표값을 dB·W로 조립. 3A+의 링 변조기(MRR ×8): 레인 링마다 2-3R 엔진을 모듈의 변조기 입력 파워에서 다시 계산(0.5 dB 격자 보간), 히터 락으로 설계 디튜닝 유지, 히터 = (링 드리프트 − 레이저 드리프트)·ΔT mod FSR의 0–70 °C 최악값, 비냉각 DFB 0.085/0.10 nm/K·파장 산포 σ 0.5 nm·락 2 mW/레인·드라이버(= MZM 등급 − 부하 에너지 차)는 대표값 가정, 링 열 효율은 2D 단면 × 둘레라 낙관적(문헌 비교는 docs/arch_1p6t_dr8.md). 레인 마진은 4채널 × 케이스 0/70 °C 코너의 최솟값이며, Demux는 1-7 lattice를 dn<sub>eff</sub>/dT만큼 굴절률을 옮겨 다시 계산(밴드 ±6.5 nm 최악). 비냉각 DFB: −0.02 dB/K(25 °C 이상), WPE −0.5%/K. TEC: 0.3 W + 레이저 발열/COP 0.6. 크로스토크 페널티 −10log(1−3·XT). 전력 상수(1.6T DSP 10 W, MLSE +1.5 W, 드라이버 0.35/0.15 W·레인, TIA 0.12 W·레인, DC-DC 90%)와 LPO/CPO 페널티(전기 +1.5/+0.5 dB, 감도 +0.5/+0.3 dB, CPO FAU +1 dB)는 학습용 대표값입니다. <b>긴 지연선.</b> 단면은 EIM, 산란 손실은 σ²·(n₁²−n₂²)·∂n<sub>eff</sub>/∂w(측벽)와 ∂n<sub>eff</sub>/∂t(상하면)에 비례하는 근사로, 상수는 Hong 2022의 Si 측정값(0.45/1.6/2 µm: 5.5/0.38/0.28 dB/cm, σ 4.6/0.42 nm)에 한 번 맞춘 뒤 SiN(σ 5/0.4 nm 가정, 재료 흡수 0.06 dB/cm @1550, 0.02 @1310)에 그대로 적용합니다. 굽힘 방사는 EIM 횡방향 슬랩의 Marcuse 식이라 SiN 임계 반경을 실제보다 작게 예측하는 경향이 있습니다. S-bend 모드 변환은 n²w³/(λ²R) 스케일을 논문의 원호 −2.3 dB에 맞춘 근사, 이웃 회전 결합은 결합 슬랩 κ(동방향 가정, 보수적)입니다. MZ 스위치 위상 오차는 국소 폭 요동 2 nm·√(L·3 µm) 가정, 보정 후 잔차는 초기 오차의 15%로 둡니다. 직사각형 나선은 경계 안에 생성한 실제 형상(직선·원호/Euler 코너·중앙 S-bend)의 길이와 국소 반경으로 손실·지연을 계산하며, 원호 코너의 곡률 점프 모드 변환은 접합마다 가우시안 이동을 비간섭으로 더한 공학적 추정입니다. 1-7 Guided 단계의 MZI는 같은 n<sub>eff</sub>·n<sub>g</sub> 테이블과 커플러 과잉손실 0.05 dB를 쓰며, 단계 3의 "출력 전력의 95%"는 과잉손실을 뺀 포트 분배 비율입니다. <b>Track B.</b> 처프: 분해능 c/2B, 비트 f<sub>b</sub> = 2Rγ/c ≤ ADC 500 MHz, 코히어런스 손실 exp(−2πΔν·2R/c), 잔류 처프 오차 √(지터² + Δν/(2πτ<sub>ref</sub>M) + 측정²)로 비트 위상 오차 2π(2R/c)e → exp(−σφ²); 레이저 선폭·튜닝 범위·지터와 예왜곡 평균 M = 1000은 대표값 가정. 거리 눈금 오차 = R·(1/n<sub>g</sub>)dn<sub>g</sub>/dT·ΔT. 스캐너: 가우시안 방출 모드 → 렌즈 뒤 w<sub>b</sub> = λf/(πw<sub>e</sub>), 퍼짐 w<sub>e</sub>/f(FWHM 1.18배), 수차는 NA·시야각에 대한 경험식, 스위치 손실·소광비는 대표값(열광학 0.3 dB/−27 dB, PIN 0.9 dB/−19 dB). 시스템: 모노스태틱 코히어런트, 람베르트 ρ = 0.1, P<sub>rx</sub> = P<sub>out</sub>ρD²/(4R²)·η<sub>het</sub>(0.4, 스펙클), 왕복 칩 손실, 균형 검출 SNR = ℜP<sub>rx</sub>T<sub>int</sub>/q × 샷잡음 비율(TIA 10 pA/√Hz), 처프 N<sub>av</sub>개 비코히어런트 적산 √N<sub>av</sub>, 임계 13 dB; Si는 TPA/FCA 손실 0.6·(P/100 mW)² dB 근사. 도플러·다중 반사·눈 안전은 다루지 않습니다. 공정 변동: 웨이퍼 CD 오프셋 + 두께 bowl + 다이 랜덤(CD σ ≈ 8 nm, 두께 σ ≈ Si 3 nm / SiN 5 nm). <b>PIC Design Lab.</b> 부품은 카드 또는 기준 설계의 레벨 엔진 값, 배선은 직선·원호/Euler 코너·S-bend 기하로 길이·굽힘·간격을 계산하고, 전파 손실은 D-1 산란 모델, 테이퍼 길이·패드/범프 크기·MZM 접지 폭은 대표값 가정입니다. 시스템 예측은 3A+ 엔진 마진에서 레이아웃 배선 손실을 뺀 값이며, RF 전자기·레인 간 열 크로스토크·파운드리 규칙·DC 배선 교차는 검사하지 않습니다(NOT VERIFIED). 결과는 Engineering Prototype이며 Tape-out Ready가 아닙니다. <b>게임 밖 검증.</b> 설계 내보내기(smq-design/1) → tools/smq2gds가 GDS(gdsfactory)와 솔버 입력을 만듭니다. MMI는 GDS를 그대로 자른 3D EME(국소 Tidy3D FDE 모드, 테이퍼 포함), 지연 나선은 같은 단면의 벡터 모드 해석(직선: 두 격자 Richardson, 굽힘: PML·등각 변환)과 곡률 반전 모드 겹침으로 검사하고, 참조 설계의 결과를 "오프라인 솔버 검증" 패널에 게임 예측과 나란히 보여 줍니다. 각 보스의 최종 검증은 3D FDTD(MEEP 스크립트 생성, Tidy3D)·Ansys(CHARGE/HEAT/INTERCONNECT)로 넘기는 것을 전제로 합니다.
+    <b>모델 범위.</b> 플랫폼 4종(Si 220 nm / SiN 400 nm × 1310 / 1550 nm, SiO₂ 클래딩)의 모드는 semi-vectorial 2D 유한차분 솔버(quasi-TE Ex, quasi-TM Ey)로 사전계산한 테이블입니다: 도파로 TE/TM 모드와 n<sub>eff</sub>(폭·두께·파장), 방향성 결합기의 짝/홀 슈퍼모드, SSC 팁 모드와 광섬유 overlap. MMI는 2D 유효굴절률법 + 고유모드 전개, CWDM은 같은 n<sub>eff</sub>·n<sub>g</sub> 테이블로 만든 회로 S-matrix입니다. 측벽 산란 손실은 (∂n<sub>eff</sub>/∂w)²에 비례하는 근사, 기판 누설은 BOX 터널링 근사. 반사, 3D 방사, 벤드 구간 결합, 편광 혼합은 포함하지 않아 FDTD·벡터 솔버보다 낙관적입니다 (500×220 nm Si @1550 TE0 n<sub>eff</sub> 2.49 vs 벡터 해 ≈ 2.44). <b>Stage 2.</b> TO: 히터 단면 2D 유한체적 열해석 테이블(트렌치·언더컷; 언더컷은 2D에서 볼 수 없는 팔 끝·테더 누설 0.5 W/m·K를 더함) + EIM dn<sub>eff</sub>/dT, τ는 국소 적층 에너지법. PN: 리브 EIM + 1D 모드, 계단 접합 공핍 근사, Soref–Bennett(1.31/1.55 µm), Caughey–Thomas 이동도. TW-MZM: CPW 등각사상(Hilberg) + 접합 부하 전신방정식, 양끝 반사, 광 진행 좌표계 적분, 112 GBd PAM4 눈은 5-tap FFE 기준 수신기(TDECQ 방식 근사, 잡음 증폭 √Σc²). Ge PD: 흡수 1−e<sup>−ΓαL</sup>, 전이(0.45v/d)×RC 1차 극, TIA 잡음은 입력 C에 비례하는 근사. 2-3R 링 변조기: Si 리브(220/90 nm) EIM, 결합은 휜 간격 위 Marcuse 결합 슬랩 κ 적분, 굽힘 방사 Marcuse, 링 손실 = 2-2 접합 흡수(덮개 75%) + 측벽 0.15 dB/mm + 히터 금속 + TPA·FCA. 투과는 all-pass Airy 식, 고속은 결합 모드 방정식(CMT) 시간영역 적분(광자 수명) × 접합 RC 극 — Q만으로 대역폭을 정하지 않습니다. OMA는 정착 레벨(정적, TDECQ 방식 점수)과 파형 극값(동적)을 분리합니다. 열: 2-1 단면 열해석의 G′를 링 둘레에 그대로 적용(링의 3D 열 퍼짐 무시 → 히터 효율 낙관적), 자기 가열 개루프 이득으로 빨강 쪽 디튜닝의 열 불안정을 판정. 공정: 폭·두께 산포로 공진 이동, 레이아웃 반경은 1 nm 격자에서 공진을 레이저 파장에 맞춘 값(GDS 반경과 같음). SiN 플랫폼의 링은 이종 집적 Si 활성층 가정입니다. MZM 비교의 구동 에너지는 부하 C·V²(PAM4) 대 정합 선로 V²/R이며 드라이버 효율·DSP는 포함하지 않습니다. 링크: 부품 카드의 대표값을 dB로 더한 버짓, 광 궤환은 파셋 Fresnel × 가우시안 overlap과 RIN 페널티 로지스틱 근사. <b>Stage 3.</b> 모듈 = 부품 카드(또는 기준 설계)의 대표값을 dB·W로 조립. 3A+의 링 변조기(MRR ×8): 레인 링마다 2-3R 엔진을 모듈의 변조기 입력 파워에서 다시 계산(0.5 dB 격자 보간), 히터 락으로 설계 디튜닝 유지, 히터 = (링 드리프트 − 레이저 드리프트)·ΔT mod FSR의 0–70 °C 최악값, 비냉각 DFB 0.085/0.10 nm/K·파장 산포 σ 0.5 nm·락 2 mW/레인·드라이버(= MZM 등급 − 부하 에너지 차)는 대표값 가정, 링 열 효율은 2D 단면 × 둘레라 낙관적(문헌 비교는 docs/arch_1p6t_dr8.md). 레인 마진은 4채널 × 케이스 0/70 °C 코너의 최솟값이며, Demux는 1-7 lattice를 dn<sub>eff</sub>/dT만큼 굴절률을 옮겨 다시 계산(밴드 ±6.5 nm 최악). 비냉각 DFB: −0.02 dB/K(25 °C 이상), WPE −0.5%/K. TEC: 0.3 W + 레이저 발열/COP 0.6. 크로스토크 페널티 −10log(1−3·XT). 전력 상수(1.6T DSP 10 W, MLSE +1.5 W, 드라이버 0.35/0.15 W·레인, TIA 0.12 W·레인, DC-DC 90%)와 LPO/CPO 페널티(전기 +1.5/+0.5 dB, 감도 +0.5/+0.3 dB, CPO FAU +1 dB)는 학습용 대표값입니다. <b>긴 지연선.</b> 단면은 EIM, 산란 손실은 σ²·(n₁²−n₂²)·∂n<sub>eff</sub>/∂w(측벽)와 ∂n<sub>eff</sub>/∂t(상하면)에 비례하는 근사로, 상수는 Hong 2022의 Si 측정값(0.45/1.6/2 µm: 5.5/0.38/0.28 dB/cm, σ 4.6/0.42 nm)에 한 번 맞춘 뒤 SiN(σ 5/0.4 nm 가정, 재료 흡수 0.06 dB/cm @1550, 0.02 @1310)에 그대로 적용합니다. 굽힘 방사는 EIM 횡방향 슬랩의 Marcuse 식이라 SiN 임계 반경을 실제보다 작게 예측하는 경향이 있습니다. S-bend 모드 변환은 n²w³/(λ²R) 스케일을 논문의 원호 −2.3 dB에 맞춘 근사, 이웃 회전 결합은 결합 슬랩 κ(동방향 가정, 보수적)입니다. MZ 스위치 위상 오차는 국소 폭 요동 2 nm·√(L·3 µm) 가정, 보정 후 잔차는 초기 오차의 15%로 둡니다. 직사각형 나선은 경계 안에 생성한 실제 형상(직선·원호/Euler 코너·중앙 S-bend)의 길이와 국소 반경으로 손실·지연을 계산하며, 원호 코너의 곡률 점프 모드 변환은 접합마다 가우시안 이동을 비간섭으로 더한 공학적 추정입니다. 1-7 Guided 단계의 MZI는 같은 n<sub>eff</sub>·n<sub>g</sub> 테이블과 커플러 과잉손실 0.05 dB를 쓰며, 단계 3의 "출력 전력의 95%"는 과잉손실을 뺀 포트 분배 비율입니다. <b>Track B.</b> 처프: 분해능 c/2B, 비트 f<sub>b</sub> = 2Rγ/c ≤ ADC 500 MHz, 코히어런스 손실 exp(−2πΔν·2R/c), 잔류 처프 오차 √(지터² + Δν/(2πτ<sub>ref</sub>M) + 측정²)로 비트 위상 오차 2π(2R/c)e → exp(−σφ²); 레이저 선폭·튜닝 범위·지터와 예왜곡 평균 M = 1000은 대표값 가정. 거리 눈금 오차 = R·(1/n<sub>g</sub>)dn<sub>g</sub>/dT·ΔT. 스캐너: 가우시안 방출 모드 → 렌즈 뒤 w<sub>b</sub> = λf/(πw<sub>e</sub>), 퍼짐 w<sub>e</sub>/f(FWHM 1.18배), 수차는 NA·시야각에 대한 경험식, 스위치 손실·소광비는 대표값(열광학 0.3 dB/−27 dB, PIN 0.9 dB/−19 dB). 시스템: 모노스태틱 코히어런트, 람베르트 ρ = 0.1, P<sub>rx</sub> = P<sub>out</sub>ρD²/(4R²)·η<sub>het</sub>(0.4, 스펙클), 왕복 칩 손실, 균형 검출 SNR = ℜP<sub>rx</sub>T<sub>int</sub>/q × 샷잡음 비율(TIA 10 pA/√Hz), 처프 N<sub>av</sub>개 비코히어런트 적산 √N<sub>av</sub>, 임계 13 dB; Si는 TPA/FCA 손실 0.6·(P/100 mW)² dB 근사. 도플러·다중 반사·눈 안전은 다루지 않습니다. 공정 변동: 웨이퍼 CD 오프셋 + 두께 bowl + 다이 랜덤(CD σ ≈ 8 nm, 두께 σ ≈ Si 3 nm / SiN 5 nm). <b>PIC Design Lab.</b> 부품은 카드 또는 기준 설계의 레벨 엔진 값, 배선은 직선·원호/Euler 코너·S-bend 기하로 길이·굽힘·간격을 계산하고, 전파 손실은 D-1 산란 모델, 테이퍼 길이·패드/범프 크기·MZM 접지 폭은 대표값 가정입니다. 시스템 예측은 3A+ 엔진 마진에서 레이아웃 배선 손실을 뺀 값이며, 금속은 RF(M1)·DC(M2) 각 한 층의 추상 선(폭 10/5 µm)으로 그려 같은 층 접촉만 검사합니다. RF 전자기·레인 간 열 크로스토크·파운드리 규칙은 검사하지 않습니다(NOT VERIFIED). GDS는 tools/smq2gds(circuit)가 같은 기본 도형으로 그리고 다시 읽어 검사합니다. 결과는 Engineering Prototype이며 Tape-out Ready가 아닙니다. <b>게임 밖 검증.</b> 설계 내보내기(smq-design/1) → tools/smq2gds가 GDS(gdsfactory)와 솔버 입력을 만듭니다. MMI는 GDS를 그대로 자른 3D EME(국소 Tidy3D FDE 모드, 테이퍼 포함), 지연 나선은 같은 단면의 벡터 모드 해석(직선: 두 격자 Richardson, 굽힘: PML·등각 변환)과 곡률 반전 모드 겹침으로 검사하고, 참조 설계의 결과를 "오프라인 솔버 검증" 패널에 게임 예측과 나란히 보여 줍니다. 각 보스의 최종 검증은 3D FDTD(MEEP 스크립트 생성, Tidy3D)·Ansys(CHARGE/HEAT/INTERCONNECT)로 넘기는 것을 전제로 합니다.
   </footer>
 </div>
 <script>
@@ -5017,6 +5017,12 @@ const LAB = (() => {
   const SCHEMA = 'smq-circuit/1', LANES = 8, LANE_GBPS = 224, NET_GBPS = 200;
   const PAD = { w: 80, rfPitch: 100 };   // abstract wire-bond pads (µm)
   const BUMP = { w: 30, pitch: 45 };     // abstract flip-chip micro-bumps (µm, Cu-pillar class)
+  const RING_BX = 50;                   // ring RF bumps: nearer (G) bump centre this far west of the ring (clear of the next lane's DC bump row)
+  const MW = { rf: 10, dc: 5 };
+  const DC_TP = 10;                      // DC fan-out track pitch (µm) = line 5 + space 5          // abstract metal line widths (µm) — the same widths are drawn in the GDS (smq2gds)
+  const LITHO = { si: 0.15, sin: 0.3 };  // generic minimum printable width (µm)
+  const XT_HET = 60;                     // SiN↔Si co-taper length (µm) for a heterogeneous Si ring on SiN — Unverified Assumption
+  const r3 = (v) => Math.round(v * 1000) / 1000;   // 1 nm GDS grid
   const SW = 15, GW = 50;                // CPW signal / ground width of the TW-MZM (2-3 engine: signal 15 µm; ground width abstract)
   const TAP = 0.02;                      // monitor tap power ratio (−17 dB)
   const SH = [1, 2, 4, 8];
@@ -5065,7 +5071,7 @@ const LAB = (() => {
     const d = { mod, share, edge: 50, fp: 127, rf: 0, rfSide: 0, pp: 100, bend: 1, R: Math.max(wm.Rmin, si ? 10 : 100), wr: pf.w0, jog: si ? 4 : 8, mon: 1, W: 6, H: 4 };
     const lb = laneBox(ctx, d, P);
     d.P = Math.max(d.fp, Math.ceil((lb.h + 40) / 5) * 5);
-    d.stag = stagAuto(d, P);
+    d.stag = stagAuto(d);
     const fit = minDie(ctx, d);
     d.W = Math.ceil(fit.W / 500) * 0.5; d.H = Math.ceil(fit.H / 500) * 0.5;   // smallest 0.5-mm die that fits the auto placement
     return d;
@@ -5073,13 +5079,14 @@ const LAB = (() => {
   // RF pad group width per lane on the die edge (GSG for the TW-MZM, GS for the lumped ring) and the lane stagger it needs
   const rfPads = (d) => ((d.mod | 0) === 1 ? 2 : 3);
   const groupW = (d) => (rfPads(d) - 1) * d.pp + PAD.w;
+  const DC_SEP = MW.dc + 5;   // centre spacing of parallel DC verticals (line + 5 µm space)
   const stagAuto = (d) => ((d.rf | 0) === 1 ? 0 : Math.ceil((groupW(d) + 40) / 10) * 10);
 
   /* ---------------- component footprints (local frame: optical input at the origin, flow +x) ---------------- */
   function mzmGeom(ctx, d, P) {
     const pf = ctx.pf, m = P.mmi, z = P.mzm, h = P.heater, R = d.R, da = SW + z.g, dy = (da - m.s) / 2;
     const sb = sBend(dy, R, d.bend ? 'euler' : 'arc'), Lsb = sb.len;
-    const x0 = m.Ltot, xe0 = x0 + Lsb + 20, xe1 = xe0 + z.Le, xh0 = xe1 + 30, xh1 = xh0 + h.L, xa1 = xh1 + 20, x1 = xa1 + Lsb, Ltot = x1 + m.Ltot;
+    const x0 = m.Ltot, xe0 = x0 + Lsb + 20, xe1 = xe0 + z.Le, xh0 = xe1 + 30, xh1 = xh0 + h.L, xa1 = xh1 + 20, x1 = Math.ceil((xa1 + Lsb) * 1000 - 1e-6) / 1000, Ltot = r3(x1 + m.Ltot);   // output MMI and length on the 1 nm grid (arms end ≤ 1 nm straight later)
     const half = SW / 2 + z.g + GW;
     return { kind: 'mzm', L: Ltot, h: 2 * half, y0: -half, y1: half, da, xe0, xe1, xh0, xh1, sb, arms: { x0, xa0: x0 + Lsb, xa1, x1 },
       ports: [{ n: 'in', k: 'o', x: 0, y: 0, a: 180 }, { n: 'out', k: 'o', x: Ltot, y: 0, a: 0 },
@@ -5087,18 +5094,25 @@ const LAB = (() => {
         { n: 'term', k: 'int', x: xe1, y: 0 }, { n: 'h_p', k: 'dc', x: xh0, y: da / 2 }, { n: 'h_n', k: 'dc', x: xh1, y: da / 2 }] };
   }
   function mrrGeom(ctx, d, P) {
-    const g = P.mrr.geom, R = g.R_um, w = g.w_um, gap = g.gap_um, Lb = 2 * R + 20, yc = R + gap + w;   // ring centre above the bus
+    const g = P.mrr.geom, R = g.R_um, w = g.w_um, gap = g.gap_um, Lb = g.bus_len_um || 2 * R + 20, yc = R + gap + w;   // ring centre above the bus
+    // bus ↔ route port (w0): same core → linear taper; Si ring on a SiN platform → SiN/Si co-taper (vertical transition, plan view)
+    const pf = ctx.pf, wb = g.bus_w_um || w, het = pf.mat !== 'si';
+    const Lt = het ? XT_HET : Math.abs(wb - pf.w0) > 1e-9 ? r3(taperLen(pf, pf.w0, wb)) : 0, L = Lb + 2 * Lt, xc = Lt + Lb / 2;
+    const tp = (a, b, w0, w1, layer) => ({ t: 'L', a: [a, 0], b: [b, 0], w0, w1, w: Math.max(w0, w1), layer });
+    const prims = !Lt ? [] : het
+      ? [tp(0, Lt, pf.w0, LITHO.sin, 'core'), tp(0, Lt, LITHO.si, wb, 'si'), tp(L - Lt, L, wb, LITHO.si, 'si'), tp(L - Lt, L, LITHO.sin, pf.w0, 'core')]
+      : [tp(0, Lt, pf.w0, wb, 'core'), tp(L - Lt, L, wb, pf.w0, 'core')];
     // contacts: P (inside, ring centre) and N (outside, above the ring) of the lateral junction; heater lead ends as drawn by
     // tools/smq2gds ring_allpass (leads leave the arc ends beside the coupler and run up to R + 8 µm above the ring centre)
-    const y0 = -(w / 2 + 3), y1 = yc + R + 10;
-    return { kind: 'mrr', L: Lb, h: y1 - y0, y0, y1, R, w, gap, yc, xc: Lb / 2,
-      ports: [{ n: 'in', k: 'o', x: 0, y: 0, a: 180 }, { n: 'out', k: 'o', x: Lb, y: 0, a: 0 },
-        { n: 'rf_s', k: 'rf', x: Lb / 2, y: yc }, { n: 'rf_g', k: 'rf', x: Lb / 2, y: yc + R + 5 },
-        { n: 'h_p', k: 'dc', x: Lb / 2 - (R + 4), y: yc + R + 8 }, { n: 'h_n', k: 'dc', x: Lb / 2 + (R + 4), y: yc + R + 8 }] };
+    const y0 = -(Math.max(w, pf.w0) / 2 + 3), y1 = yc + R + 10;
+    return { kind: 'mrr', L, h: y1 - y0, y0, y1, R, w, gap, yc, xc, Lt, Lb, het, local: { prims, ring_x_um: xc, ring_y_um: yc, transition: !Lt ? 'none' : het ? `SiN ${pf.w0}→${LITHO.sin} / Si ${LITHO.si}→${wb} µm co-taper ${XT_HET} µm (vertical SiN–Si transition, plan view; loss not computed)` : `linear taper ${pf.w0}→${wb} µm` },
+      ports: [{ n: 'in', k: 'o', x: 0, y: 0, a: 180 }, { n: 'out', k: 'o', x: L, y: 0, a: 0 },
+        { n: 'rf_s', k: 'rf', x: xc, y: yc }, { n: 'rf_g', k: 'rf', x: xc, y: yc + R + 5 },
+        { n: 'h_p', k: 'dc', x: xc - (R + 4), y: yc + R + 8 }, { n: 'h_n', k: 'dc', x: xc + (R + 4), y: yc + R + 8 }] };
   }
   function tapGeom(ctx, d, P) {
     const pf = ctx.pf, w = d.wr, gap = Math.max(pf.rules.gap * 2, pf.mat === 'si' ? 0.3 : 0.6), Lc = tapLen(pf, w, gap), pd = P.pd;
-    const yt = -(w + gap), sb = sBend(Math.max(8, 4 * w) , d.R, d.bend ? 'euler' : 'arc'), Lpd = pd.L, L = 10 + Lc + sb.len + Lpd + 10;
+    const yt = -(w + gap), sb = sBend(Math.max(8, 4 * w) , d.R, d.bend ? 'euler' : 'arc'), Lpd = pd.L, L = r3(10 + Lc + sb.len + Lpd + 10);
     return { kind: 'tap', L, h: 20 + sb.dy, y0: yt - sb.dy - pd.w / 2 - 4, y1: 4, Lc, gap, yt, sb, xpd: 10 + Lc + sb.len, Lpd, pdw: pd.w,
       ports: [{ n: 'in', k: 'o', x: 0, y: 0, a: 180 }, { n: 'out', k: 'o', x: L, y: 0, a: 0 },
         { n: 'pd_a', k: 'dc', x: 10 + Lc + sb.len + Lpd * 0.25, y: yt - sb.dy }, { n: 'pd_k', k: 'dc', x: 10 + Lc + sb.len + Lpd * 0.75, y: yt - sb.dy }] };
@@ -5117,8 +5131,8 @@ const LAB = (() => {
   function sBend(dy, R, shape) {
     const a = a0Of(shape, R), ady = Math.abs(dy);
     if (ady < 1e-9) return { kind: 'none', len: 0, dx: 0, dy: 0 };
-    if (ady >= 2 * a) return { kind: 'corners', len: 2 * a, dx: 2 * a, dy: ady, a, shape };
-    if (ady >= 2 * R) return { kind: 'corners', len: 2 * R, dx: 2 * R, dy: ady, a: R, shape: 'arc', mixed: shape === 'euler' };   // Euler footprint too large: circular corners
+    if (ady >= 2 * a) return { kind: 'corners', len: 2 * a, dx: 2 * a, dy: ady, a, shape, R };
+    if (ady >= 2 * R) return { kind: 'corners', len: 2 * R, dx: 2 * R, dy: ady, a: R, shape: 'arc', mixed: shape === 'euler', R };   // Euler footprint too large: circular corners
     const th = Math.acos(1 - ady / (2 * R));   // circular arcs for small offsets (Euler footprint too large)
     return { kind: 'arcs', len: 2 * R * Math.sin(th), dx: 2 * R * Math.sin(th), dy: ady, th, R };
   }
@@ -5191,6 +5205,27 @@ const LAB = (() => {
     return { L, prop, bend, total: prop + bend };
   }
 
+  // local-frame geometry of composite cells, exported so the GDS backend draws exactly these primitives
+  const prw = (prims, w) => prims.map((p) => ({ ...p, w }));
+  function mzmLocal(m, P, pf) {
+    const mm = P.mmi, a = m.arms, h = m.da / 2, prims = [], Rb = m.sb.R, sh = m.sb.kind === 'corners' && !m.sb.mixed ? m.sb.shape : 'euler';
+    for (const sg of [1, -1]) {
+      prims.push(...jogRoute([mm.Ltot, sg * mm.s / 2], [a.xa0, sg * h], mm.Ltot + m.sb.dx / 2, Rb, sh).prims);
+      prims.push({ t: 'L', a: [a.xa0, sg * h], b: [a.xa1, sg * h] });
+      prims.push(...jogRoute([a.xa1, sg * h], [a.x1, sg * mm.s / 2], a.xa1 + m.sb.dx / 2, Rb, sh).prims);
+    }
+    const g = P.mzm.g, rects = [
+      { layer: 'm1', role: 'G1', x0: m.xe0, x1: m.xe1, y0: SW / 2 + g, y1: SW / 2 + g + GW }, { layer: 'm1', role: 'S', x0: m.xe0, x1: m.xe1, y0: -SW / 2, y1: SW / 2 },
+      { layer: 'm1', role: 'G2', x0: m.xe0, x1: m.xe1, y0: -(SW / 2 + g + GW), y1: -(SW / 2 + g) },
+      { layer: 'heater', role: 'bias heater', x0: m.xh0, x1: m.xh1, y0: h - 1, y1: h + 1 }, { layer: 'term', role: `R_T ${P.mzm.RT} Ω (placeholder)`, x0: m.xe1, x1: m.xe1 + 20, y0: -SW / 2, y1: SW / 2 }];
+    return { local: { prims: prw(prims, pf.w0), mmi_in: { x_um: 0, mirror: false }, mmi_out: { x_um: m.L, mirror: true }, rects } };
+  }
+  function tapLocal(t, d, pf) {
+    const w = pf.w0, xe = 10 + t.Lc, yp = t.yt - t.sb.dy, prims = [{ t: 'L', a: [0, 0], b: [t.L, 0] }, { t: 'L', a: [10, t.yt], b: [xe, t.yt] }];
+    prims.push(...jogRoute([xe, t.yt], [t.xpd, yp], xe + t.sb.dx / 2, d.R, d.bend ? 'euler' : 'arc').prims);
+    prims.push({ t: 'L', a: [t.xpd, yp], b: [t.xpd + t.Lpd, yp] });   // waveguide under the Ge absorber
+    return { local: { prims: prw(prims, w), rects: [{ layer: 'ge', role: 'Ge PD', x0: t.xpd, x1: t.xpd + t.Lpd, y0: yp - t.pdw / 2, y1: yp + t.pdw / 2 }] } };
+  }
   // horizontal room a fan needs (same ordering as route(): corners share the jog pitch, arc S-bends are laid side by side)
   function fanWidth(moves, R, shape, jog, compress) {
     const w = (g) => { if (!g.length) return 0; g = g.slice().sort((p, q) => Math.abs(p) - Math.abs(q)); if (!compress) g.reverse(); let lastV = -Infinity, lastEnd = -jog, end = 0; g.forEach((dy) => { const sb = sBend(dy, R, shape), xj = Math.max(lastV + jog, lastEnd + jog + sb.dx / 2, sb.dx / 2); lastV = xj; lastEnd = Math.max(lastEnd, xj + sb.dx / 2); end = Math.max(end, xj + sb.dx / 2); }); return end; };
@@ -5204,18 +5239,19 @@ const LAB = (() => {
     const flip = (d.rf | 0) === 1;
     (c.pads || []).forEach((p) => { if (flip) ys.push(p.y - p.w / 2, p.y + p.w / 2); });
     const xr = Math.max(0, ...(c.pads || []).map((p) => p.x + p.w / 2 + e)), span = Math.max(...ys) - Math.min(...ys);
-    return { W: Math.max(c.need.W, xr), H: flip ? span + 2 * e + 20 : Math.max(c.need.H, span + 2 * (PAD.w + 30 + e) + 20) };
+    return { W: Math.max(c.need.W, xr), H: flip ? span + 2 * e + 20 : c.need.H };
   }
   function build(ctx, d, opt) {
     opt = opt || {};
     const pf = ctx.pf, P = parts(ctx), mod = (d.mod | 0) === 1 ? 'mrr' : 'mzm', N = SH[d.share | 0], nL = LANES / N, depth = Math.log2(N);
     const W = d.W * 1000, H = d.H * 1000, e = d.edge, shape = d.bend ? 'euler' : 'arc', R = d.R, wm = wgModel(pf, Math.max(d.wr, pf.w0)), a = a0Of(shape, R);
     const lb = laneBox(ctx, d, P), inst = [], onets = [], enets = [], issues = [];
-    const add = (o) => { inst.push(o); return o; };
+    const add = (o) => { o.x = r3(o.x); o.y = r3(o.y); o.ports = o.ports.map((p) => ({ ...p, x: r3(p.x), y: r3(p.y) })); inst.push(o); return o; };   // placement and ports on the 1 nm grid
     const portAbs = (I, n) => { const p = I.ports.find((q) => q.n === n); return { ...p, X: I.x + p.x * (I.rot === 180 ? -1 : 1), Y: I.y + p.y * (I.rot === 180 ? -1 : 1), A: I.rot === 180 ? (p.a + 180) % 360 : p.a }; };
     const bbox = (I) => (I.rot === 180 ? [I.x - I.L, I.y - I.y1, I.x, I.y - I.y0] : [I.x, I.y + I.y0, I.x + I.L, I.y + I.y1]);
     // vertical stack: lanes centred between the two pad rows
-    const rfH = (d.rf | 0) === 1 ? 0 : PAD.w + 30, yc = H / 2, yL = (i) => yc + (i - (LANES - 1) / 2) * d.P;
+    const rfH = (d.rf | 0) === 1 ? 0 : PAD.w + 30, yL = (i) => yc + (i - (LANES - 1) / 2) * d.P;
+    let yc = H / 2, dcH = rfH;   // yc is moved below once the DC fan-out channel height is known
     // x columns
     const ssc = P.ssc, mmi = P.mmi, rootY = (k) => (yL(k * N) + yL(k * N + N - 1)) / 2, finY = (k) => yc + (k - (nL - 1) / 2) * d.fp;
     const fanIn = fanWidth(Array.from({ length: nL }, (_, k) => rootY(k) - finY(k)), R, shape, d.jog, d.fp > N * d.P);
@@ -5223,11 +5259,18 @@ const LAB = (() => {
     const lvlLen = []; for (let j = 0; j < depth; j++) { const dyj = d.P * Math.pow(2, depth - j - 2) - mmi.s / 2; lvlLen.push(mmi.Ltot + sBend(Math.max(dyj, 0), R, shape).len + 20); }
     let xMod0 = xTree0 + lvlLen.reduce((s, v) => s + v, 0) + (N === 1 ? 0 : 10) + 20;
     if ((d.rf | 0) === 0) { const xf = lb.m.ports.find((p) => p.n === 'rf_s').x; xMod0 = Math.max(xMod0, e + PAD.w / 2 + 30 + (rfPads(d) - 1) * d.pp + 10 - xf); }
-    else if (lb.m.kind === 'mrr') xMod0 = Math.max(xMod0, e + BUMP.w / 2 + 30 + (rfPads(d) - 1) * BUMP.pitch + lb.m.R - lb.m.xc + 5);   // bump row west of the ring
+    else if (lb.m.kind === 'mrr') xMod0 = Math.max(xMod0, e + BUMP.w / 2 + RING_BX + (rfPads(d) - 1) * BUMP.pitch + lb.m.R - lb.m.xc + 5);   // bump row west of the ring
     else xMod0 = Math.max(xMod0, e + BUMP.w / 2 + 40 - lb.m.xe0 + 5);
     const stag = (i) => ((d.rfSide | 0) === 1 ? (LANES - 1 - i) : i) * d.stag;
+    // edge pads: DC lines fan out planar to the pad row through a channel of one track per line (dcPlan) — the channel sets the
+    // margin on the DC side; lanes are centred between the RF pad margin and the DC margin
+    if ((d.rf | 0) === 0) {
+      const its = []; for (let i = 0; i < LANES; i++) { const xm = r3(xMod0 + stag(i)), y = (i - (LANES - 1) / 2) * d.P; lb.m.ports.filter((p) => p.k === 'dc').forEach((p) => its.push({ X: r3(xm + p.x), Y: y + p.y })); if (lb.t) lb.t.ports.filter((p) => p.k === 'dc').forEach((p) => its.push({ X: r3(r3(xm + lb.m.L + 10) + p.x), Y: y + p.y })); }
+      dcH = PAD.w + 30 + dcPlan(its, d.pp, e + PAD.w / 2 + 10, W - e - PAD.w / 2 - 10).n * DC_TP;
+      yc = (d.rfSide | 0) === 0 ? (e + dcH + H - e - rfH) / 2 : (e + rfH + H - e - dcH) / 2;
+    }
     // ---- instances ----
-    const ins = []; for (let k = 0; k < nL; k++) ins.push(add({ id: `IN${k}`, type: 'ssc', role: 'input', lane: null, x: 0, y: yc + (k - (nL - 1) / 2) * d.fp, rot: 0, L: ssc.Lt, y0: -2, y1: 2, params: { Lt_um: ssc.Lt, tip_um: ssc.tw, w_um: d.wr }, src: ssc.src,
+    const ins = []; for (let k = 0; k < nL; k++) ins.push(add({ id: `IN${k}`, type: 'ssc', role: 'input', lane: null, x: 0, y: yc + (k - (nL - 1) / 2) * d.fp, rot: 0, L: ssc.Lt, y0: -2, y1: 2, params: { Lt_um: ssc.Lt, tip_um: ssc.tw, w_um: pf.w0 }, src: ssc.src,
       ports: [{ n: 'fib', k: 'fib', x: 0, y: 0, a: 180 }, { n: 'out', k: 'o', x: ssc.Lt, y: 0, a: 0 }] }));
     // splitter tree: node (k, j, idx) covers lanes [k·N + idx·N/2^j, … + N/2^j)
     const tree = [];
@@ -5249,20 +5292,20 @@ const LAB = (() => {
       const m = lb.m, x = xMod0 + stag(i), y = yL(i);
       const src = mod === 'mrr' ? P.mrr.src : `${P.mzm.src} + ${P.mmi.src} + ${P.heater.src}`;
       mods.push(add({ id: `MOD${i}`, type: mod, role: 'modulator', lane: i, x, y, rot: 0, L: m.L, y0: m.y0, y1: m.y1, geom: m, src,
-        params: mod === 'mrr' ? { ring: P.mrr.geom } : { L_e_um: P.mzm.Le, gap_um: P.mzm.g, signal_um: SW, ground_um: GW, arm_sep_um: m.da, RT_ohm: P.mzm.RT, mmi: { W_um: mmi.W, L_um: mmi.L, wt_um: mmi.wt, s_um: mmi.s, taper_len_um: mmi.tl },
-          heater: { L_um: P.heater.L, w_um: 2, h_um: P.heater.h, x0_um: m.xh0 }, sbend: m.sb },
+        params: mod === 'mrr' ? { ring: { ...P.mrr.geom, local_pads: false }, local: m.local } : { L_e_um: P.mzm.Le, gap_um: P.mzm.g, signal_um: SW, ground_um: GW, arm_sep_um: m.da, RT_ohm: P.mzm.RT, mmi: { W_um: mmi.W, L_um: mmi.L, wt_um: mmi.wt, s_um: mmi.s, taper_len_um: mmi.tl, w_io_um: pf.w0 },
+          heater: { L_um: P.heater.L, w_um: 2, h_um: P.heater.h, x0_um: m.xh0 }, sbend: m.sb, ...mzmLocal(m, P, pf) },
         ports: m.ports }));
       if (lb.t) { const t = lb.t; taps.push(add({ id: `MON${i}`, type: 'tap_pd', role: 'monitor', lane: i, x: x + m.L + 10, y, rot: 0, L: t.L, y0: t.y0, y1: t.y1, geom: t, src: `${P.pd.src} (Ge ${P.pd.L}×${P.pd.w} µm) · 2 % 방향성 결합기`,
-        params: { Lc_um: r4(t.Lc), gap_um: t.gap, ratio: TAP, pd_L_um: t.Lpd, pd_w_um: t.pdw }, ports: t.ports })); }
+        params: { Lc_um: r4(t.Lc), gap_um: t.gap, ratio: TAP, pd_L_um: t.Lpd, pd_w_um: t.pdw, ...tapLocal(t, d, pf) }, ports: t.ports })); }
     }
     const lastX = Math.max(...(lb.t ? taps : mods).map((I) => I.x + I.L));
     const fanOut = fanWidth(Array.from({ length: LANES }, (_, i) => yc + (i - (LANES - 1) / 2) * d.fp - yL(i)), R, shape, d.jog, d.P > d.fp) + 20, xOutFacet = W;
     const outs = []; for (let i = 0; i < LANES; i++) outs.push(add({ id: `OUT${i}`, type: 'ssc', role: 'output', lane: i, x: xOutFacet, y: yc + (i - (LANES - 1) / 2) * d.fp, rot: 180, L: ssc.Lt, y0: -2, y1: 2,
-      params: { Lt_um: ssc.Lt, tip_um: ssc.tw, w_um: d.wr }, src: ssc.src, ports: [{ n: 'fib', k: 'fib', x: 0, y: 0, a: 180 }, { n: 'in', k: 'o', x: ssc.Lt, y: 0, a: 0 }] }));
+      params: { Lt_um: ssc.Lt, tip_um: ssc.tw, w_um: pf.w0 }, src: ssc.src, ports: [{ n: 'fib', k: 'fib', x: 0, y: 0, a: 180 }, { n: 'in', k: 'o', x: ssc.Lt, y: 0, a: 0 }] }));
     // die size actually needed
     const nDC = (lb.m.ports.filter((p) => p.k === 'dc').length + (lb.t ? 2 : 0)) * LANES;
     const needW = Math.max(lastX + fanOut + ssc.Lt + e, (d.rf | 0) === 1 ? 0 : 2 * e + PAD.w + 20 + nDC * d.pp), ys = inst.flatMap((I) => { const b = bbox(I); return [b[1], b[3]]; });
-    const needH = (Math.max(...ys) - Math.min(...ys)) + 2 * (rfH + e) + 20;
+    const needH = (Math.max(...ys) - Math.min(...ys)) + rfH + dcH + 2 * e + 20;
     // ---- optical nets ----
     const net = (from, to, lane, kind) => onets.push({ id: `n${onets.length}`, from, to, lane, kind });
     for (let k = 0; k < nL; k++) {
@@ -5333,8 +5376,8 @@ const LAB = (() => {
     c.pads = []; c.elines = []; c.enets.length = 0;
     const yRF = N_side ? H - e - PAD.w / 2 : e + PAD.w / 2, yDC = N_side ? e + PAD.w / 2 : H - e - PAD.w / 2;
     const pad = (id, kind, x, y, net, w) => { const p = { id, kind, x, y, w: w || (flip ? BUMP.w : PAD.w), net }; c.pads.push(p); return p; };
-    const line = (net, kind, pts, layer) => { let L = 0; for (let i = 1; i < pts.length; i++) L += Math.abs(pts[i][0] - pts[i - 1][0]) + Math.abs(pts[i][1] - pts[i - 1][1]); c.elines.push({ net, kind, pts, layer, length_um: L }); return L; };
-    let dcX = e + PAD.w / 2 + 10;
+    const line = (net, kind, pts, layer) => { let L = 0; for (let i = 1; i < pts.length; i++) L += Math.abs(pts[i][0] - pts[i - 1][0]) + Math.abs(pts[i][1] - pts[i - 1][1]); c.elines.push({ net, kind, pts, layer, width_um: MW[kind], length_um: L }); return L; };
+    const dcAll = [];
     for (const M of c.inst.filter((x) => x.role === 'modulator')) {
       const i = M.lane, P = (n) => c.portAbs(M, n), rf = M.ports.filter((p) => p.k === 'rf').map((p) => p.n);
       // RF: GSG (TW-MZM) or GS (ring). Edge pads: pads in a row at the feed x, lines go west then straight to the edge (planar by the
@@ -5347,7 +5390,8 @@ const LAB = (() => {
         const p = P(n), id = `RF${i}_${n.slice(3)}`;
         if (flip) {   // bump column 50 µm west of the feed point, 55 µm pitch (3D-stacked driver right above)
           const kk = k - (order2.length - 1) / 2, g = M.geom;
-          const b = c.mod === 'mrr' ? pad(id, 'rf', M.x + g.xc - g.R - 30 - (order2.length - 1 - k) * BUMP.pitch, p.Y, `${M.id}.${n}`)   // row west of the ring, each at its contact height
+          const xr = M.x + g.xc - g.R - RING_BX, sY = P('rf_s').Y;   // ring: S bump west at the junction height, G bump nearer and raised so the S line passes below it
+          const b = c.mod === 'mrr' ? (n === 'rf_s' ? pad(id, 'rf', xr - BUMP.pitch, p.Y, `${M.id}.${n}`) : pad(id, 'rf', xr, Math.max(p.Y, sY + MW.rf / 2 + 5 + BUMP.w / 2), `${M.id}.${n}`))
             : pad(id, 'rf', s.X - 40, s.Y + kk * BUMP.pitch * dir, `${M.id}.${n}`);                                                    // column at the electrode start
           rfLen = Math.max(rfLen, line(`${M.id}.${n}`, 'rf', [[p.X, p.Y], [b.x, p.Y], [b.x, b.y]], 'M1'));
         }
@@ -5361,14 +5405,53 @@ const LAB = (() => {
       if (c.mod === 'mzm') c.enets.push({ id: `${M.id}.term`, kind: 'rf_term', lane: i, from: `${M.id}.term`, to: `R_T ${M.params.RT_ohm} Ω (온칩, 추상)` });
       // DC: heater ± and monitor PD ± → pads on the opposite edge (or local bumps)
       const dcp = M.ports.filter((p) => p.k === 'dc').map((p) => ({ n: p.n, I: M })).concat(c.inst.filter((x) => x.role === 'monitor' && x.lane === i).flatMap((T) => T.ports.filter((p) => p.k === 'dc').map((p) => ({ n: p.n, I: T }))));
-      const xs0 = Math.min(...dcp.map((q) => c.portAbs(q.I, q.n).X));
-      dcp.forEach((q, kq) => {
-        const p = c.portAbs(q.I, q.n), id = `DC${i}_${q.n}`;
-        if (flip) { const b = pad(id, 'dc', xs0 + kq * BUMP.pitch, M.y + lbY0(c) - 35, `${q.I.id}.${q.n}`); line(`${q.I.id}.${q.n}`, 'dc', [[p.X, p.Y], [p.X, b.y], [b.x, b.y]], 'M2'); }   // row under the lane
-        else { const b = pad(id, 'dc', dcX, yDC, `${q.I.id}.${q.n}`); dcX += d.pp; line(`${q.I.id}.${q.n}`, 'dc', [[p.X, p.Y], [p.X, b.y + dir * 40], [b.x, b.y + dir * 40], [b.x, b.y]], 'M2'); }
-        c.enets.push({ id: `${q.I.id}.${q.n}`, kind: 'dc', lane: i, from: `${q.I.id}.${q.n}`, to: `pad:${id}` });
-      });
+      dcp.forEach((q) => { const p = c.portAbs(q.I, q.n); dcAll.push({ ...q, i, X: p.X, Y: p.Y, id: `DC${i}_${q.n}`, net: `${q.I.id}.${q.n}`, laneY0: M.y + lbY0(c) }); });
     }
+    // DC: planar fan-out (dcPlan) — flip-chip: a bump row under each lane; edge: one pad row on the DC edge for the whole die
+    const dcDraw = (grp, py, tdir, t0, pitch, lo, hi) => {
+      const pl = dcPlan(grp, pitch, lo, hi);
+      grp.forEach((q, k) => {
+        const b = pad(q.id, 'dc', pl.px[k], py, q.net), t = r3(py + tdir * (t0 + pl.tr[k] * DC_TP)), x = pl.col[k];
+        const head = x !== q.X ? [[q.X, q.Y], [x, q.Y]] : [[q.X, q.Y]];   // stub at the port height to the line's own column
+        line(q.net, 'dc', pl.tr[k] < 0 ? [...head, [x, b.y]] : [...head, [x, t], [b.x, t], [b.x, b.y]], 'M2');
+        c.enets.push({ id: q.net, kind: 'dc', lane: q.i, from: q.net, to: `pad:${q.id}` });
+      });
+      return pl;
+    };
+    if (flip) for (let i = 0; i < LANES; i++) {
+      const grp = dcAll.filter((q) => q.i === i); if (!grp.length) continue;
+      const M = c.inst.find((x) => x.id === `MOD${i}`), g = M.geom;
+      const lo = c.mod === 'mrr' ? M.x + g.xc - g.R - RING_BX + BUMP.pitch : -Infinity;   // ring: DC bumps east of the RF bump column (clear of it at any height)
+      const n = dcPlan(grp, BUMP.pitch, lo, Infinity).n, t0 = BUMP.w / 2 + 8;
+      dcDraw(grp, r3(grp[0].laneY0 - 5 - Math.max(n - 1, 0) * DC_TP - t0), 1, t0, BUMP.pitch, lo, Infinity);   // top track 5 µm under the lane box
+    }
+    else { const dir = N_side ? 1 : -1; c.dcPlan = dcDraw(dcAll, yDC, dir, PAD.w / 2 + 20, d.pp, e + PAD.w / 2 + 10, c.W - e - PAD.w / 2 - 10); }
+  }
+  // planar ("river") fan-out of DC lines (ports {X, Y} above a pad row) on one metal layer:
+  // 1. columns — lines are taken from the lowest port up; a line keeps its port x unless a column already taken (or a stub
+  //    already drawn below it) is closer than DC_SEP, then it runs a short stub at its own port height to the nearest free column
+  //    (the stub may not pass a column whose port is within DC_SEP of this height);
+  // 2. pads in column order, centred under the columns (clamped to [lo, hi] when the row fits), one horizontal track per line:
+  //    lines going left — the larger column takes the track nearer the pads; going right — mirrored. No vertical then crosses
+  //    another line's track, and left / right groups never overlap.
+  function dcPlan(items, pitch, lo, hi) {
+    const n = items.length, col = new Array(n), px = new Array(n), tr = new Array(n).fill(-1);
+    if (!n) return { px, tr, col, n: 0 };
+    const fixed = [];   // { x: column, top, sx0, sx1, sy } — vertical from top down; stub [sx0, sx1] at height sy
+    const free = (x, h, x0) => fixed.every((f) => Math.abs(f.x - x) >= DC_SEP - 1e-9 && !(f.sx1 > f.sx0 && f.sy < h + DC_SEP && x > f.sx0 - DC_SEP && x < f.sx1 + DC_SEP))
+      && (x === x0 || fixed.every((f) => { const dir = Math.sign(x - x0), a = (f.x - x0) * dir, b = (f.x - x) * dir; return !(f.top > h - DC_SEP && a >= 0 && b < DC_SEP); }));   // the stub may not run over or past a column reaching this height (columns behind the stub start are fine)
+    items.map((q, k) => k).sort((a, b) => items[a].Y - items[b].Y || items[a].X - items[b].X).forEach((k) => {
+      const { X, Y } = items[k]; let x = X;
+      if (!free(X, Y, X)) for (let s = 1; s <= 400; s++) { const c1 = r3(X + s * 0.5), c2 = r3(X - s * 0.5); if (free(c1, Y, X)) { x = c1; break; } if (free(c2, Y, X)) { x = c2; break; } }
+      col[k] = x; fixed.push({ x, top: Y, sx0: Math.min(X, x), sx1: Math.max(X, x), sy: Y });
+    });
+    const ord = col.map((x, k) => k).sort((a, b) => col[a] - col[b]);
+    let x0 = col.reduce((s, v) => s + v, 0) / n - (n - 1) / 2 * pitch;
+    if (hi - (n - 1) * pitch >= lo) x0 = Math.min(Math.max(x0, lo), hi - (n - 1) * pitch);
+    ord.forEach((k, r) => { px[k] = r3(x0 + r * pitch); });
+    const left = ord.filter((k) => px[k] < col[k] - 1e-6), right = ord.filter((k) => px[k] > col[k] + 1e-6);
+    left.forEach((k, r) => { tr[k] = left.length - 1 - r; }); right.forEach((k, r) => { tr[k] = r; });
+    return { px, tr, col, n: Math.max(left.length, right.length) };
   }
 
   const lbY0 = (c) => c.lb.y0;   // lane bottom incl. the monitor tap (DC bumps sit below it, away from the RF bumps)
@@ -5429,12 +5512,22 @@ const LAB = (() => {
       const pOut = c.pads.filter((p) => p.x - p.w / 2 < e || p.x + p.w / 2 > c.W - e || p.y - p.w / 2 < e - 1e-6 || p.y + p.w / 2 > H - e + 1e-6);
       let pov = 0; for (let i = 0; i < c.pads.length; i++) for (let j = i + 1; j < c.pads.length; j++) { const A = c.pads[i], B = c.pads[j]; const sp = (d.rf | 0) === 1 ? BUMP.pitch - BUMP.w : 10; if (Math.abs(A.x - B.x) < (A.w + B.w) / 2 + sp - 1e-6 && Math.abs(A.y - B.y) < (A.w + B.w) / 2 + sp - 1e-6) pov++; }
       add('Geometry', (d.rf | 0) === 1 ? `범프 배치 (다이 안, 간격 ≥ ${BUMP.pitch - BUMP.w} µm)` : '패드 배치 (다이 안, 간격 ≥ 10 µm)', pOut.length || pov ? ST.F : ST.P, `${c.pads.length}개 ${(d.rf | 0) === 1 ? '범프' : '패드'}${pOut.length ? ` · 경계 밖 ${pOut.length}` : ''}${pov ? ` · 겹침 ${pov}` : ''}`);
-      // RF lines on one metal layer must not cross
+      // RF metal (lines drawn MW.rf wide + RF pads / bumps) of different nets on one layer must not touch — the GDS draws the same rectangles
       const rf = c.elines.filter((l) => l.kind === 'rf'); let cross = 0;
       const segs = (l) => l.pts.slice(1).map((p, k) => [l.pts[k], p]);
       const hit = (s, t) => { const [a, b] = s, [p, q] = t; const ax0 = Math.min(a[0], b[0]), ax1 = Math.max(a[0], b[0]), ay0 = Math.min(a[1], b[1]), ay1 = Math.max(a[1], b[1]), bx0 = Math.min(p[0], q[0]), bx1 = Math.max(p[0], q[0]), by0 = Math.min(p[1], q[1]), by1 = Math.max(p[1], q[1]); return ax0 <= bx1 + 1 && bx0 <= ax1 + 1 && ay0 <= by1 + 1 && by0 <= ay1 + 1; };
-      for (let i = 0; i < rf.length; i++) for (let j = i + 1; j < rf.length; j++) if (segs(rf[i]).some((s) => segs(rf[j]).some((t) => hit(s, t)))) cross++;
-      add('Geometry', 'RF 배선 교차 (같은 금속층)', cross ? ST.F : ST.P, cross ? `${cross}쌍 교차 — 레인 엇갈림(stagger)을 늘리거나 플립칩` : '');
+      const box = (s, h) => [Math.min(s[0][0], s[1][0]) - h, Math.min(s[0][1], s[1][1]) - h, Math.max(s[0][0], s[1][0]) + h, Math.max(s[0][1], s[1][1]) + h];
+      const ov = (A, B) => A[0] < B[2] && B[0] < A[2] && A[1] < B[3] && B[1] < A[3];
+      const shorts = (kind) => {   // pairs of nets whose drawn metal (lines MW[kind] wide + pads) touch on the one layer of that kind
+        const ls = c.elines.filter((l) => l.kind === kind), nets = [...new Set(ls.map((l) => l.net))];
+        const mt = nets.map((net) => ls.filter((l) => l.net === net).flatMap((l) => segs(l).map((s) => box(s, MW[kind] / 2))).concat(c.pads.filter((p) => p.kind === kind && p.net === net).map((p) => [p.x - p.w / 2, p.y - p.w / 2, p.x + p.w / 2, p.y + p.w / 2])));
+        let n = 0; for (let i = 0; i < nets.length; i++) for (let j = i + 1; j < nets.length; j++) if (mt[i].some((A) => mt[j].some((B) => ov(A, B)))) n++;
+        return n;
+      };
+      cross = shorts('rf');
+      add('Geometry', 'RF 배선 교차 (같은 금속층)', cross ? ST.F : ST.P, cross ? `${cross}쌍 교차·접촉 (M1, 선폭 ${MW.rf} µm, 패드 포함) — 레인 엇갈림(stagger)을 늘리거나 플립칩` : `M1 선폭 ${MW.rf} µm · 패드·범프 포함`);
+      const dcx = shorts('dc');
+      add('Geometry', 'DC 배선 교차 (같은 금속층)', dcx ? ST.F : ST.P, dcx ? `${dcx}쌍 교차·접촉 (M2, 선폭 ${MW.dc} µm)` : `M2 한 층, 선폭 ${MW.dc} µm · 평면 팬아웃 (트랙 ${DC_TP} µm 간격${c.dcPlan ? ` × ${c.dcPlan.n}` : ''})`);
       // RF over optical waveguide crossings (information)
       const wgSeg = (c.routes || []).filter((r) => r.ok).flatMap((r) => r.prims.filter((p) => p.t === 'L').map((p) => [p.a, p.b]));
       let ox = 0; rf.forEach((l) => segs(l).forEach((s) => { ox += wgSeg.filter((t) => hit(s, t)).length; }));
@@ -5455,8 +5548,10 @@ const LAB = (() => {
     add('Model validity', 'RF 전극·급전선 전자기 해석', ST.N, 'CPW·패드·종단은 추상 형상 — EM 시뮬레이션 필요');
     add('Model validity', '레인 간 열 크로스토크 · 링 락 상호작용', ST.N, '레인 간 거리만 표시, 열해석 없음');
     add('Model validity', '파운드리 DRC (주입·금속·비아 규칙)', ST.N, '일반 규칙만: 선폭·간격·굽힘·경계·겹침');
-    add('Model validity', 'DC 배선 교차 (2층 금속 가정)', ST.N, 'DC는 M2로 가정 — 교차 검사 안 함');
-    add('Model validity', 'GDS 재검사', ST.N, 'Phase D: smq2gds가 GDS를 만들고 다시 읽어 검사');
+    { const gr = ctx && ctx.gds, cur = gr ? designHash(c) : null, sm = gr && gr.summary;   // imported tools/smq2gds re-check (engine_verification.json gds_recheck)
+      if (!gr) add('Model validity', 'GDS 재검사', ST.N, 'tools/smq2gds.circuit로 GDS를 만들고 다시 읽어 검사한 결과(engine_verification.json)를 Mission 6에서 불러오면 반영');
+      else if (gr.design_hash !== cur) add('Model validity', 'GDS 재검사', ST.N, `불러온 결과는 다른 설계 (hash ${String(gr.design_hash).replace(/[^0-9a-f]/g, '')} ≠ 지금 ${cur}) — 다시 내보내고 GDS를 다시 만드세요`);
+      else add('Model validity', 'GDS 재검사', sm.FAIL ? ST.F : ST.P, `smq2gds: PASS ${sm.PASS} · WARNING ${sm.WARNING} · FAIL ${sm.FAIL}${sm['NOT VERIFIED'] != null ? ` · NOT VERIFIED ${sm['NOT VERIFIED']}` : ''} · GDS sha1 ${String(gr.gds_sha1 || '').replace(/[^0-9a-f]/g, '').slice(0, 10)} (hash ${cur})`); }
     return { checks: out, sys };
   }
 
@@ -5486,36 +5581,47 @@ const LAB = (() => {
     const sch = noFail(by('Connectivity', /광 포트|포트 종류|레인 수|입·출력/));
     const fp = noFail(by('Geometry', /다이 경계|소자 겹침/)) && noFail(by('Geometry', /패드 배치/));
     const rt = noFail(by('Geometry', /광 배선 생성|배선 간격|굽힘 반경|장애물|최소 선폭/));
-    const el = noFail(by('Connectivity', /전기 포트/)) && noFail(by('Geometry', /RF 배선 교차|패드 배치/));
+    const el = noFail(by('Connectivity', /전기 포트/)) && noFail(by('Geometry', /RF 배선 교차|DC 배선 교차|패드 배치/));
     const vf = chk.checks.every((x) => x.status !== 'FAIL');
     return { schematic: sch, floorplan: fp, routing: rt, electrical: el, verification: vf };
   }
 
   /* ---------------- export: smq-circuit/1 ---------------- */
+  // design identity of a built circuit (same as engine_layout.json design_hash)
+  function designHash(c) { return layoutData(c, '').layout.design_hash; }
   function exportCircuit(c, chk, meta) {
+    const { schematic, layout } = layoutData(c, (meta && meta.time) || new Date().toISOString()), pf = c.platform;
+    const sys = chk.sys;
+    const verification = { schema: SCHEMA + '#verification', platform: pf.id, design_hash: layout.design_hash, checks: chk.checks.map(({ group, item, status, detail }) => ({ group, item: item.replace(/<[^>]+>/g, ''), status, detail: String(detail || '').replace(/<[^>]+>/g, '') })),
+      summary: ['PASS', 'WARNING', 'FAIL', 'NOT VERIFIED'].reduce((o, s) => ({ ...o, [s]: chk.checks.filter((x) => x.status === s).length }), {}),
+      performance: { model: '3A+ engine (' + sys.src + ')', margin_model_dB: r4(sys.marginModel), layout_route_loss_dB_worst: r4(sys.extra), margin_with_layout_dB: r4(sys.marginLayout), module_W: r4(sys.pw), pJ_per_bit: r4(sys.pj),
+        lanes: sys.lanes.map((x) => ({ lane: x.lane, before_mod_dB: r4(x.before), after_mod_dB: r4(x.after), tap_dB: r4(x.tap), total_dB: r4(x.total) })) } };
+    return { schematic, layout, verification };
+  }
+  function layoutData(c, time) {
     const pf = c.platform, inst = c.inst.map((I) => ({ id: I.id, type: I.type, role: I.role, lane: I.lane, source: I.src, params: I.params,
       placement: { x_um: r4(I.x), y_um: r4(I.y), rot_deg: I.rot }, bbox_um: c.bbox(I).map(r4), size_um: [r4(I.L), r4(I.y1 - I.y0)],
       ports: I.ports.map((p) => { const q = c.portAbs(I, p.n); return { name: p.n, kind: p.k === 'o' || p.k === 'fib' ? 'optical' : p.k === 'int' ? 'internal' : 'electrical', sub: p.k, xy_um: [r4(q.X), r4(q.Y)], angle_deg: q.A != null ? q.A : null }; }) }));
-    const base = { schema: SCHEMA, generator: 'SPEC-to-MASK Quest · PIC Design Lab', exported: (meta && meta.time) || new Date().toISOString(),
+    const base = { schema: SCHEMA, generator: 'SPEC-to-MASK Quest · PIC Design Lab', exported: time,
       platform: { id: pf.id, mat: pf.mat, lam_um: pf.lam, core_t_um: pf.t, w0_um: pf.w0, wc_um: pf.wc, clad: 'SiO2', box: 'SiO2', rules_um: pf.rules,
         route_rules: { port_width_um: pf.w0, body_width_um: Math.max(c.d.wr, pf.w0), taper: 'linear on the first / last straight (short nets stay at the port width)', bend: c.shape, R_um: c.d.R, R_min_rule_um: wgModel(pf, pf.w0).Rmin, alpha_body_dB_cm: r4(c.wm.alpha), alpha_port_dB_cm: r4(wgModel(pf, pf.w0).alpha), litho_min_width_um: pf.mat === 'si' ? 0.15 : 0.3 } },
       architecture: { name: '1.6T DR8 Tx PIC', lanes: LANES, lane_rate_gbps: LANE_GBPS, net_rate_gbps: NET_GBPS, baud_gbd: 112, format: 'PAM4', modulator: c.mod, laser_share: c.N, lasers: c.nL, splitter_depth: c.depth, monitor_pd: !!c.d.mon },
       die: { W_um: c.W, H_um: c.H, edge_um: c.d.edge, optical_io: { input: 'W', output: 'E', fiber_pitch_um: c.d.fp }, electrical_io: (c.d.rf | 0) === 1 ? { type: 'flip-chip bumps (abstract)', side: 'local' } : { type: 'edge wire-bond pads (abstract)', rf_side: (c.d.rfSide | 0) === 0 ? 'N' : 'S', dc_side: (c.d.rfSide | 0) === 0 ? 'S' : 'N', pad_pitch_um: c.d.pp, pad_um: PAD.w }, lane_pitch_um: c.d.P, lane_stagger_um: c.d.stag },
       instances: inst };
     const schematic = { ...base, nets: { optical: c.onets, electrical: c.enets } };
+    const fnv = (str) => { let h = 0x811c9dc5; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, '0'); };
     const layout = { ...base, nets: { optical: c.onets, electrical: c.enets },
       routing: { optical: (c.routes || []).map((r) => ({ net: r.net, from: r.from, to: r.to, lane: r.lane, ok: r.ok, reason: r.why || null, body_width_um: r.w, length_um: r4(r.length_um), loss_dB: r4(r.loss_dB), prims: r.prims.map((p) => JSON.parse(JSON.stringify(p, (k, v) => (typeof v === 'number' ? r4(v) : v)))) })),
-        electrical: (c.elines || []).map((l) => ({ net: l.net, kind: l.kind, layer: l.layer, length_um: r4(l.length_um), pts: l.pts.map((p) => p.map(r4)) })), pads: (c.pads || []).map((p) => ({ ...p, x: r4(p.x), y: r4(p.y) })) },
+        electrical: (c.elines || []).map((l) => ({ net: l.net, kind: l.kind, layer: l.layer, width_um: l.width_um, length_um: r4(l.length_um), pts: l.pts.map((p) => p.map(r4)) })), pads: (c.pads || []).map((p) => ({ ...p, x: r4(p.x), y: r4(p.y) })) },
       abstraction: { implants: 'annotation layers (generic PDK)', rf_metal: 'abstract CPW / pads, not foundry RF rules', termination: 'on-chip resistor placeholder', not_tape_out_ready: true } };
-    const sys = chk.sys;
-    const verification = { schema: SCHEMA + '#verification', platform: pf.id, checks: chk.checks.map(({ group, item, status, detail }) => ({ group, item: item.replace(/<[^>]+>/g, ''), status, detail: String(detail || '').replace(/<[^>]+>/g, '') })),
-      summary: ['PASS', 'WARNING', 'FAIL', 'NOT VERIFIED'].reduce((o, s) => ({ ...o, [s]: chk.checks.filter((x) => x.status === s).length }), {}),
-      performance: { model: '3A+ engine (' + sys.src + ')', margin_model_dB: r4(sys.marginModel), layout_route_loss_dB_worst: r4(sys.extra), margin_with_layout_dB: r4(sys.marginLayout), module_W: r4(sys.pw), pJ_per_bit: r4(sys.pj),
-        lanes: sys.lanes.map((x) => ({ lane: x.lane, before_mod_dB: r4(x.before), after_mod_dB: r4(x.after), tap_dB: r4(x.tap), total_dB: r4(x.total) })) } };
-    return { schematic, layout, verification };
+    // design identity: hash of the layout content (without the export time); the GDS backend echoes it so the Lab can tell
+    // whether a GDS re-check belongs to the design on screen
+    const hash = fnv(JSON.stringify({ ...layout, exported: '' }));
+    layout.design_hash = hash; schematic.design_hash = hash;
+    return { schematic, layout };
   }
 
-  return { SCHEMA, LANES, SH, SW, GW, parts, wgModel, defaults, laneBox, stagAuto, minDie, build, checks, missions, system, exportCircuit, sample, sBend, jogRoute, routeLoss, primLen, a0Of, PAD, BUMP, tapLen };
+  return { SCHEMA, LANES, SH, SW, GW, MW, DC_TP, parts, wgModel, defaults, laneBox, stagAuto, minDie, build, checks, missions, system, exportCircuit, designHash, sample, sBend, jogRoute, routeLoss, primLen, a0Of, PAD, BUMP, tapLen };
 })();
 
 const PSPEC = {"si1310":{"1-1":{"start":{"w":0.6},"s1":{},"s2":{"alpha":4.191,"margin":0.016,"wlo":0.34},"fab":{"alpha":4.819,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"aRef":1,"dbY":[0,8],"ref":{"w":0.36},"ns":["alpha","margin","wlo"]},"1-2":{"start":{"g":0.3,"L":12},"s1":{"dk":0.05},"s2":{"dk":0.03,"dkb":0.097,"size":21},"fab":{"dk":0.05,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.7}},"aRef":21,"dbY":[0,0.5],"ref":{"g":0.2,"L":14.5}},"1-3":{"type":"1x2","lc":1.31,"lams":[1.31],"elCap":0.6,"imbCap":1.2,"s1":{"el":0.3},"dbY":[0,1],"start":{"W":3,"L":20,"wt":0.8,"s":1.6},"aRef":25,"s2":{"el":0.05,"size":25},"fab":{"el":0.05,"y":0.95,"yMode":{"easy":0.95,"std":0.95,"hard":0.9}},"ref":{"W":2.05,"L":5.3,"wt":0.82,"s":1.1}},"1-4":{"type":"1x2","lc":1.31,"lams":[1.26,1.285,1.31,1.335,1.36],"elCap":0.4,"imbCap":1.2,"s1":{"el":0.2},"dbY":[0,1],"start":{"W":3,"L":11.2,"wt":1,"s":1.6},"aRef":8,"s2":{"el":0.08,"size":8},"fab":{"el":0.08,"y":0.9,"yMode":{"easy":0.9,"std":0.9,"hard":0.8}},"ref":{"W":1.7,"L":3.7,"wt":0.7,"s":0.9}},"1-5":{"type":"2x2","lc":1.301,"lams":[1.271,1.301,1.331],"elCap":1.2,"imbCap":1.2,"s1":{"el":0.6,"imb":0.6},"dbY":[0,1.5],"start":{"W":3,"L":30,"wt":0.8,"s":1.6},"aRef":100,"s2":{"el":0.45,"imb":0.3,"size":100},"fab":{"el":0.45,"imb":0.3,"y":0.7,"yMode":{"easy":0.7,"std":0.7,"hard":0.55}},"ref":{"W":3.55,"L":20.8,"wt":1.18,"s":1.38}},"1-6":{"start":{"tw":0.15,"Lt":40,"p":1},"lossCap":3,"tolBest":0.77,"aRef":110,"s1":{"loss":2,"tol":0.55},"s2":{"loss":1.16,"tol":0.66,"size":110},"fab":{"loss":1.51,"y":0.5,"yMode":{"easy":0.7,"std":0.5,"hard":0.35}},"hb":["tol"],"ref":{"tw":0.106,"Lt":100,"p":2},"dbY":[0,4]},"1-7":{"start":{"ord":1,"dL1":7.73,"t1":0,"dL2":3.87,"t2a":0,"t2b":0,"wa":0.36,"useCard":0},"ilCap":2,"xtWorst":0,"xtBest":-16,"xt0":-40,"aRef":3000,"s1":{"il":1.5,"xt":-8},"s2":{"il":1,"xt":-12,"size":3000},"fab":{"il":1.5,"xt":-8,"y":0.2,"yMode":{"easy":0.5,"std":0.2,"hard":0.05}},"hb":["xt"],"ref":{"ord":3,"wa":1,"dL1":10.87,"dL2":5.48,"t1":-0.85,"t2a":0.23,"t2b":0.79,"useCard":0},"dbY":[0,4]},"2-1":{"start":{"h":0.6,"iso":0,"L":30,"pitch":8},"aRef":550,"dbY":[0,30],"s1":{"ppi":16,"metal":0.02},"s2":{"ppi":11.5,"tau":30,"xt":0.03,"size":550},"fab":{"pmax":54,"y":0.65,"yMode":{"easy":0.7,"std":0.65,"hard":0.45}},"ns":["ppi","xt"],"ref":{"h":0.4,"iso":1,"L":58,"pitch":8}},"2-2":{"start":{"na":17.3,"nd":17.3,"xj":0,"vb":0.5,"dc":1.2},"aRef":1,"dbY":[0,5],"s1":{"vpil":2.1,"loss":0.84},"s2":{"fom":15.9,"frc":95},"fab":{"fom":16.5,"frc":87,"y":0.7,"yMode":{"easy":0.75,"std":0.7,"hard":0.45}},"hb":["frc"],"ns":["vpil","frc"],"ref":{"na":17.5,"nd":17.9,"xj":0.1,"vb":0.55,"dc":0.3}},"2-3":{"start":{"L":5,"g":6,"eta":1,"RT":50,"useCard":0},"pnRef":{"VpiL":1.859,"loss":0.743,"Cp":0.2862,"Rp":5.106},"aRef":3100,"dbY":[-8,6],"s1":{"bw":25,"il":4.4,"oma":1.37},"s2":{"pen":2.35,"oma":2.28,"size":3100},"fab":{"pen":2.7,"oma":2.03,"y":0.7,"yMode":{"easy":0.75,"std":0.7,"hard":0.7}},"hb":["bw","oma"],"ns":["oma"],"ref":{"L":2.45,"g":60,"eta":1,"RT":53,"useCard":0}},"2-4":{"start":{"L":40,"w":4,"di":0.8,"V":0.5},"aRef":23,"dbY":[-10,-2],"s1":{"resp":0.79,"bw":33.6},"s2":{"sens":170,"dark":45.2,"size":23},"fab":{"sens":182,"dark":59.5,"y":0.7,"yMode":{"easy":0.7,"std":0.7,"hard":0.65}},"hb":["bw"],"ns":["resp"],"ref":{"L":11.5,"w":1,"di":0.4,"V":2.6}},"2-5":{"start":{"P":10,"ns":2,"iso":0,"th":0,"useCard":0},"parts":{"ssc":0.861,"split":0.003,"mux":0.696,"gain":-8.62,"pen":1.88,"sens":-8.71},"aRef":1,"dbY":[-4,6],"s1":{"margin":0,"fb":-30},"s2":{"margin":2,"pj":1.08,"fb":-36},"fab":{"margin":0,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"ns":["margin","fb"],"ref":{"P":17,"ns":1,"iso":0,"th":12,"useCard":0}},"3A":{"start":{"P":12,"share":0,"tc":0,"mt":0,"dsp":0,"useCard":0},"parts":{"ssc":0.861,"split":0.003,"gain":-8.62,"pen":1.88,"sens":-8.71,"ppi":10.11,"cplx":0.432,"fb":-36.73089625404729,"trimPi":3.25},"muxRef":{"ord":3,"wa":1,"dL1":10.87,"dL2":5.48,"t1":-0.85,"t2a":0.23,"t2b":0.79,"useCard":0},"aRef":1,"dbY":[-4,6],"s1":{"margin":0,"pw":22.5},"s2":{"margin":1.5,"pw":19.7},"fab":{"margin":0,"y":0.65,"yMode":{"easy":0.7,"std":0.65,"hard":0.45}},"ns":["margin","pw"],"ref":{"P":16,"share":0,"tc":0,"mt":1,"dsp":0,"useCard":0}},"3A+":{"start":{"P":12,"share":3,"tc":0,"pkg":0,"mod":0,"useCard":0},"parts":{"ssc":0.861,"split":0.003,"gain":-8.62,"pen":1.88,"sens":-8.71,"ppi":10.11,"cplx":0.432,"fb":-36.73089625404729,"trimPi":3.25},"aRef":1,"dbY":[-4,6],"s1":{"margin":0,"pw":19},"s2":{"margin":1.5,"pw":4.5},"fab":{"margin":0,"y":0.7,"yMode":{"easy":0.7,"std":0.7,"hard":0.7}},"ns":["margin","pw"],"ref":{"P":13,"share":0,"tc":0,"pkg":2,"mod":0,"useCard":0}},"D-1":{"start":{"w":0.45,"gap":1,"rin":10,"ws":0.45,"sb":0},"tau":2,"aRef":809000,"dbY":[0,12],"s1":{"il":7.82,"xtm":-20,"xtg":-30},"s2":{"il":5.1,"size":809000},"fab":{"il":5.61,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.65}},"ns":["xtm","xtg"],"ref":{"w":2.15,"gap":1,"rin":33,"ws":0.55,"sb":1},"paper":{"w":2,"gap":1.5,"rin":25,"ws":0.6,"sb":1}},"D-2":{"start":{"N":6,"dt":20,"wa":0.36,"useCard":0},"parts":{"spiral":{"w":2.15,"gap":1,"rin":33,"ws":0.55,"sb":1},"ppi":10.11},"aRef":3397000,"dbY":[0,23],"s1":{"range":5000,"step":10,"il":17.64},"s2":{"dil":12.9,"echo":-30,"pw":160,"size":3397000},"fab":{"il":17.64,"echo":-28,"y":0.7,"yMode":{"easy":0.7,"std":0.7,"hard":0.7}},"ns":["range","step","echo","dil","il"],"ref":{"N":9,"dt":10,"wa":0.65,"useCard":0}},"B-1":{"start":{"las":0,"B":1,"T":5,"tau":1,"tc":0,"useCard":0},"parts":{"spiral":{"w":2.15,"gap":1,"rin":33,"ws":0.55,"sb":1}},"aRef":1380000,"dbY":[0,12],"s1":{"dr":5,"refil":30},"s2":{"loss":1.15,"cal":2,"pr":100,"size":1380000},"fab":{"loss":1.26,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"ns":["dr","refil","cal","pr"],"ref":{"las":1,"B":3.9,"T":3.5,"tau":3,"tc":1,"useCard":0}},"B-2":{"start":{"k":4,"p":20,"f":3,"we":3,"sw":1,"useCard":0},"parts":{"to":{"Ppi":10.11,"tau":9.17},"T":3.5},"aRef":5991,"dbY":[0,15],"s1":{"fov":30,"res":0.1,"il":6.84},"s2":{"fmin":0.8,"fmax":1.5,"ghost":-20,"size":5991},"fab":{"ghost":-20,"y":0.7,"yMode":{"easy":0.7,"std":0.7,"hard":0.65}},"ns":["fov","res","fmin","fmax","ghost"],"ref":{"k":9,"p":10,"f":8.2,"we":10.5,"sw":0,"useCard":0}},"B-3":{"start":{"P":13,"nch":0,"lo":1,"nav":1,"useCard":0},"parts":{"chirp":{"las":1,"B":3.9,"T":3.5,"dnu":100000,"eres":78776,"Radc":67,"dR":3.84},"scan":{"N":512,"il":5.09,"wb":0.0003256461711796456,"settle":27.509999999999998,"pw":90.99,"ghost":-23.3,"fov":34.68,"res":0.0864},"resp":0.886,"split":0.003},"aRef":1,"dbY":[0,20],"s1":{"r":6,"pr":14},"s2":{"r":7,"pr":43,"pw":18},"fab":{"r":6,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"ns":["r","pr"],"ref":{"P":28,"nch":2,"lo":10,"nav":2,"useCard":0}},"2-3R":{"start":{"R":12,"g":0.3,"dop":0,"vb":0.5,"vpp":1,"det":-0.6,"bm":1,"useCard":0,"useHeater":0},"pnD":{"na":17.5,"nd":17.9,"xj":0.1,"vb":0.55,"dc":0.3},"hd":{"h":0.4,"iso":1},"tr":[0,70],"aRef":1,"dbY":[-8,8],"st":{"fsr":11},"s1":{"il":4.9,"er":1.7,"bw":30,"omaS":2},"s2":{"pen":2.35,"oma":3.31,"ph":11.7,"eb":42},"fab":{"pen":2.7,"oma":2.95,"ph":17.5,"y":0.25,"yMode":{"easy":0.75,"std":0.25,"hard":0.15}},"hb":["bw","er","oma","omaS"],"ns":["oma","omaS","eb"],"ref":{"R":6.1,"g":0.185,"dop":0.8,"vb":0.7,"vpp":3,"det":-0.28,"bm":0.5,"useCard":0,"useHeater":0}}},"sin1310":{"1-1":{"start":{"w":1.3},"s1":{},"s2":{"alpha":0.203,"margin":0.016,"wlo":0.739},"fab":{"alpha":0.234,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"aRef":1,"dbY":[0,0.6],"ref":{"w":0.78},"ns":["alpha","margin","wlo"]},"1-2":{"start":{"g":0.7,"L":40},"s1":{"dk":0.05},"s2":{"dk":0.03,"dkb":0.072,"size":49},"fab":{"dk":0.05,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"aRef":49,"dbY":[0,0.5],"ref":{"g":0.5,"L":35}},"1-3":{"type":"1x2","lc":1.31,"lams":[1.31],"start":{"W":8,"L":84.5,"wt":2,"s":4.2},"elCap":0.6,"imbCap":1.2,"aRef":110,"s1":{"el":0.3},"s2":{"el":0.05,"size":110},"fab":{"el":0.05,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"ref":{"W":4.2,"L":14,"wt":1.6,"s":2.25},"dbY":[0,1]},"1-4":{"type":"1x2","lc":1.31,"lams":[1.26,1.285,1.31,1.335,1.36],"start":{"W":8,"L":58,"wt":2.4,"s":4.2},"elCap":0.4,"imbCap":1.2,"aRef":80,"s1":{"el":0.2},"s2":{"el":0.08,"size":80},"fab":{"el":0.08,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"ref":{"W":4.1,"L":13.5,"wt":1.6,"s":2.2},"dbY":[0,1]},"1-5":{"type":"2x2","lc":1.301,"lams":[1.271,1.301,1.331],"start":{"W":8,"L":129.5,"wt":2,"s":4.45},"elCap":1.2,"imbCap":1.2,"aRef":280,"s1":{"el":0.6,"imb":0.6},"s2":{"el":0.45,"imb":0.3,"size":280},"fab":{"el":0.45,"imb":0.3,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.7}},"ref":{"W":3.9,"L":49.5,"wt":1.25,"s":2.35},"dbY":[0,1.5]},"1-6":{"start":{"tw":0.465,"Lt":40,"p":1},"lossCap":3,"tolBest":0.75,"aRef":180,"s1":{"loss":2,"tol":0.54},"s2":{"loss":1,"tol":0.64,"size":180},"fab":{"loss":1.3,"y":0.7,"yMode":{"easy":0.75,"std":0.7,"hard":0.7}},"hb":["tol"],"ref":{"tw":0.23,"Lt":100,"p":1.6},"dbY":[0,4]},"1-7":{"start":{"ord":1,"dL1":15.76,"t1":0,"dL2":7.88,"t2a":0,"t2b":0,"wa":0.78,"useCard":0},"ilCap":2,"xtWorst":0,"xtBest":-16,"xt0":-40,"aRef":3500,"s1":{"il":1.5,"xt":-8},"s2":{"il":1,"xt":-12,"size":3500},"fab":{"il":1.5,"xt":-8,"y":0.35,"yMode":{"easy":0.6,"std":0.35,"hard":0.1}},"hb":["xt"],"ref":{"ord":3,"wa":2.4,"dL1":20.44,"dL2":10.26,"t1":0.27,"t2a":0.81,"t2b":-0.56,"useCard":0},"dbY":[0,4]},"2-1":{"start":{"h":0.8,"iso":0,"L":200,"pitch":8},"aRef":5550,"dbY":[0,200],"s1":{"ppi":145,"metal":0.02},"s2":{"ppi":81.8,"tau":56,"xt":0.03,"size":5550},"fab":{"pmax":318,"y":0.6,"yMode":{"easy":0.7,"std":0.6,"hard":0.4}},"ns":["ppi","xt"],"ref":{"h":1.25,"iso":1,"L":590,"pitch":8}},"2-2":{"start":{"na":17.3,"nd":17.3,"xj":0,"vb":0.5,"dc":1.2},"aRef":1,"dbY":[0,5],"s1":{"vpil":2.1,"loss":0.84},"s2":{"fom":15.9,"frc":95},"fab":{"fom":16.5,"frc":87,"y":0.7,"yMode":{"easy":0.75,"std":0.7,"hard":0.45}},"hb":["frc"],"ns":["vpil","frc"],"ref":{"na":17.5,"nd":17.9,"xj":0.1,"vb":0.55,"dc":0.3}},"2-3":{"start":{"L":5,"g":6,"eta":1,"RT":50,"useCard":0},"pnRef":{"VpiL":1.859,"loss":0.743,"Cp":0.2862,"Rp":5.106},"aRef":3100,"dbY":[-8,6],"s1":{"bw":25,"il":4.4,"oma":1.37},"s2":{"pen":2.35,"oma":2.28,"size":3100},"fab":{"pen":2.7,"oma":2.03,"y":0.7,"yMode":{"easy":0.75,"std":0.7,"hard":0.7}},"hb":["bw","oma"],"ns":["oma"],"ref":{"L":2.45,"g":60,"eta":1,"RT":53,"useCard":0}},"2-4":{"start":{"L":40,"w":4,"di":0.8,"V":0.5},"aRef":23,"dbY":[-10,-2],"s1":{"resp":0.71,"bw":33.6},"s2":{"sens":190,"dark":45.2,"size":23},"fab":{"sens":204,"dark":59.5,"y":0.7,"yMode":{"easy":0.7,"std":0.7,"hard":0.65}},"hb":["bw"],"ns":["resp"],"ref":{"L":11.5,"w":1,"di":0.4,"V":2.6}},"2-5":{"start":{"P":10,"ns":2,"iso":0,"th":0,"useCard":0},"parts":{"ssc":0.701,"split":0,"mux":0.757,"gain":-8.62,"pen":1.88,"sens":-8.23},"aRef":1,"dbY":[-4,6],"s1":{"margin":0,"fb":-30},"s2":{"margin":2,"pj":1.04,"fb":-36},"fab":{"margin":0,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"ns":["margin","fb"],"ref":{"P":17,"ns":1,"iso":0,"th":12,"useCard":0}},"3A":{"start":{"P":12,"share":0,"tc":0,"mt":0,"dsp":0,"useCard":0},"parts":{"ssc":0.701,"split":0,"gain":-8.62,"pen":1.88,"sens":-8.23,"ppi":71.11,"cplx":0.432,"fb":-36.41089625404729,"trimPi":2.5},"muxRef":{"ord":3,"wa":2.4,"dL1":20.44,"dL2":10.26,"t1":0.27,"t2a":0.81,"t2b":-0.56,"useCard":0},"aRef":1,"dbY":[-4,6],"s1":{"margin":0,"pw":23.5},"s2":{"margin":1.5,"pw":20.4},"fab":{"margin":0,"y":0.6,"yMode":{"easy":0.7,"std":0.6,"hard":0.4}},"ns":["margin","pw"],"ref":{"P":16,"share":0,"tc":0,"mt":1,"dsp":0,"useCard":0}},"3A+":{"start":{"P":12,"share":3,"tc":0,"pkg":0,"mod":0,"useCard":0},"parts":{"ssc":0.701,"split":0,"gain":-8.62,"pen":1.88,"sens":-8.23,"ppi":71.11,"cplx":0.432,"fb":-36.41089625404729,"trimPi":2.5},"aRef":1,"dbY":[-4,6],"s1":{"margin":0,"pw":19},"s2":{"margin":1.5,"pw":4.5},"fab":{"margin":0,"y":0.7,"yMode":{"easy":0.7,"std":0.7,"hard":0.7}},"ns":["margin","pw"],"ref":{"P":13,"share":0,"tc":0,"pkg":2,"mod":0,"useCard":0}},"D-1":{"start":{"w":1,"gap":1.5,"rin":30,"ws":1,"sb":0},"tau":2,"aRef":2530000,"dbY":[0,6],"s1":{"il":3.92,"xtm":-20,"xtg":-30},"s2":{"il":1.36,"size":2530000},"fab":{"il":1.5,"y":0.7,"yMode":{"easy":0.75,"std":0.7,"hard":0.7}},"ns":["xtm","xtg"],"ref":{"w":2.55,"gap":2.6,"rin":155,"ws":0.9,"sb":1},"paper":{"w":2.4,"gap":4,"rin":120,"ws":1.2,"sb":1}},"D-2":{"start":{"N":6,"dt":20,"wa":0.78,"useCard":0},"parts":{"spiral":{"w":2.55,"gap":2.6,"rin":155,"ws":0.9,"sb":1},"ppi":71.11},"aRef":9915000,"dbY":[0,12],"s1":{"range":5000,"step":10,"il":8.8},"s2":{"dil":3.87,"echo":-30,"pw":948,"size":9915000},"fab":{"il":8.8,"echo":-28,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"ns":["range","step","echo","dil","il"],"ref":{"N":9,"dt":10,"wa":0.8,"useCard":0}},"B-1":{"start":{"las":0,"B":1,"T":5,"tau":1,"tc":0,"useCard":0},"parts":{"spiral":{"w":2.55,"gap":2.6,"rin":155,"ws":0.9,"sb":1}},"aRef":4227000,"dbY":[0,12],"s1":{"dr":5,"refil":30},"s2":{"loss":1.18,"cal":2,"pr":100,"size":4227000},"fab":{"loss":1.3,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"ns":["dr","refil","cal","pr"],"ref":{"las":1,"B":3.9,"T":3,"tau":2.8,"tc":1,"useCard":0}},"B-2":{"start":{"k":4,"p":20,"f":3,"we":3,"sw":1,"useCard":0},"parts":{"to":{"Ppi":71.11,"tau":20.74},"T":3},"aRef":5991,"dbY":[0,15],"s1":{"fov":30,"res":0.1,"il":6.71},"s2":{"fmin":0.8,"fmax":1.5,"ghost":-20,"size":5991},"fab":{"ghost":-20,"y":0.7,"yMode":{"easy":0.7,"std":0.7,"hard":0.65}},"ns":["fov","res","fmin","fmax","ghost"],"ref":{"k":9,"p":10,"f":8.2,"we":10.5,"sw":0,"useCard":0}},"B-3":{"start":{"P":13,"nch":0,"lo":1,"nav":1,"useCard":0},"parts":{"chirp":{"las":1,"B":3.9,"T":3,"dnu":100000,"eres":81144,"Radc":58,"dR":3.84},"scan":{"N":512,"il":4.99,"wb":0.0003256461711796456,"settle":62.22,"pw":639.99,"ghost":-23.3,"fov":34.68,"res":0.0864},"resp":0.792,"split":0},"aRef":1,"dbY":[0,20],"s1":{"r":8,"pr":7},"s2":{"r":9,"pr":22,"pw":18.9},"fab":{"r":8,"y":0.7,"yMode":{"easy":0.75,"std":0.7,"hard":0.7}},"ns":["r","pr"],"ref":{"P":28,"nch":1,"lo":3,"nav":1,"useCard":0}},"2-3R":{"start":{"R":12,"g":0.3,"dop":0,"vb":0.5,"vpp":1,"det":-0.6,"bm":1,"useCard":0,"useHeater":0},"pnD":{"na":17.5,"nd":17.9,"xj":0.1,"vb":0.55,"dc":0.3},"hd":{"h":1.25,"iso":1},"tr":[0,70],"aRef":1,"dbY":[-8,8],"st":{"fsr":12.5},"s1":{"il":4.6,"er":1.2,"bw":31,"omaS":1.71},"s2":{"pen":2.35,"oma":2.84,"ph":11,"eb":33.7},"fab":{"pen":2.7,"oma":2.53,"ph":19.5,"y":0.2,"yMode":{"easy":0.75,"std":0.2,"hard":0.1}},"hb":["bw","er","oma","omaS"],"ns":["oma","omaS","eb"],"ref":{"R":5.35,"g":0.19,"dop":0.6,"vb":1.45,"vpp":3,"det":-0.34,"bm":0.3,"useCard":0,"useHeater":0}}},"si1550":{"1-1":{"start":{"w":0.6},"s1":{},"s2":{"alpha":1.831,"margin":0.016,"wlo":0.445},"fab":{"alpha":2.105,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"aRef":1,"dbY":[0,8],"ref":{"w":0.47},"ns":["alpha","margin","wlo"]},"1-2":{"start":{"g":0.3,"L":12},"s1":{"dk":0.05},"s2":{"dk":0.03,"dkb":0.072,"size":18},"fab":{"dk":0.05,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.65}},"aRef":18,"dbY":[0,0.5],"ref":{"g":0.2,"L":12.5}},"1-3":{"type":"1x2","lc":1.55,"lams":[1.55],"start":{"W":3,"L":16.5,"wt":0.8,"s":1.6},"elCap":0.6,"imbCap":1.2,"aRef":11,"s1":{"el":0.3},"s2":{"el":0.05,"size":11},"fab":{"el":0.05,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"ref":{"W":1.8,"L":3.3,"wt":0.7,"s":0.98},"dbY":[0,1]},"1-4":{"type":"1x2","lc":1.55,"lams":[1.5,1.525,1.55,1.575,1.6],"start":{"W":3,"L":11.3,"wt":1,"s":1.6},"elCap":0.4,"imbCap":1.2,"aRef":10,"s1":{"el":0.2},"s2":{"el":0.08,"size":10},"fab":{"el":0.08,"y":0.65,"yMode":{"easy":0.75,"std":0.65,"hard":0.5}},"ref":{"W":1.85,"L":3.6,"wt":0.68,"s":1.02},"dbY":[0,1]},"1-5":{"type":"2x2","lc":1.561,"lams":[1.531,1.561,1.591],"start":{"W":3,"L":24.9,"wt":0.8,"s":1.7},"elCap":1.2,"imbCap":1.2,"aRef":157,"s1":{"el":0.6,"imb":0.6},"s2":{"el":0.465,"imb":0.3,"size":157},"fab":{"el":0.465,"imb":0.3,"y":0.65,"yMode":{"easy":0.75,"std":0.65,"hard":0.2}},"ref":{"W":3.05,"L":36.6,"wt":1.1,"s":1.74},"dbY":[0,1.5]},"1-6":{"start":{"tw":0.15,"Lt":40,"p":1},"lossCap":3,"tolBest":0.76,"aRef":110,"s1":{"loss":2,"tol":0.55},"s2":{"loss":1,"tol":0.65,"size":110},"fab":{"loss":1.3,"y":0.7,"yMode":{"easy":0.75,"std":0.7,"hard":0.55}},"hb":["tol"],"ref":{"tw":0.146,"Lt":60,"p":1.3},"dbY":[0,4]},"1-7":{"start":{"ord":1,"dL1":11.67,"t1":0,"dL2":5.83,"t2a":0,"t2b":0,"wa":0.46,"useCard":0},"ilCap":2,"xtWorst":0,"xtBest":-16,"xt0":-40,"aRef":3300,"s1":{"il":1.5,"xt":-8},"s2":{"il":1,"xt":-12,"size":3300},"fab":{"il":1.5,"xt":-8,"y":0.2,"yMode":{"easy":0.45,"std":0.2,"hard":0.05}},"hb":["xt"],"ref":{"ord":3,"wa":1,"dL1":16.05,"dL2":8.03,"t1":-0.34,"t2a":0.72,"t2b":-1.07,"useCard":0},"dbY":[0,4]},"2-1":{"start":{"h":0.6,"iso":0,"L":30,"pitch":8},"aRef":700,"dbY":[0,30],"s1":{"ppi":20,"metal":0.02},"s2":{"ppi":14.4,"tau":33,"xt":0.03,"size":700},"fab":{"pmax":90,"y":0.6,"yMode":{"easy":0.7,"std":0.6,"hard":0.5}},"ns":["ppi","xt"],"ref":{"h":0.5,"iso":1,"L":74,"pitch":8}},"2-2":{"start":{"na":17.3,"nd":17.3,"xj":0,"vb":0.5,"dc":1.2},"aRef":1,"dbY":[0,5],"s1":{"vpil":2.1,"loss":1.33},"s2":{"fom":28.7,"frc":95},"fab":{"fom":29.9,"frc":87,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.65}},"hb":["frc"],"ns":["vpil","frc"],"ref":{"na":17.7,"nd":17.8,"xj":0.04,"vb":0.85,"dc":0.4}},"2-3":{"start":{"L":5,"g":6,"eta":1,"RT":50,"useCard":0},"pnRef":{"VpiL":1.879,"loss":1.181,"Cp":0.2893,"Rp":5.2},"aRef":2500,"dbY":[-8,6],"s1":{"bw":27,"il":4.9,"oma":0.975},"s2":{"pen":1.93,"oma":1.62,"size":2500},"fab":{"pen":2.22,"oma":1.44,"y":0.7,"yMode":{"easy":0.75,"std":0.7,"hard":0.7}},"hb":["bw","oma"],"ns":["oma"],"ref":{"L":2,"g":60,"eta":1,"RT":52,"useCard":0}},"2-4":{"start":{"L":40,"w":4,"di":0.8,"V":0.5},"aRef":45,"dbY":[-10,-2],"s1":{"resp":0.95,"bw":29.9},"s2":{"sens":184,"dark":73.9,"size":45},"fab":{"sens":197,"dark":97,"y":0.7,"yMode":{"easy":0.75,"std":0.7,"hard":0.6}},"hb":["bw"],"ns":["resp"],"ref":{"L":28,"w":1,"di":0.44,"V":1.5}},"2-5":{"start":{"P":10,"ns":2,"iso":0,"th":0,"useCard":0},"parts":{"ssc":0.829,"split":0,"mux":0.708,"gain":-10.11,"pen":1.53,"sens":-8.37},"aRef":1,"dbY":[-4,6],"s1":{"margin":0,"fb":-30},"s2":{"margin":2,"pj":1.66,"fb":-36},"fab":{"margin":0,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"ns":["margin","fb"],"ref":{"P":16.5,"ns":0,"iso":1,"th":0,"useCard":0}},"3A":{"start":{"P":12,"share":0,"tc":0,"mt":0,"dsp":0,"useCard":0},"parts":{"ssc":0.829,"split":0,"gain":-10.11,"pen":1.53,"sens":-8.37,"ppi":12.56,"cplx":1,"fb":-68.36421710742508,"trimPi":5.25},"muxRef":{"ord":3,"wa":1,"dL1":16.05,"dL2":8.03,"t1":-0.34,"t2a":0.72,"t2b":-1.07,"useCard":0},"aRef":1,"dbY":[-4,6],"s1":{"margin":0,"pw":24},"s2":{"margin":1.5,"pw":21.1},"fab":{"margin":0,"y":0.6,"yMode":{"easy":0.7,"std":0.6,"hard":0.5}},"ns":["margin","pw"],"ref":{"P":17,"share":0,"tc":0,"mt":1,"dsp":0,"useCard":0}},"3A+":{"start":{"P":12,"share":3,"tc":0,"pkg":0,"mod":0,"useCard":0},"parts":{"ssc":0.829,"split":0,"gain":-10.11,"pen":1.53,"sens":-8.37,"ppi":12.56,"cplx":1,"fb":-68.36421710742508,"trimPi":5.25},"aRef":1,"dbY":[-4,6],"s1":{"margin":0,"pw":19.5},"s2":{"margin":1.5,"pw":5.7},"fab":{"margin":0,"y":0.7,"yMode":{"easy":0.7,"std":0.7,"hard":0.7}},"ns":["margin","pw"],"ref":{"P":15.5,"share":0,"tc":0,"pkg":2,"mod":0,"useCard":0}},"D-1":{"start":{"w":0.45,"gap":1,"rin":10,"ws":0.45,"sb":0},"tau":2,"aRef":931000,"dbY":[0,12],"s1":{"il":7.76,"xtm":-20,"xtg":-30},"s2":{"il":5.06,"size":931000},"fab":{"il":5.57,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.7}},"ns":["xtm","xtg"],"ref":{"w":2.3,"gap":1.2,"rin":20,"ws":0.55,"sb":1},"paper":{"w":2,"gap":1.5,"rin":25,"ws":0.6,"sb":1}},"D-2":{"start":{"N":6,"dt":20,"wa":0.46,"useCard":0},"parts":{"spiral":{"w":2.3,"gap":1.2,"rin":20,"ws":0.55,"sb":1},"ppi":12.56},"aRef":3721000,"dbY":[0,23],"s1":{"range":5000,"step":10,"il":17.25},"s2":{"dil":12.6,"echo":-30,"pw":190,"size":3721000},"fab":{"il":17.25,"echo":-28,"y":0.7,"yMode":{"easy":0.7,"std":0.7,"hard":0.7}},"ns":["range","step","echo","dil","il"],"ref":{"N":9,"dt":10,"wa":0.7,"useCard":0}},"B-1":{"start":{"las":0,"B":1,"T":5,"tau":1,"tc":0,"useCard":0},"parts":{"spiral":{"w":2.3,"gap":1.2,"rin":20,"ws":0.55,"sb":1}},"aRef":1570000,"dbY":[0,12],"s1":{"dr":5,"refil":30},"s2":{"loss":1.15,"cal":2,"pr":100,"size":1570000},"fab":{"loss":1.26,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"ns":["dr","refil","cal","pr"],"ref":{"las":1,"B":3.9,"T":3.5,"tau":3.3,"tc":1,"useCard":0}},"B-2":{"start":{"k":4,"p":20,"f":3,"we":3,"sw":1,"useCard":0},"parts":{"to":{"Ppi":12.56,"tau":9.65},"T":3.5},"aRef":5991,"dbY":[0,15],"s1":{"fov":30,"res":0.1,"il":6.84},"s2":{"fmin":0.8,"fmax":1.5,"ghost":-20,"size":5991},"fab":{"ghost":-20,"y":0.7,"yMode":{"easy":0.7,"std":0.7,"hard":0.65}},"ns":["fov","res","fmin","fmax","ghost"],"ref":{"k":9,"p":10,"f":8.2,"we":10.5,"sw":0,"useCard":0}},"B-3":{"start":{"P":13,"nch":0,"lo":1,"nav":1,"useCard":0},"parts":{"chirp":{"las":1,"B":3.9,"T":3.5,"dnu":100000,"eres":75652,"Radc":67,"dR":3.84},"scan":{"N":512,"il":5.09,"wb":0.00038530653841866466,"settle":28.950000000000003,"pw":113.04,"ghost":-23.3,"fov":34.68,"res":0.0864},"resp":0.952,"split":0},"aRef":1,"dbY":[0,20],"s1":{"r":7,"pr":14},"s2":{"r":8,"pr":42,"pw":10.5},"fab":{"r":7,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"ns":["r","pr"],"ref":{"P":27,"nch":1,"lo":20,"nav":1,"useCard":0}},"2-3R":{"start":{"R":12,"g":0.3,"dop":0,"vb":0.5,"vpp":1,"det":-0.6,"bm":1,"useCard":0,"useHeater":0},"pnD":{"na":17.7,"nd":17.8,"xj":0.04,"vb":0.85,"dc":0.4},"hd":{"h":0.5,"iso":1},"tr":[0,70],"aRef":1,"dbY":[-8,8],"st":{"fsr":15},"s1":{"il":5.5,"er":1.8,"bw":30,"omaS":1.82},"s2":{"pen":2.32,"oma":3.02,"ph":12.2,"eb":41.6},"fab":{"pen":2.67,"oma":2.69,"ph":21.6,"y":0.3,"yMode":{"easy":0.75,"std":0.3,"hard":0.25}},"hb":["bw","er","oma","omaS"],"ns":["oma","omaS","eb"],"ref":{"R":6.65,"g":0.24,"dop":0.6,"vb":0.45,"vpp":3,"det":-0.24,"bm":0.2,"useCard":0,"useHeater":0}}},"sin1550":{"1-1":{"start":{"w":1.3},"s1":{},"s2":{"alpha":0.352,"margin":0.016,"wlo":0.995},"fab":{"alpha":0.405,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"aRef":1,"dbY":[0,0.6],"ref":{"w":1.04},"ns":["alpha","margin","wlo"]},"1-2":{"start":{"g":0.7,"L":40},"s1":{"dk":0.05},"s2":{"dk":0.03,"dkb":0.053,"size":43},"fab":{"dk":0.05,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.65}},"aRef":43,"dbY":[0,0.5],"ref":{"g":0.5,"L":30}},"1-3":{"type":"1x2","lc":1.55,"lams":[1.55],"start":{"W":8,"L":71,"wt":2,"s":4.25},"elCap":0.6,"imbCap":1.2,"aRef":80,"s1":{"el":0.3},"s2":{"el":0.05,"size":80},"fab":{"el":0.05,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"ref":{"W":4,"L":11,"wt":1.5,"s":2.3},"dbY":[0,1]},"1-4":{"type":"1x2","lc":1.55,"lams":[1.5,1.525,1.55,1.575,1.6],"start":{"W":8,"L":49,"wt":2.4,"s":4.25},"elCap":0.4,"imbCap":1.2,"aRef":70,"s1":{"el":0.2},"s2":{"el":0.08,"size":70},"fab":{"el":0.08,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"ref":{"W":4,"L":11,"wt":1.5,"s":2.25},"dbY":[0,1]},"1-5":{"type":"2x2","lc":1.561,"lams":[1.531,1.561,1.591],"start":{"W":8,"L":107.5,"wt":2,"s":4.5},"elCap":1.2,"imbCap":1.2,"aRef":750,"s1":{"el":0.6,"imb":0.6},"s2":{"el":0.45,"imb":0.3,"size":750},"fab":{"el":0.45,"imb":0.3,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"ref":{"W":5.9,"L":90,"wt":2,"s":3.4},"dbY":[0,1.5]},"1-6":{"start":{"tw":0.487,"Lt":40,"p":1},"lossCap":3,"tolBest":0.75,"aRef":180,"s1":{"loss":2,"tol":0.55},"s2":{"loss":1,"tol":0.65,"size":180},"fab":{"loss":1.3,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.7}},"hb":["tol"],"ref":{"tw":0.325,"Lt":100,"p":1.3},"dbY":[0,4]},"1-7":{"start":{"ord":1,"dL1":23.18,"t1":0,"dL2":11.59,"t2a":0,"t2b":0,"wa":1,"useCard":0},"ilCap":2,"xtWorst":0,"xtBest":-16,"xt0":-40,"aRef":4000,"s1":{"il":1.5,"xt":-8},"s2":{"il":1,"xt":-12,"size":4000},"fab":{"il":1.5,"xt":-8,"y":0.35,"yMode":{"easy":0.6,"std":0.35,"hard":0.1}},"hb":["xt"],"ref":{"ord":3,"wa":2.4,"dL1":29.84,"dL2":14.93,"t1":0.35,"t2a":0.03,"t2b":0.4,"useCard":0},"dbY":[0,4]},"2-1":{"start":{"h":0.8,"iso":0,"L":200,"pitch":8},"aRef":7350,"dbY":[0,200],"s1":{"ppi":120,"metal":0.02},"s2":{"ppi":102,"tau":58,"xt":0.03,"size":7350},"fab":{"pmax":513,"y":0.6,"yMode":{"easy":0.7,"std":0.6,"hard":0.35}},"ns":["ppi","xt"],"ref":{"h":1.6,"iso":1,"L":780,"pitch":8}},"2-2":{"start":{"na":17.3,"nd":17.3,"xj":0,"vb":0.5,"dc":1.2},"aRef":1,"dbY":[0,5],"s1":{"vpil":2.1,"loss":1.33},"s2":{"fom":28.7,"frc":95},"fab":{"fom":29.9,"frc":87,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.65}},"hb":["frc"],"ns":["vpil","frc"],"ref":{"na":17.7,"nd":17.8,"xj":0.04,"vb":0.85,"dc":0.4}},"2-3":{"start":{"L":5,"g":6,"eta":1,"RT":50,"useCard":0},"pnRef":{"VpiL":1.879,"loss":1.181,"Cp":0.2893,"Rp":5.2},"aRef":2500,"dbY":[-8,6],"s1":{"bw":27,"il":4.9,"oma":0.975},"s2":{"pen":1.93,"oma":1.62,"size":2500},"fab":{"pen":2.22,"oma":1.44,"y":0.7,"yMode":{"easy":0.75,"std":0.7,"hard":0.7}},"hb":["bw","oma"],"ns":["oma"],"ref":{"L":2,"g":60,"eta":1,"RT":52,"useCard":0}},"2-4":{"start":{"L":40,"w":4,"di":0.8,"V":0.5},"aRef":45,"dbY":[-10,-2],"s1":{"resp":0.85,"bw":29.9},"s2":{"sens":206,"dark":73.9,"size":45},"fab":{"sens":220,"dark":97,"y":0.7,"yMode":{"easy":0.75,"std":0.7,"hard":0.6}},"hb":["bw"],"ns":["resp"],"ref":{"L":28,"w":1,"di":0.44,"V":1.5}},"2-5":{"start":{"P":10,"ns":2,"iso":0,"th":0,"useCard":0},"parts":{"ssc":0.692,"split":0,"mux":0.72,"gain":-10.11,"pen":1.53,"sens":-7.89},"aRef":1,"dbY":[-4,6],"s1":{"margin":0,"fb":-30},"s2":{"margin":2,"pj":1.93,"fb":-36},"fab":{"margin":0,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"ns":["margin","fb"],"ref":{"P":16.5,"ns":0,"iso":1,"th":0,"useCard":0}},"3A":{"start":{"P":12,"share":0,"tc":0,"mt":0,"dsp":0,"useCard":0},"parts":{"ssc":0.692,"split":0,"gain":-10.11,"pen":1.53,"sens":-7.89,"ppi":88.8,"cplx":1,"fb":-68.09021710742508,"trimPi":4.5},"muxRef":{"ord":3,"wa":2.4,"dL1":29.84,"dL2":14.93,"t1":0.35,"t2a":0.03,"t2b":0.4,"useCard":0},"aRef":1,"dbY":[-4,6],"s1":{"margin":0,"pw":26},"s2":{"margin":1.5,"pw":23.1},"fab":{"margin":0,"y":0.65,"yMode":{"easy":0.7,"std":0.65,"hard":0.35}},"ns":["margin","pw"],"ref":{"P":17.5,"share":0,"tc":0,"mt":1,"dsp":0,"useCard":0}},"3A+":{"start":{"P":12,"share":3,"tc":0,"pkg":0,"mod":0,"useCard":0},"parts":{"ssc":0.692,"split":0,"gain":-10.11,"pen":1.53,"sens":-7.89,"ppi":88.8,"cplx":1,"fb":-68.09021710742508,"trimPi":4.5},"aRef":1,"dbY":[-4,6],"s1":{"margin":0,"pw":19.5},"s2":{"margin":1.5,"pw":5.7},"fab":{"margin":0,"y":0.7,"yMode":{"easy":0.7,"std":0.7,"hard":0.7}},"ns":["margin","pw"],"ref":{"P":15.5,"share":0,"tc":0,"pkg":2,"mod":0,"useCard":0}},"D-1":{"start":{"w":1,"gap":1.5,"rin":30,"ws":1,"sb":0},"tau":2,"aRef":2970000,"dbY":[0,8],"s1":{"il":5.11,"xtm":-20,"xtg":-30},"s2":{"il":2.83,"size":2970000},"fab":{"il":3.11,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"ns":["xtm","xtg"],"ref":{"w":2.55,"gap":3.5,"rin":145,"ws":0.8,"sb":1},"paper":{"w":2.4,"gap":4,"rin":120,"ws":1.2,"sb":1}},"D-2":{"start":{"N":6,"dt":20,"wa":1,"useCard":0},"parts":{"spiral":{"w":2.55,"gap":3.5,"rin":145,"ws":0.8,"sb":1},"ppi":88.8},"aRef":11212000,"dbY":[0,16],"s1":{"range":5000,"step":10,"il":11.84},"s2":{"dil":7.22,"echo":-30,"pw":1170,"size":11212000},"fab":{"il":11.84,"echo":-28,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"ns":["range","step","echo","dil","il"],"ref":{"N":9,"dt":10,"wa":1,"useCard":0}},"B-1":{"start":{"las":0,"B":1,"T":5,"tau":1,"tc":0,"useCard":0},"parts":{"spiral":{"w":2.55,"gap":3.5,"rin":145,"ws":0.8,"sb":1}},"aRef":4982000,"dbY":[0,12],"s1":{"dr":5,"refil":30},"s2":{"loss":1.19,"cal":2,"pr":100,"size":4982000},"fab":{"loss":1.31,"y":0.75,"yMode":{"easy":0.75,"std":0.75,"hard":0.75}},"ns":["dr","refil","cal","pr"],"ref":{"las":1,"B":3.9,"T":3,"tau":3.1,"tc":1,"useCard":0}},"B-2":{"start":{"k":4,"p":20,"f":3,"we":3,"sw":1,"useCard":0},"parts":{"to":{"Ppi":88.8,"tau":23.2},"T":3},"aRef":5991,"dbY":[0,15],"s1":{"fov":30,"res":0.1,"il":6.73},"s2":{"fmin":0.8,"fmax":1.5,"ghost":-20,"size":5991},"fab":{"ghost":-20,"y":0.7,"yMode":{"easy":0.7,"std":0.7,"hard":0.65}},"ns":["fov","res","fmin","fmax","ghost"],"ref":{"k":9,"p":10,"f":8.2,"we":10.5,"sw":0,"useCard":0}},"B-3":{"start":{"P":13,"nch":0,"lo":1,"nav":1,"useCard":0},"parts":{"chirp":{"las":1,"B":3.9,"T":3,"dnu":100000,"eres":77680,"Radc":58,"dR":3.84},"scan":{"N":512,"il":5,"wb":0.00038530653841866466,"settle":69.6,"pw":799.1999999999999,"ghost":-23.3,"fov":34.68,"res":0.0864},"resp":0.852,"split":0},"aRef":1,"dbY":[0,20],"s1":{"r":11,"pr":7},"s2":{"r":12,"pr":20,"pw":34},"fab":{"r":11,"y":0.7,"yMode":{"easy":0.75,"std":0.7,"hard":0.65}},"ns":["r","pr"],"ref":{"P":29,"nch":1,"lo":3,"nav":1,"useCard":0}},"2-3R":{"start":{"R":12,"g":0.3,"dop":0,"vb":0.5,"vpp":1,"det":-0.6,"bm":1,"useCard":0,"useHeater":0},"pnD":{"na":17.7,"nd":17.8,"xj":0.04,"vb":0.85,"dc":0.4},"hd":{"h":1.6,"iso":1},"tr":[0,70],"aRef":1,"dbY":[-8,8],"st":{"fsr":14},"s1":{"il":6.2,"er":2.19,"bw":28.6,"omaS":1.91},"s2":{"pen":2.4,"oma":3.17,"ph":15.3,"eb":52.6},"fab":{"pen":2.76,"oma":2.82,"ph":25.5,"y":0.3,"yMode":{"easy":0.75,"std":0.3,"hard":0.25}},"hb":["bw","er","oma","omaS"],"ns":["oma","omaS","eb"],"ref":{"R":7.05,"g":0.23,"dop":0.75,"vb":0,"vpp":3,"det":-0.2,"bm":0.25,"useCard":0,"useHeater":0}}}};
@@ -7099,7 +7205,7 @@ window.LABUI = (() => {
   let LS = load(), isOpen = false, C = null, CHK = null, MS = null, sel = null, cam = null, drag = null, timer = null;
   const SH = () => window.GAME_SHELL;
   const S = () => { const p = SH().plat(); LS[p] = LS[p] || {}; return LS[p]; };
-  const ctx = () => ({ pf: SH().pf(), lev: (id) => window.GAME_LEV(id), cards: SH().cards(), des3: Object.keys(SH().design('3A+')).length ? SH().design('3A+') : null });
+  const ctx = () => ({ pf: SH().pf(), lev: (id) => window.GAME_LEV(id), cards: SH().cards(), des3: Object.keys(SH().design('3A+')).length ? SH().design('3A+') : null, gds: S().gds || null });
   function arch3() {
     const cd = SH().cards()['3A+']; if (cd && cd.d) return { mod: cd.d.mod | 0, share: cd.d.share | 0, src: '내 3A+ 카드' };
     const de = SH().design('3A+'); if (Object.keys(de).length) return { mod: de.mod | 0, share: de.share | 0, src: '3A+ 현재 설계' };
@@ -7144,7 +7250,7 @@ window.LABUI = (() => {
       intro: '연결성, 기하(선폭·간격·굽힘·경계·겹침·간섭), 시스템(레인 속도·용량·변조기·파워 버짓·RF) 검사를 실행합니다. 결과는 PASS / WARNING / FAIL / NOT VERIFIED로 나뉘고, 검사하지 않은 항목에는 PASS를 주지 않습니다. FAIL이 없어야 완료입니다.',
       done: (m, s) => m.verification && !!s.ran },
     { id: 'export', short: '내보내기', title: 'Mission 6 · Circuit Export (→ GDS)', keys: [], adv: [],
-      intro: '설계를 smq-circuit/1 데이터(회로 넷리스트, 소자 파라미터, 포트 연결, 배치, 배선 형상, 플랫폼·규칙, 성능 예측, 검증 결과)로 내보냅니다. 같은 데이터를 tools/smq2gds가 읽어 PCell 조립·GDS·미리보기·재검사를 하는 것은 Phase D입니다.',
+      intro: '설계를 smq-circuit/1 데이터(회로 넷리스트, 소자 파라미터, 포트 연결, 배치, 배선 형상, 플랫폼·규칙, 성능 예측, 검증 결과)로 내보냅니다. tools/smq2gds가 같은 데이터로 PCell 조립·GDS·미리보기·재검사를 하고, 그 결과를 다시 불러오면 GDS Generated가 됩니다.',
       done: (m, s) => !!s.exported && m.verification }
   ];
   const progress = () => { if (!SH() || !SH().plat()) return '—'; const s = LS[SH().plat()] || {}, n = MISS.filter((m) => (s.done || {})[m.id]).length; return `미션 ${n}/${MISS.length}`; };
@@ -7158,6 +7264,21 @@ window.LABUI = (() => {
     C.samples = (C.routes || []).map((r) => ({ r, pts: LAB.sample(r.prims, Math.max(1, (C.W + C.H) / 4000)) }));
     save();
   }
+  // imported GDS re-check: 'PASS' | 'FAIL' (matches this design) | 'stale' (another design) | null
+  function gdsSt() { const g = S().gds; if (!g || !C) return null; return g.design_hash !== LAB.designHash(C) ? 'stale' : g.summary.FAIL ? 'FAIL' : 'PASS'; }
+  function gdsMsg() {
+    const g = S().gds, st = gdsSt(); if (!g) return S().gdsErr ? `<span class="st-FAIL">${S().gdsErr}</span>` : '아직 불러온 GDS 재검사 결과가 없습니다.';
+    const sm = g.summary, E = (v) => String(v == null ? '' : v).replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[ch]); return `${st === 'stale' ? '<span class="st-WARNING">불러온 결과는 지금과 다른 설계입니다 — 다시 내보내고 GDS를 다시 만드세요.</span> ' : ''}GDS ${E(g.gds)} · sha1 ${E(String(g.gds_sha1).slice(0, 12))} · 셀 ${E(g.cells)}개 · PASS ${sm.PASS} · WARNING ${sm.WARNING} · FAIL ${sm.FAIL}${sm['NOT VERIFIED'] != null ? ` · NOT VERIFIED ${sm['NOT VERIFIED']}` : ''} (hash ${E(g.design_hash)})`;
+  }
+  function importGds(txt) {
+    let V; S().gdsErr = null;
+    try { V = JSON.parse(txt); } catch (er) { S().gdsErr = 'JSON이 아닙니다.'; return; }
+    const r = V && V.gds_recheck;
+    if (!r || r.schema !== LAB.SCHEMA + '#gds-recheck' || !r.summary || !Array.isArray(r.checks)) { S().gdsErr = 'gds_recheck가 없는 파일입니다 — smq2gds.circuit가 만든 engine_verification.json을 고르세요.'; return; }
+    if (V.platform && V.platform !== SH().plat()) { S().gdsErr = `다른 플랫폼(${V.platform})의 결과입니다.`; return; }
+    const sm = { PASS: 0, WARNING: 0, FAIL: 0, 'NOT VERIFIED': 0 }; r.checks.forEach((c) => { if (sm[c.status] != null) sm[c.status]++; });   // count from the checks themselves, not the stated summary
+    S().gds = { design_hash: r.design_hash, gds: r.gds, gds_sha1: r.gds_sha1, cells: r.cells, summary: sm, checks: r.checks.map(({ group, item, status, detail }) => ({ group, item, status, detail })), at: new Date().toISOString() };
+  }
   function setV(k, v) { const d = des(); d[k] = v; if (k === 'mod' || k === 'rf') d.stag = LAB.stagAuto(d); S().ran = false; S().exported = null; save(); }
 
   /* ---------------- render ---------------- */
@@ -7170,7 +7291,7 @@ window.LABUI = (() => {
     $('#lab-mode').innerHTML = [['beginner', 'Beginner'], ['advanced', 'Advanced']].map(([k, t]) => `<button role="radio" aria-checked="${mode === k}" data-lm="${k}">${t}</button>`).join('');
     const a3 = SH().stars('3A+') > 0, st = [['Schematic Complete', MS.schematic], ['Floorplan Complete', MS.floorplan], ['Routing Complete', MS.routing], ['Electrical Interface', MS.electrical], ['Verification Complete', MS.verification && !!s.ran]];
     $('#lab-prog').innerHTML = st.map(([t, ok]) => `<span class="${ok ? 'ok' : ''}">${ok ? '✓' : '·'} ${t}</span>`).join('')
-      + '<span class="pend" title="Phase D: tools/smq2gds가 GDS를 만들고 다시 읽어 검사">· GDS Generated (Phase D)</span>'
+      + (() => { const g = gdsSt(); return `<span class="${g === 'PASS' ? 'ok' : 'pend'}" title="tools/smq2gds.circuit가 GDS를 만들고 다시 읽어 검사한 결과(engine_verification.json)를 Mission 6에서 불러옴">${g === 'PASS' ? '✓' : '·'} GDS Generated${g === 'PASS' ? '' : g === 'FAIL' ? ' (재검사 FAIL)' : g === 'stale' ? ' (다른 설계)' : ''}</span>`; })()
       + `<span class="${a3 ? 'ok' : 'pend'}" title="정식 Project Completion은 Stage 3 설계 완료와 연계">${a3 ? '✓' : '·'} 3A+ ★ 연계 ${a3 ? '' : '(미리보기 모드)'}</span>`;
     $('#lab-steps').innerHTML = MISS.map((m, j) => `<li><button class="stp ${(s.done || {})[m.id] ? 'done' : ''}" data-ms="${j}" aria-current="${j === cur() ? 'step' : 'false'}" aria-label="미션 ${j + 1} ${m.title}${(s.done || {})[m.id] ? ' (완료)' : ''}"><span class="num">${(s.done || {})[m.id] ? '✓' : j + 1}</span><span class="t">${m.short}</span></button></li>`).join('');
     const m = MISS[cur()], ok = m.done(MS, s), nx = MISS[cur() + 1];
@@ -7184,7 +7305,9 @@ window.LABUI = (() => {
     if (m.id === 'floorplan') h += `<p class="note">자동 배치 기준 필요한 다이: <b>${(C.need.W / 1000).toFixed(2)} × ${(C.need.H / 1000).toFixed(2)} mm</b>.</p><div class="row-btns"><button class="btn" data-la="fit">필요 크기로 맞춤 (0.1 mm 올림)</button><button class="btn" data-la="auto">자동 배치 값 복원</button></div>`;
     if (m.id === 'routing') h += `<p class="note">배선 폭 w<sub>r</sub> &gt; w<sub>0</sub> ${SH().pf().w0} µm이면 긴 넷의 직선 구간에 선형 테이퍼를 넣어 몸통만 넓힙니다 (짧은 넷은 w<sub>0</sub>). 단일모드 차단 폭 ${SH().pf().wc} µm 이상은 다중모드 — 굽힘은 Euler로.</p>`;
     if (m.id === 'verification') h += `<div class="row-btns"><button class="btn pri" data-la="run">검사 실행</button></div><p class="note">${S().ran ? '마지막 실행 결과가 아래 표에 있습니다. 설계를 바꾸면 다시 실행해야 합니다.' : '아직 실행하지 않았습니다.'}</p>`;
-    if (m.id === 'export') h += `<div class="row-btns"><button class="btn pri" data-la="exp-all">smq-circuit/1 내보내기 (3개 파일)</button></div><div class="row-btns"><button class="btn" data-la="exp-s">engine_schematic.json</button><button class="btn" data-la="exp-l">engine_layout.json</button><button class="btn" data-la="exp-v">engine_verification.json</button></div><textarea id="lab-json" class="jsonout" hidden readonly aria-label="smq-circuit JSON"></textarea>`;
+    if (m.id === 'export') h += `<div class="row-btns"><button class="btn pri" data-la="exp-all">smq-circuit/1 내보내기 (3개 파일)</button></div><div class="row-btns"><button class="btn" data-la="exp-s">engine_schematic.json</button><button class="btn" data-la="exp-l">engine_layout.json</button><button class="btn" data-la="exp-v">engine_verification.json</button></div><textarea id="lab-json" class="jsonout" hidden readonly aria-label="smq-circuit JSON"></textarea>`
+      + `<h4 class="sub">GDS (tools/smq2gds)</h4><p class="note">내려받은 세 파일과 같은 폴더에서: <code>python -m smq2gds.circuit ${SH().plat()}_engine_layout.json -o gds/</code> → engine_layout.gds · engine_preview.png · engine_verification.json(GDS 재검사 포함). 그 verification 파일을 불러오면 지금 설계(design hash)와 맞는지 확인해 반영합니다.</p>`
+      + `<div class="row-btns"><label class="btn" for="lab-gds">GDS 재검사 결과 불러오기</label><input type="file" id="lab-gds" accept=".json,application/json" hidden></div><p class="note" id="lab-gds-msg">${gdsMsg()}</p>`;
     $('#lab-params').innerHTML = h || '<p class="note">이 미션에는 손잡이가 없습니다.</p>';
   }
   function renderLib() {
@@ -7261,8 +7384,8 @@ window.LABUI = (() => {
   }
   function summary() {
     const s = CHK.sys, n = (st) => CHK.checks.filter((x) => x.status === st).length, a3 = SH().stars('3A+') > 0;
-    return `<table class="ltbl">${row(['총 데이터 속도', `${LAB.LANES} × 200G = 1.6 Tb/s (라인 ${LAB.LANES} × 224 Gb/s)`])}${row(['변조기', C.mod === 'mzm' ? 'TW-MZM ×8' : 'MRR ×8'])}${row(['다이', `${des().W.toFixed(1)} × ${des().H.toFixed(1)} mm`])}${row(['광 손실 추정 (칩 배선, 최악 레인)', `${s.extra.toFixed(2)} dB`])}${row(['링크 마진 (레이아웃 반영)', `${s.marginLayout.toFixed(2)} dB`])}${row(['비트당 에너지 (3A+ 모듈 모델)', `${s.pj.toFixed(2)} pJ/bit`])}${row(['검증 요약', `PASS ${n('PASS')} · WARNING ${n('WARNING')} · FAIL ${n('FAIL')} · NOT VERIFIED ${n('NOT VERIFIED')}${S().ran ? '' : ' (검사 미실행)'}`])}${row(['Project Completion', a3 ? (MISS.every((m) => (S().done || {})[m.id]) ? '<span class="st-PASS">완료</span>' : '진행 중') : '3A+ ★ 이후 정식 완료 (지금은 미리보기)'])}</table>`
-      + `<p class="note">GDS는 Phase D에서 같은 smq-circuit/1 데이터를 tools/smq2gds가 읽어 생성·재검사합니다. 이 결과는 구조 검증이 가능한 Engineering Prototype이며 Tape-out Ready Mask가 아닙니다.</p>`;
+    return `<table class="ltbl">${row(['총 데이터 속도', `${LAB.LANES} × 200G = 1.6 Tb/s (라인 ${LAB.LANES} × 224 Gb/s)`])}${row(['변조기', C.mod === 'mzm' ? 'TW-MZM ×8' : 'MRR ×8'])}${row(['다이', `${des().W.toFixed(1)} × ${des().H.toFixed(1)} mm`])}${row(['광 손실 추정 (칩 배선, 최악 레인)', `${s.extra.toFixed(2)} dB`])}${row(['링크 마진 (레이아웃 반영)', `${s.marginLayout.toFixed(2)} dB`])}${row(['비트당 에너지 (3A+ 모듈 모델)', `${s.pj.toFixed(2)} pJ/bit`])}${row(['검증 요약', `PASS ${n('PASS')} · WARNING ${n('WARNING')} · FAIL ${n('FAIL')} · NOT VERIFIED ${n('NOT VERIFIED')}${S().ran ? '' : ' (검사 미실행)'}`])}${row(['GDS 재검사 (smq2gds)', gdsMsg()])}${row(['Project Completion', a3 ? (MISS.every((m) => (S().done || {})[m.id]) ? '<span class="st-PASS">완료</span>' : '진행 중') : '3A+ ★ 이후 정식 완료 (지금은 미리보기)'])}</table>`
+      + `<p class="note">GDS는 같은 smq-circuit/1 데이터를 tools/smq2gds가 읽어 같은 기본 도형으로 그리고, 다시 읽어 계층·연결·포트·길이·간격·선폭·금속 단락을 검사합니다. 이 결과는 구조 검증이 가능한 Engineering Prototype이며 Tape-out Ready Mask가 아닙니다.</p>`;
   }
   function renderCoach() {
     const m = MISS[cur()], el = $('#lab-coach'), fails = CHK.checks.filter((x) => x.status === 'FAIL');
@@ -7335,7 +7458,7 @@ window.LABUI = (() => {
     g.strokeStyle = 'rgba(231,236,243,.7)'; g.lineWidth = 1.2 * DPR; g.strokeRect(TX(0), TY(C.H), C.W * s, C.H * s);
     g.setLineDash([4 * DPR, 4 * DPR]); g.strokeStyle = 'rgba(158,171,189,.35)'; const e = C.d.edge; g.strokeRect(TX(e), TY(C.H - e), (C.W - 2 * e) * s, (C.H - 2 * e) * s); g.setLineDash([]);
     // electrical lines under everything
-    (C.elines || []).forEach((l) => { g.strokeStyle = l.kind === 'rf' ? 'rgba(242,176,74,.75)' : 'rgba(158,171,189,.45)'; g.lineWidth = (l.kind === 'rf' ? 1.4 : 1) * DPR; if (l.kind !== 'rf') g.setLineDash([3 * DPR, 3 * DPR]); g.beginPath(); l.pts.forEach((p, i) => (i ? g.lineTo(TX(p[0]), TY(p[1])) : g.moveTo(TX(p[0]), TY(p[1])))); g.stroke(); g.setLineDash([]); });
+    (C.elines || []).forEach((l) => { g.strokeStyle = l.kind === 'rf' ? 'rgba(242,176,74,.75)' : 'rgba(158,171,189,.45)'; g.lineWidth = Math.max((l.kind === 'rf' ? 1.4 : 1) * DPR, (l.width_um || 0) * s); if (l.kind !== 'rf' && (l.width_um || 0) * s < 2 * DPR) g.setLineDash([3 * DPR, 3 * DPR]); g.beginPath(); l.pts.forEach((p, i) => (i ? g.lineTo(TX(p[0]), TY(p[1])) : g.moveTo(TX(p[0]), TY(p[1])))); g.stroke(); g.setLineDash([]); });
     (C.pads || []).forEach((p) => { g.fillStyle = p.kind === 'rf' ? 'rgba(242,176,74,.55)' : 'rgba(158,171,189,.4)'; g.fillRect(TX(p.x - p.w / 2), TY(p.y + p.w / 2), p.w * s, p.w * s); });
     // components
     const bad = new Set(); CHK.checks.filter((x) => x.status === 'FAIL').forEach((x) => C.inst.forEach((I) => { if (String(x.detail).includes(I.id)) bad.add(I.id); }));
@@ -7361,19 +7484,21 @@ window.LABUI = (() => {
     const rect = (x0, y0, x1, y1, col) => { g.fillStyle = col; const a = X(x0), b = X(x1); g.fillRect(Math.min(a, b), Math.min(Y(y0), Y(y1)), Math.max(1, Math.abs(b - a)), Math.max(1, Math.abs(Y(y1) - Y(y0)))); };
     if (I.type === 'ssc') { g.fillStyle = '#64c9df'; g.beginPath(); g.moveTo(X(0), Y(0.5 * px(1) / s)); g.lineTo(X(I.L), Y(Math.max(0.6, I.params.w_um / 2))); g.lineTo(X(I.L), Y(-Math.max(0.6, I.params.w_um / 2))); g.lineTo(X(0), Y(-0.5 * px(1) / s)); g.fill(); }
     else if (I.type === 'mmi1x2') { const p = I.params; rect(p.taper_len_um, -p.W_um / 2, p.taper_len_um + p.L_um, p.W_um / 2, 'rgba(100,201,223,.8)'); line(0, 0, p.taper_len_um, 0, '#64c9df'); line(p.taper_len_um + p.L_um, p.s_um / 2, I.L, p.s_um / 2, '#64c9df'); line(p.taper_len_um + p.L_um, -p.s_um / 2, I.L, -p.s_um / 2, '#64c9df'); }
-    else if (I.type === 'mzm') {
-      const P = C.P, m = P.mmi, a = gm.arms, h2 = gm.da / 2, gp = P.mzm.g, SW = LAB.SW, GW = LAB.GW;
-      rect(gm.xe0, SW / 2 + gp, gm.xe1, SW / 2 + gp + GW, 'rgba(242,176,74,.35)'); rect(gm.xe0, -SW / 2, gm.xe1, SW / 2, 'rgba(242,176,74,.55)'); rect(gm.xe0, -(SW / 2 + gp + GW), gm.xe1, -(SW / 2 + gp), 'rgba(242,176,74,.35)');
-      rect(0, -m.W / 2, m.Ltot, m.W / 2, 'rgba(100,201,223,.7)'); rect(gm.L - m.Ltot, -m.W / 2, gm.L, m.W / 2, 'rgba(100,201,223,.7)');
-      [1, -1].forEach((sg) => { line(m.Ltot, sg * m.s / 2, a.xa0, sg * h2, '#64c9df'); line(a.xa0, sg * h2, a.xa1, sg * h2, '#64c9df'); line(a.xa1, sg * h2, a.x1, sg * m.s / 2, '#64c9df'); });
-      rect(gm.xh0, h2 - 1, gm.xh1, h2 + 1, '#f6ad55');
+    else if (I.type === 'mzm') {   // the same local primitives and rectangles the GDS backend draws (params.local)
+      const P = C.P, m = P.mmi, loc = I.params.local, lc = { m1: 'rgba(242,176,74,.45)', heater: '#f6ad55', term: '#e53e3e' };
+      loc.rects.forEach((r) => rect(r.x0, r.y0, r.x1, r.y1, lc[r.layer] || 'rgba(231,236,243,.3)'));
+      rect(m.tl, -m.W / 2, m.tl + m.L, m.W / 2, 'rgba(100,201,223,.7)'); rect(gm.L - m.tl - m.L, -m.W / 2, gm.L - m.tl, m.W / 2, 'rgba(100,201,223,.7)');
+      [1, -1].forEach((sg) => { line(0, 0, m.tl, 0, '#64c9df'); line(m.tl + m.L, sg * m.s / 2, m.Ltot, sg * m.s / 2, '#64c9df'); line(gm.L - m.tl, 0, gm.L, 0, '#64c9df'); line(gm.L - m.Ltot, sg * m.s / 2, gm.L - m.tl - m.L, sg * m.s / 2, '#64c9df'); });
+      wg(loc.prims, '#64c9df');
     } else if (I.type === 'mrr') {
-      line(0, 0, gm.L, 0, '#64c9df'); g.strokeStyle = '#64c9df'; g.lineWidth = Math.max(1.2 * DPR, gm.w * s); g.beginPath(); g.arc(X(gm.xc), Y(gm.yc), Math.max(2, gm.R * s), 0, 2 * Math.PI); g.stroke();
+      const loc = I.params.local || { prims: [] };
+      wg(loc.prims.filter((p) => p.layer !== 'si'), '#64c9df'); wg(loc.prims.filter((p) => p.layer === 'si'), '#3b82c4');
+      line(gm.Lt || 0, 0, gm.L - (gm.Lt || 0), 0, '#64c9df', Math.max(1, gm.w * s)); g.strokeStyle = '#64c9df'; g.lineWidth = Math.max(1.2 * DPR, gm.w * s); g.beginPath(); g.arc(X(gm.xc), Y(gm.yc), Math.max(2, gm.R * s), 0, 2 * Math.PI); g.stroke();
       g.strokeStyle = 'rgba(246,173,85,.8)'; g.lineWidth = Math.max(1, 2 * s); g.beginPath(); g.arc(X(gm.xc), Y(gm.yc), Math.max(2, gm.R * s), -(270 - 27) * Math.PI / 180, -(270 + 27 - 360) * Math.PI / 180, true); g.stroke();
     } else if (I.type === 'tap_pd') {
-      line(0, 0, gm.L, 0, '#64c9df'); line(10, gm.yt, 10 + gm.Lc, gm.yt, '#64c9df'); line(10 + gm.Lc, gm.yt, gm.xpd, gm.yt - gm.sb.dy, '#64c9df');
-      rect(gm.xpd, gm.yt - gm.sb.dy - gm.pdw / 2, gm.xpd + gm.Lpd, gm.yt - gm.sb.dy + gm.pdw / 2, 'rgba(180,140,255,.8)');
+      const loc = I.params.local; wg(loc.prims, '#64c9df'); loc.rects.forEach((r) => rect(r.x0, r.y0, r.x1, r.y1, 'rgba(180,140,255,.8)'));
     }
+    function wg(prims, col) { if (!prims.length) return; prims.forEach((p) => { const pts = LAB.sample([p], Math.max(0.05, 1.5 / s)); g.strokeStyle = col; g.lineWidth = Math.max(1, (p.w0 != null ? Math.max(p.w0, p.w1) : p.w) * s); g.beginPath(); pts.forEach((q, i) => (i ? g.lineTo(X(q[0]), Y(q[1])) : g.moveTo(X(q[0]), Y(q[1])))); g.stroke(); }); }
   }
   function hit(px, py) {
     const x = IX(px), y = IY(py);
@@ -7420,14 +7545,14 @@ window.LABUI = (() => {
       G: ['hong', 'cherchi', 'chrost', 'gdsf'] },
     electrical: { re: /전기 포트|RF 배선 교차|RF 금속|패드 배치|범프 배치|RF 급전선|링 구동선/, A: 'MZM과 링이 서로 다른 전기 인터페이스를 요구하는 이유(진행파 전극 vs 집중 소자), 패드 배치와 RF 선 길이가 성능과 다이 크기에 미치는 영향을 배웁니다.',
       B: '<p>TW-MZM은 RF가 전극을 따라 진행하는 전송선이라 50 Ω급 GSG 입력과 끝단 종단 저항이 필요하고, 급전선이 길어도 정합만 되면 동작하지만 도체 손실(∝√f)이 쌓입니다. 링은 수 fF의 집중 용량이라 구동선이 RF 파장의 1/10보다 길면 반사·공진이 생깁니다 — 그래서 링 변조기는 구동기를 바로 위에 붙이는 3D/플립칩(CPO)과 짝을 이룹니다. 히터와 모니터 PD는 DC 패드가 필요합니다.</p>',
-      deep: '<p>MZM 급전 손실 = (0.35 + 3/g)·√f<sub>GHz</sub> dB/cm (2-3 CPW 도체 손실식, g = 2-3 설계의 신호–접지 간격), f = 56 GHz(112 GBd 나이퀴스트). 링 구동선 기준 λ/10 = c/(f√ε<sub>eff</sub>)/10, ε<sub>eff</sub> = (11.7+1)/2. 가장자리 패드는 RF를 한 변(N), DC를 반대 변(S)에 두고, RF 선은 같은 금속층이라 교차하면 FAIL, DC는 2층 금속(M2) 가정으로 교차 검사를 하지 않습니다(NOT VERIFIED).</p>',
+      deep: '<p>MZM 급전 손실 = (0.35 + 3/g)·√f<sub>GHz</sub> dB/cm (2-3 CPW 도체 손실식, g = 2-3 설계의 신호–접지 간격), f = 56 GHz(112 GBd 나이퀴스트). 링 구동선 기준 λ/10 = c/(f√ε<sub>eff</sub>)/10, ε<sub>eff</sub> = (11.7+1)/2. 가장자리 패드는 RF를 한 변(N), DC를 반대 변(S)에 두고, RF 선(M1, 폭 10 µm)은 같은 금속층이라 다른 넷과 닿으면 FAIL. DC 선(M2, 폭 5 µm)은 패드 열까지 평면 팬아웃(river routing): 패드를 포트 x 순서로 놓고, 왼쪽으로 가는 선은 x가 큰 것부터 패드에 가까운 트랙을 쓰고 오른쪽은 반대로 — 그러면 수직선이 다른 선의 수평 트랙을 가로지르지 않아 한 층으로 충분하며, 트랙 수 × 10 µm가 DC 쪽 여백(다이 높이)이 됩니다.</p>',
       D: '같은 MRR 설계를 가장자리 패드와 플립칩으로 바꿔 링 구동선 길이 WARNING이 사라지고 다이가 얼마나 작아지는지 비교하세요.',
       P: { rf: { m: '구동기 연결 방식', ud: '플립칩: 선 짧음·다이↓, 3D 공정 필요', tr: 'RF 성능 ↔ 패키지 복잡도' }, rfSide: { m: 'RF 패드 변', ud: '엇갈림 방향이 바뀜', tr: '구동기 위치' }, pp: { m: '패드 피치', ud: '↑ 본딩 쉬움, 변 길이↑', tr: '조립 ↔ 다이 크기' } },
       F: [['패드·전극·종단', 'asm', '추상 형상 (Generic PDK에 RF 금속·저항 없음)'], ['RF 손실·반사', 'semi', 'CPW 도체 손실식 / λ/10 기준만 — EM 해석 아님'], ['파운드리 RF 규칙', 'fw', '검증하지 않음 (NOT VERIFIED)']],
       G: ['ieee3dj', 'oif', 'chrost'] },
     verification: { re: /./, A: '설계 검증을 연결성·기하·시스템·모델 유효성으로 나누고, 검사하지 않은 것을 PASS로 표시하지 않는 습관을 익힙니다.',
       B: '<p>연결성은 그래프 검사(모든 광 포트가 정확히 한 번, 8 레인이 입력까지 이어짐, 전기 포트마다 패드), 기하는 실제 형상의 샘플로 선폭·간격·굽힘·경계·겹침·간섭을 계산합니다. 시스템은 3A+ 모듈 엔진의 예측에 레이아웃이 더한 칩 위 배선 손실을 빼서 링크가 여전히 닫히는지 봅니다.</p>',
-      deep: '<p>간격 검사는 서로 다른 넷의 중심선 샘플 사이 최소 거리 − (두 폭의 평균)입니다. 소자 내부(MMI 출력 포트 간격 등)는 각 레벨의 DRC가 맡습니다. NOT VERIFIED 항목(EM, 열 크로스토크, 파운드리 DRC, DC 교차, GDS 재검사)은 이 게임이 계산하지 않는 것들이며, Phase D의 GDS 재검사가 그 일부를 메웁니다.</p>',
+      deep: '<p>간격 검사는 서로 다른 넷의 중심선 샘플 사이 최소 거리 − (두 폭의 평균)입니다. 소자 내부(MMI 출력 포트 간격 등)는 각 레벨의 DRC가 맡습니다. NOT VERIFIED 항목(EM, 열 크로스토크, 파운드리 DRC)은 이 게임이 계산하지 않는 것들입니다. GDS 재검사는 tools/smq2gds 결과를 Mission 6에서 불러오면 PASS/FAIL이 됩니다 — GDS에서 다시 잰 연결·포트·길이·간격·선폭·금속 단락.</p>',
       D: '검사를 실행한 뒤 FAIL 항목을 눌러 원인 미션으로 돌아가 고쳐 보세요.',
       P: {}, F: [['연결성', 'an', '정확한 그래프 검사'], ['기하', 'an', '샘플 기반 (0.5 µm) 간격·경계·겹침'], ['시스템 예측', 'semi', '3A+ 엔진 + 레이아웃 배선 손실'], ['EM·열·파운드리 규칙', 'fw', 'NOT VERIFIED']],
       G: ['chrost', 'gdsf', 'luceda'] },
@@ -7435,7 +7560,7 @@ window.LABUI = (() => {
       B: '<p>게임은 넷리스트·소자 파라미터·포트 연결·배치·배선 형상(직선·코너·원호 기본 도형)·플랫폼·규칙·성능 예측·검증 결과를 내보냅니다. GDS 백엔드는 그 데이터를 읽어 PCell을 만들고 배치·조립·형상 검증·GDS·미리보기를 만듭니다. 형상을 기본 도형으로 넘기므로 게임 미리보기와 GDS가 같은 모양이 됩니다.</p>',
       deep: '<p>세 파일: engine_schematic.json(소자·포트·넷), engine_layout.json(배치·배선 기본 도형·패드·추상화 수준), engine_verification.json(검사 결과·성능 예측). 링 소자는 2-3R의 ring_allpass PCell 데이터를, MZM은 2-3 전극 길이·간격과 1-3 MMI·2-1 히터를 그대로 담습니다.</p>',
       D: '내보낸 JSON의 routing.optical[].prims가 캔버스에 그린 선과 같은 기본 도형인지 확인해 보세요.',
-      P: {}, F: [['회로 데이터', 'an', '게임 상태 그대로'], ['GDS 생성·재검사', 'fw', 'Phase D (tools/smq2gds)'], ['능동층·금속', 'asm', '주석 레이어 추상화 — Tape-out Ready 아님']],
+      P: {}, F: [['회로 데이터', 'an', '게임 상태 그대로'], ['GDS 생성·재검사', 'an', 'tools/smq2gds: 같은 기본 도형 → GDS → KLayout으로 다시 읽어 검사'], ['능동층·금속', 'asm', '주석 레이어 추상화 — Tape-out Ready 아님']],
       G: ['gdsf', 'luceda', 'chrost'] }
   };
 
@@ -7449,6 +7574,12 @@ window.LABUI = (() => {
   }
   const sched = (refit) => { clearTimeout(timer); timer = setTimeout(() => renderAll(refit), 90); };
   box.addEventListener('input', (e) => { const t = e.target.closest('[data-lk]'); if (!t) return; const p = pfP()[t.dataset.lk], v = +t.value; $('#lo-' + p.k).textContent = fmtV(p, v); setV(p.k, v); sched(p.k === 'W' || p.k === 'H' || p.k === 'mod' || p.k === 'share'); });
+  box.addEventListener('change', (e) => {
+    if (e.target.id !== 'lab-gds' || !e.target.files || !e.target.files[0]) return;
+    const f = e.target.files[0], rd = new FileReader();
+    rd.onload = () => { importGds(String(rd.result)); save(); renderAll(); };
+    rd.readAsText(f);
+  });
   box.addEventListener('click', (e) => {
     const lm = e.target.closest('[data-lm]'), ms = e.target.closest('[data-ms]'), nx = e.target.closest('#lab-next'), la = e.target.closest('[data-la]'), lv = e.target.closest('[data-lv]'), lt = e.target.closest('[data-lt]'), z = e.target.closest('[data-z]');
     if (lm) { S().mode = lm.dataset.lm; save(); renderAll(); return; }
@@ -7485,7 +7616,9 @@ window.LABUI = (() => {
 
   function open() { if (!SH() || !SH().plat()) return; isOpen = true; box.hidden = false; const g = $('main.game'); if (g) g.hidden = true; cam = null; renderAll(true); box.scrollIntoView && box.scrollIntoView({ block: 'start' }); }
   function close() { isOpen = false; box.hidden = true; const g = $('main.game'); if (g) g.hidden = false; }
-  return { open, close, isOpen: () => isOpen, progress, state: () => ({ C, CHK, MS, d: isOpen ? des() : null, s: SH() && SH().plat() ? S() : null }), MISS };
+  // focus(x, y, w): centre the layout view on (x, y) µm showing w µm across (inspection, screenshots)
+  const focus = (x, y, w) => { if (!C || !CV) return; cam = { s: CV.width / w, x, y }; draw(); };
+  return { open, close, isOpen: () => isOpen, progress, focus, state: () => ({ C, CHK, MS, d: isOpen ? des() : null, s: SH() && SH().plat() ? S() : null }), MISS };
 })();
 if (window.LABUI && window.GAME_SHELL && window.GAME_SHELL.plat()) window.GAME_SHELL.refreshMap();
 
