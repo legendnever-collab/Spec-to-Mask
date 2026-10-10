@@ -1,7 +1,7 @@
 {
  "schema": "smq-circuit/1#verification",
  "platform": "sin1550",
- "design_hash": "a51aa122",
+ "design_hash": "15597ba6",
  "checks": [
   {
    "group": "Connectivity",
@@ -31,7 +31,7 @@
    "group": "Connectivity",
    "item": "전기 포트 → 패드 매핑",
    "status": "PASS",
-   "detail": "48개 전기 포트 → 48개 패드"
+   "detail": "48개 전기 포트 → 48개 범프"
   },
   {
    "group": "Geometry",
@@ -234,22 +234,22 @@
  },
  "gds_recheck": {
   "schema": "smq-circuit/1#gds-recheck",
-  "design_hash": "a51aa122",
+  "design_hash": "15597ba6",
   "gds": "engine_layout.gds",
-  "gds_sha1": "8d2b3d2750a2c617c6f5cfece3bf546844c29d43",
+  "gds_sha1": "370f928f9a25dd4aceae3d5a775dbb9237a7de24",
   "cells": 3,
   "checks": [
    {
     "group": "GDS",
     "item": "입력 일치 (layout ↔ verification design_hash)",
     "status": "PASS",
-    "detail": "a51aa122 / a51aa122"
+    "detail": "15597ba6 / 15597ba6"
    },
    {
     "group": "GDS",
     "item": "파일 다시 읽기 (top cell 1개)",
     "status": "PASS",
-    "detail": "engine_layout.gds: 46 KB, top ['SMQ_PIC_sin1550_MRR_DR8_a51aa122']"
+    "detail": "engine_layout.gds: 46 KB, top ['SMQ_PIC_sin1550_MRR_DR8_15597ba6']"
    },
    {
     "group": "GDS",
@@ -357,7 +357,7 @@
     "group": "Model validity",
     "item": "SiN ↔ Si 층간 전이",
     "status": "WARNING",
-    "detail": "이종 Si 링 버스 양쪽에 SiN/Si 공동 테이퍼를 그림 (평면도, 층간 결합 손실·수직 간격 미계산) — 연결 검사는 SiN ∪ Si 평면 합집합"
+    "detail": "이종 Si 링 버스 양 끝에 SiN/Si 공동 테이퍼를 그림 (평면도, 층간 결합 손실·수직 간격 미계산) — 연결 검사는 SiN ∪ Si 평면 합집합"
    }
   ],
   "summary": {

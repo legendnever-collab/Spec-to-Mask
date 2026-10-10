@@ -20,8 +20,9 @@ generator, exported
 platform: { id, mat, lam_um, core_t_um, w0_um, wc_um, clad, box, rules_um{gap, wmin, edge},
             route_rules{ port_width_um, body_width_um, taper, bend: "arc"|"euler", R_um, R_min_rule_um,
                          alpha_body_dB_cm, alpha_port_dB_cm, litho_min_width_um } }
-architecture: { name, lanes: 8, lane_rate_gbps: 224, net_rate_gbps: 200, baud_gbd: 112, format: "PAM4",
-                modulator: "mzm"|"mrr", laser_share, lasers, splitter_depth, monitor_pd }
+architecture: { name, outputs (8 DR8 / 1 WDM8), lanes: 8, lane_rate_gbps: 224, net_rate_gbps: 200, baud_gbd: 112, format: "PAM4",
+                modulator: "mzm"|"mrr"|"wdm", laser_share, lasers, splitter_depth, monitor_pd,
+                wdm?: { channels, grid_GHz, lambda_um[8], fsr_nm, radii, assignment, ring_pitch_um, source, model } }
 die: { W_um, H_um, edge_um, optical_io{input:"W", output:"E", fiber_pitch_um}, electrical_io{…}, lane_pitch_um, lane_stagger_um }
 ```
 
@@ -33,8 +34,8 @@ die: { W_um, H_um, edge_um, optical_io{input:"W", output:"E", fiber_pitch_um}, e
 
 | 필드 | 의미 |
 |---|---|
-| `id` | `IN{k}` 입력 SSC, `SP{k}_{level}_{q}` 1×2 MMI, `MOD{i}` 변조기, `MON{i}` 모니터 탭+PD, `OUT{i}` 출력 SSC |
-| `type` | `ssc`, `mmi1x2`, `mzm`, `mrr`, `tap_pd` |
+| `id` | `IN{k}` 입력 SSC, `SP{k}_{level}_{q}` 1×2 MMI, `MOD{i}` 변조기, `MON{i}` 모니터 탭+PD, `OUT{i}` 출력 SSC · WDM8: `IN0`, `BUS`, (`MON0`), `OUT0` |
+| `type` | `ssc`, `mmi1x2`, `mzm`, `mrr`, `mrr_wdm`, `tap_pd` |
 | `role`, `lane` | input / splitter / modulator / monitor / output, 레인 번호 |
 | `source` | "내 2-3R 카드", "1-3 기준 설계" 등 |
 | `params` | 형상을 다시 만들 수 있는 값 (아래) |
@@ -51,6 +52,7 @@ die: { W_um, H_um, edge_um, optical_io{input:"W", output:"E", fiber_pitch_um}, e
 | `mzm` | `L_e_um`, `gap_um`, `signal_um`(15), `ground_um`(50, 추상), `arm_sep_um`, `RT_ohm`, `mmi{…}`, `heater{L_um, w_um, h_um, x0_um}`, `sbend{kind, len, dx, dy, a, shape | th, R}`, `local{prims, mmi_in{x_um, mirror}, mmi_out{x_um, mirror}, rects}` |
 | `mrr` | `ring` = 2-3R `exportGeom` 그대로 (`pcell: "ring_allpass"`, `R_um` = 레이아웃 반경, `gap_um`, `w_um`, `bus_w_um`, `bus_len_um`, rib, junction, heater, predicted, model, `local_pads: false`), `local{prims, ring_x_um, ring_y_um, transition}` |
 | `tap_pd` | `Lc_um`, `gap_um`, `ratio`(0.02), `pd_L_um`, `pd_w_um`, `local{prims, rects}` |
+| `mrr_wdm` | WDM8 공유 버스: `rings[]` (링마다 2-3R `exportGeom` + `R_um` = 3W 계단/같은 반경, `bus_len_um`, `channel`), `pitch_um`, `channels`, `grid_GHz`, `radii`, `assignment`, `local{prims (끝 전이 + 링 사이 Si 버스 필러, layer "si"), ring_x_um[], ring_y_um[], transition}` — 포트 `in`, `out`, `rf_s{k}`, `rf_g{k}`, `h_p{k}`, `h_n{k}` |
 
 `local` = 소자 내부 형상(소자 로컬 좌표: 광 입력 포트가 원점, 진행 +x):
 

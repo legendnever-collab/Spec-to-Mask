@@ -48,4 +48,38 @@ module.exports = function (G, pf, S, H) {
     }
     console.log(` ${id} parts ${JSON.stringify(parts)}\n   max margin ${r2(mmax)} · cheapest ★ ${desc(ok0.sort((a, b) => a.r.pw - b.r.pw)[0])}\n   s1 ${JSON.stringify(l.s1)} s2 ${JSON.stringify(l.s2)} cheapest ★★ ${desc(ok2[0])}\n   ref ${desc(ref)} y ${JSON.stringify(yMode)} start m ${r2(K.evaluate(l, start).margin)} pw ${r2(K.evaluate(l, start).pw, 1)}`);
   }
+  /* 3W — MRR WDM8 (Phase E): 8 wavelengths on one shared bus, same parts as 3A+, CPO. The ring is the 2-3R reference at radius R.
+     ★: margin ≥ 0 and engine power within 20 % of the cheapest closing design that uses NEITHER stepped radii NOR the barrel shift
+        (reachable once the grid / FSR alias and the comb's edge lines are understood);
+     ★★: margin ≥ s2.margin (comb, below its top power), engine power ≤ the cheapest such design + 4 %, and Tx ring tuning power
+        ≤ 1.5 × the best achievable (needs stepped radii + cyclic assignment with 8·Δλ close to an integer number of FSRs). */
+  {
+    const K = KINDS.wdm, ring = S['2-3R'].ref;
+    const start = { P: 10, grid: 1, R: ring.R, rad: 0, asg: 0, src: 0, pitch: 40, useCard: 0 };
+    const l = L('3W', { parts, s1: { margin: 0, pw: 1e9 }, s2: { margin: 0, pw: 1e9, heat: 1e9 }, fab: { margin: 0 }, ns: ['margin', 'pw', 'heat'] });
+    const all = [], Rs = []; for (let R = 3; R <= 12.001; R += 0.1) Rs.push(+R.toFixed(2));
+    for (const grid of [0, 1, 2]) for (const R of Rs) for (const rad of [0, 1]) for (const asg of [0, 1]) for (const src of [0, 1]) for (let P = 4; P <= 16.001; P += 1) {
+      const d = { ...start, grid, R, rad, asg, src, P }, r = K.evaluate(l, d); all.push({ d, r });
+    }
+    const good = (x, m) => x.r.margin >= m && x.r.lockOK && x.r.stable && !x.r.drc.length;
+    const naive = all.filter((x) => good(x, 0) && !x.d.rad && !x.d.asg), mmax = Math.max(...all.filter((x) => good(x, -99) && !x.d.src).map((x) => x.r.margin));
+    l.s1.pw = Math.ceil(Math.min(...naive.map((x) => x.r.pw)) * 1.2 * 20) / 20;
+    l.s2.margin = r2(clamp(Math.floor((mmax - 0.75) * 2) / 2, 0, 1.0), 1);   // reachable with the comb source below its top power
+    const ok2 = all.filter((x) => good(x, l.s2.margin)).sort((a, b) => a.r.pw - b.r.pw);
+    l.s2.pw = Math.ceil(ok2[0].r.pw * 1.04 * 20) / 20;
+    if (l.s2.pw > l.s1.pw) l.s1.pw = Math.ceil(l.s2.pw * 1.1 * 20) / 20;
+    const hbest = Math.min(...ok2.filter((x) => x.r.pw <= l.s2.pw).map((x) => x.r.H.tot));
+    l.s2.heat = Math.ceil(hbest * 1.5);
+    // reference: inside ★★ with the most margin; refine P at 0.5 dB and R at 0.05 µm around it
+    let ref = ok2.filter((x) => x.r.pw <= l.s2.pw && x.r.H.tot <= l.s2.heat).sort((a, b) => b.r.margin - a.r.margin)[0];
+    for (let dP = -1; dP <= 1.001; dP += 0.5) for (let dR = -0.1; dR <= 0.1001; dR += 0.05) {
+      const d = { ...ref.d, P: +(ref.d.P + dP).toFixed(1), R: +(ref.d.R + dR).toFixed(2) }, r = K.evaluate(l, d), x = { d, r };
+      if (good(x, l.s2.margin) && r.pw <= l.s2.pw && r.H.tot <= l.s2.heat && r.margin > ref.r.margin) ref = x;
+    }
+    const yMode = yT(K, l, ref.d); l.fab = { margin: 0, y: yMode.std, yMode };
+    S['3W'] = { start, parts, aRef: 1, dbY: [-4, 6], s1: l.s1, s2: l.s2, fab: l.fab, ns: l.ns, ref: ref.d };
+    const desc = (x) => `${JSON.stringify(x.d)} m ${r2(x.r.margin)} pw ${r2(x.r.pw, 2)} heat ${r2(x.r.H.tot, 1)} fsr ${r2(x.r.fsr * 1000, 2)}/${r2(x.r.span * 1000, 2)}`;
+    const nst = all.filter((x) => good(x, 0) && x.r.pw <= l.s1.pw).length, n2 = all.filter((x) => good(x, l.s2.margin) && x.r.pw <= l.s2.pw && x.r.H.tot <= l.s2.heat).length;
+    console.log(` 3W ${all.length} designs · ★ ${nst} · ★★ ${n2} · max margin ${r2(mmax)}\n   cheapest naive ★ ${desc(naive.sort((a, b) => a.r.pw - b.r.pw)[0])}\n   s1 ${JSON.stringify(l.s1)} s2 ${JSON.stringify(l.s2)}\n   ref ${desc(ref)} y ${JSON.stringify(yMode)}\n   start ${desc({ d: start, r: K.evaluate(l, start) })}`);
+  }
 };

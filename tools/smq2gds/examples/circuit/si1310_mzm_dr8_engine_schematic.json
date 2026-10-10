@@ -30,6 +30,7 @@
  },
  "architecture": {
   "name": "1.6T DR8 Tx PIC",
+  "outputs": 8,
   "lanes": 8,
   "lane_rate_gbps": 224,
   "net_rate_gbps": 200,
@@ -5540,7 +5541,7 @@
    }
   ]
  },
- "design_hash": "6873d219",
+ "design_hash": "8a2c56b1",
  "design": {
   "mod": 0,
   "share": 0,

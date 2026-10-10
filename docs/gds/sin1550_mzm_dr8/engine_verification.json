@@ -1,7 +1,7 @@
 {
  "schema": "smq-circuit/1#verification",
  "platform": "sin1550",
- "design_hash": "83debf09",
+ "design_hash": "366576fd",
  "checks": [
   {
    "group": "Connectivity",
@@ -234,22 +234,22 @@
  },
  "gds_recheck": {
   "schema": "smq-circuit/1#gds-recheck",
-  "design_hash": "83debf09",
+  "design_hash": "366576fd",
   "gds": "engine_layout.gds",
-  "gds_sha1": "0077b94230f3007b785a1335489fe1844d720a14",
+  "gds_sha1": "87cde03c946f23b3cb5d3cc71fae2a9644a541a7",
   "cells": 3,
   "checks": [
    {
     "group": "GDS",
     "item": "입력 일치 (layout ↔ verification design_hash)",
     "status": "PASS",
-    "detail": "83debf09 / 83debf09"
+    "detail": "366576fd / 366576fd"
    },
    {
     "group": "GDS",
     "item": "파일 다시 읽기 (top cell 1개)",
     "status": "PASS",
-    "detail": "engine_layout.gds: 156 KB, top ['SMQ_PIC_sin1550_MZM_DR8_83debf09']"
+    "detail": "engine_layout.gds: 156 KB, top ['SMQ_PIC_sin1550_MZM_DR8_366576fd']"
    },
    {
     "group": "GDS",

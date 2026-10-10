@@ -1,7 +1,7 @@
 {
  "schema": "smq-circuit/1#verification",
  "platform": "si1550",
- "design_hash": "3421ca9f",
+ "design_hash": "d414a9cb",
  "checks": [
   {
    "group": "Connectivity",
@@ -31,7 +31,7 @@
    "group": "Connectivity",
    "item": "전기 포트 → 패드 매핑",
    "status": "PASS",
-   "detail": "48개 전기 포트 → 48개 패드"
+   "detail": "48개 전기 포트 → 48개 범프"
   },
   {
    "group": "Geometry",

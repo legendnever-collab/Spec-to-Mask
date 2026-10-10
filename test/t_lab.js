@@ -12,6 +12,7 @@ let fail = 0, n = 0;
 const ok = (c, msg) => { n++; if (!c) { fail++; console.log('  FAIL', msg); } else if (process.env.V) console.log('  ok', msg); };
 const near = (a, b, t) => Math.abs(a - b) <= t;
 const L = G.LAB;
+const KW = (l3) => G.KINDS.wdm.evaluate(l3, { ...l3.ref, useCard: 0 }), KR = KW;
 const st = (chk, re) => chk.checks.filter((x) => re.test(x.item)).map((x) => x.status);
 for (const pid of Object.keys(G.PLATFORMS)) {
   const pf = G.PLATFORMS[pid];
@@ -102,6 +103,25 @@ for (const pid of Object.keys(G.PLATFORMS)) {
       const k = L.checks(L.build(ctx, d), ctx); if (st(k, /DC 배선 교차|RF 배선 교차|범프 배치|패드 배치/).some((x) => x !== 'PASS')) bad.push(`${mod}/${rf}/${wr}/${d.stag}`);
     }
     ok(!bad.length, `${pid}: DC river fan-out and RF metal planar in 24 variants${bad.length ? ' — ' + bad.join(', ') : ''}`); }
+  { // Phase E: WDM8 shared bus (3W reference design) — one input, one bus with eight rings, one output, flip-chip
+    const d = { ...L.defaults(ctx, { mod: 2, share: 0 }), wr: pf.mat === 'si' ? 1.0 : 2.0 }, f = L.minDie(ctx, d); d.W = Math.ceil(f.W / 100) / 10; d.H = Math.ceil(f.H / 100) / 10;
+    const c = L.build(ctx, d), chk = L.checks(c, ctx), M = L.missions(c, chk), B = c.I('BUS'), g = B.geom, l3 = LV('3W');
+    ok(c.mod === 'wdm' && c.inst.filter((x) => x.role === 'input').length === 1 && c.inst.filter((x) => x.role === 'output').length === 1 && B.params.rings.length === 8 && st(chk, /채널 수|입·출력/).every((x) => x === 'PASS'), `${pid} WDM8: 1 input → bus with 8 rings → 1 output`);
+    ok(M.schematic && M.floorplan && M.routing && M.electrical && M.verification, `${pid} WDM8: missions 1–5 complete on the fitted die ${d.W}×${d.H} mm (${chk.checks.filter((x) => x.status === 'FAIL').map((x) => x.item).join(', ') || 'no FAIL'})`);
+    const rk = KR(l3), Rk = rk.Rk.map((x) => x.R);
+    ok(JSON.stringify(B.params.rings.map((x) => x.R_um)) === JSON.stringify(Rk) && Math.abs(g.p - l3.ref.pitch) < 1e-9 && B.params.radii === ((l3.ref.rad | 0) ? 'stepped' : 'same'), `${pid} WDM8: ring radii ${Rk[0]}…${Rk[7]} µm and pitch ${g.p} µm are the 3W design's`);
+    // the bus is continuous: transitions + fillers + ring-cell buses tile [0, L] without gaps or overlaps
+    const segs = g.local.prims.filter((p) => p.layer === 'si' || !g.het).map((p) => [Math.min(p.a[0], p.b[0]), Math.max(p.a[0], p.b[0])]).concat(B.params.rings.map((rg, k) => [g.xs[k] - rg.bus_len_um / 2, g.xs[k] + rg.bus_len_um / 2])).sort((a, b) => a[0] - b[0]);
+    let cont = Math.abs(segs[0][0]) < 1e-6 && Math.abs(segs[segs.length - 1][1] - g.L) < 1e-6; for (let k = 1; k < segs.length; k++) if (Math.abs(segs[k][0] - segs[k - 1][1]) > 1e-6) cont = false;
+    ok(cont, `${pid} WDM8: Si bus tiles 0…${g.L} µm (end transitions, ${segs.length - 8 - (g.Lt ? 2 : 0)} fillers, 8 ring cells)`);
+    const sys = chk.sys, rr = KW(l3);
+    ok(Math.abs(sys.marginModel - rr.margin) < 1e-9 && Math.abs(sys.marginLayout - (rr.margin - sys.extra)) < 1e-9 && sys.extra > 0, `${pid} WDM8: layout margin = 3W margin ${rr.margin.toFixed(2)} − layout loss ${sys.extra.toFixed(2)} dB`);
+    ok(st(chk, /RF 배선 교차|DC 배선 교차|범프 배치|링 간격/).every((x) => x === 'PASS') && c.pads.length === 2 * 8 + 2 * 8 + (d.mon ? 2 : 0), `${pid} WDM8: ${c.pads.length} bumps (S/G per ring + 16 heater${d.mon ? ' + 2 PD' : ''}), RF / DC planar`);
+    const d2 = { ...d, rp: Math.floor(g.pmin) - 1 }, k2 = L.checks(L.build(ctx, d2), ctx);
+    ok(st(k2, /링 간격/)[0] === 'FAIL', `${pid} WDM8: ring pitch ${d2.rp} µm < ring cell ${g.pmin.toFixed(1)} µm fails`);
+    const ex = L.exportCircuit(c, chk, { time: 'T' }), bi = ex.layout.instances.find((x) => x.type === 'mrr_wdm');
+    ok(ex.layout.architecture.outputs === 1 && ex.layout.architecture.wdm.channels === 8 && bi && bi.params.local.ring_x_um.length === 8 && ex.layout.design_hash === L.designHash(c), `${pid} WDM8: export (architecture.wdm, mrr_wdm instance with ring positions, design hash)`);
+  }
   { // geometry is deterministic (same design → same export)
     const a = JSON.stringify(L.exportCircuit(L.build(ctx, d0), L.checks(L.build(ctx, d0), ctx), { time: 'T' }).layout), b = JSON.stringify(L.exportCircuit(L.build(ctx, d0), L.checks(L.build(ctx, d0), ctx), { time: 'T' }).layout);
     ok(a === b, `${pid}: layout export is deterministic`); }

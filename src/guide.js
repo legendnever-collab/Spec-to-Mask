@@ -58,6 +58,11 @@
     soref: { t: 'R. A. Soref, B. R. Bennett, "Electrooptical effects in silicon," IEEE J. Quantum Electron. 23(1), 123–129 (1987)', u: 'https://doi.org/10.1109/JQE.1987.1073206', n: '자유 캐리어 굴절률·흡수 변화 (plasma dispersion)' },
     reed: { t: 'G. T. Reed et al., "Silicon optical modulators," Nature Photonics 4, 518–526 (2010)', u: 'https://doi.org/10.1038/nphoton.2010.179' },
     michel: { t: 'J. Michel, J. Liu, L. C. Kimerling, "High-performance Ge-on-Si photodetectors," Nature Photonics 4, 527–534 (2010)', u: 'https://doi.org/10.1038/nphoton.2010.157' },
+    cwwdm: { t: 'CW-WDM MSA — O-band 다파장(8/16/32파장) 연속광 광원 규격', u: 'https://cw-wdm.org/', n: 'WDM 링 송신기용 다파장 외부 광원 (콤·DFB 배열)' },
+    krish11: { t: 'A. V. Krishnamoorthy et al., "Exploiting CMOS Manufacturing to Reduce Tuning Requirements for Resonant Optical Devices," IEEE Photonics Journal 3(3), 567–579 (2011)', u: 'https://doaj.org/article/68ebd1f292c946b98df1dfedde066c0d', n: '가까운 링끼리의 간격·FSR은 웨이퍼 간에도 잘 맞고 절대 위치는 안 맞음 → 200 GHz 격자 정렬에 채널당 평균 < 1.2 nm 튜닝' },
+    choi24: { t: 'S. Choi, V. Stojanović, "Scalable Wavelength Arbitration for Microring-based DWDM Transceivers," arXiv:2411.14810 (2024)', u: 'https://arxiv.org/abs/2411.14810', n: '공진 배정 정책: 고정(Lock-to-Deterministic) · 순환(Lock-to-Cyclic, 배럴 시프트) · 임의(Lock-to-Any) — 튜닝 범위 LtD > LtC > LtA' },
+    padma14: { t: 'K. Padmaraju, K. Bergman, "Resolving the thermal challenges for silicon microring resonator devices," Nanophotonics 3(4–5), 269–281 (2014)', u: 'https://nanophotonics-journal.com/issues/volume03/volume3_issue04', n: '링 열 안정화·락 방식 리뷰' },
+    sun15: { t: 'C. Sun et al., "Single-chip microprocessor that communicates directly using light," Nature 528, 534–538 (2015)', u: 'https://doi.org/10.1038/nature16454', n: '한 버스의 링 WDM 송수신과 열 튜닝' },
     ieee3dj: { t: 'IEEE P802.3dj — 200 Gb/s, 400 Gb/s, 800 Gb/s and 1.6 Tb/s Ethernet Task Force', u: 'https://www.ieee802.org/3/dj/', n: '1.6T(8×200G) 광 PMD 표준화 현황' },
     oif: { t: 'Optical Internetworking Forum (OIF) — CPO·외부 광원(ELSFP) 등 구현 협약', u: 'https://www.oiforum.com/' },
     bogaerts: { t: 'W. Bogaerts et al., "Silicon microring resonators," Laser & Photonics Reviews 6(1), 47–73 (2012)', u: 'https://doi.org/10.1002/lpor.201100017', n: 'all-pass/add-drop 전달함수, Q, 결합 영역 — 이 레벨의 링 식' },
@@ -96,7 +101,8 @@
     '2-4': { goal: 'Ge 도파로 수광기의 흡수·전이 시간·RC와 TIA 잡음을 함께 보며 감도(OMA)를 최적화합니다.', prev: ['1-1·1-6: 도파로와 결합.'], next: ['2-5: 수신 감도.', 'B-3: 균형 검출 LiDAR 수신.'] },
     '2-5': { goal: '외부 광원부터 수광기까지 레인당 링크 버짓을 부품 카드로 조립하고, 레이저 출력·공유·반사 대책을 결정합니다.', prev: ['1-3·1-6·1-7·2-3·2-4 카드.'], next: ['3A·3A+: 모듈 전체 전력과 온도 코너.'] },
     '3A': { goal: '1.6T 2×FR4 모듈을 아키텍처 수준(레이저 수·냉각·Mux 열 추적·DSP)에서 설계해 0–70 °C 최악 레인 마진과 전력을 맞춥니다.', prev: ['Stage 1·2 카드 전부 (특히 1-7 Demux, 2-1 히터).'], next: ['3A+: 병렬 광섬유·LPO·CPO 비교.'] },
-    '3A+': { goal: 'DR8 병렬 광학에서 변조기(MZM ×8 / 링 ×8)와 DSP/LPO/CPO 패키징을 비교해 비트당 에너지와 마진을 최적화합니다.', prev: ['3A: 모듈 버짓의 구조.'], next: ['실제 제품 아키텍처 검토 (IEEE 802.3dj, OIF CPO/ELSFP).'] },
+    '3A+': { goal: 'DR8 병렬 광학에서 변조기(MZM ×8 / 링 ×8)와 DSP/LPO/CPO 패키징을 비교해 비트당 에너지와 마진을 최적화합니다.', prev: ['3A: 모듈 버짓의 구조.'], next: ['3W: 같은 링으로 8파장을 한 버스·한 광섬유에 (WDM8).', '실제 제품 아키텍처 검토 (IEEE 802.3dj, OIF CPO/ELSFP).'] },
+    '3W': { goal: '8파장을 한 버스·한 광섬유에 싣는 링 WDM 송신기를 설계합니다 — 파장 격자와 FSR(별칭), 이웃 링 크로스토크, 링 반경 배치와 공진 배정(배럴 시프트), 히터 열 결합, 다파장 광원의 선 세기.', prev: ['2-3R: 링 변조기 (반경만 바꿔 다시 계산).', '3A+: 같은 부품의 MRR DR8 — 비교 표.', '2-1: 히터 단면과 열 결합 프로파일.'], next: ['PIC Design Lab: WDM8 공유 버스 레이아웃과 GDS.'] },
     'D-1': { goal: '2 ns(수십 cm) 지연선을 저손실·소면적으로 감는 법 — 산란·굽힘·S-bend 모드 변환·이웃 결합을 함께 다루고, 직사각형 사용 영역 안에 실제 배치까지 합니다.', prev: ['1-1: 폭과 측벽 산란, 멀티모드 조건.'], next: ['D-2: 이진 지연선의 지연 소자.', 'B-1: FMCW 기준 간섭계의 지연.'] },
     'D-2': { goal: 'MZ 스위치와 이진 지연 나선으로 0–5 ns를 10 ps 단위로 바꾸는 실시간 지연선(TTD)을 설계합니다 — 스위치 누설·에코·보정 전력.', prev: ['D-1: 나선 (카드).', '2-1: 히터 P_π.'], next: ['B-2: 같은 스위치 트리로 빔 조향.'] },
     'B-1': { goal: 'FMCW 처프(대역폭·램프 시간)와 칩 위 기준 간섭계로 거리 분해능·비트 주파수·처프 비선형 보정을 설계합니다.', prev: ['D-1: 기준 지연 나선.'], next: ['B-2·B-3: 점 속도와 SNR.'] },
@@ -167,6 +173,10 @@
       <path d="M160 92 H190" stroke="#5dd193" stroke-width="2"/>${T(176, 108, 'f_b', { c: '#5dd193' })}`, 'FMCW 처프 모식도'),
     fpsa: () => W0(420, 200, `<rect width="420" height="200" fill="#0b1220"/><path d="M200 30 Q220 100 200 170 Q180 100 200 30" fill="rgba(100,201,223,.2)" stroke="#64c9df"/>${[-3, -1, 1, 3].map((i) => `<circle cx="80" cy="${100 + i * 15}" r="4" fill="#f2b04a"/><path d="M80 ${100 + i * 15} L200 ${100 - i * 8} L400 ${100 - i * 32}" stroke="#f2b04a" opacity=".55" fill="none"/>`).join('')}
       ${T(80, 40, '방출기 (간격 p)', { s: 10, c: '#e7ecf3' })}${T(200, 190, '렌즈 (초점거리 f)', { s: 10, c: '#64c9df' })}${T(320, 30, 'θ_i = atan(x_i / f)', { c: '#f2b04a' })}${T(80, 175, '1×N 스위치 트리가 하나를 선택', { s: 10 })}`, '초점면 스위치 어레이 모식도'),
+    wdm: () => W0(460, 200, `<rect width="460" height="200" fill="#0b1220"/><path d="M20 120 H440" stroke="#64c9df" stroke-width="3"/>${T(30, 110, 'λ₀…λ₇ (콤/DFB)', { a: 'start', s: 10, c: '#f6c35a' })}
+      ${['#8fb3ff', '#64c9df', '#5dd193', '#c6e06b', '#f6c35a', '#f2b04a', '#ff8d9c', '#b48cff'].map((c, k) => `<circle cx="${70 + k * 47}" cy="94" r="17" fill="none" stroke="${c}" stroke-width="3"/>${T(70 + k * 47, 98, 'λ' + k, { s: 9, c })}`).join('')}${T(440, 140, '→ 한 광섬유', { a: 'end', s: 10 })}
+      ${T(230, 30, '링 k의 공진: λ_k + m·FSR (FSR = λ²/(n_g·2πR))', { s: 10.5, c: '#f2b04a' })}${T(230, 50, '8·Δλ ≈ m·FSR → 순환 배정이 공통 이동을 Δλ 단위로 흡수', { s: 10 })}
+      ${T(230, 170, '이웃 링: 통과 손실 + 변조 크로스토크 · 히터 열 결합 κ(p)', { s: 10 })}${T(230, 190, '히터는 빨강 쪽으로만: need = (λ_target − λ_unheated) mod FSR', { s: 10, c: '#9eabbd' })}`, '링 WDM8 공유 버스 모식도'),
     lidar: () => W0(440, 180, `<rect width="440" height="180" fill="#0b1220"/>${ARROW}<rect x="20" y="70" width="70" height="40" fill="none" stroke="#f2b04a"/>${T(55, 94, '광원', { c: '#e7ecf3', s: 10 })}<rect x="140" y="70" width="80" height="40" fill="none" stroke="#9eabbd"/>${T(180, 94, '스위치·렌즈', { c: '#e7ecf3', s: 10 })}
       <rect x="380" y="50" width="20" height="80" fill="#5d6b80"/>${T(390, 145, '표적 ρ', { s: 10 })}<path d="M220 82 H378" stroke="#f2b04a" marker-end="url(#gar)"/><path d="M378 98 H222" stroke="#64c9df" stroke-dasharray="4 3" marker-end="url(#gar)"/>
       <rect x="140" y="130" width="80" height="34" fill="none" stroke="#5dd193"/>${T(180, 151, '균형 검출', { c: '#5dd193', s: 10 })}<path d="M90 100 C110 140 120 147 140 147" stroke="#9eabbd" fill="none"/>${T(100, 168, 'LO', { s: 10 })}
@@ -326,6 +336,26 @@
       miss: [[/마진/, 'P, tc, mt', '온도 코너와 드리프트'], [/전력|W|pJ/, 'share, tc, dsp, pkg', '아키텍처별 전력 항목'], [/수율/, 'mt, tc', '코너 마진의 여유']],
       lim: [['모듈 버짓', 'an', '부품 카드 대표값의 dB·W 조립'], ['Demux 열 이동', 'semi', '1-7 lattice를 dn<sub>eff</sub>/dT로 재계산'], ['DR8 링 변조기', 'semi', '2-3R 엔진을 모듈의 변조기 입력 파워에서 재계산(0.5 dB 격자 보간), 링 광학은 공칭 공정 + ±0.3 dB, 다이 공정 이동은 히터로'], ['DFB 파장 드리프트·산포, 링 락 전력, 드라이버 부하 차', 'asm', 'DFB 0.085/0.1 nm/K, σ 0.5 nm, 락 2 mW/레인, 드라이버 = MZM 등급 − 부하 에너지 차'], ['전력 상수', 'asm', 'DSP 10 W, MLSE +1.5 W, 드라이버·TIA·DC-DC 대표값'], ['실제 제품', 'fw', '표준(IEEE 802.3dj) 지표와 측정 검증']],
       refs: ['ieee3dj', 'oif', 'rp_wdm', 'rp_ofc']
+    }),
+    wdm: R({
+      basic: () => `<p>DR8에서는 링 8개가 각자 광섬유를 가졌지만, WDM8에서는 8개의 파장이 <b>버스 하나</b>를 지나며 링 8개를 모두 통과합니다. 링 k는 자기 파장 λ<sub>k</sub>만 변조하고 나머지는 그냥 지나가게 해야 합니다.</p>
+        <p>그러려면 (1) 링의 다음 공진 차수(FSR 간격으로 반복)가 다른 채널 위에 놓이지 않아야 하고(<b>FSR 별칭</b>), (2) 채널 간격이 링 선폭보다 충분히 넓어 이웃 링의 꼬리와 변조가 덜 섞여야 하고(<b>크로스토크</b>), (3) 공정·온도로 함께 움직이는 공진을 히터가 각자의 파장으로 데려가야 합니다(<b>공진 배정</b>). 히터는 빨강 쪽으로만 밀 수 있다는 점이 핵심입니다.</p>`,
+      deep: () => `<p><b>버스 투과.</b> 채널 j의 세기 = 광원 선 P<sub>j</sub> − 결합 − (Si) 버스 TPA(8채널 합 파워) − Σ<sub>k≠j</sub> 링 k의 통과 손실 + 자기 링의 OMA 변환. 링 k의 투과는 2-3R과 같은 all-pass Airy 식 T(φ), φ = 2π(λ<sub>r,k</sub> − λ<sub>j</sub>)/FSR — 주기적이므로 FSR 별칭이 자동으로 들어갑니다. 변조 크로스토크 ε<sub>j</sub> = Σ<sub>k</sub>|T<sub>k</sub>(λ<sub>j</sub>; 레벨 3) − T<sub>k</sub>(λ<sub>j</sub>; 레벨 0)| / (자기 링의 같은 값), 페널티 −10log(1 − 3ε) (Rx Demux 크로스토크 합산).</p>
+        <p><b>공진 배정과 히터.</b> 링 k의 가열 전 공진 = 설계 위치(같은 반경: 모두 λ₀ 근처 · 계단 반경: λ<sub>k</sub> 근처, 1 nm 레이아웃 격자 잔차) − (dλ/dT)(T<sub>max</sub> − T) + 다이 공정 이동 + 링 간 불일치. 필요 이동 = (목표 − 가열 전) mod FSR ≥ 0. 고정 배정: 링 k → λ<sub>k</sub>. 순환 배정(배럴 시프트): 링 k → λ<sub>(k+s) mod 8</sub>, 온도마다 히터 합이 최소인 s. 계단 반경이면 링들이 FSR 원 위에 고르게 퍼지므로, 8·Δλ가 FSR의 정수배일 때 공통 이동이 Δλ 단위로 흡수되고 각 링은 Δλ 이하만 밉니다(Krishnamoorthy 2011, Choi 2024의 Lock-to-Cyclic).</p>
+        <p><b>열 결합.</b> 링 j의 이동 = η(P<sub>j</sub> + Σκ<sub>jk</sub>P<sub>k</sub>), κ(거리)는 2-1 히터 단면의 가로 온도 프로파일(긴 히터 기준이라 점 열원인 링에는 상한). 이웃 열이 목표를 넘겨 밀면 히터는 식힐 수 없으므로 다음 차수로 넘어갑니다(홉, 한 FSR 더).</p>
+        <p><b>광원.</b> 콤: 레이저 하나, 선 세기 포물선(가장자리 −${KINDS.wdm._x.TILT} dB 가정), WPE ${KINDS.wdm._x.COMB_WPE * 100}% 가정. DFB ×8 + MUX(ELS 안): MUX ${KINDS.wdm._x.MUX_IL} dB, TEC·파장 잠금기, 같은 총 광출력에서 채널 마진이 같아지도록 선마다 출력을 맞춥니다.</p>`,
+      fig: 'wdm', cap: '공유 버스: 8파장이 링 8개를 모두 지나고, 링 k는 λ_k(또는 순환 배정된 파장)만 변조.',
+      P: { P: { m: '광원 선 세기 (채널당)', up: '마진↑, 버스 총 파워↑ → Si TPA·광원 전력↑', dn: '마진↓', tr: '마진 ↔ 전력·비선형', f: 'TPA ∝ (Σ P)²', rg: '4–16 dBm' },
+        grid: { m: '파장 격자 Δf → Δλ = λ²Δf/c', up: '크로스토크↓, 8Δλ↑ → FSR이 더 커야 별칭 없음(작은 링)', dn: '크로스토크↑', tr: '크로스토크 ↔ FSR(반경)', f: 'Δλ = λ²Δf/c', rg: '200/400/800 GHz' },
+        R: { m: '링 반경 (2-3R 설계, 반경만 변경)', up: 'FSR↓ (별칭 위험), 굽힘 손실↓', dn: 'FSR↑, 굽힘 손실↑ → Q·OMA↓', tr: 'FSR ↔ 링 손실', f: 'FSR = λ²/(n<sub>g</sub>·2πR)', rg: '3–12 µm' },
+        rad: { m: '링 반경 배치 (같은 / 계단)', up: '계단: 링 k가 λ<sub>k</sub> 근처에서 출발 → 히터 이동↓ (셀이 링마다 다름)', dn: '같은 반경: 링 k가 k·Δλ를 히터로', tr: '튜닝 전력 ↔ 레이아웃 셀 수', f: 'ΔR<sub>k</sub> = R·n<sub>g</sub>Δλ<sub>k</sub>/(n<sub>eff</sub>λ)', rg: '—' },
+        asg: { m: '공진 배정 (고정 / 순환)', up: '순환: 공통 이동을 채널 간격 단위로 흡수 (배럴 시프터로 데이터 레인 재배치)', dn: '고정: 공통 이동 전체를 히터로 (최대 한 FSR)', tr: '튜닝 전력 ↔ 데이터 경로 재배치', f: 'need = (λ<sub>(k+s)</sub> − λ<sub>unheated,k</sub>) mod FSR', rg: '—' },
+        src: { m: '다파장 광원 (콤 / DFB ×8 + MUX)', up: 'DFB: 선마다 출력 조정 → 채널 마진 균일', dn: '콤: 레이저 하나, 가장자리 선 약함', tr: '마진 균일성 ↔ 광원 전력·MUX 손실', f: '같은 총 광출력에서 마진 등화', rg: '—' },
+        pitch: { m: '링 간격 (버스 위)', up: '열 결합↓, 버스 손실·면적↑', dn: '열 결합↑ (홉 위험)', tr: '열 결합 ↔ 면적', f: 'κ(p): 2-1 단면 프로파일', rg: '2R + 20 µm 이상' } },
+      ix: { k: 'R', m: [['최악 채널 마진', (r) => r.margin, 'dB', 2], ['FSR', (r) => r.fsr * 1000, 'nm', 2], ['Tx 링 히터 합', (r) => r.H.tot, 'mW', 1]], note: '8·Δλ 근처에서 FSR이 어디에 놓이는지 보세요 — 별칭과 순환 배정의 효율이 같이 바뀝니다.' },
+      miss: [[/마진/, 'P, grid, R, src', 'FSR 별칭·크로스토크·선 세기'], [/튜닝|히터/, 'rad, asg, R', '8Δλ ≈ m·FSR과 순환 배정'], [/전력|W|pJ/, 'P, src', '광원 전력'], [/락|열/, 'pitch, R', '열 결합·히터 범위']],
+      lim: [['버스 투과·크로스토크·별칭', 'an', 'all-pass Airy 곱 (2-3R 링 파라미터)'], ['링 광학', 'semi', '2-3R 엔진을 채널 입력 파워·반경에서 재계산 (눈은 평균 파워 하나)'], ['열 결합', 'semi', '2-1 2D 단면 프로파일 — 링(점 열원)에는 상한'], ['링 간 불일치 σ, 콤 기울기, 광원 WPE, MUX·Demux IL/XT, 히터 범위', 'asm', `σ ${KINDS.wdm._x.LOC_SIG} nm · 가장자리 −${KINDS.wdm._x.TILT} dB · WPE ${KINDS.wdm._x.COMB_WPE * 100}% · MUX ${KINDS.wdm._x.MUX_IL} dB · Rx Demux ${KINDS.wdm._x.RXD.il} dB · 1.2·P<sub>2π</sub>`], ['락 동역학·배정 알고리즘', 'fw', '온도마다 최적 배정을 고른다고 가정 — 재락 중 링크 중단·탐색 실패는 NOT VERIFIED']],
+      refs: ['krish11', 'choi24', 'padma14', 'sun15', 'cwwdm', 'bogaerts']
     }),
     spiral: R({
       basic: (c) => `<p>빛을 2 ns 붙잡으려면 수십 cm의 도파로가 필요합니다(τ = n<sub>g</sub>L/c). 그 길이를 칩 위에 감으려면 <b>손실</b>(측벽 산란·굽힘 방사·S-bend 모드 변환)과 <b>면적</b>, 이웃 회전 사이의 <b>결합</b>을 함께 다뤄야 합니다.</p><p>요령은 도파로를 넓혀 측벽 산란을 줄이고(넓으면 멀티모드), 아주 천천히 굽혀 기본모드만 유지하는 것입니다. 곡률이 갑자기 바뀌는 곳(직선↔원호, S-bend 중심)에서는 기본모드가 고차모드로 바뀌므로 곡률을 서서히 바꾸는 Euler 곡선을 씁니다.</p>

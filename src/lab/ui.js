@@ -11,7 +11,7 @@ window.LABUI = (() => {
   let LS = load(), isOpen = false, C = null, CHK = null, MS = null, sel = null, cam = null, drag = null, timer = null;
   const SH = () => window.GAME_SHELL;
   const S = () => { const p = SH().plat(); LS[p] = LS[p] || {}; return LS[p]; };
-  const ctx = () => ({ pf: SH().pf(), lev: (id) => window.GAME_LEV(id), cards: SH().cards(), des3: Object.keys(SH().design('3A+')).length ? SH().design('3A+') : null, gds: S().gds || null });
+  const ctx = () => ({ pf: SH().pf(), lev: (id) => window.GAME_LEV(id), cards: SH().cards(), des3: Object.keys(SH().design('3A+')).length ? SH().design('3A+') : null, desW: Object.keys(SH().design('3W') || {}).length ? SH().design('3W') : null, gds: S().gds || null });
   function arch3() {
     const cd = SH().cards()['3A+']; if (cd && cd.d) return { mod: cd.d.mod | 0, share: cd.d.share | 0, src: '내 3A+ 카드' };
     const de = SH().design('3A+'); if (Object.keys(de).length) return { mod: de.mod | 0, share: de.share | 0, src: '3A+ 현재 설계' };
@@ -22,7 +22,7 @@ window.LABUI = (() => {
   /* ---------------- parameters and missions ---------------- */
   const SHL = ['1:1 · 레이저 8개', '1:2 · 레이저 4개', '1:4 · 레이저 2개', '1:8 · 레이저 1개'];
   const PR = (pf) => ({
-    mod: { k: 'mod', label: '변조기 (레인당)', sym: 'MOD', min: 0, max: 1, step: 1, dec: 0, unit: '', labels: ['TW-MZM ×8 (2-3)', 'MRR ×8 (2-3R)'] },
+    mod: { k: 'mod', label: '송신 아키텍처 (변조기)', sym: 'MOD', min: 0, max: 2, step: 1, dec: 0, unit: '', labels: ['DR8 · TW-MZM ×8 (2-3)', 'DR8 · MRR ×8 (2-3R)', 'WDM8 · 공유 버스 링 ×8 (3W)'] },
     share: { k: 'share', label: '레이저 공유 (입력 수 · 분배 트리)', sym: 'N', min: 0, max: 3, step: 1, dec: 0, unit: '', labels: SHL },
     mon: { k: 'mon', label: '모니터 탭 + Ge PD (바이어스·링 락)', sym: 'MON', min: 0, max: 1, step: 1, dec: 0, unit: '', labels: ['없음', '2 % 탭 + PD'] },
     W: { k: 'W', label: '다이 폭', sym: 'W', min: 0.5, max: 12, step: 0.1, dec: 1, unit: 'mm' },
@@ -37,11 +37,12 @@ window.LABUI = (() => {
     jog: { k: 'jog', label: '팬 수직선 간격', sym: 'p<sub>j</sub>', min: 1, max: 40, step: 0.5, dec: 1, unit: 'µm' },
     rf: { k: 'rf', label: '전기 인터페이스', sym: 'I/O', min: 0, max: 1, step: 1, dec: 0, unit: '', labels: ['가장자리 와이어본드 패드', '플립칩 마이크로범프 (3D 구동기)'] },
     rfSide: { k: 'rfSide', label: 'RF 패드 변 (DC는 반대 변)', sym: 'RF', min: 0, max: 1, step: 1, dec: 0, unit: '', labels: ['북(N)', '남(S)'] },
-    pp: { k: 'pp', label: '패드 피치', sym: 'p<sub>pad</sub>', min: 90, max: 200, step: 5, dec: 0, unit: 'µm' }
+    pp: { k: 'pp', label: '패드 피치', sym: 'p<sub>pad</sub>', min: 90, max: 200, step: 5, dec: 0, unit: 'µm' },
+    rp: { k: 'rp', label: '링 간격 (WDM 버스, 3W 설계값에서 시작)', sym: 'p<sub>ring</sub>', min: 15, max: 150, step: 1, dec: 0, unit: 'µm' }
   });
   const MISS = [
     { id: 'schematic', short: '회로도', title: 'Mission 1 · 1.6T Tx 회로도', keys: ['mod', 'share', 'mon'], adv: [],
-      intro: '1.6T DR8 송신 PIC의 회로를 정합니다. 변조기 8개, 레이저 입력과 1×2 MMI 분배 트리, 레인마다 출력 SSC가 자동으로 만들어집니다. 레이저 공유를 바꾸면 입력 포트 수와 분배 트리의 깊이가 함께 바뀝니다. 모든 소자는 실제 광·전기 포트를 가진 객체이고, 연결은 포트 사이의 넷입니다.',
+      intro: '1.6T 송신 PIC의 회로를 정합니다 (DR8: MZM ×8 또는 링 ×8 · WDM8: 3W의 공유 버스 링 ×8, 입력·출력 각 1개). 변조기 8개, 레이저 입력과 1×2 MMI 분배 트리, 레인마다 출력 SSC가 자동으로 만들어집니다. 레이저 공유를 바꾸면 입력 포트 수와 분배 트리의 깊이가 함께 바뀝니다. 모든 소자는 실제 광·전기 포트를 가진 객체이고, 연결은 포트 사이의 넷입니다.',
       done: (m) => m.schematic },
     { id: 'floorplan', short: '평면 배치', title: 'Mission 2 · Floorplan', keys: ['W', 'H'], adv: ['edge', 'P', 'stag', 'fp'],
       intro: '다이 크기를 정하고 소자를 배치합니다. 입력 광섬유는 서쪽(W), 출력 8개는 동쪽(E) 가장자리에 FAU 피치로 놓이고, RF 패드는 북쪽, DC 패드는 남쪽입니다. 자동 배치가 레인 피치와 RF 급전 통로(레인 엇갈림)를 정합니다 — 다이가 작으면 원인과 필요한 크기를 알려 줍니다.',
@@ -85,7 +86,7 @@ window.LABUI = (() => {
     const sm = { PASS: 0, WARNING: 0, FAIL: 0, 'NOT VERIFIED': 0 }; r.checks.forEach((c) => { if (sm[c.status] != null) sm[c.status]++; });   // count from the checks themselves, not the stated summary
     S().gds = { design_hash: r.design_hash, gds: r.gds, gds_sha1: r.gds_sha1, cells: r.cells, summary: sm, checks: r.checks.map(({ group, item, status, detail }) => ({ group, item, status, detail })), at: new Date().toISOString() };
   }
-  function setV(k, v) { const d = des(); d[k] = v; if (k === 'mod' || k === 'rf') d.stag = LAB.stagAuto(d); S().ran = false; S().exported = null; save(); }
+  function setV(k, v) { const d = des(); if (k === 'mod' && ((v | 0) === 2) !== ((d.mod | 0) === 2)) { S().d = LAB.defaults(ctx(), { mod: v | 0, share: 0 }); S().ran = false; S().exported = null; save(); return; } d[k] = v; if (k === 'mod' || k === 'rf') d.stag = LAB.stagAuto(d); S().ran = false; S().exported = null; save(); }
 
   /* ---------------- render ---------------- */
   const pfP = () => PR(SH().pf());
@@ -105,9 +106,12 @@ window.LABUI = (() => {
       + (nx ? `<div class="row-btns"><button class="btn ${ok ? 'pri' : ''}" id="lab-next">다음 미션 → ${nx.short}</button></div>` : '');
   }
   function renderParams() {
-    const s = S(), m = MISS[cur()], P = pfP(), d = des(), keys = m.keys.concat((s.mode || 'beginner') === 'advanced' ? m.adv : []);
+    const s = S(), m = MISS[cur()], P = pfP(), d = des(), wdm = (d.mod | 0) === 2, skipW = ['share', 'P', 'stag', 'fp', 'rf', 'rfSide', 'pp'];
+    const keys = m.keys.concat((s.mode || 'beginner') === 'advanced' ? m.adv : []).concat(wdm && m.id === 'floorplan' ? ['rp'] : []).filter((k) => !(wdm && skipW.includes(k)));
     let h = keys.map((k) => { const p = P[k]; return `<div class="prm"><div class="prm-h"><label for="lp-${k}">${p.label}<i>${p.sym}</i></label><output id="lo-${k}">${fmtV(p, d[k])}</output></div><div class="prm-r"><input type="range" id="lp-${k}" data-lk="${k}" min="${p.min}" max="${p.max}" step="${p.step}" value="${d[k]}"></div></div>`; }).join('');
-    if (m.id === 'schematic') { const a = arch3(); h += `<p class="note">아키텍처 출처: <b>${a.src}</b> (${a.mod ? 'MRR' : 'MZM'} ×8, ${SHL[a.share]}). 바꾸면 시스템 예측도 Lab 구성으로 다시 계산합니다.</p><div class="row-btns"><button class="btn" data-la="arch">3A+ 구성으로 되돌리기</button></div>`; }
+    if (wdm && m.id === 'schematic') h += `<p class="note">WDM8: 다파장 광원 입력 1개 → 버스 하나에 링 8개(3W 설계: <b>${C.wdm.s}</b> · ${C.wdm.r.grid} GHz · R ${C.wdm.d.R} µm · ${(C.wdm.d.rad | 0) ? '계단 반경' : '같은 반경'} · ${(C.wdm.d.asg | 0) ? '순환 배정' : '고정 배정'}) → 출력 1개. 링 설계는 3W 레벨에서 바꿉니다.</p>`;
+    if (wdm && m.id === 'electrical') h += '<p class="note">WDM8은 플립칩 마이크로범프만: 링마다 S 범프(북쪽 2열)·G 범프(남쪽 2열), 히터 16선은 남쪽 범프 열로 평면 팬아웃(M2).</p>';
+    if (m.id === 'schematic' && !wdm) { const a = arch3(); h += `<p class="note">아키텍처 출처: <b>${a.src}</b> (${a.mod ? 'MRR' : 'MZM'} ×8, ${SHL[a.share]}). 바꾸면 시스템 예측도 Lab 구성으로 다시 계산합니다.</p><div class="row-btns"><button class="btn" data-la="arch">3A+ 구성으로 되돌리기</button></div>`; }
     if (m.id === 'floorplan') h += `<p class="note">자동 배치 기준 필요한 다이: <b>${(C.need.W / 1000).toFixed(2)} × ${(C.need.H / 1000).toFixed(2)} mm</b>.</p><div class="row-btns"><button class="btn" data-la="fit">필요 크기로 맞춤 (0.1 mm 올림)</button><button class="btn" data-la="auto">자동 배치 값 복원</button></div>`;
     if (m.id === 'routing') h += `<p class="note">배선 폭 w<sub>r</sub> &gt; w<sub>0</sub> ${SH().pf().w0} µm이면 긴 넷의 직선 구간에 선형 테이퍼를 넣어 몸통만 넓힙니다 (짧은 넷은 w<sub>0</sub>). 단일모드 차단 폭 ${SH().pf().wc} µm 이상은 다중모드 — 굽힘은 Euler로.</p>`;
     if (m.id === 'verification') h += `<div class="row-btns"><button class="btn pri" data-la="run">검사 실행</button></div><p class="note">${S().ran ? '마지막 실행 결과가 아래 표에 있습니다. 설계를 바꾸면 다시 실행해야 합니다.' : '아직 실행하지 않았습니다.'}</p>`;
@@ -122,11 +126,13 @@ window.LABUI = (() => {
     add('ssc', 'SSC (광섬유 I/O)', P.ssc.src, `L<sub>t</sub> ${P.ssc.Lt} µm · 팁 ${P.ssc.tw} µm · ${P.ssc.loss.toFixed(2)} dB`, '1-6');
     add('mmi1x2', 'Splitter (1×2 MMI)', P.mmi.src, `${P.mmi.W}×${P.mmi.L} µm · s ${P.mmi.s} · EL ${P.mmi.el.toFixed(2)} dB`, '1-3');
     if (C.mod === 'mzm') add('mzm', 'TW-MZM', P.mzm.src, `L ${(P.mzm.Le / 1000).toFixed(2)} mm · g ${P.mzm.g} µm · IL ${P.mzm.IL.toFixed(1)} dB · ${P.mzm.bw.toFixed(0)} GHz`, '2-3');
+    else if (C.mod === 'wdm') { const w = C.wdm, g = C.I('BUS').geom; add('mrr_wdm', 'MRR ×8 · 공유 버스 (WDM8)', g.src, `R ${g.rings[0].R_um}…${g.rings[7].R_um} µm · 간격 ${g.p} µm · FSR ${(w.r.fsr * 1e3).toFixed(2)} nm vs 8Δλ ${(w.r.span * 1e3).toFixed(2)} nm · ${w.r.grid} GHz`, '2-3R / 3W'); }
     else add('mrr', 'MRR (all-pass)', P.mrr.src, `R ${P.mrr.R} µm · g ${P.mrr.gap} µm · FSR ${P.mrr.fsr.toFixed(1)} nm · ${P.mrr.bw.toFixed(0)} GHz`, '2-3R');
     add('heater', 'Heater (TiN)', P.heater.src, `h ${P.heater.h} µm · P<sub>π</sub> ${P.heater.Ppi.toFixed(1)} mW${C.mod === 'mzm' ? ` · L ${P.heater.L} µm` : ' · 링 히터 호'}`, '2-1');
     if (C.d.mon) add('tap_pd', 'PD Interface (2 % 탭 + Ge PD)', P.pd.src, `Ge ${P.pd.L}×${P.pd.w} µm · ${P.pd.resp.toFixed(2)} A/W`, '2-4');
     add('wg', 'WG (배선 도파로)', `${SH().pf().short} strip`, `w<sub>0</sub> ${SH().pf().w0} µm (${C.wm && LAB.wgModel(SH().pf(), SH().pf().w0).alpha.toFixed(2)} dB/cm) · w<sub>r</sub> ${Math.max(C.d.wr, SH().pf().w0)} µm (${C.wm.alpha.toFixed(2)} dB/cm) · R<sub>min</sub> ${LAB.wgModel(SH().pf(), SH().pf().w0).Rmin} µm`, '1-1');
-    add('src', 'Optical Source Interface', '외부 광원 (DR8 CW 레이저, 3A+)', `입력 ${C.nL}개 · 1:${C.N} 공유 · FAU 피치 ${C.d.fp} µm`, '2-5 / 3A+');
+    if (C.mod === 'wdm') add('src', 'Optical Source Interface', `다파장 외부 광원 (${(C.wdm.d.src | 0) ? 'DFB ×8 + MUX' : '콤'}, 3W)`, `입력 1개 · 8파장 · 출력 1개 (한 광섬유)`, '3W');
+    else add('src', 'Optical Source Interface', '외부 광원 (DR8 CW 레이저, 3A+)', `입력 ${C.nL}개 · 1:${C.N} 공유 · FAU 피치 ${C.d.fp} µm`, '2-5 / 3A+');
     $('#lab-lib-list').innerHTML = it.join('') + '<p class="note">카드가 있으면 내 설계, 없으면 각 레벨의 기준 설계로 조립합니다. 항목을 누르면 그 소자들이 강조됩니다.</p>';
   }
   function renderSel() {
@@ -148,7 +154,7 @@ window.LABUI = (() => {
     const ctab = (rows) => `<table class="ltbl"><tr><th>검사</th><th>상태</th><th>내용</th></tr>${rows.map((x) => `<tr><td>${x.item}</td><td>${stBadge(x.status)}</td><td>${x.detail || ''}</td></tr>`).join('')}</table>`;
     if (m.id === 'schematic') {
       t = '회로 구성';
-      h = `<table class="ltbl">${row(['레인', `${LAB.LANES} × ${224} Gb/s 라인 (200G 순 데이터)`])}${row(['변조기', C.mod === 'mzm' ? 'TW-MZM (2-3) + 바이어스 히터' : 'all-pass 링 (2-3R) + 링 히터'])}${row(['레이저 입력', `${C.nL}개 (1:${C.N})`])}${row(['분배 트리', C.depth ? `1×2 MMI ${C.depth}단 × ${C.nL} = ${C.inst.filter((x) => x.type === 'mmi1x2').length}개` : '없음'])}${row(['모니터', d.mon ? '레인마다 2 % 탭 + Ge PD' : '없음'])}${row(['소자 / 광 넷 / 전기 넷', `${C.inst.length} / ${C.onets.length} / ${C.enets.length}`])}</table>` + ctab(CHK.checks.filter((x) => x.group === 'Connectivity'));
+      h = `<table class="ltbl">${row(['레인', `${LAB.LANES} × ${224} Gb/s 라인 (200G 순 데이터)`])}${row(['변조기', C.mod === 'mzm' ? 'TW-MZM (2-3) + 바이어스 히터' : C.mod === 'wdm' ? `공유 버스 all-pass 링 ×8 (2-3R, 3W) · ${C.wdm.r.grid} GHz · 출력 1` : 'all-pass 링 (2-3R) + 링 히터'])}${row(['레이저 입력', `${C.nL}개 (1:${C.N})`])}${row(['분배 트리', C.depth ? `1×2 MMI ${C.depth}단 × ${C.nL} = ${C.inst.filter((x) => x.type === 'mmi1x2').length}개` : '없음'])}${row(['모니터', d.mon ? '레인마다 2 % 탭 + Ge PD' : '없음'])}${row(['소자 / 광 넷 / 전기 넷', `${C.inst.length} / ${C.onets.length} / ${C.enets.length}`])}</table>` + ctab(CHK.checks.filter((x) => x.group === 'Connectivity'));
     } else if (m.id === 'floorplan') {
       t = '평면 배치';
       const bbs = C.inst.map((I) => C.bbox(I)), occ = bbs.reduce((s, b) => s + (b[2] - b[0]) * (b[3] - b[1]), 0), die = C.W * C.H;
@@ -167,7 +173,8 @@ window.LABUI = (() => {
     } else if (m.id === 'electrical') {
       t = '전기 인터페이스';
       const mods = C.inst.filter((x) => x.role === 'modulator');
-      h = `<table class="ltbl"><tr><th>레인</th><th>RF</th><th>RF 선 길이 µm</th><th>DC 패드</th><th>종단</th></tr>${mods.map((M) => `<tr><td class="num">${M.lane}</td><td>${C.mod === 'mzm' ? 'GSG (진행파 전극)' : 'GS (집중 소자 PN)'}</td><td class="num">${(M.rfLen || 0).toFixed(0)}</td><td class="num">${C.enets.filter((n) => n.kind === 'dc' && n.lane === M.lane).length}</td><td>${C.mod === 'mzm' ? `R<sub>T</sub> ${C.P.mzm.RT} Ω 온칩 (추상)` : '없음 (집중 소자)'}</td></tr>`).join('')}</table>`
+      if (C.mod === 'wdm') { const L = (n) => (C.elines.find((x) => x.net === n) || { length_um: 0 }).length_um; h = `<table class="ltbl"><tr><th>링 (λ)</th><th>RF</th><th>S / G 선 µm</th><th>DC 범프</th><th>종단</th></tr>${C.I('BUS').params.rings.map((_, k) => `<tr><td class="num">${k}</td><td>GS 범프 (S 북 ${k % 2 ? '2' : '1'}열 · G 남 ${k % 2 ? '2' : '1'}열)</td><td class="num">${L(`BUS.rf_s${k}`).toFixed(0)} / ${L(`BUS.rf_g${k}`).toFixed(0)}</td><td class="num">${C.enets.filter((n) => n.kind === 'dc' && n.lane === k).length}</td><td>없음 (집중 소자)</td></tr>`).join('')}</table>`; }
+      else h = `<table class="ltbl"><tr><th>레인</th><th>RF</th><th>RF 선 길이 µm</th><th>DC 패드</th><th>종단</th></tr>${mods.map((M) => `<tr><td class="num">${M.lane}</td><td>${C.mod === 'mzm' ? 'GSG (진행파 전극)' : 'GS (집중 소자 PN)'}</td><td class="num">${(M.rfLen || 0).toFixed(0)}</td><td class="num">${C.enets.filter((n) => n.kind === 'dc' && n.lane === M.lane).length}</td><td>${C.mod === 'mzm' ? `R<sub>T</sub> ${C.P.mzm.RT} Ω 온칩 (추상)` : '없음 (집중 소자)'}</td></tr>`).join('')}</table>`
         + ctab(chk(/전기 포트|RF 배선 교차|RF 금속|패드 배치|범프 배치|RF 급전선|링 구동선/));
     } else if (m.id === 'verification') {
       t = '설계 검증';
@@ -186,11 +193,12 @@ window.LABUI = (() => {
   }
   function sysTable() {
     const s = CHK.sys;
-    return `<h4>레이아웃 결과 vs 시스템 예측 (3A+ 엔진)</h4><table class="ltbl">${row(['3A+ 모델 (같은 변조기·레이저 공유)', `${s.src} → 최악 레인 마진 ${s.marginModel.toFixed(2)} dB · 모듈 ${s.pw.toFixed(2)} W · ${s.pj.toFixed(2)} pJ/bit`])}${row(['레이아웃이 더한 손실 (최악 레인)', `${s.extra.toFixed(2)} dB — 3A+ 모델에 없는 칩 위 배선 전파·굽힘 + 모니터 탭`])}${row(['레이아웃 반영 마진', `<b>${s.marginLayout.toFixed(2)} dB</b>`])}</table><p class="note">3A+ 모델은 SSC·결합·분배기 과잉손실을 이미 셉니다. 여기서는 레이아웃에서 생긴 길이만 더합니다 (RF 급전 손실은 위 RF 항목에서 따로 표시).</p>`;
+    const lv = s.wdm ? '3W' : '3A+';
+    return `<h4>레이아웃 결과 vs 시스템 예측 (${lv} 엔진)</h4><table class="ltbl">${row([s.wdm ? '3W 모델 (같은 링·격자·배정·링 간격)' : '3A+ 모델 (같은 변조기·레이저 공유)', `${s.src} → 최악 ${s.wdm ? '채널' : '레인'} 마진 ${s.marginModel.toFixed(2)} dB · 모듈 ${s.pw.toFixed(2)} W · ${s.pj.toFixed(2)} pJ/bit`])}${row(['레이아웃이 더한 손실 (최악 레인)', `${s.extra.toFixed(2)} dB — ${lv} 모델에 없는 칩 위 배선 전파·굽힘 + 모니터 탭${s.wdm ? ' (링 사이 버스는 3W가 이미 셈)' : ''}`])}${row(['레이아웃 반영 마진', `<b>${s.marginLayout.toFixed(2)} dB</b>`])}</table><p class="note">3A+ 모델은 SSC·결합·분배기 과잉손실을 이미 셉니다. 여기서는 레이아웃에서 생긴 길이만 더합니다 (RF 급전 손실은 위 RF 항목에서 따로 표시).</p>`;
   }
   function summary() {
     const s = CHK.sys, n = (st) => CHK.checks.filter((x) => x.status === st).length, a3 = SH().stars('3A+') > 0;
-    return `<table class="ltbl">${row(['총 데이터 속도', `${LAB.LANES} × 200G = 1.6 Tb/s (라인 ${LAB.LANES} × 224 Gb/s)`])}${row(['변조기', C.mod === 'mzm' ? 'TW-MZM ×8' : 'MRR ×8'])}${row(['다이', `${des().W.toFixed(1)} × ${des().H.toFixed(1)} mm`])}${row(['광 손실 추정 (칩 배선, 최악 레인)', `${s.extra.toFixed(2)} dB`])}${row(['링크 마진 (레이아웃 반영)', `${s.marginLayout.toFixed(2)} dB`])}${row(['비트당 에너지 (3A+ 모듈 모델)', `${s.pj.toFixed(2)} pJ/bit`])}${row(['검증 요약', `PASS ${n('PASS')} · WARNING ${n('WARNING')} · FAIL ${n('FAIL')} · NOT VERIFIED ${n('NOT VERIFIED')}${S().ran ? '' : ' (검사 미실행)'}`])}${row(['GDS 재검사 (smq2gds)', gdsMsg()])}${row(['Project Completion', a3 ? (MISS.every((m) => (S().done || {})[m.id]) ? '<span class="st-PASS">완료</span>' : '진행 중') : '3A+ ★ 이후 정식 완료 (지금은 미리보기)'])}</table>`
+    return `<table class="ltbl">${row(['총 데이터 속도', `${LAB.LANES} × 200G = 1.6 Tb/s (라인 ${LAB.LANES} × 224 Gb/s)`])}${row(['변조기', C.mod === 'mzm' ? 'TW-MZM ×8 (DR8)' : C.mod === 'wdm' ? 'MRR WDM8 (공유 버스 · 광섬유 1)' : 'MRR ×8 (DR8)'])}${row(['다이', `${des().W.toFixed(1)} × ${des().H.toFixed(1)} mm`])}${row(['광 손실 추정 (칩 배선, 최악 레인)', `${s.extra.toFixed(2)} dB`])}${row(['링크 마진 (레이아웃 반영)', `${s.marginLayout.toFixed(2)} dB`])}${row(['비트당 에너지 (3A+ 모듈 모델)', `${s.pj.toFixed(2)} pJ/bit`])}${row(['검증 요약', `PASS ${n('PASS')} · WARNING ${n('WARNING')} · FAIL ${n('FAIL')} · NOT VERIFIED ${n('NOT VERIFIED')}${S().ran ? '' : ' (검사 미실행)'}`])}${row(['GDS 재검사 (smq2gds)', gdsMsg()])}${row(['Project Completion', a3 ? (MISS.every((m) => (S().done || {})[m.id]) ? '<span class="st-PASS">완료</span>' : '진행 중') : '3A+ ★ 이후 정식 완료 (지금은 미리보기)'])}</table>`
       + `<p class="note">GDS는 같은 smq-circuit/1 데이터를 tools/smq2gds가 읽어 같은 기본 도형으로 그리고, 다시 읽어 계층·연결·포트·길이·간격·선폭·금속 단락을 검사합니다. 이 결과는 구조 검증이 가능한 Engineering Prototype이며 Tape-out Ready Mask가 아닙니다.</p>`;
   }
   function renderCoach() {
@@ -226,11 +234,11 @@ window.LABUI = (() => {
     const col = { input: 0, mod: 2 + C.depth, monitor: 3 + C.depth, output: 4 + C.depth }, pos = {};
     C.inst.forEach((I) => {
       let x, y;
-      if (I.role === 'input') { const k = +I.id.slice(2); x = col.input; y = k * C.N + C.N / 2 - 0.5 - (LAB.LANES - 1) / 2; }
+      if (I.role === 'input') { const k = +I.id.slice(2); x = col.input; y = C.mod === 'wdm' ? 0 : k * C.N + C.N / 2 - 0.5 - (LAB.LANES - 1) / 2; }
       else if (I.role === 'splitter') { x = 1 + I.j; y = I.l0 + I.span / 2 - 0.5 - (LAB.LANES - 1) / 2; }
-      else if (I.role === 'modulator') { x = col.mod; y = I.lane - (LAB.LANES - 1) / 2; }
-      else if (I.role === 'monitor') { x = col.monitor; y = I.lane - (LAB.LANES - 1) / 2; }
-      else { x = col.output; y = I.lane - (LAB.LANES - 1) / 2; }
+      else if (I.role === 'modulator') { x = col.mod; y = I.lane == null ? 0 : I.lane - (LAB.LANES - 1) / 2; }
+      else if (I.role === 'monitor') { x = col.monitor; y = I.lane == null ? 0 : I.lane - (LAB.LANES - 1) / 2; }
+      else { x = col.output; y = C.mod === 'wdm' ? 0 : I.lane - (LAB.LANES - 1) / 2; }
       pos[I.id] = { x: x * 120, y: y * 44, w: 84, h: 26 };
     });
     return pos;
@@ -248,10 +256,10 @@ window.LABUI = (() => {
     const pp = (ep) => { const [id, pn] = ep.split('.'), p = pos[id], I = C.I(id), q = I.ports.find((z) => z.n === pn); const out = q && q.a === 0; return [p.x + (out ? p.w / 2 : -p.w / 2), p.y + (I.type === 'mmi1x2' && pn !== 'in' ? (q.y > 0 ? 7 : -7) : 0)]; };
     C.onets.forEach((n) => { const a = pp(n.from), b = pp(n.to), r = (C.routes || []).find((x) => x.net === n.id); g.strokeStyle = r && !r.ok ? '#ff6b6b' : '#64c9df'; g.lineWidth = 1.4 * DPR; g.beginPath(); g.moveTo(TX(a[0]), TY(a[1])); const xm = (a[0] + b[0]) / 2; g.lineTo(TX(xm), TY(a[1])); g.lineTo(TX(xm), TY(b[1])); g.lineTo(TX(b[0]), TY(b[1])); g.stroke(); void bad; });
     C.inst.forEach((I) => {
-      const p = pos[I.id], on = sel && (sel.id === I.id || sel.type === I.type), col = I.type === 'mzm' || I.type === 'mrr' ? '#64c9df' : I.type === 'tap_pd' ? '#b48cff' : I.type === 'mmi1x2' ? '#9eabbd' : '#f6c35a';
+      const p = pos[I.id], on = sel && (sel.id === I.id || sel.type === I.type), col = I.type === 'mzm' || I.type === 'mrr' || I.type === 'mrr_wdm' ? '#64c9df' : I.type === 'tap_pd' ? '#b48cff' : I.type === 'mmi1x2' ? '#9eabbd' : '#f6c35a';
       g.fillStyle = on ? 'rgba(100,201,223,.25)' : 'rgba(231,236,243,.06)'; g.strokeStyle = col; g.lineWidth = (on ? 2.2 : 1.2) * DPR;
       g.fillRect(TX(p.x - p.w / 2), TY(p.y + p.h / 2), p.w * cam.s, p.h * cam.s); g.strokeRect(TX(p.x - p.w / 2), TY(p.y + p.h / 2), p.w * cam.s, p.h * cam.s);
-      if (cam.s * p.w > 40 * DPR) { g.fillStyle = '#e7ecf3'; g.textAlign = 'center'; g.fillText(I.type === 'ssc' ? (I.role === 'input' ? `IN${I.id.slice(2)} SSC` : `OUT${I.lane} SSC`) : I.type === 'mmi1x2' ? '1×2 MMI' : I.type === 'tap_pd' ? 'tap+PD' : `${I.type.toUpperCase()}${I.lane}`, TX(p.x), TY(p.y)); }
+      if (cam.s * p.w > 40 * DPR) { g.fillStyle = '#e7ecf3'; g.textAlign = 'center'; g.fillText(I.type === 'ssc' ? (I.role === 'input' ? `IN${I.id.slice(2)} SSC` : `OUT${I.lane} SSC`) : I.type === 'mmi1x2' ? '1×2 MMI' : I.type === 'tap_pd' ? 'tap+PD' : I.type === 'mrr_wdm' ? 'MRR ×8 버스' : `${I.type.toUpperCase()}${I.lane}`, TX(p.x), TY(p.y)); }
       // electrical pins
       const ep = I.ports.filter((q) => q.k === 'rf' || q.k === 'dc');
       ep.forEach((q, k) => { const mapped = C.enets.some((n) => n.from === `${I.id}.${q.n}`); g.fillStyle = !mapped ? '#ff6b6b' : q.k === 'rf' ? '#f2b04a' : '#9eabbd'; g.fillRect(TX(p.x - p.w / 2 + 6 + k * 9), TY(p.y + p.h / 2 + 5), 5 * DPR, 5 * DPR); });
@@ -301,6 +309,10 @@ window.LABUI = (() => {
       wg(loc.prims.filter((p) => p.layer !== 'si'), '#64c9df'); wg(loc.prims.filter((p) => p.layer === 'si'), '#3b82c4');
       line(gm.Lt || 0, 0, gm.L - (gm.Lt || 0), 0, '#64c9df', Math.max(1, gm.w * s)); g.strokeStyle = '#64c9df'; g.lineWidth = Math.max(1.2 * DPR, gm.w * s); g.beginPath(); g.arc(X(gm.xc), Y(gm.yc), Math.max(2, gm.R * s), 0, 2 * Math.PI); g.stroke();
       g.strokeStyle = 'rgba(246,173,85,.8)'; g.lineWidth = Math.max(1, 2 * s); g.beginPath(); g.arc(X(gm.xc), Y(gm.yc), Math.max(2, gm.R * s), -(270 - 27) * Math.PI / 180, -(270 + 27 - 360) * Math.PI / 180, true); g.stroke();
+    } else if (I.type === 'mrr_wdm') {   // the same primitives the GDS draws: bus fillers + end transitions (local), ring cells at (x_k, y_k)
+      const loc = I.params.local, cols = ['#8fb3ff', '#64c9df', '#5dd193', '#c6e06b', '#f6c35a', '#f2b04a', '#ff8d9c', '#b48cff'];
+      wg(loc.prims.filter((p) => p.layer !== 'si'), '#64c9df'); wg(loc.prims.filter((p) => p.layer === 'si'), '#64c9df');
+      I.params.rings.forEach((rg, k) => { const x = loc.ring_x_um[k], y = loc.ring_y_um[k]; line(x - rg.bus_len_um / 2, 0, x + rg.bus_len_um / 2, 0, '#64c9df', Math.max(1, rg.bus_w_um * s)); g.strokeStyle = cols[k]; g.lineWidth = Math.max(1.2 * DPR, rg.w_um * s); g.beginPath(); g.arc(X(x), Y(y), Math.max(2, rg.R_um * s), 0, 2 * Math.PI); g.stroke(); });
     } else if (I.type === 'tap_pd') {
       const loc = I.params.local; wg(loc.prims, '#64c9df'); loc.rects.forEach((r) => rect(r.x0, r.y0, r.x1, r.y1, 'rgba(180,140,255,.8)'));
     }
@@ -339,7 +351,7 @@ window.LABUI = (() => {
       B: '<p>광 I/O는 광섬유 배열(FAU)의 피치(127 µm)에 맞춘 SSC 가장자리 결합입니다. TW-MZM은 전극 길이(mm)가 다이 폭을, 와이어본드 패드 수가 변 길이를 정합니다. RF 급전선이 다른 레인의 전극을 가로지르지 않도록 레인을 엇갈려(Δx) 각 급전선이 지나갈 통로를 만듭니다.</p>',
       deep: '<p>자동 배치: 레인 피치 = max(FAU 피치, 레인 높이 + 40 µm), 엇갈림 Δx = (RF 패드 수 − 1)·패드 피치 + 패드 폭 + 40 µm(가장자리 패드일 때), 분배 트리 각 단의 길이 = MMI + 그 단 S-bend + 여유. 필요한 다이 = 광 경로 길이 + 출력 팬 + SSC + 여유, 그리고 DC 패드 줄 길이 중 큰 값.</p>',
       D: '다이 폭을 필요 크기보다 줄여 Infeasible 이유가 어떻게 바뀌는지 보세요. Advanced에서 엇갈림을 0으로 하면 RF 배선이 교차합니다(Mission 4).',
-      P: { W: { m: '다이 가로', ud: '↓ 웨이퍼당 다이↑, 배선·패드 공간↓', tr: '비용 ↔ 실현 가능성' }, H: { m: '다이 세로', ud: '↓ 레인·패드 줄 공간↓', tr: '비용 ↔ 레인 피치' }, edge: { m: '다이싱·패키지 여유', ud: '↑ 안전, 공간↓', tr: '수율 ↔ 면적' }, P: { m: '레인 간격', ud: '↑ 열·RF 결합↓, 다이↑', tr: '크로스토크 ↔ 면적' }, stag: { m: 'RF 급전 통로 폭', ud: '↓ 다이 폭↓, RF 교차 위험', tr: '면적 ↔ 평면 배선 가능성' }, fp: { m: 'FAU 광섬유 피치', ud: '250 µm: 팬 길이↑', tr: '패키지 표준' } },
+      P: { rp: { m: 'WDM8 링 간격 (버스 위, 3W 설계값에서 시작)', ud: '↑ 열 결합↓, 버스 길이·면적↑ · ↓ 링 셀(2R + 20 µm)과 범프 열이 겹칠 수 있음', tr: '열 결합 ↔ 면적' }, W: { m: '다이 가로', ud: '↓ 웨이퍼당 다이↑, 배선·패드 공간↓', tr: '비용 ↔ 실현 가능성' }, H: { m: '다이 세로', ud: '↓ 레인·패드 줄 공간↓', tr: '비용 ↔ 레인 피치' }, edge: { m: '다이싱·패키지 여유', ud: '↑ 안전, 공간↓', tr: '수율 ↔ 면적' }, P: { m: '레인 간격', ud: '↑ 열·RF 결합↓, 다이↑', tr: '크로스토크 ↔ 면적' }, stag: { m: 'RF 급전 통로 폭', ud: '↓ 다이 폭↓, RF 교차 위험', tr: '면적 ↔ 평면 배선 가능성' }, fp: { m: 'FAU 광섬유 피치', ud: '250 µm: 팬 길이↑', tr: '패키지 표준' } },
       F: [['배치', 'an', '직사각형 bbox 기준 경계·겹침'], ['패드·범프 크기', 'asm', '와이어본드 80 µm / 피치 100, 마이크로범프 30 / 45 µm'], ['열 크로스토크', 'fw', '레인 간 열해석 없음']],
       G: ['chrost', 'oif', 'gdsf'] },
     routing: { re: /광 배선 생성|배선 간격|굽힘 반경|최소 선폭|넓은 배선|장애물/, A: '회로 넷을 실제 도파로 형상(직선·코너·S-bend·테이퍼)으로 바꾸고, 굽힘 반경·간격·길이가 손실과 실현 가능성을 어떻게 정하는지 배웁니다.',

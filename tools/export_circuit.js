@@ -1,6 +1,7 @@
 // Reference smq-circuit/1 examples from the PIC Design Lab engine (same code as the game), for tools/smq2gds (Phase D).
 //   node tools/export_circuit.js [platform|all] [outdir]
-// Designs: MZM DR8 (1:1 lasers, edge wire-bond pads) and MRR DR8 (1:1, flip-chip micro-bumps), wide low-loss routes,
+// Designs: MZM DR8 (1:1 lasers, edge wire-bond pads), MRR DR8 (1:1, flip-chip micro-bumps) and MRR WDM8 (3W reference design:
+// one input, shared bus with eight rings, one output, flip-chip), wide low-loss routes,
 // die = the smallest 0.1-mm die that fits the auto placement. Reference parts of each level (no cards).
 const fs = require('fs'), path = require('path');
 const load = require('../test/load.js');
@@ -12,7 +13,7 @@ for (const pid of plats) {
   const pf = G.PLATFORMS[pid], LV = (id) => ({ ...G.LEVELS.find((x) => x.id === id), ...G.PSPEC[pid][id], pf });
   G.GAME_LEV = LV; G.PQ.setPlatform(pf.mat, pf.t, pf.rules);
   const ctx = { pf, lev: LV, cards: {} };
-  for (const [name, mod, rf] of [['mzm_dr8', 0, 0], ['mrr_dr8', 1, 1]]) {
+  for (const [name, mod, rf] of [['mzm_dr8', 0, 0], ['mrr_dr8', 1, 1], ['mrr_wdm8', 2, 1]]) {
     const d = { ...L.defaults(ctx, { mod, share: 0 }), rf, wr: pf.mat === 'si' ? 1.0 : 2.0 };
     d.stag = L.stagAuto(d);
     const f = L.minDie(ctx, d); d.W = Math.ceil(f.W / 100) / 10; d.H = Math.ceil(f.H / 100) / 10;

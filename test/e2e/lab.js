@@ -90,6 +90,20 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const warn = () => (st().CHK.checks.find((x) => /링 구동선/.test(x.item)) || {}).status;
   const w0 = warn(); await set('rf', 1); await sleep(300);
   okm(w0 === 'WARNING' && warn() === 'PASS', `MRR drive line: edge pads ${w0} → flip-chip ${warn()}`);
+  // WDM8 (Phase E): the shared-bus architecture from the 3W design
+  $('[data-ms="0"]').click(); await sleep(300); await set('mod', 2); await sleep(500);
+  const C2 = st().C, bus = C2.I('BUS');
+  okm(C2.mod === 'wdm' && bus && bus.params.rings.length === 8 && C2.inst.filter((x) => x.role === 'output').length === 1 && /3W/.test($('#lab-params').textContent) && !$('#lp-share'), 'WDM8: one bus with eight 3W rings, one output; laser sharing hidden');
+  okm(/MRR ×8 · 공유 버스/.test($('#lab-lib-list').textContent), 'library lists the WDM shared bus with its radii and FSR');
+  $('[data-ms="3"]').click(); await sleep(400);
+  okm(!$('#lp-rf') && /S \/ G 선/.test($('#lab-out-b').textContent) && st().MS.electrical, 'WDM8 electrical: flip-chip bumps per ring (S north / G south), planar heaters, mission complete');
+  $('[data-ms="4"]').click(); await sleep(300); $('[data-la="run"]').click(); await sleep(400);
+  okm(/FSR 별칭/.test($('#lab-out-b').textContent) && /공진 배정/.test($('#lab-out-b').textContent) && /3W 엔진/.test($('#lab-out-b').textContent), 'WDM8 verification: FSR alias, resonance assignment / tuning, 3W system prediction');
+  $('[data-ms="5"]').click(); await sleep(300); $('[data-la="exp-all"]').click(); await sleep(300);
+  let jw = null; try { jw = JSON.parse($('#lab-json').value); } catch (e) { jw = null; }
+  okm(jw && jw.layout.architecture.wdm && jw.layout.instances.some((x) => x.type === 'mrr_wdm'), 'WDM8 export: architecture.wdm + mrr_wdm instance');
+  $('[data-ms="0"]').click(); await sleep(300); await set('mod', 0); await sleep(500);
+  okm(st().C.mod === 'mzm' && st().C.inst.filter((x) => x.role === 'output').length === 8, 'back to DR8 (MZM): eight outputs again');
   // back to the campaign; nothing in the campaign changed
   $('#lab-back').click(); await sleep(300);
   okm($('#lab').hidden && !$('main.game').hidden, 'back to the campaign');

@@ -1,0 +1,2456 @@
+{
+ "schema": "smq-circuit/1",
+ "generator": "SPEC-to-MASK Quest · PIC Design Lab",
+ "exported": "2026-10-10T00:00:00Z",
+ "platform": {
+  "id": "sin1550",
+  "mat": "sin",
+  "lam_um": 1.55,
+  "core_t_um": 0.4,
+  "w0_um": 1,
+  "wc_um": 1.098,
+  "clad": "SiO2",
+  "box": "SiO2",
+  "rules_um": {
+   "gap": 0.4,
+   "wmin": 0.8,
+   "edge": 0.1
+  },
+  "route_rules": {
+   "port_width_um": 1,
+   "body_width_um": 2,
+   "taper": "linear on the first / last straight (short nets stay at the port width)",
+   "bend": "euler",
+   "R_um": 100,
+   "R_min_rule_um": 20,
+   "alpha_body_dB_cm": 0.0845,
+   "alpha_port_dB_cm": 0.1522,
+   "litho_min_width_um": 0.3
+  }
+ },
+ "architecture": {
+  "name": "1.6T WDM8 Tx PIC",
+  "outputs": 1,
+  "lanes": 8,
+  "lane_rate_gbps": 224,
+  "net_rate_gbps": 200,
+  "baud_gbd": 112,
+  "format": "PAM4",
+  "modulator": "wdm",
+  "laser_share": 1,
+  "lasers": 1,
+  "splitter_depth": 0,
+  "monitor_pd": false,
+  "wdm": {
+   "channels": 8,
+   "grid_GHz": 200,
+   "lambda_um": [
+    1.5444,
+    1.546,
+    1.5476,
+    1.5492,
+    1.5508,
+    1.5524,
+    1.554,
+    1.5556
+   ],
+   "fsr_nm": 13.9745,
+   "radii": "stepped",
+   "assignment": "cyclic (barrel shift)",
+   "ring_pitch_um": 40,
+   "source": "comb (ELS)",
+   "model": "3W engine (3W 기준 설계)"
+  }
+ },
+ "die": {
+  "W_um": 900,
+  "H_um": 500,
+  "edge_um": 50,
+  "optical_io": {
+   "input": "W",
+   "output": "E",
+   "fiber_pitch_um": 127
+  },
+  "electrical_io": {
+   "type": "flip-chip bumps (abstract)",
+   "side": "local"
+  },
+  "lane_pitch_um": 127,
+  "lane_stagger_um": 0
+ },
+ "instances": [
+  {
+   "id": "IN0",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.325,
+    "w_um": 1
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 271.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    269.5,
+    100,
+    273.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      271.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      100,
+      271.5
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "BUS",
+   "type": "mrr_wdm",
+   "role": "modulator",
+   "lane": null,
+   "source": "2-3R 기준 설계 · 3W 기준 설계 (R 7.05 µm, 200 GHz)",
+   "params": {
+    "rings": [
+     {
+      "pcell": "ring_allpass",
+      "core_mat": "si",
+      "R_um": 7.013,
+      "R_slider_um": 7.05,
+      "gap_um": 0.23,
+      "w_um": 0.5,
+      "bus_w_um": 0.5,
+      "bus_len_um": 34.026,
+      "rib": {
+       "t_um": 0.22,
+       "slab_um": 0.09,
+       "slab_ext_um": 2
+      },
+      "order_m": 75,
+      "heterogeneous_si": true,
+      "junction": {
+       "type": "lateral PN (P inside, N outside)",
+       "coverage": 0.75,
+       "arc_deg": 270,
+       "centred_opposite_coupler": true,
+       "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+      },
+      "heater": {
+       "h_um": 1.6,
+       "iso": 1,
+       "coverage": 0.85,
+       "w_um": 2,
+       "arc_deg": 306,
+       "gap_centred_opposite_coupler": true,
+       "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+      },
+      "lambda_design_um": 1.55,
+      "predicted": {
+       "fsr_nm": 13.9745,
+       "QL": 4014,
+       "Qi": 11988,
+       "Qc": 6036,
+       "kappa2": 0.109,
+       "shift_pm_per_V": 23.1887,
+       "Cj_fF": 19.1488,
+       "PhW_mW": 11.2139,
+       "dlambda_dT_pm_K": 75.8307
+      },
+      "model": {
+       "neff": 2.6003,
+       "ng": 3.8806,
+       "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+      },
+      "local_pads": false,
+      "channel": 0
+     },
+     {
+      "pcell": "ring_allpass",
+      "core_mat": "si",
+      "R_um": 7.024,
+      "R_slider_um": 7.05,
+      "gap_um": 0.23,
+      "w_um": 0.5,
+      "bus_w_um": 0.5,
+      "bus_len_um": 34.048,
+      "rib": {
+       "t_um": 0.22,
+       "slab_um": 0.09,
+       "slab_ext_um": 2
+      },
+      "order_m": 75,
+      "heterogeneous_si": true,
+      "junction": {
+       "type": "lateral PN (P inside, N outside)",
+       "coverage": 0.75,
+       "arc_deg": 270,
+       "centred_opposite_coupler": true,
+       "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+      },
+      "heater": {
+       "h_um": 1.6,
+       "iso": 1,
+       "coverage": 0.85,
+       "w_um": 2,
+       "arc_deg": 306,
+       "gap_centred_opposite_coupler": true,
+       "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+      },
+      "lambda_design_um": 1.55,
+      "predicted": {
+       "fsr_nm": 13.9745,
+       "QL": 4014,
+       "Qi": 11988,
+       "Qc": 6036,
+       "kappa2": 0.109,
+       "shift_pm_per_V": 23.1887,
+       "Cj_fF": 19.1488,
+       "PhW_mW": 11.2139,
+       "dlambda_dT_pm_K": 75.8307
+      },
+      "model": {
+       "neff": 2.6003,
+       "ng": 3.8806,
+       "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+      },
+      "local_pads": false,
+      "channel": 1
+     },
+     {
+      "pcell": "ring_allpass",
+      "core_mat": "si",
+      "R_um": 7.035,
+      "R_slider_um": 7.05,
+      "gap_um": 0.23,
+      "w_um": 0.5,
+      "bus_w_um": 0.5,
+      "bus_len_um": 34.07,
+      "rib": {
+       "t_um": 0.22,
+       "slab_um": 0.09,
+       "slab_ext_um": 2
+      },
+      "order_m": 75,
+      "heterogeneous_si": true,
+      "junction": {
+       "type": "lateral PN (P inside, N outside)",
+       "coverage": 0.75,
+       "arc_deg": 270,
+       "centred_opposite_coupler": true,
+       "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+      },
+      "heater": {
+       "h_um": 1.6,
+       "iso": 1,
+       "coverage": 0.85,
+       "w_um": 2,
+       "arc_deg": 306,
+       "gap_centred_opposite_coupler": true,
+       "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+      },
+      "lambda_design_um": 1.55,
+      "predicted": {
+       "fsr_nm": 13.9745,
+       "QL": 4014,
+       "Qi": 11988,
+       "Qc": 6036,
+       "kappa2": 0.109,
+       "shift_pm_per_V": 23.1887,
+       "Cj_fF": 19.1488,
+       "PhW_mW": 11.2139,
+       "dlambda_dT_pm_K": 75.8307
+      },
+      "model": {
+       "neff": 2.6003,
+       "ng": 3.8806,
+       "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+      },
+      "local_pads": false,
+      "channel": 2
+     },
+     {
+      "pcell": "ring_allpass",
+      "core_mat": "si",
+      "R_um": 7.046,
+      "R_slider_um": 7.05,
+      "gap_um": 0.23,
+      "w_um": 0.5,
+      "bus_w_um": 0.5,
+      "bus_len_um": 34.092,
+      "rib": {
+       "t_um": 0.22,
+       "slab_um": 0.09,
+       "slab_ext_um": 2
+      },
+      "order_m": 75,
+      "heterogeneous_si": true,
+      "junction": {
+       "type": "lateral PN (P inside, N outside)",
+       "coverage": 0.75,
+       "arc_deg": 270,
+       "centred_opposite_coupler": true,
+       "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+      },
+      "heater": {
+       "h_um": 1.6,
+       "iso": 1,
+       "coverage": 0.85,
+       "w_um": 2,
+       "arc_deg": 306,
+       "gap_centred_opposite_coupler": true,
+       "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+      },
+      "lambda_design_um": 1.55,
+      "predicted": {
+       "fsr_nm": 13.9745,
+       "QL": 4014,
+       "Qi": 11988,
+       "Qc": 6036,
+       "kappa2": 0.109,
+       "shift_pm_per_V": 23.1887,
+       "Cj_fF": 19.1488,
+       "PhW_mW": 11.2139,
+       "dlambda_dT_pm_K": 75.8307
+      },
+      "model": {
+       "neff": 2.6003,
+       "ng": 3.8806,
+       "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+      },
+      "local_pads": false,
+      "channel": 3
+     },
+     {
+      "pcell": "ring_allpass",
+      "core_mat": "si",
+      "R_um": 7.056,
+      "R_slider_um": 7.05,
+      "gap_um": 0.23,
+      "w_um": 0.5,
+      "bus_w_um": 0.5,
+      "bus_len_um": 34.112,
+      "rib": {
+       "t_um": 0.22,
+       "slab_um": 0.09,
+       "slab_ext_um": 2
+      },
+      "order_m": 75,
+      "heterogeneous_si": true,
+      "junction": {
+       "type": "lateral PN (P inside, N outside)",
+       "coverage": 0.75,
+       "arc_deg": 270,
+       "centred_opposite_coupler": true,
+       "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+      },
+      "heater": {
+       "h_um": 1.6,
+       "iso": 1,
+       "coverage": 0.85,
+       "w_um": 2,
+       "arc_deg": 306,
+       "gap_centred_opposite_coupler": true,
+       "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+      },
+      "lambda_design_um": 1.55,
+      "predicted": {
+       "fsr_nm": 13.9745,
+       "QL": 4014,
+       "Qi": 11988,
+       "Qc": 6036,
+       "kappa2": 0.109,
+       "shift_pm_per_V": 23.1887,
+       "Cj_fF": 19.1488,
+       "PhW_mW": 11.2139,
+       "dlambda_dT_pm_K": 75.8307
+      },
+      "model": {
+       "neff": 2.6003,
+       "ng": 3.8806,
+       "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+      },
+      "local_pads": false,
+      "channel": 4
+     },
+     {
+      "pcell": "ring_allpass",
+      "core_mat": "si",
+      "R_um": 7.067,
+      "R_slider_um": 7.05,
+      "gap_um": 0.23,
+      "w_um": 0.5,
+      "bus_w_um": 0.5,
+      "bus_len_um": 34.134,
+      "rib": {
+       "t_um": 0.22,
+       "slab_um": 0.09,
+       "slab_ext_um": 2
+      },
+      "order_m": 75,
+      "heterogeneous_si": true,
+      "junction": {
+       "type": "lateral PN (P inside, N outside)",
+       "coverage": 0.75,
+       "arc_deg": 270,
+       "centred_opposite_coupler": true,
+       "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+      },
+      "heater": {
+       "h_um": 1.6,
+       "iso": 1,
+       "coverage": 0.85,
+       "w_um": 2,
+       "arc_deg": 306,
+       "gap_centred_opposite_coupler": true,
+       "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+      },
+      "lambda_design_um": 1.55,
+      "predicted": {
+       "fsr_nm": 13.9745,
+       "QL": 4014,
+       "Qi": 11988,
+       "Qc": 6036,
+       "kappa2": 0.109,
+       "shift_pm_per_V": 23.1887,
+       "Cj_fF": 19.1488,
+       "PhW_mW": 11.2139,
+       "dlambda_dT_pm_K": 75.8307
+      },
+      "model": {
+       "neff": 2.6003,
+       "ng": 3.8806,
+       "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+      },
+      "local_pads": false,
+      "channel": 5
+     },
+     {
+      "pcell": "ring_allpass",
+      "core_mat": "si",
+      "R_um": 7.078,
+      "R_slider_um": 7.05,
+      "gap_um": 0.23,
+      "w_um": 0.5,
+      "bus_w_um": 0.5,
+      "bus_len_um": 34.156,
+      "rib": {
+       "t_um": 0.22,
+       "slab_um": 0.09,
+       "slab_ext_um": 2
+      },
+      "order_m": 75,
+      "heterogeneous_si": true,
+      "junction": {
+       "type": "lateral PN (P inside, N outside)",
+       "coverage": 0.75,
+       "arc_deg": 270,
+       "centred_opposite_coupler": true,
+       "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+      },
+      "heater": {
+       "h_um": 1.6,
+       "iso": 1,
+       "coverage": 0.85,
+       "w_um": 2,
+       "arc_deg": 306,
+       "gap_centred_opposite_coupler": true,
+       "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+      },
+      "lambda_design_um": 1.55,
+      "predicted": {
+       "fsr_nm": 13.9745,
+       "QL": 4014,
+       "Qi": 11988,
+       "Qc": 6036,
+       "kappa2": 0.109,
+       "shift_pm_per_V": 23.1887,
+       "Cj_fF": 19.1488,
+       "PhW_mW": 11.2139,
+       "dlambda_dT_pm_K": 75.8307
+      },
+      "model": {
+       "neff": 2.6003,
+       "ng": 3.8806,
+       "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+      },
+      "local_pads": false,
+      "channel": 6
+     },
+     {
+      "pcell": "ring_allpass",
+      "core_mat": "si",
+      "R_um": 7.089,
+      "R_slider_um": 7.05,
+      "gap_um": 0.23,
+      "w_um": 0.5,
+      "bus_w_um": 0.5,
+      "bus_len_um": 34.178,
+      "rib": {
+       "t_um": 0.22,
+       "slab_um": 0.09,
+       "slab_ext_um": 2
+      },
+      "order_m": 75,
+      "heterogeneous_si": true,
+      "junction": {
+       "type": "lateral PN (P inside, N outside)",
+       "coverage": 0.75,
+       "arc_deg": 270,
+       "centred_opposite_coupler": true,
+       "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+      },
+      "heater": {
+       "h_um": 1.6,
+       "iso": 1,
+       "coverage": 0.85,
+       "w_um": 2,
+       "arc_deg": 306,
+       "gap_centred_opposite_coupler": true,
+       "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+      },
+      "lambda_design_um": 1.55,
+      "predicted": {
+       "fsr_nm": 13.9745,
+       "QL": 4014,
+       "Qi": 11988,
+       "Qc": 6036,
+       "kappa2": 0.109,
+       "shift_pm_per_V": 23.1887,
+       "Cj_fF": 19.1488,
+       "PhW_mW": 11.2139,
+       "dlambda_dT_pm_K": 75.8307
+      },
+      "model": {
+       "neff": 2.6003,
+       "ng": 3.8806,
+       "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+      },
+      "local_pads": false,
+      "channel": 7
+     }
+    ],
+    "pitch_um": 40,
+    "channels": 8,
+    "grid_GHz": 200,
+    "radii": "stepped",
+    "assignment": "cyclic (barrel shift)",
+    "local": {
+     "prims": [
+      {
+       "t": "L",
+       "a": [
+        0,
+        0
+       ],
+       "b": [
+        60,
+        0
+       ],
+       "w0": 1,
+       "w1": 0.3,
+       "w": 1,
+       "layer": "core"
+      },
+      {
+       "t": "L",
+       "a": [
+        0,
+        0
+       ],
+       "b": [
+        60,
+        0
+       ],
+       "w0": 0.15,
+       "w1": 0.5,
+       "w": 0.5,
+       "layer": "si"
+      },
+      {
+       "t": "L",
+       "a": [
+        380,
+        0
+       ],
+       "b": [
+        440,
+        0
+       ],
+       "w0": 0.5,
+       "w1": 0.15,
+       "w": 0.5,
+       "layer": "si"
+      },
+      {
+       "t": "L",
+       "a": [
+        380,
+        0
+       ],
+       "b": [
+        440,
+        0
+       ],
+       "w0": 0.3,
+       "w1": 1,
+       "w": 1,
+       "layer": "core"
+      },
+      {
+       "t": "L",
+       "a": [
+        60,
+        0
+       ],
+       "b": [
+        62.987,
+        0
+       ],
+       "w": 0.5,
+       "layer": "si"
+      },
+      {
+       "t": "L",
+       "a": [
+        97.013,
+        0
+       ],
+       "b": [
+        102.976,
+        0
+       ],
+       "w": 0.5,
+       "layer": "si"
+      },
+      {
+       "t": "L",
+       "a": [
+        137.024,
+        0
+       ],
+       "b": [
+        142.965,
+        0
+       ],
+       "w": 0.5,
+       "layer": "si"
+      },
+      {
+       "t": "L",
+       "a": [
+        177.035,
+        0
+       ],
+       "b": [
+        182.954,
+        0
+       ],
+       "w": 0.5,
+       "layer": "si"
+      },
+      {
+       "t": "L",
+       "a": [
+        217.046,
+        0
+       ],
+       "b": [
+        222.944,
+        0
+       ],
+       "w": 0.5,
+       "layer": "si"
+      },
+      {
+       "t": "L",
+       "a": [
+        257.056,
+        0
+       ],
+       "b": [
+        262.933,
+        0
+       ],
+       "w": 0.5,
+       "layer": "si"
+      },
+      {
+       "t": "L",
+       "a": [
+        297.067,
+        0
+       ],
+       "b": [
+        302.922,
+        0
+       ],
+       "w": 0.5,
+       "layer": "si"
+      },
+      {
+       "t": "L",
+       "a": [
+        337.078,
+        0
+       ],
+       "b": [
+        342.911,
+        0
+       ],
+       "w": 0.5,
+       "layer": "si"
+      },
+      {
+       "t": "L",
+       "a": [
+        377.089,
+        0
+       ],
+       "b": [
+        380,
+        0
+       ],
+       "w": 0.5,
+       "layer": "si"
+      }
+     ],
+     "ring_x_um": [
+      80,
+      120,
+      160,
+      200,
+      240,
+      280,
+      320,
+      360
+     ],
+     "ring_y_um": [
+      7.743,
+      7.754,
+      7.765,
+      7.776,
+      7.786,
+      7.797,
+      7.808,
+      7.819
+     ],
+     "transition": "SiN 1→0.3 / Si 0.15→0.5 µm co-taper 60 µm at the two bus ends (plan view; loss not computed)"
+    }
+   },
+   "placement": {
+    "x_um": 192.5,
+    "y_um": 271.5,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    192.5,
+    268,
+    632.5,
+    296.408
+   ],
+   "size_um": [
+    440,
+    28.408
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      192.5,
+      271.5
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      632.5,
+      271.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s0",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      272.5,
+      279.243
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g0",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      287.513,
+      279.243
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p0",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      261.487,
+      294.256
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n0",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      283.513,
+      294.256
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_s1",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      312.5,
+      279.254
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g1",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      327.524,
+      279.254
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p1",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      301.476,
+      294.278
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n1",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      323.524,
+      294.278
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_s2",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      352.5,
+      279.265
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g2",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      367.535,
+      279.265
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p2",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      341.465,
+      294.3
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n2",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      363.535,
+      294.3
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_s3",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      392.5,
+      279.276
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g3",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      407.546,
+      279.276
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p3",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      381.454,
+      294.322
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n3",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      403.546,
+      294.322
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_s4",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      432.5,
+      279.286
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g4",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      447.556,
+      279.286
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p4",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      421.444,
+      294.342
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n4",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      443.556,
+      294.342
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_s5",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      472.5,
+      279.297
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g5",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      487.567,
+      279.297
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p5",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      461.433,
+      294.364
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n5",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      483.567,
+      294.364
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_s6",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      512.5,
+      279.308
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g6",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      527.578,
+      279.308
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p6",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      501.422,
+      294.386
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n6",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      523.578,
+      294.386
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_s7",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      552.5,
+      279.319
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g7",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      567.589,
+      279.319
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p7",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      541.411,
+      294.408
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n7",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      563.589,
+      294.408
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "OUT0",
+   "type": "ssc",
+   "role": "output",
+   "lane": 0,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 100,
+    "tip_um": 0.325,
+    "w_um": 1
+   },
+   "placement": {
+    "x_um": 900,
+    "y_um": 271.5,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    800,
+    269.5,
+    900,
+    273.5
+   ],
+   "size_um": [
+    100,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      900,
+      271.5
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      800,
+      271.5
+     ],
+     "angle_deg": 180
+    }
+   ]
+  }
+ ],
+ "nets": {
+  "optical": [
+   {
+    "id": "n0",
+    "from": "IN0.out",
+    "to": "BUS.in",
+    "lane": null,
+    "kind": "feed"
+   },
+   {
+    "id": "n1",
+    "from": "BUS.out",
+    "to": "OUT0.in",
+    "lane": 0,
+    "kind": "out"
+   }
+  ],
+  "electrical": [
+   {
+    "id": "BUS.rf_s0",
+    "kind": "rf",
+    "lane": 0,
+    "from": "BUS.rf_s0",
+    "to": "pad:RF0_s"
+   },
+   {
+    "id": "BUS.rf_g0",
+    "kind": "rf",
+    "lane": 0,
+    "from": "BUS.rf_g0",
+    "to": "pad:RF0_g"
+   },
+   {
+    "id": "BUS.rf_s1",
+    "kind": "rf",
+    "lane": 1,
+    "from": "BUS.rf_s1",
+    "to": "pad:RF1_s"
+   },
+   {
+    "id": "BUS.rf_g1",
+    "kind": "rf",
+    "lane": 1,
+    "from": "BUS.rf_g1",
+    "to": "pad:RF1_g"
+   },
+   {
+    "id": "BUS.rf_s2",
+    "kind": "rf",
+    "lane": 2,
+    "from": "BUS.rf_s2",
+    "to": "pad:RF2_s"
+   },
+   {
+    "id": "BUS.rf_g2",
+    "kind": "rf",
+    "lane": 2,
+    "from": "BUS.rf_g2",
+    "to": "pad:RF2_g"
+   },
+   {
+    "id": "BUS.rf_s3",
+    "kind": "rf",
+    "lane": 3,
+    "from": "BUS.rf_s3",
+    "to": "pad:RF3_s"
+   },
+   {
+    "id": "BUS.rf_g3",
+    "kind": "rf",
+    "lane": 3,
+    "from": "BUS.rf_g3",
+    "to": "pad:RF3_g"
+   },
+   {
+    "id": "BUS.rf_s4",
+    "kind": "rf",
+    "lane": 4,
+    "from": "BUS.rf_s4",
+    "to": "pad:RF4_s"
+   },
+   {
+    "id": "BUS.rf_g4",
+    "kind": "rf",
+    "lane": 4,
+    "from": "BUS.rf_g4",
+    "to": "pad:RF4_g"
+   },
+   {
+    "id": "BUS.rf_s5",
+    "kind": "rf",
+    "lane": 5,
+    "from": "BUS.rf_s5",
+    "to": "pad:RF5_s"
+   },
+   {
+    "id": "BUS.rf_g5",
+    "kind": "rf",
+    "lane": 5,
+    "from": "BUS.rf_g5",
+    "to": "pad:RF5_g"
+   },
+   {
+    "id": "BUS.rf_s6",
+    "kind": "rf",
+    "lane": 6,
+    "from": "BUS.rf_s6",
+    "to": "pad:RF6_s"
+   },
+   {
+    "id": "BUS.rf_g6",
+    "kind": "rf",
+    "lane": 6,
+    "from": "BUS.rf_g6",
+    "to": "pad:RF6_g"
+   },
+   {
+    "id": "BUS.rf_s7",
+    "kind": "rf",
+    "lane": 7,
+    "from": "BUS.rf_s7",
+    "to": "pad:RF7_s"
+   },
+   {
+    "id": "BUS.rf_g7",
+    "kind": "rf",
+    "lane": 7,
+    "from": "BUS.rf_g7",
+    "to": "pad:RF7_g"
+   },
+   {
+    "id": "BUS.h_p0",
+    "kind": "dc",
+    "lane": 0,
+    "from": "BUS.h_p0",
+    "to": "pad:DC0_h_p"
+   },
+   {
+    "id": "BUS.h_n0",
+    "kind": "dc",
+    "lane": 0,
+    "from": "BUS.h_n0",
+    "to": "pad:DC0_h_n"
+   },
+   {
+    "id": "BUS.h_p1",
+    "kind": "dc",
+    "lane": 1,
+    "from": "BUS.h_p1",
+    "to": "pad:DC1_h_p"
+   },
+   {
+    "id": "BUS.h_n1",
+    "kind": "dc",
+    "lane": 1,
+    "from": "BUS.h_n1",
+    "to": "pad:DC1_h_n"
+   },
+   {
+    "id": "BUS.h_p2",
+    "kind": "dc",
+    "lane": 2,
+    "from": "BUS.h_p2",
+    "to": "pad:DC2_h_p"
+   },
+   {
+    "id": "BUS.h_n2",
+    "kind": "dc",
+    "lane": 2,
+    "from": "BUS.h_n2",
+    "to": "pad:DC2_h_n"
+   },
+   {
+    "id": "BUS.h_p3",
+    "kind": "dc",
+    "lane": 3,
+    "from": "BUS.h_p3",
+    "to": "pad:DC3_h_p"
+   },
+   {
+    "id": "BUS.h_n3",
+    "kind": "dc",
+    "lane": 3,
+    "from": "BUS.h_n3",
+    "to": "pad:DC3_h_n"
+   },
+   {
+    "id": "BUS.h_p4",
+    "kind": "dc",
+    "lane": 4,
+    "from": "BUS.h_p4",
+    "to": "pad:DC4_h_p"
+   },
+   {
+    "id": "BUS.h_n4",
+    "kind": "dc",
+    "lane": 4,
+    "from": "BUS.h_n4",
+    "to": "pad:DC4_h_n"
+   },
+   {
+    "id": "BUS.h_p5",
+    "kind": "dc",
+    "lane": 5,
+    "from": "BUS.h_p5",
+    "to": "pad:DC5_h_p"
+   },
+   {
+    "id": "BUS.h_n5",
+    "kind": "dc",
+    "lane": 5,
+    "from": "BUS.h_n5",
+    "to": "pad:DC5_h_n"
+   },
+   {
+    "id": "BUS.h_p6",
+    "kind": "dc",
+    "lane": 6,
+    "from": "BUS.h_p6",
+    "to": "pad:DC6_h_p"
+   },
+   {
+    "id": "BUS.h_n6",
+    "kind": "dc",
+    "lane": 6,
+    "from": "BUS.h_n6",
+    "to": "pad:DC6_h_n"
+   },
+   {
+    "id": "BUS.h_p7",
+    "kind": "dc",
+    "lane": 7,
+    "from": "BUS.h_p7",
+    "to": "pad:DC7_h_p"
+   },
+   {
+    "id": "BUS.h_n7",
+    "kind": "dc",
+    "lane": 7,
+    "from": "BUS.h_n7",
+    "to": "pad:DC7_h_n"
+   }
+  ]
+ },
+ "routing": {
+  "optical": [
+   {
+    "net": "n0",
+    "from": "IN0.out",
+    "to": "BUS.in",
+    "lane": null,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 1,
+    "length_um": 92.5,
+    "loss_dB": 0.0014,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       100,
+       271.5
+      ],
+      "b": [
+       192.5,
+       271.5
+      ],
+      "w": 1
+     }
+    ]
+   },
+   {
+    "net": "n1",
+    "from": "BUS.out",
+    "to": "OUT0.in",
+    "lane": 0,
+    "ok": true,
+    "reason": null,
+    "body_width_um": 2,
+    "length_um": 167.5,
+    "loss_dB": 0.002,
+    "prims": [
+     {
+      "t": "L",
+      "a": [
+       632.5,
+       271.5
+      ],
+      "b": [
+       712.5,
+       271.5
+      ],
+      "w0": 1,
+      "w1": 2,
+      "w": 2
+     },
+     {
+      "t": "L",
+      "a": [
+       712.5,
+       271.5
+      ],
+      "b": [
+       720,
+       271.5
+      ],
+      "w": 2
+     },
+     {
+      "t": "L",
+      "a": [
+       720,
+       271.5
+      ],
+      "b": [
+       800,
+       271.5
+      ],
+      "w0": 2,
+      "w1": 1,
+      "w": 2
+     }
+    ]
+   }
+  ],
+  "electrical": [
+   {
+    "net": "BUS.rf_s0",
+    "kind": "rf",
+    "layer": "M1",
+    "width_um": 10,
+    "length_um": 47.165,
+    "pts": [
+     [
+      272.5,
+      279.243
+     ],
+     [
+      272.5,
+      326.408
+     ]
+    ]
+   },
+   {
+    "net": "BUS.rf_g0",
+    "kind": "rf",
+    "layer": "M1",
+    "width_um": 10,
+    "length_um": 41.243,
+    "pts": [
+     [
+      287.513,
+      279.243
+     ],
+     [
+      287.513,
+      238
+     ]
+    ]
+   },
+   {
+    "net": "BUS.rf_s1",
+    "kind": "rf",
+    "layer": "M1",
+    "width_um": 10,
+    "length_um": 92.154,
+    "pts": [
+     [
+      312.5,
+      279.254
+     ],
+     [
+      312.5,
+      371.408
+     ]
+    ]
+   },
+   {
+    "net": "BUS.rf_g1",
+    "kind": "rf",
+    "layer": "M1",
+    "width_um": 10,
+    "length_um": 86.254,
+    "pts": [
+     [
+      327.524,
+      279.254
+     ],
+     [
+      327.524,
+      193
+     ]
+    ]
+   },
+   {
+    "net": "BUS.rf_s2",
+    "kind": "rf",
+    "layer": "M1",
+    "width_um": 10,
+    "length_um": 47.143,
+    "pts": [
+     [
+      352.5,
+      279.265
+     ],
+     [
+      352.5,
+      326.408
+     ]
+    ]
+   },
+   {
+    "net": "BUS.rf_g2",
+    "kind": "rf",
+    "layer": "M1",
+    "width_um": 10,
+    "length_um": 41.265,
+    "pts": [
+     [
+      367.535,
+      279.265
+     ],
+     [
+      367.535,
+      238
+     ]
+    ]
+   },
+   {
+    "net": "BUS.rf_s3",
+    "kind": "rf",
+    "layer": "M1",
+    "width_um": 10,
+    "length_um": 92.132,
+    "pts": [
+     [
+      392.5,
+      279.276
+     ],
+     [
+      392.5,
+      371.408
+     ]
+    ]
+   },
+   {
+    "net": "BUS.rf_g3",
+    "kind": "rf",
+    "layer": "M1",
+    "width_um": 10,
+    "length_um": 86.276,
+    "pts": [
+     [
+      407.546,
+      279.276
+     ],
+     [
+      407.546,
+      193
+     ]
+    ]
+   },
+   {
+    "net": "BUS.rf_s4",
+    "kind": "rf",
+    "layer": "M1",
+    "width_um": 10,
+    "length_um": 47.122,
+    "pts": [
+     [
+      432.5,
+      279.286
+     ],
+     [
+      432.5,
+      326.408
+     ]
+    ]
+   },
+   {
+    "net": "BUS.rf_g4",
+    "kind": "rf",
+    "layer": "M1",
+    "width_um": 10,
+    "length_um": 41.286,
+    "pts": [
+     [
+      447.556,
+      279.286
+     ],
+     [
+      447.556,
+      238
+     ]
+    ]
+   },
+   {
+    "net": "BUS.rf_s5",
+    "kind": "rf",
+    "layer": "M1",
+    "width_um": 10,
+    "length_um": 92.111,
+    "pts": [
+     [
+      472.5,
+      279.297
+     ],
+     [
+      472.5,
+      371.408
+     ]
+    ]
+   },
+   {
+    "net": "BUS.rf_g5",
+    "kind": "rf",
+    "layer": "M1",
+    "width_um": 10,
+    "length_um": 86.297,
+    "pts": [
+     [
+      487.567,
+      279.297
+     ],
+     [
+      487.567,
+      193
+     ]
+    ]
+   },
+   {
+    "net": "BUS.rf_s6",
+    "kind": "rf",
+    "layer": "M1",
+    "width_um": 10,
+    "length_um": 47.1,
+    "pts": [
+     [
+      512.5,
+      279.308
+     ],
+     [
+      512.5,
+      326.408
+     ]
+    ]
+   },
+   {
+    "net": "BUS.rf_g6",
+    "kind": "rf",
+    "layer": "M1",
+    "width_um": 10,
+    "length_um": 41.308,
+    "pts": [
+     [
+      527.578,
+      279.308
+     ],
+     [
+      527.578,
+      238
+     ]
+    ]
+   },
+   {
+    "net": "BUS.rf_s7",
+    "kind": "rf",
+    "layer": "M1",
+    "width_um": 10,
+    "length_um": 92.089,
+    "pts": [
+     [
+      552.5,
+      279.319
+     ],
+     [
+      552.5,
+      371.408
+     ]
+    ]
+   },
+   {
+    "net": "BUS.rf_g7",
+    "kind": "rf",
+    "layer": "M1",
+    "width_um": 10,
+    "length_um": 86.319,
+    "pts": [
+     [
+      567.589,
+      279.319
+     ],
+     [
+      567.589,
+      193
+     ]
+    ]
+   },
+   {
+    "net": "BUS.h_p0",
+    "kind": "dc",
+    "layer": "M2",
+    "width_um": 5,
+    "length_um": 405.743,
+    "pts": [
+     [
+      261.487,
+      294.256
+     ],
+     [
+      261.487,
+      168
+     ],
+     [
+      75,
+      168
+     ],
+     [
+      75,
+      75
+     ]
+    ]
+   },
+   {
+    "net": "BUS.h_n0",
+    "kind": "dc",
+    "layer": "M2",
+    "width_um": 5,
+    "length_um": 382.769,
+    "pts": [
+     [
+      283.513,
+      294.256
+     ],
+     [
+      283.513,
+      158
+     ],
+     [
+      120,
+      158
+     ],
+     [
+      120,
+      75
+     ]
+    ]
+   },
+   {
+    "net": "BUS.h_p1",
+    "kind": "dc",
+    "layer": "M2",
+    "width_um": 5,
+    "length_um": 355.754,
+    "pts": [
+     [
+      301.476,
+      294.278
+     ],
+     [
+      301.476,
+      148
+     ],
+     [
+      165,
+      148
+     ],
+     [
+      165,
+      75
+     ]
+    ]
+   },
+   {
+    "net": "BUS.h_n1",
+    "kind": "dc",
+    "layer": "M2",
+    "width_um": 5,
+    "length_um": 332.802,
+    "pts": [
+     [
+      323.524,
+      294.278
+     ],
+     [
+      323.524,
+      138
+     ],
+     [
+      210,
+      138
+     ],
+     [
+      210,
+      75
+     ]
+    ]
+   },
+   {
+    "net": "BUS.h_p2",
+    "kind": "dc",
+    "layer": "M2",
+    "width_um": 5,
+    "length_um": 305.765,
+    "pts": [
+     [
+      341.465,
+      294.3
+     ],
+     [
+      341.465,
+      128
+     ],
+     [
+      255,
+      128
+     ],
+     [
+      255,
+      75
+     ]
+    ]
+   },
+   {
+    "net": "BUS.h_n2",
+    "kind": "dc",
+    "layer": "M2",
+    "width_um": 5,
+    "length_um": 282.835,
+    "pts": [
+     [
+      363.535,
+      294.3
+     ],
+     [
+      363.535,
+      118
+     ],
+     [
+      300,
+      118
+     ],
+     [
+      300,
+      75
+     ]
+    ]
+   },
+   {
+    "net": "BUS.h_p3",
+    "kind": "dc",
+    "layer": "M2",
+    "width_um": 5,
+    "length_um": 255.776,
+    "pts": [
+     [
+      381.454,
+      294.322
+     ],
+     [
+      381.454,
+      108
+     ],
+     [
+      345,
+      108
+     ],
+     [
+      345,
+      75
+     ]
+    ]
+   },
+   {
+    "net": "BUS.h_n3",
+    "kind": "dc",
+    "layer": "M2",
+    "width_um": 5,
+    "length_um": 232.868,
+    "pts": [
+     [
+      403.546,
+      294.322
+     ],
+     [
+      403.546,
+      98
+     ],
+     [
+      390,
+      98
+     ],
+     [
+      390,
+      75
+     ]
+    ]
+   },
+   {
+    "net": "BUS.h_p4",
+    "kind": "dc",
+    "layer": "M2",
+    "width_um": 5,
+    "length_um": 232.898,
+    "pts": [
+     [
+      421.444,
+      294.342
+     ],
+     [
+      421.444,
+      98
+     ],
+     [
+      435,
+      98
+     ],
+     [
+      435,
+      75
+     ]
+    ]
+   },
+   {
+    "net": "BUS.h_n4",
+    "kind": "dc",
+    "layer": "M2",
+    "width_um": 5,
+    "length_um": 255.786,
+    "pts": [
+     [
+      443.556,
+      294.342
+     ],
+     [
+      443.556,
+      108
+     ],
+     [
+      480,
+      108
+     ],
+     [
+      480,
+      75
+     ]
+    ]
+   },
+   {
+    "net": "BUS.h_p5",
+    "kind": "dc",
+    "layer": "M2",
+    "width_um": 5,
+    "length_um": 282.931,
+    "pts": [
+     [
+      461.433,
+      294.364
+     ],
+     [
+      461.433,
+      118
+     ],
+     [
+      525,
+      118
+     ],
+     [
+      525,
+      75
+     ]
+    ]
+   },
+   {
+    "net": "BUS.h_n5",
+    "kind": "dc",
+    "layer": "M2",
+    "width_um": 5,
+    "length_um": 305.797,
+    "pts": [
+     [
+      483.567,
+      294.364
+     ],
+     [
+      483.567,
+      128
+     ],
+     [
+      570,
+      128
+     ],
+     [
+      570,
+      75
+     ]
+    ]
+   },
+   {
+    "net": "BUS.h_p6",
+    "kind": "dc",
+    "layer": "M2",
+    "width_um": 5,
+    "length_um": 332.964,
+    "pts": [
+     [
+      501.422,
+      294.386
+     ],
+     [
+      501.422,
+      138
+     ],
+     [
+      615,
+      138
+     ],
+     [
+      615,
+      75
+     ]
+    ]
+   },
+   {
+    "net": "BUS.h_n6",
+    "kind": "dc",
+    "layer": "M2",
+    "width_um": 5,
+    "length_um": 355.808,
+    "pts": [
+     [
+      523.578,
+      294.386
+     ],
+     [
+      523.578,
+      148
+     ],
+     [
+      660,
+      148
+     ],
+     [
+      660,
+      75
+     ]
+    ]
+   },
+   {
+    "net": "BUS.h_p7",
+    "kind": "dc",
+    "layer": "M2",
+    "width_um": 5,
+    "length_um": 382.997,
+    "pts": [
+     [
+      541.411,
+      294.408
+     ],
+     [
+      541.411,
+      158
+     ],
+     [
+      705,
+      158
+     ],
+     [
+      705,
+      75
+     ]
+    ]
+   },
+   {
+    "net": "BUS.h_n7",
+    "kind": "dc",
+    "layer": "M2",
+    "width_um": 5,
+    "length_um": 405.819,
+    "pts": [
+     [
+      563.589,
+      294.408
+     ],
+     [
+      563.589,
+      168
+     ],
+     [
+      750,
+      168
+     ],
+     [
+      750,
+      75
+     ]
+    ]
+   }
+  ],
+  "pads": [
+   {
+    "id": "RF0_s",
+    "kind": "rf",
+    "x": 272.5,
+    "y": 326.408,
+    "w": 30,
+    "net": "BUS.rf_s0"
+   },
+   {
+    "id": "RF0_g",
+    "kind": "rf",
+    "x": 287.513,
+    "y": 238,
+    "w": 30,
+    "net": "BUS.rf_g0"
+   },
+   {
+    "id": "RF1_s",
+    "kind": "rf",
+    "x": 312.5,
+    "y": 371.408,
+    "w": 30,
+    "net": "BUS.rf_s1"
+   },
+   {
+    "id": "RF1_g",
+    "kind": "rf",
+    "x": 327.524,
+    "y": 193,
+    "w": 30,
+    "net": "BUS.rf_g1"
+   },
+   {
+    "id": "RF2_s",
+    "kind": "rf",
+    "x": 352.5,
+    "y": 326.408,
+    "w": 30,
+    "net": "BUS.rf_s2"
+   },
+   {
+    "id": "RF2_g",
+    "kind": "rf",
+    "x": 367.535,
+    "y": 238,
+    "w": 30,
+    "net": "BUS.rf_g2"
+   },
+   {
+    "id": "RF3_s",
+    "kind": "rf",
+    "x": 392.5,
+    "y": 371.408,
+    "w": 30,
+    "net": "BUS.rf_s3"
+   },
+   {
+    "id": "RF3_g",
+    "kind": "rf",
+    "x": 407.546,
+    "y": 193,
+    "w": 30,
+    "net": "BUS.rf_g3"
+   },
+   {
+    "id": "RF4_s",
+    "kind": "rf",
+    "x": 432.5,
+    "y": 326.408,
+    "w": 30,
+    "net": "BUS.rf_s4"
+   },
+   {
+    "id": "RF4_g",
+    "kind": "rf",
+    "x": 447.556,
+    "y": 238,
+    "w": 30,
+    "net": "BUS.rf_g4"
+   },
+   {
+    "id": "RF5_s",
+    "kind": "rf",
+    "x": 472.5,
+    "y": 371.408,
+    "w": 30,
+    "net": "BUS.rf_s5"
+   },
+   {
+    "id": "RF5_g",
+    "kind": "rf",
+    "x": 487.567,
+    "y": 193,
+    "w": 30,
+    "net": "BUS.rf_g5"
+   },
+   {
+    "id": "RF6_s",
+    "kind": "rf",
+    "x": 512.5,
+    "y": 326.408,
+    "w": 30,
+    "net": "BUS.rf_s6"
+   },
+   {
+    "id": "RF6_g",
+    "kind": "rf",
+    "x": 527.578,
+    "y": 238,
+    "w": 30,
+    "net": "BUS.rf_g6"
+   },
+   {
+    "id": "RF7_s",
+    "kind": "rf",
+    "x": 552.5,
+    "y": 371.408,
+    "w": 30,
+    "net": "BUS.rf_s7"
+   },
+   {
+    "id": "RF7_g",
+    "kind": "rf",
+    "x": 567.589,
+    "y": 193,
+    "w": 30,
+    "net": "BUS.rf_g7"
+   },
+   {
+    "id": "DC0_h_p",
+    "kind": "dc",
+    "x": 75,
+    "y": 75,
+    "w": 30,
+    "net": "BUS.h_p0"
+   },
+   {
+    "id": "DC0_h_n",
+    "kind": "dc",
+    "x": 120,
+    "y": 75,
+    "w": 30,
+    "net": "BUS.h_n0"
+   },
+   {
+    "id": "DC1_h_p",
+    "kind": "dc",
+    "x": 165,
+    "y": 75,
+    "w": 30,
+    "net": "BUS.h_p1"
+   },
+   {
+    "id": "DC1_h_n",
+    "kind": "dc",
+    "x": 210,
+    "y": 75,
+    "w": 30,
+    "net": "BUS.h_n1"
+   },
+   {
+    "id": "DC2_h_p",
+    "kind": "dc",
+    "x": 255,
+    "y": 75,
+    "w": 30,
+    "net": "BUS.h_p2"
+   },
+   {
+    "id": "DC2_h_n",
+    "kind": "dc",
+    "x": 300,
+    "y": 75,
+    "w": 30,
+    "net": "BUS.h_n2"
+   },
+   {
+    "id": "DC3_h_p",
+    "kind": "dc",
+    "x": 345,
+    "y": 75,
+    "w": 30,
+    "net": "BUS.h_p3"
+   },
+   {
+    "id": "DC3_h_n",
+    "kind": "dc",
+    "x": 390,
+    "y": 75,
+    "w": 30,
+    "net": "BUS.h_n3"
+   },
+   {
+    "id": "DC4_h_p",
+    "kind": "dc",
+    "x": 435,
+    "y": 75,
+    "w": 30,
+    "net": "BUS.h_p4"
+   },
+   {
+    "id": "DC4_h_n",
+    "kind": "dc",
+    "x": 480,
+    "y": 75,
+    "w": 30,
+    "net": "BUS.h_n4"
+   },
+   {
+    "id": "DC5_h_p",
+    "kind": "dc",
+    "x": 525,
+    "y": 75,
+    "w": 30,
+    "net": "BUS.h_p5"
+   },
+   {
+    "id": "DC5_h_n",
+    "kind": "dc",
+    "x": 570,
+    "y": 75,
+    "w": 30,
+    "net": "BUS.h_n5"
+   },
+   {
+    "id": "DC6_h_p",
+    "kind": "dc",
+    "x": 615,
+    "y": 75,
+    "w": 30,
+    "net": "BUS.h_p6"
+   },
+   {
+    "id": "DC6_h_n",
+    "kind": "dc",
+    "x": 660,
+    "y": 75,
+    "w": 30,
+    "net": "BUS.h_n6"
+   },
+   {
+    "id": "DC7_h_p",
+    "kind": "dc",
+    "x": 705,
+    "y": 75,
+    "w": 30,
+    "net": "BUS.h_p7"
+   },
+   {
+    "id": "DC7_h_n",
+    "kind": "dc",
+    "x": 750,
+    "y": 75,
+    "w": 30,
+    "net": "BUS.h_n7"
+   }
+  ]
+ },
+ "abstraction": {
+  "implants": "annotation layers (generic PDK)",
+  "rf_metal": "abstract CPW / pads, not foundry RF rules",
+  "termination": "on-chip resistor placeholder",
+  "not_tape_out_ready": true
+ },
+ "design_hash": "b40bddbf",
+ "design": {
+  "mod": 2,
+  "share": 0,
+  "edge": 50,
+  "fp": 127,
+  "rf": 1,
+  "rfSide": 0,
+  "pp": 100,
+  "bend": 1,
+  "R": 100,
+  "wr": 2,
+  "jog": 8,
+  "mon": 0,
+  "W": 0.9,
+  "H": 0.5,
+  "rp": 40,
+  "P": 127,
+  "stag": 0
+ }
+}

@@ -192,6 +192,18 @@ def _mrr(I: dict, Ly: dict, lay: dict) -> gf.Component:
     return c
 
 
+def _mrr_wdm(I: dict, Ly: dict, lay: dict) -> gf.Component:
+    """WDM8 shared bus (Phase E): eight 2-3R ring cells (one per distinct radius) on a Si bus, transitions at the two ends."""
+    p, loc = I["params"], I["params"]["local"]
+    c = gf.Component(f"smq_mrrwdm_{_hash(p)}")
+    for k, g in enumerate(p["rings"]):
+        ring, _ = pcells.ring_allpass(g, lay)
+        r = c << ring
+        r.dmove((loc["ring_x_um"][k], loc["ring_y_um"][k]))
+    _draw_local(c, loc.get("prims", []), Ly)
+    return c
+
+
 def _tap(I: dict, Ly: dict) -> gf.Component:
     p = I["params"]
     c = gf.Component(f"smq_tap_pd_{_hash(p)}")
@@ -202,7 +214,7 @@ def _tap(I: dict, Ly: dict) -> gf.Component:
 
 
 # ---------------------------------------------------------------- assembly
-_OWN = ("SMQ_PIC_", "smq_routes_", "smq_metal_", "smq_mzm_", "smq_mrrlane_", "smq_tap_pd_", "smq_ssc_", "smq_mmi_", "smq_ring_")
+_OWN = ("SMQ_PIC_", "smq_routes_", "smq_metal_", "smq_mzm_", "smq_mrrwdm_", "smq_mrrlane_", "smq_tap_pd_", "smq_ssc_", "smq_mmi_", "smq_ring_")
 
 
 def _fresh() -> None:
@@ -217,13 +229,14 @@ def build_circuit(L: dict, lay: dict) -> tuple[gf.Component, dict]:
         raise design.DesignError(f"schema must be {SCHEMA!r}, got {L.get('schema')!r}")
     _fresh()
     Ly, pf, arch, die = _layers(L, lay), L["platform"], L["architecture"], L["die"]
-    top = gf.Component(f"SMQ_PIC_{pf['id']}_{arch['modulator'].upper()}_DR8_{L.get('design_hash', _hash(L['instances']))}")
+    tag = "WDM8" if arch["modulator"] == "wdm" else f"{arch['modulator'].upper()}_DR8"
+    top = gf.Component(f"SMQ_PIC_{pf['id']}_{tag}_{L.get('design_hash', _hash(L['instances']))}")
     cells, refs = {}, {}
     for I in L["instances"]:
         key = I["type"] + _hash(I["params"])
         if key not in cells:
             cells[key] = {"ssc": lambda: _ssc(I, Ly), "mmi1x2": lambda: _mmi_cell(I["params"], Ly["core"]), "mzm": lambda: _mzm(I, Ly),
-                          "mrr": lambda: _mrr(I, Ly, lay), "tap_pd": lambda: _tap(I, Ly)}[I["type"]]()
+                          "mrr": lambda: _mrr(I, Ly, lay), "mrr_wdm": lambda: _mrr_wdm(I, Ly, lay), "tap_pd": lambda: _tap(I, Ly)}[I["type"]]()
         r = top << cells[key]
         pl = I["placement"]
         r.dcplx_trans = kdb.DCplxTrans(1.0, float(pl["rot_deg"]), False, pl["x_um"], pl["y_um"])
@@ -250,7 +263,7 @@ def build_circuit(L: dict, lay: dict) -> tuple[gf.Component, dict]:
     if Ly["fp"]:
         top.add_polygon([(0, 0), (die["W_um"], 0), (die["W_um"], die["H_um"]), (0, die["H_um"])], layer=tuple(Ly["fp"]))
     if Ly["label"]:
-        top.add_label(f"{SCHEMA} {pf['id']} 1.6T DR8 Tx {arch['modulator'].upper()} x8 · lasers {arch['lasers']} · hash {L.get('design_hash', '')} · ENGINEERING PROTOTYPE, NOT TAPE-OUT READY", position=(0, die["H_um"] + 20), layer=tuple(Ly["label"]))
+        top.add_label(f"{SCHEMA} {pf['id']} 1.6T {'WDM8 Tx MRR x8 shared bus' if arch['modulator'] == 'wdm' else 'DR8 Tx ' + arch['modulator'].upper() + ' x8'} · lasers {arch['lasers']} · hash {L.get('design_hash', '')} · ENGINEERING PROTOTYPE, NOT TAPE-OUT READY", position=(0, die["H_um"] + 20), layer=tuple(Ly["label"]))
         for I in L["instances"]:
             top.add_label(I["id"], position=(I["placement"]["x_um"], I["placement"]["y_um"]), layer=tuple(Ly["label"]))
     return top, {"cells": len(cells), "routes": info_routes, "refs": len(refs)}
@@ -281,7 +294,7 @@ def recheck(gds: Path, L: dict, lay: dict, info: dict) -> list[dict]:
     core = reg(Ly["core"])
     if tuple(Ly["si"]) != tuple(Ly["core"]):
         core = (core + reg(Ly["si"])).merged()  # heterogeneous Si devices on SiN: plan-view union (SiN/Si co-taper overlaps)
-    n_rings = kinds.get("mrr", 0)
+    n_rings = kinds.get("mrr", 0) + sum(len(I["params"]["rings"]) for I in L["instances"] if I["type"] == "mrr_wdm")
     n_taps = kinds.get("tap_pd", 0)
     expect = arch["lasers"] + n_rings + n_taps
     add("Connectivity", "광 코어 연결 조각 수", core.count() == expect, f"{core.count()}조각 = 레이저 {arch['lasers']} (트리+레인) + 링 {n_rings} + 탭 암 {n_taps} 기대 {expect}")
@@ -296,17 +309,20 @@ def recheck(gds: Path, L: dict, lay: dict, info: dict) -> list[dict]:
 
     back = {n["to"]: n["from"] for n in L["nets"]["optical"]}
     lane_ok = 0
-    for i in range(arch["lanes"]):
-        ep = f"OUT{i}.in"
+    outs = [I["id"] for I in L["instances"] if I["role"] == "output"]
+    for oid in outs:
+        ep = f"{oid}.in"
         while ep in back and not back[ep].startswith("IN"):
             ep = back[ep].split(".")[0] + ".in"
         src = back.get(ep, "").split(".")[0]
-        a = ports.get((src, "fib")), ports.get((f"OUT{i}", "fib"))
+        a = ports.get((src, "fib")), ports.get((oid, "fib"))
         if a[0] and a[1]:
             pa, pb = piece(_inward(a[0])), piece(_inward(a[1]))
             if pa is not None and pa == pb:
                 lane_ok += 1
-    add("Connectivity", "레인 경로 (입력 광섬유 단면 ↔ 출력 단면, 같은 도파로 조각)", lane_ok == arch["lanes"], f"{lane_ok}/{arch['lanes']} 레인")
+    n_out = arch.get("outputs", arch["lanes"])
+    add("Connectivity", "레인 경로 (입력 광섬유 단면 ↔ 출력 단면, 같은 도파로 조각)", lane_ok == n_out == len(outs),
+        f"{lane_ok}/{n_out} {'출력 (8파장 공유 버스)' if arch['modulator'] == 'wdm' else '레인'}")
     # every optical port has waveguide right behind it
     miss = []
     for (iid, name), q in ports.items():
@@ -374,7 +390,7 @@ def recheck(gds: Path, L: dict, lay: dict, info: dict) -> list[dict]:
     add("DRC", "다이 경계 (광 코어)", inside, f"코어 bbox [{bb.left * dbu:.1f}, {bb.bottom * dbu:.1f}, {bb.right * dbu:.1f}, {bb.top * dbu:.1f}] in {die['W_um']}×{die['H_um']} µm")
     # facets: 8 output waveguides reach the east edge
     east = sum(1 for I in L["instances"] if I["role"] == "output" and piece(_inward([q for q in I["ports"] if q["name"] == "fib"][0])) is not None)
-    add("Connectivity", "출력 단면 수 = 8 (동쪽 가장자리)", east == arch["lanes"], f"{east}")
+    add("Connectivity", f"출력 단면 수 = {n_out} (동쪽 가장자리)", east == n_out, f"{east}")
     # electrical (LVS-like on the abstract metal): every net — its line from the device contact to its pad — is one merged
     # piece of its layer (no open), and no piece carries two nets (no short)
     for kind, lname, label in (("rf", "m1", "RF 금속 (M1)"), ("dc", "m2", "DC 금속 (M2)")):
@@ -404,8 +420,8 @@ def recheck(gds: Path, L: dict, lay: dict, info: dict) -> list[dict]:
     add("Electrical", "패드·범프 수", len(L["routing"]["pads"]) == sum(1 for n in L["nets"]["electrical"] if n["kind"] in ("rf", "dc")), f"{len(L['routing']['pads'])}")
     add("Model validity", "능동층·금속·패드 추상화", True, "주입·히터·Ge·금속·종단은 주석 레이어 (Generic PDK) — 파운드리 규칙 검증 아님, Tape-out Ready 아님", status="NOT VERIFIED")
     if pf["mat"] == "sin":
-        het = [I for I in L["instances"] if I["type"] == "mrr" and I["params"].get("local", {}).get("prims")]
-        add("Model validity", "SiN ↔ Si 층간 전이", True, ("이종 Si 링 버스 양쪽에 SiN/Si 공동 테이퍼를 그림 (평면도, 층간 결합 손실·수직 간격 미계산) — " if het else "")
+        het = [I for I in L["instances"] if I["type"] in ("mrr", "mrr_wdm") and I["params"].get("local", {}).get("prims")]
+        add("Model validity", "SiN ↔ Si 층간 전이", True, ("이종 Si 링 버스 양 끝에 SiN/Si 공동 테이퍼를 그림 (평면도, 층간 결합 손실·수직 간격 미계산) — " if het else "")
             + "연결 검사는 SiN ∪ Si 평면 합집합", status="WARNING")
     return out
 
@@ -431,7 +447,7 @@ def preview(comp: gf.Component, L: dict, path: Path, checks: list) -> None:
     col = {(1, 0): "#2b6cb0", (34, 0): "#c05621", (41, 0): "#ecc94b", (45, 0): "#a0aec0", (47, 0): "#f6ad55", (5, 0): "#9f7aea", (49, 0): "#e53e3e",
            (3, 0): "#bee3f8", (20, 0): "#9ae6b4", (21, 0): "#fbb6ce"}
     order = [(64, 0), (45, 0), (41, 0), (3, 0), (21, 0), (20, 0), (1, 0), (34, 0), (47, 0), (5, 0), (49, 0)]
-    mod0 = [I for I in L["instances"] if I["id"] == "MOD0"][0]["bbox_um"]
+    mod0 = [I for I in L["instances"] if I["role"] == "modulator"][0]["bbox_um"]
     fig, axs = plt.subplots(1, 2, figsize=(14, 6.2), gridspec_kw={"width_ratios": [1.6, 1]})
     for k, ax in enumerate(axs):
         for lay_ in order:
@@ -449,18 +465,26 @@ def preview(comp: gf.Component, L: dict, path: Path, checks: list) -> None:
             ax.set_xlim(-0.02 * die["W_um"], 1.02 * die["W_um"])
             ax.set_ylim(-0.04 * die["H_um"], 1.04 * die["H_um"])
             ax.set_title("full die", fontsize=9)
+        elif L["architecture"]["modulator"] == "wdm":   # first three rings with their S / G bumps
+            bus = [I for I in L["instances"] if I["type"] == "mrr_wdm"][0]
+            x0 = bus["placement"]["x_um"] + bus["params"]["local"]["ring_x_um"][0] - bus["params"]["pitch_um"] * 0.7
+            ax.set_xlim(x0, x0 + bus["params"]["pitch_um"] * 3.2)
+            ax.set_ylim(mod0[1] - 95, mod0[3] + 95)
+            ax.set_title("shared bus, rings 0–2 with S (north) / G (south) bumps", fontsize=9)
         else:
             m = 30
             ax.set_xlim(mod0[0] - m, min(mod0[0] + max(250, (mod0[3] - mod0[1]) * 2.5), mod0[2] + m))
             ax.set_ylim(mod0[1] - m, mod0[3] + m)
-            ax.set_title("lane 0 modulator (zoom)", fontsize=9)
+            ax.set_title("WDM bus, rings 0–2 (zoom)" if L["architecture"]["modulator"] == "wdm" else "lane 0 modulator (zoom)", fontsize=9)
         ax.set_aspect("equal")
         ax.set_xlabel("x (µm)")
         ax.set_ylabel("y (µm)")
         ax.grid(alpha=0.15)
     a, pf = L["architecture"], L["platform"]
     n = {s: sum(1 for c in checks if c["status"] == s) for s in ("PASS", "WARNING", "FAIL", "NOT VERIFIED")}
-    fig.suptitle(f"{pf['id']} · 1.6T DR8 Tx PIC · {a['modulator'].upper()} ×8 · lasers {a['lasers']} (1:{a['laser_share']}) · die {die['W_um'] / 1000:.2f} × {die['H_um'] / 1000:.2f} mm · "
+    arch_s = (f"1.6T WDM8 Tx PIC · MRR ×8 on one bus · {a['wdm']['grid_GHz']} GHz · FSR {a['wdm']['fsr_nm']:.2f} nm" if a["modulator"] == "wdm"
+              else f"1.6T DR8 Tx PIC · {a['modulator'].upper()} ×8 · lasers {a['lasers']} (1:{a['laser_share']})")
+    fig.suptitle(f"{pf['id']} · {arch_s} · die {die['W_um'] / 1000:.2f} × {die['H_um'] / 1000:.2f} mm · "
                  f"GDS re-check PASS {n['PASS']} / WARNING {n['WARNING']} / FAIL {n['FAIL']} / NOT VERIFIED {n['NOT VERIFIED']} · engineering prototype, not tape-out ready", fontsize=9.5)
     fig.tight_layout()
     fig.savefig(path, dpi=140)
