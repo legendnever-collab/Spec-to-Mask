@@ -96,7 +96,9 @@ KINDS.mrr = (() => {
     const tabN = pnTab(pf, pnD, null), tab = proc ? pnTab(pf, pnD, proc) : tabN;
     const V = [0, 1, 2, 3].map((k) => d.vb + d.vpp * k / 3), Vm = d.vb + d.vpp / 2;
     const dn = V.map((v) => ETA * tab.at(tab.dn, v)), dnN0 = ETA * tabN.at(tabN.dn, d.vb);
-    const H = heater(pf, x, hd), lamL = lam + (env.sL || 0) * 1e-6;
+    // env.gs: thermal-model sensitivity only (v1.0 comparison panels) — scales the ring's thermal conductance G′, so heater power
+    // (∝ G′), self-heating (∝ 1/G′) and the thermal loop gain move together; the drawn ring (designLayout) is unchanged
+    const H0 = heater(pf, x, hd), H = env.gs && env.gs !== 1 ? { ...H0, Gp: H0.Gp * env.gs, Ppi: H0.Ppi * env.gs, P2pi: H0.P2pi * env.gs } : H0, lamL = lam + (env.sL || 0) * 1e-6;
     // radius: explicit, slider, or the design layout (order-m resonance placed for the temperature range; process-free)
     const R = env.R || (env.noAlign || env.natural ? d.R : designLayout(l, d).R), L = 2 * Math.PI * R;
     const lay = env.R || env.noAlign || env.natural ? { R, m: Math.max(1, Math.round(L * (x.neff + dn[0]) / lam)), resid: 0 } : designLayout(l, d);
@@ -251,7 +253,7 @@ KINDS.mrr = (() => {
   /* ---------- full analysis ---------- */
   function analyse(l, d, proc, opt) {
     opt = opt || {};
-    const c = core(l, d, { proc, R: opt.R, noAlign: opt.noAlign, natural: opt.natural, sL: opt.sL, lamR0: opt.lamR0, Pin: opt.Pin });
+    const c = core(l, d, { proc, R: opt.R, noAlign: opt.noAlign, natural: opt.natural, sL: opt.sL, lamR0: opt.lamR0, Pin: opt.Pin, gs: opt.gs });
     const s = statics(c), eo = eoResp(c);
     const eye = opt.noEye ? null : eyeSim(c, eo);
     const pen = !eye ? 0 : eye.ratio > 0.02 && s.mono ? Math.max(0, -10 * Math.log10(Math.min(1, eye.ratio))) : 17;
@@ -604,6 +606,7 @@ KINDS.mrr = (() => {
       if (c.ob2 && c.fab && c.fab.yield < l.fab.y) return { h: '공정 오차에 공진 위치가 흔들립니다', b: `다이마다 폭·두께 오차로 공진이 수 nm씩 움직입니다(∂λ/∂t ≈ ${f2(r.c.x.dndt * r.c.lam / r.c.x.ng, 2)} nm/nm). 히터가 빨강 쪽으로만 옮길 수 있으므로 배치 여유 Δλ<sub>b</sub>로 분포의 가운데를 맞추고, FSR을 넓혀(반경↓) 한 FSR 안의 히터 전력을 줄이세요.` };
       return null;
     },
+    compareRows: (l, r) => [['OMA (외곽)', r.omaDbm, 'dBm', 2, 'hi', 'semi'], ['눈 페널티', r.pen, 'dB', 2, 'lo', 'semi'], ['삽입 손실 (동작점)', r.IL, 'dB', 2, 'lo', 'semi'], ['EO 대역폭', r.bw, 'GHz', 1, 'hi', 'semi'], ['히터 (0–70 °C 최악)', r.PhW, 'mW', 1, 'lo', 'semi'], ['에너지 (구동 + 열)', r.Etot, 'fJ/bit', 0, 'lo', 'semi'], ['열 루프 이득 g_th', r.gth, '', 2, 'lo', 'semi'], ['면적', r.area, 'µm²', 0, 'lo', 'an']],
     card(l, r) { return { kind: 'mrr', lines: [`EO ${f2(r.bw, 1)} GHz · IL ${f2(r.IL, 1)} dB · R ${r.Rlay.toFixed(2)} µm`, `OMA ${f2(r.omaDbm, 1)} dBm @${PIN} dBm · 페널티 ${f2(r.pen, 1)} dB · 히터 ${f2(r.PhW, 1)} mW`],
       model: { bw: +r.bw.toFixed(1), il: +r.IL.toFixed(2), gain: +(r.omaDbm - PIN).toFixed(2), pen: +r.pen.toFixed(2), R: r.Rlay, g: r.d.g, fsr: +(r.fsr * 1e3).toFixed(3), QL: Math.round(r.QL), er: +r.er.toFixed(2), ph: +r.PhW.toFixed(2), pha: +r.PhA.toFixed(2), p2pi: +r.P2pi.toFixed(2), eb: +r.Ebit.toFixed(2), eth: +r.Eth.toFixed(1), area: Math.round(r.area), dldT: +(r.dldTpm).toFixed(1), cj: +r.Cj.toFixed(2), vpp: r.d.vpp } }; },
     aiStarts: (l) => [l.start, { ...l.start, g: 0.18, det: -0.5, vpp: 1.5 }],
@@ -651,7 +654,7 @@ KINDS.mrr = (() => {
     const title = 'MZM vs MRR 비교 — 같은 112 GBd PAM4 · 13 dBm 입력 · 0–70 °C · 같은 링크 요구';
     if (!ctx.stars && !ctx.hasCard) return { title, html: '<p class="note">2-3R에서 ★를 달성하면(또는 2-3R 카드가 있으면) 이 자리에 2-3 TW-MZM과의 같은 조건 비교가 열립니다. 비교는 점수에 들어가지 않습니다.</p>' };
     const c = compare(l, r, ctx.run); if (!c) return null;
-    if (c.pending) return { title, html: `<p class="note" style="margin:0 0 8px">지금 설계(R ${r.Rlay.toFixed(2)} µm)를 2-3 TW-MZM과 같은 조건에서 비교합니다. 공정 몬테카를로(61 다이 × 두 변조기)를 포함해 1–2초 걸립니다.</p><div class="row-btns"><button class="btn pri" data-xp-run="1">같은 조건으로 비교 계산</button></div>` };
+    if (c.pending) return { title, html: `<p class="note" style="margin:0 0 8px">지금 설계(R ${r.Rlay.toFixed(2)} µm)를 2-3 TW-MZM과 같은 조건에서 비교합니다. 공정 몬테카를로(같은 웨이퍼 69 다이 × 두 변조기, 시드 1067)를 포함해 1–2초 걸립니다.</p><div class="row-btns"><button class="btn pri" data-xp-run="1">같은 조건으로 비교 계산</button></div>` };
     const m = c.m, fmt = (v, k) => (Number.isFinite(v) ? (+v).toFixed(k == null ? 1 : k) : '—');
     // differences inside the model's resolution are ties (abs. tolerance for dB, relative 5 % for GHz / fJ / area, 3 points for yield)
     const win = (a, b, better, tol) => { const t = tol == null ? 0.05 * Math.max(Math.abs(a), Math.abs(b)) : tol; if (Math.abs(a - b) <= t) return -1; return better === 'hi' ? (a > b ? 0 : 1) : (a < b ? 0 : 1); };
@@ -666,7 +669,7 @@ KINDS.mrr = (() => {
       ['열 제어 에너지 (평균)', `${fmt(c.EthM, 1)} fJ/bit`, `${fmt(c.EthR, 1)} fJ/bit`, win(c.EthM, c.EthR, 'lo'), 'semi', `MZM 바이어스 히터 평균 P<sub>π</sub>/4 (P<sub>π</sub> ${fmt(c.PpiB, 1)} mW, 균형 팔: 온도 무관) · MRR: 0–70 °C × 공정 몬테카를로 평균`],
       ['비트당 에너지 합계', `${fmt(c.Emzm + c.EthM, 1)} fJ/bit`, `${fmt(r.Ebit + c.EthR, 1)} fJ/bit`, win(c.Emzm + c.EthM, r.Ebit + c.EthR, 'lo'), 'semi', '레이저(같은 13 dBm 입력)·DSP 제외'],
       ['±5 K 드리프트 (락 꺼짐) OMA 손실', '≈ 0 dB (균형 팔)', `${fmt(c.d5, 1)} dB`, c.d5 < -0.1 ? 0 : -1, 'semi', '열 견고성'],
-      ['Fab 수율 (같은 웨이퍼 61 다이)', `${fmt(c.yM * 100, 0)} %`, `${fmt(c.yR * 100, 0)} %`, win(c.yM, c.yR, 'hi', 0.03), 'semi', '각 레벨 자신의 ★★★ 판정 (MRR은 히터 예산·온도 포함)'],
+      ['Fab 수율 (같은 웨이퍼 · 시드 1067 · 69 다이, Monte Carlo 추정)', `${fmt(c.yM * 100, 0)} %`, `${fmt(c.yR * 100, 0)} %`, win(c.yM, c.yR, 'hi', 0.03), 'semi', '각 레벨 자신의 ★★★ 판정 (MRR은 히터 예산·온도 포함)'],
       [`공통 링크 요구 (2-3 ★★: 페널티 ≤ ${fmtT(c.req.pen)} dB, OMA ≥ ${dbm(c.req.oma)} dBm)`, c.passM ? '충족' : '미달', c.passR ? '충족' : '미달', c.passM && !c.passR ? 0 : c.passR && !c.passM ? 1 : -1, 'semi', '']
     ];
     const B = { an: 'Analytical', semi: 'Physics-informed Surrogate', asm: 'Unverified Assumption' };

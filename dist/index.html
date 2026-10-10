@@ -45,12 +45,12 @@ button{font:inherit;color:inherit}
 
 /* grid */
 .game{display:grid;gap:12px;grid-template-columns:minmax(0,1fr);
-  grid-template-areas:"mission" "view" "params" "spec" "xp" "fab" "ai" "db" "cards"}
+  grid-template-areas:"mission" "view" "params" "spec" "xp" "cmp" "fab" "ai" "db" "cards"}
 @media (min-width:920px){
   .game{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);
-    grid-template-areas:"mission params" "view params" "spec fab" "xp xp" "ai db" "cards cards"}
+    grid-template-areas:"mission params" "view params" "spec fab" "xp xp" "cmp cmp" "ai db" "cards cards"}
   /* the controls stay beside the field while the mission text and the view scroll */
-  .game.stepping{grid-template-areas:"mission params" "view params" "spec spec" "xp xp" "cards cards"}
+  .game.stepping{grid-template-areas:"mission params" "view params" "spec spec" "xp xp" "cmp cmp" "cards cards"}
   #params{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
 }
 .game.stepping #fab,.game.stepping #ai,.game.stepping #db{display:none}
@@ -140,6 +140,12 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 /* spectrum */
 #spec{grid-area:spec}
 #xpanel{grid-area:xp}
+#cmpcard{grid-area:cmp}
+.fab-repro{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px;font-family:var(--mono);font-size:11.5px;color:var(--fg-2);line-height:1.7}
+.fab-repro b{color:var(--fg);font-weight:500}
+.fab-repro .row-btns{margin-top:6px}
+.fab-repro .btn{font-family:var(--body);font-size:12px;padding:6px 10px}
+.dlt-up{color:var(--pass)} .dlt-dn{color:var(--fail)} .dlt-0{color:var(--fg-3)}
 .cmp td.win{color:var(--pass);font-weight:600}
 .cmp th[scope=row]{font-weight:500;color:var(--fg)}
 .legend{display:flex;gap:12px;flex-wrap:wrap;font-family:var(--mono);font-size:11.5px;color:var(--fg-2);margin:-4px 0 6px}
@@ -270,6 +276,8 @@ details.sect[open] > summary{margin-bottom:10px}
 .concepts summary{cursor:pointer;padding:8px 11px;font-size:13px;color:var(--amber)}
 .concepts dl{margin:0;padding:0 12px 10px;display:grid;gap:6px}
 .concepts dt{font-weight:600;font-size:12.5px;color:var(--fg)}
+
+.ratedef{margin:0;padding:0 12px 10px;font-size:12.5px;color:var(--fg-2);line-height:1.6;max-width:80ch}
 .concepts dd{margin:0;font-size:12.5px;color:var(--fg-2);line-height:1.6;max-width:72ch}
 .valid{margin:10px 0 0;border:1px solid rgba(100,201,223,.45);border-radius:8px;background:var(--panel-2)}
 .valid summary{cursor:pointer;padding:8px 11px;font-size:13px;color:var(--cyan)}
@@ -399,6 +407,15 @@ details.sect[open] > summary{margin-bottom:10px}
 .roles div b{display:block;color:var(--fg);font-size:12.5px}
 @media (max-width:600px){.gdlg-back{padding:0}.gdlg{height:100vh;height:100dvh;border-radius:0;border:0}.gdlg-h h2{font-size:19px}}
 @media (prefers-reduced-motion:reduce){.bar > i{transition:none}}
+/* model confidence badges (shape + text) */
+.conf{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:10.5px;line-height:1.3;border:1px solid var(--line-2);border-radius:999px;padding:1px 7px;background:transparent;color:var(--fg-2);cursor:pointer;white-space:nowrap}
+.conf:hover{border-color:var(--fg-2)}
+.conf-an{color:#5dd193}.conf-semi{color:#64c9df}.conf-exp{color:#e7ecf3;border-style:solid}.conf-asm{color:#f2b04a;border-style:dashed}.conf-nv{color:#9eabbd;border-style:dotted}
+.conf-legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-family:var(--mono);font-size:11px;color:var(--fg-2);margin:6px 0}
+.conf-legend b{font-weight:400;color:var(--fg)} .conf-legend .conf-hint{color:var(--fg-3);font-family:var(--body)}
+.tsens{margin-top:10px;border-top:1px dashed var(--line);padding-top:10px}
+.tsens h4{margin:0 0 6px;font-size:13.5px;color:var(--fg)}
+.cmp th.grp{background:var(--panel-2);color:var(--cyan);font-size:12px;letter-spacing:.03em;text-align:left}
 /* save state chip, failure banner, data dialog */
 .savechip{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--panel);color:var(--fg-2);cursor:pointer}
 .savechip .sv-dot{width:8px;height:8px;border-radius:50%;background:var(--pass)}
@@ -460,6 +477,7 @@ details.sect[open] > summary{margin-bottom:10px}
       <div class="name" id="m-name"></div>
       <p class="brief" id="m-brief"></p>
       <details class="concepts" id="m-concepts" hidden></details>
+      <details class="concepts" id="m-rate" hidden><summary>1.6T 속도 정의 — 112 GBd · 224 Gb/s 라인 · 200 Gb/s 데이터 · FEC</summary><p class="ratedef" id="m-rate-b"></p></details>
       <div class="locked-note" id="m-locked" hidden></div>
       <div class="objs" id="objs"></div>
       <div id="m-next"></div>
@@ -508,6 +526,11 @@ details.sect[open] > summary{margin-bottom:10px}
       <div id="xp-body"></div>
     </section>
 
+    <section class="card" id="cmpcard" hidden aria-live="polite">
+      <h2><span class="n">02±</span>기준 설계와 비교 (Baseline)</h2>
+      <div id="cmp-body"></div>
+    </section>
+
     <section class="card" id="fab">
       <h2><span class="n">03</span>Fab Run · 보스 스테이지</h2>
       <div class="fab-body">
@@ -522,6 +545,7 @@ details.sect[open] > summary{margin-bottom:10px}
         <button class="btn pri" id="btn-fab">Tape-out</button>
       </div>
       <p class="note" id="fab-note"></p>
+      <div class="fab-repro" id="fab-repro"></div>
     </section>
 
     <section class="card" id="ai">
@@ -853,12 +877,24 @@ async function smqDownload(name, text, mime) {
   if (cap) { try { await cap.save({ filename: name, data: text }); return { ok: true, how: 'viewer' }; } catch (e) { return { ok: false, how: e && e.code === 'declined' ? 'declined' : 'blocked' }; } }
   try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: mime || 'application/json' })); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000); return { ok: true, how: 'blob' }; } catch (e) { return { ok: false, how: 'blocked' }; }
 }
+// model-confidence vocabulary shared by every panel (v1.0 §7.7). Shape + text, never colour alone; PASS/FAIL keep their own badges.
+const CONF = {
+  an: ['◆', 'Analytical', '해석식·정의(근사 없이 계산되는 관계)'],
+  semi: ['◇', 'Physics-informed Surrogate', '물리 모델·사전계산 테이블로 계산한 근사값'],
+  exp: ['●', 'Experimental Reference', '문헌 측정값 — 조건(소자·공정)이 게임 소자와 다를 수 있음'],
+  asm: ['△', 'Unverified Assumption', '대표값으로 둔 가정 — 검증하지 않음'],
+  nv: ['○', 'NOT VERIFIED', '이 프로그램이 검사하지 않은 항목 (PASS가 아님)']
+};
+const confBadge = (k, short) => { const c = CONF[k] || CONF.asm; return `<button type="button" class="conf conf-${k}" data-conf="${k}" title="${c[1]} — ${c[2]} (누르면 학습 가이드의 모델 한계)"><span aria-hidden="true">${c[0]}</span> ${short ? c[1].split(' ')[0] : c[1]}</button>`; };
+const confLegend = (keys) => `<div class="conf-legend" role="note" aria-label="모델 신뢰도 범례">${(keys || Object.keys(CONF)).map((k) => `<span><b aria-hidden="true">${CONF[k][0]}</b> ${CONF[k][1]}</span>`).join('')}<span class="conf-hint">PASS/FAIL은 그 모델의 조건을 만족했는지이지, 제조 가능성 검증이 아닙니다.</span></div>`;
 
 // ===== Persistence: one place that writes localStorage, reports save state, and makes / checks / restores full backups =====
 // Every write goes through SMQ_STORE.set, which returns false and flips the state to 'failed' when the browser refuses
 // (quota, private mode, blocked storage). Nothing is retried silently: the header shows the state and the data dialog
 // offers a full backup. The backup is one versioned JSON (smq-backup/1) of every key the game owns.
 const BUILD = (typeof SMQ_BUILD !== 'undefined' && SMQ_BUILD) || { version: '1.0.0', channel: 'dev', commit: null, date: null, offline: false };
+// model identity recorded with every Fab Run: same design + seed + model version → the same wafer result
+const MODEL_VERSION = 'smq-model-1.0';
 const SMQ_STORE = (() => {
   const W = typeof window !== 'undefined' ? window : null;
   const LS = () => (W ? W.localStorage : null);
@@ -2996,7 +3032,9 @@ KINDS.mrr = (() => {
     const tabN = pnTab(pf, pnD, null), tab = proc ? pnTab(pf, pnD, proc) : tabN;
     const V = [0, 1, 2, 3].map((k) => d.vb + d.vpp * k / 3), Vm = d.vb + d.vpp / 2;
     const dn = V.map((v) => ETA * tab.at(tab.dn, v)), dnN0 = ETA * tabN.at(tabN.dn, d.vb);
-    const H = heater(pf, x, hd), lamL = lam + (env.sL || 0) * 1e-6;
+    // env.gs: thermal-model sensitivity only (v1.0 comparison panels) — scales the ring's thermal conductance G′, so heater power
+    // (∝ G′), self-heating (∝ 1/G′) and the thermal loop gain move together; the drawn ring (designLayout) is unchanged
+    const H0 = heater(pf, x, hd), H = env.gs && env.gs !== 1 ? { ...H0, Gp: H0.Gp * env.gs, Ppi: H0.Ppi * env.gs, P2pi: H0.P2pi * env.gs } : H0, lamL = lam + (env.sL || 0) * 1e-6;
     // radius: explicit, slider, or the design layout (order-m resonance placed for the temperature range; process-free)
     const R = env.R || (env.noAlign || env.natural ? d.R : designLayout(l, d).R), L = 2 * Math.PI * R;
     const lay = env.R || env.noAlign || env.natural ? { R, m: Math.max(1, Math.round(L * (x.neff + dn[0]) / lam)), resid: 0 } : designLayout(l, d);
@@ -3151,7 +3189,7 @@ KINDS.mrr = (() => {
   /* ---------- full analysis ---------- */
   function analyse(l, d, proc, opt) {
     opt = opt || {};
-    const c = core(l, d, { proc, R: opt.R, noAlign: opt.noAlign, natural: opt.natural, sL: opt.sL, lamR0: opt.lamR0, Pin: opt.Pin });
+    const c = core(l, d, { proc, R: opt.R, noAlign: opt.noAlign, natural: opt.natural, sL: opt.sL, lamR0: opt.lamR0, Pin: opt.Pin, gs: opt.gs });
     const s = statics(c), eo = eoResp(c);
     const eye = opt.noEye ? null : eyeSim(c, eo);
     const pen = !eye ? 0 : eye.ratio > 0.02 && s.mono ? Math.max(0, -10 * Math.log10(Math.min(1, eye.ratio))) : 17;
@@ -3504,6 +3542,7 @@ KINDS.mrr = (() => {
       if (c.ob2 && c.fab && c.fab.yield < l.fab.y) return { h: '공정 오차에 공진 위치가 흔들립니다', b: `다이마다 폭·두께 오차로 공진이 수 nm씩 움직입니다(∂λ/∂t ≈ ${f2(r.c.x.dndt * r.c.lam / r.c.x.ng, 2)} nm/nm). 히터가 빨강 쪽으로만 옮길 수 있으므로 배치 여유 Δλ<sub>b</sub>로 분포의 가운데를 맞추고, FSR을 넓혀(반경↓) 한 FSR 안의 히터 전력을 줄이세요.` };
       return null;
     },
+    compareRows: (l, r) => [['OMA (외곽)', r.omaDbm, 'dBm', 2, 'hi', 'semi'], ['눈 페널티', r.pen, 'dB', 2, 'lo', 'semi'], ['삽입 손실 (동작점)', r.IL, 'dB', 2, 'lo', 'semi'], ['EO 대역폭', r.bw, 'GHz', 1, 'hi', 'semi'], ['히터 (0–70 °C 최악)', r.PhW, 'mW', 1, 'lo', 'semi'], ['에너지 (구동 + 열)', r.Etot, 'fJ/bit', 0, 'lo', 'semi'], ['열 루프 이득 g_th', r.gth, '', 2, 'lo', 'semi'], ['면적', r.area, 'µm²', 0, 'lo', 'an']],
     card(l, r) { return { kind: 'mrr', lines: [`EO ${f2(r.bw, 1)} GHz · IL ${f2(r.IL, 1)} dB · R ${r.Rlay.toFixed(2)} µm`, `OMA ${f2(r.omaDbm, 1)} dBm @${PIN} dBm · 페널티 ${f2(r.pen, 1)} dB · 히터 ${f2(r.PhW, 1)} mW`],
       model: { bw: +r.bw.toFixed(1), il: +r.IL.toFixed(2), gain: +(r.omaDbm - PIN).toFixed(2), pen: +r.pen.toFixed(2), R: r.Rlay, g: r.d.g, fsr: +(r.fsr * 1e3).toFixed(3), QL: Math.round(r.QL), er: +r.er.toFixed(2), ph: +r.PhW.toFixed(2), pha: +r.PhA.toFixed(2), p2pi: +r.P2pi.toFixed(2), eb: +r.Ebit.toFixed(2), eth: +r.Eth.toFixed(1), area: Math.round(r.area), dldT: +(r.dldTpm).toFixed(1), cj: +r.Cj.toFixed(2), vpp: r.d.vpp } }; },
     aiStarts: (l) => [l.start, { ...l.start, g: 0.18, det: -0.5, vpp: 1.5 }],
@@ -3551,7 +3590,7 @@ KINDS.mrr = (() => {
     const title = 'MZM vs MRR 비교 — 같은 112 GBd PAM4 · 13 dBm 입력 · 0–70 °C · 같은 링크 요구';
     if (!ctx.stars && !ctx.hasCard) return { title, html: '<p class="note">2-3R에서 ★를 달성하면(또는 2-3R 카드가 있으면) 이 자리에 2-3 TW-MZM과의 같은 조건 비교가 열립니다. 비교는 점수에 들어가지 않습니다.</p>' };
     const c = compare(l, r, ctx.run); if (!c) return null;
-    if (c.pending) return { title, html: `<p class="note" style="margin:0 0 8px">지금 설계(R ${r.Rlay.toFixed(2)} µm)를 2-3 TW-MZM과 같은 조건에서 비교합니다. 공정 몬테카를로(61 다이 × 두 변조기)를 포함해 1–2초 걸립니다.</p><div class="row-btns"><button class="btn pri" data-xp-run="1">같은 조건으로 비교 계산</button></div>` };
+    if (c.pending) return { title, html: `<p class="note" style="margin:0 0 8px">지금 설계(R ${r.Rlay.toFixed(2)} µm)를 2-3 TW-MZM과 같은 조건에서 비교합니다. 공정 몬테카를로(같은 웨이퍼 69 다이 × 두 변조기, 시드 1067)를 포함해 1–2초 걸립니다.</p><div class="row-btns"><button class="btn pri" data-xp-run="1">같은 조건으로 비교 계산</button></div>` };
     const m = c.m, fmt = (v, k) => (Number.isFinite(v) ? (+v).toFixed(k == null ? 1 : k) : '—');
     // differences inside the model's resolution are ties (abs. tolerance for dB, relative 5 % for GHz / fJ / area, 3 points for yield)
     const win = (a, b, better, tol) => { const t = tol == null ? 0.05 * Math.max(Math.abs(a), Math.abs(b)) : tol; if (Math.abs(a - b) <= t) return -1; return better === 'hi' ? (a > b ? 0 : 1) : (a < b ? 0 : 1); };
@@ -3566,7 +3605,7 @@ KINDS.mrr = (() => {
       ['열 제어 에너지 (평균)', `${fmt(c.EthM, 1)} fJ/bit`, `${fmt(c.EthR, 1)} fJ/bit`, win(c.EthM, c.EthR, 'lo'), 'semi', `MZM 바이어스 히터 평균 P<sub>π</sub>/4 (P<sub>π</sub> ${fmt(c.PpiB, 1)} mW, 균형 팔: 온도 무관) · MRR: 0–70 °C × 공정 몬테카를로 평균`],
       ['비트당 에너지 합계', `${fmt(c.Emzm + c.EthM, 1)} fJ/bit`, `${fmt(r.Ebit + c.EthR, 1)} fJ/bit`, win(c.Emzm + c.EthM, r.Ebit + c.EthR, 'lo'), 'semi', '레이저(같은 13 dBm 입력)·DSP 제외'],
       ['±5 K 드리프트 (락 꺼짐) OMA 손실', '≈ 0 dB (균형 팔)', `${fmt(c.d5, 1)} dB`, c.d5 < -0.1 ? 0 : -1, 'semi', '열 견고성'],
-      ['Fab 수율 (같은 웨이퍼 61 다이)', `${fmt(c.yM * 100, 0)} %`, `${fmt(c.yR * 100, 0)} %`, win(c.yM, c.yR, 'hi', 0.03), 'semi', '각 레벨 자신의 ★★★ 판정 (MRR은 히터 예산·온도 포함)'],
+      ['Fab 수율 (같은 웨이퍼 · 시드 1067 · 69 다이, Monte Carlo 추정)', `${fmt(c.yM * 100, 0)} %`, `${fmt(c.yR * 100, 0)} %`, win(c.yM, c.yR, 'hi', 0.03), 'semi', '각 레벨 자신의 ★★★ 판정 (MRR은 히터 예산·온도 포함)'],
       [`공통 링크 요구 (2-3 ★★: 페널티 ≤ ${fmtT(c.req.pen)} dB, OMA ≥ ${dbm(c.req.oma)} dBm)`, c.passM ? '충족' : '미달', c.passR ? '충족' : '미달', c.passM && !c.passR ? 0 : c.passR && !c.passM ? 1 : -1, 'semi', '']
     ];
     const B = { an: 'Analytical', semi: 'Physics-informed Surrogate', asm: 'Unverified Assumption' };
@@ -3870,17 +3909,17 @@ KINDS.xcvr = (() => {
   const xtPen = (xt) => -10 * Math.log10(Math.max(0.05, 1 - 3 * Math.pow(10, xt / 10)));
   // ----- DR8 microring lane: 2-3R engine at the module's modulator input power (cached) -----
   const RINGC = new Map();
-  function ringAt(p, Pmod) {
-    const key = p.ring.l.pf.id + JSON.stringify(p.ring.d) + JSON.stringify(p.ring.l.ref || {}) + '|' + Pmod.toFixed(2);
+  function ringAt(p, Pmod, gs) {
+    const key = p.ring.l.pf.id + JSON.stringify(p.ring.d) + JSON.stringify(p.ring.l.ref || {}) + '|' + Pmod.toFixed(2) + (gs && gs !== 1 ? '|g' + gs.toFixed(4) : '');
     let r = RINGC.get(key);
-    if (!r) { r = KINDS.mrr._x.analyse(p.ring.l, p.ring.d, null, { Pin: Pmod }); if (RINGC.size > 600) RINGC.clear(); RINGC.set(key, r); }
+    if (!r) { r = KINDS.mrr._x.analyse(p.ring.l, p.ring.d, null, gs && gs !== 1 ? { Pin: Pmod, gs } : { Pin: Pmod }); if (RINGC.size > 600) RINGC.clear(); RINGC.set(key, r); }
     return r;
   }
   // optics on a 0.5 dB input-power grid, linear in between (the eye simulation is the expensive part; gain, penalty and loop gain
   // vary smoothly with input power), so Fab Run dies with scattered laser power reuse the cached grid points
   const PG = 0.5;
-  function ringOpt(p, Pmod) {
-    const a = Math.floor(Pmod / PG) * PG, f = (Pmod - a) / PG, r0 = ringAt(p, a), r1 = ringAt(p, a + PG), mix = (x, y) => x + (y - x) * f;
+  function ringOpt(p, Pmod, gs) {
+    const a = Math.floor(Pmod / PG) * PG, f = (Pmod - a) / PG, r0 = ringAt(p, a, gs), r1 = ringAt(p, a + PG, gs), mix = (x, y) => x + (y - x) * f;
     return { gain: mix(r0.omaDbm - a, r1.omaDbm - a - PG), pen: mix(r0.pen, r1.pen), gth: mix(r0.gth, r1.gth), Ebit: r0.Ebit, P2pi: r0.P2pi, omaDyn: mix(r0.omaDynDbm - a, r1.omaDynDbm - a - PG), r: f < 0.5 ? r0 : r1 };
   }
   // ring resonance sensitivity to the die's width / Si-thickness offsets (linear; checked against the full core in test/t_dr8.js)
@@ -3893,8 +3932,8 @@ KINDS.xcvr = (() => {
   }
   const procShift = (p, proc) => { if (!proc) return 0; const s = ringSens(p), pf = p.ring.l.pf; return s.w * (proc.dw || 0) + s.t * (proc.dt || 0) * 0.006 / (pf.dt || 0.006); };   // µm
   // ring heater power (mW) at case temperature T: red-only, one FSR reaches the next order; the laser moves by dλ_DFB/dT when uncooled
-  function ringHeat(l, p, Pmod, proc, T, tc, dLas) {
-    const c = KINDS.mrr._x.core(p.ring.l, p.ring.d, { Pin: Pmod }), fsr = c.B.fsr, dl = (tc ? 0 : DLAS(l.pf) * 1e-3 * (T - 25)) + (dLas || 0) * 1e-3;
+  function ringHeat(l, p, Pmod, proc, T, tc, dLas, gs) {
+    const c = KINDS.mrr._x.core(p.ring.l, p.ring.d, gs && gs !== 1 ? { Pin: Pmod, gs } : { Pin: Pmod }), fsr = c.B.fsr, dl = (tc ? 0 : DLAS(l.pf) * 1e-3 * (T - 25)) + (dLas || 0) * 1e-3;
     const s = c.lamOp + dl - c.unheated(T) - procShift(p, proc);
     return (((s % fsr) + fsr) % fsr) / fsr * c.H.P2pi;
   }
@@ -3902,7 +3941,8 @@ KINDS.xcvr = (() => {
   // driver: same driver class as the MZM (pk.drv) minus the load-energy difference vs the 2-3 reference TW-MZM (terminated line V²/R_T
   // vs ring C·V²); the driver IC's own overhead dominates either way
   function mzmLoadE() { const l23 = gl('2-3'); if (!l23) return 0; const m = KINDS.mzm.evaluate(l23, l23.ref); return 2 * (m.v0 * m.v0 / 4) * (5 / 9) / l23.ref.RT / BIT; }
-  function analyse(l, d, proc) {
+  function analyse(l, d, proc, opt) {
+    const gs = opt && opt.gs;   // thermal-model sensitivity (G′ scale) for the comparison panel only; scores never pass it
     const g = (k) => (proc ? gaussLike(proc, k) : 0), p = parts(l, d), F = fr4(l), si = l.pf.mat === 'si';
     const share = SH[l.arch][d.share | 0], nLas = LANES / share, tc = d.tc | 0, pk = F ? PKG[0] : PKG[d.pkg | 0], mlse = F && (d.dsp | 0) === 1;
     const chan = F ? 4.0 + (l.pf.lam > 1.4 ? 1.0 : 0.3) : 3.0 + (l.pf.lam > 1.4 ? 0.6 : 0.2);
@@ -3928,7 +3968,7 @@ KINDS.xcvr = (() => {
       const { Pmod, tpa, split } = pmodAt(T);
       // ring optics at the nominal process: the lock holds the design detuning on every die, like the MZM part the module only adds the
       // ±0.3 dB modulation spread below; the die's process shift reaches the module through the ring heater (ringHeat)
-      const ring = p.ring ? ringOpt(p, Pmod) : null, gain = ring ? ring.gain : p.gain, mpen = ring ? ring.pen : p.pen;
+      const ring = p.ring ? ringOpt(p, Pmod, gs) : null, gain = ring ? ring.gain : p.gain, mpen = ring ? ring.pen : p.pen;
       const oma = Pmod + gain + (proc ? 0.3 * g(4) : 0);
       for (let c = 0; c < chs; c++) {
         const il = F ? m.il[c] + resid[c] : 0, xt = F ? m.xt[c] : -60;
@@ -3949,8 +3989,8 @@ KINDS.xcvr = (() => {
       // every ring is locked at its design detuning; heater = worst case temperature of the 0–70 °C range, nominal process
       // (Fab Run: the die's ring process shift and the laser wavelength tolerance)
       const dLas = proc ? LAS_SIG * g(5) : 0, ref = corners.find((c) => c.T === THI).ring;
-      const hs = TGRID.map((T) => ringHeat(l, p, pmodAt(T).Pmod, proc, T, tc, dLas)), Eload = mzmLoadE(), Er = ref.Ebit * 1e-15;
-      const rr = ringOpt(p, pmodAt(THI).Pmod).r;
+      const hs = TGRID.map((T) => ringHeat(l, p, pmodAt(T).Pmod, proc, T, tc, dLas, gs)), Eload = mzmLoadE(), Er = ref.Ebit * 1e-15;
+      const rr = ringOpt(p, pmodAt(THI).Pmod, gs).r;
       ringH = { max: Math.max(...hs), mean: hs.reduce((a, b) => a + b, 0) / hs.length, P2pi: ref.P2pi, Eload: Eload * 1e15, Er: Er * 1e15, dLas,
         eff: rr.fsr * 1e6 / rr.P2pi, selfK: rr.selfK, R: rr.Rlay, h: rr.c.hd.h, iso: rr.c.hd.iso | 0 };
       biasW = LANES * ringH.max / 1000; drvLane = pk.drv - (Eload - Er) * BIT; ctrl += LANES * RLOCK / 1000;
@@ -4059,9 +4099,10 @@ KINDS.xcvr = (() => {
       if (c.ob2 && c.fab && c.fab.yield < l.fab.y) return { h: '양산·환경 코너에서 탈락하는 모듈이 있습니다', b: '레이저 노화와 결합 오차, 다이마다 다른 Demux 트리밍 결과가 겹치면 공칭 마진이 금방 사라집니다. 마진 여유를 1 dB 이상 확보하세요.' };
       return null;
     },
+    compareRows: (l, r) => [['최악 레인 마진', r.margin, 'dB', 2, 'hi', 'semi'], ['모듈 전력', r.pw, 'W', 2, 'lo', 'semi'], ['비트당 에너지', r.pj, 'pJ/bit', 2, 'lo', 'semi'], ['히터 (8레인)', r.PW.heat, 'W', 3, 'lo', 'semi'], ['레이저 (전력)', r.PW.laser + r.PW.tec, 'W', 2, 'lo', 'asm'], ['레이저 수', r.nLas, '개', 0, null, 'an']].concat(r.mrr ? [['링 히터 (레인 최악)', r.ringH.max, 'mW', 1, 'lo', 'semi']] : []),
     card(l, r) { return { kind: 'xcvr', lines: [`마진 ${f2(r.margin, 2)} dB @ ${cornerTxt(l, r.worst)}`, `${f2(r.pw, 1)} W · ${f2(r.pj, 1)} pJ/bit · 레이저 ${r.nLas}개${fr4(l) ? '' : r.mrr ? ' · MRR' : ' · MZM'}`], model: { margin: +r.margin.toFixed(2), pw: +r.pw.toFixed(2), pj: +r.pj.toFixed(2), nLas: r.nLas, mod: fr4(l) ? 'mzm' : r.mrr ? 'mrr' : 'mzm' } }; },
     aiStarts: (l) => [l.start, fr4(l) ? { ...l.start, P: 16, share: 1, mt: 1 } : { ...l.start, P: 17, share: 2, pkg: 2 }].concat(fr4(l) ? [] : [{ ...l.start, P: 16, share: 1, pkg: 2, mod: 1 }]),
-    _x: { analyse, parts, mux, muxDrift, PKG, SH, ringAt, ringOpt, ringHeat, ringSens, procShift, mzmLoadE, DLAS, LAS_SIG, RLOCK, MODS }
+    _x: { thermalSens, analyse, parts, mux, muxDrift, PKG, SH, ringAt, ringOpt, ringHeat, ringSens, procShift, mzmLoadE, DLAS, LAS_SIG, RLOCK, MODS }
   };
 
   /* ---------- DR8: MZM ×8 vs MRR ×8 in the same architecture (laser count / power, TEC, packaging) ---------- */
@@ -4072,6 +4113,38 @@ KINDS.xcvr = (() => {
     const dies = makeWafer(11 * 97, 1), out = {};
     for (const mod of [0, 1]) { let n = 0, ok = 0, hs = []; for (const die of dies) { const r = analyse(l, { ...d, mod }, die); n++; if (K.fabPass(l, r)) ok++; if (r.ringH) hs.push(r.ringH.max); } out[mod] = { y: ok / n, hmax: hs.length ? Math.max(...hs) : 0, hmin: hs.length ? Math.min(...hs) : 0 }; }
     if (XPC.size > 20) XPC.clear(); XPC.set(key, out); return out;
+  }
+  /* ---------- MRR thermal-model sensitivity (v1.0 §4.1): the same engine with the ring's thermal conductance G′ re-scaled ----------
+     nominal = the 2-1 cross-section G′ around the circumference (optimistic: no 3D spread or lead loss);
+     conservative = G′ raised until the ring reaches 160 pm/mW (upper end reported for un-isolated rings; an engineering assumption);
+     experimental reference = 73 pm/mW measured by Yuan et al. 2024 on a different ring (R 12 µm, no isolation).
+     Heater power, self-heating, loop gain and module power are recomputed, not scaled after the fact. Never part of the score. */
+  const TSC = new Map(), TS_REF = [['nom', null, 'Nominal model', 'semi'], ['cons', 160, 'Conservative (160 pm/mW)', 'asm'], ['exp', 73, 'Experimental ref. (73 pm/mW)', 'exp']];
+  function thermalSens(l, d) {
+    const key = l.pf.id + JSON.stringify(d) + JSON.stringify(Object.keys(cards())); if (TSC.has(key)) return TSC.get(key);
+    const mz = analyse(l, { ...d, mod: 0 }), b0 = analyse(l, { ...d, mod: 1 }), eff0 = b0.ringH.eff;
+    const rows = TS_REF.map(([id, eff, name, conf]) => {
+      const gs = eff ? Math.max(1, eff0 / eff) : 1, b = gs === 1 ? b0 : analyse(l, { ...d, mod: 1 }, null, { gs });
+      return { id, name, conf, gs, eff: b.ringH.eff, heat: b.ringH.max, heatW: b.PW.heat, selfK: b.ringH.selfK, gth: b.gth, stable: b.stable, pw: b.pw, pj: b.pj, margin: b.margin, dPw: b.pw - mz.pw };
+    });
+    const out = { rows, mzm: { pw: mz.pw, pj: mz.pj, heatW: mz.PW.heat } };
+    if (TSC.size > 20) TSC.clear(); TSC.set(key, out); return out;
+  }
+  function thermalHTML(l, d) {
+    const t = thermalSens(l, d), R = t.rows, mx = Math.max(t.mzm.pw, ...R.map((x) => x.pw)) * 1.08;
+    const bar = (v, c) => `<span style="display:inline-block;height:8px;width:${Math.max(2, 100 * v / mx).toFixed(1)}px;background:${c};border-radius:2px;vertical-align:middle;margin-right:6px"></span>`;
+    const tr = (k, f, conf) => `<tr><th scope="row">${k}</th>${R.map(f).map((v) => `<td>${v}</td>`).join('')}<td>${conf ? confBadge(conf, true) : ''}</td></tr>`;
+    return `<div class="tsens"><h4>MRR 열 민감도 (Thermal Sensitivity) — 같은 엔진, 링 열 컨덕턴스 G′만 바꿔 다시 계산</h4>
+      <div class="gtbl"><table class="cmp"><tr><th>항목</th>${R.map((x) => `<th>${x.name}<br>${confBadge(x.conf, true)}</th>`).join('')}<th>근거</th></tr>
+      ${tr('히터 효율', (x) => `${f2(x.eff, 0)} pm/mW${x.gs > 1 ? ` <span class="note">(G′ ×${f2(x.gs, 2)})</span>` : ''}`)}
+      ${tr('링 히터 (레인, 0–70 °C 최악)', (x) => `${f2(x.heat, 1)} mW`, 'semi')}
+      ${tr('국부 온도 상승 (자기 가열)', (x) => `${f2(x.selfK, 1)} K`, 'semi')}
+      ${tr('열 되먹임 안정 (루프 이득 g<sub>th</sub>)', (x) => `${f2(x.gth, 2)} ${x.stable ? '· 안정' : '· <b class="st-FAIL">열 폭주</b>'}`, 'semi')}
+      ${tr('모듈 전력', (x) => `${bar(x.pw, '#64c9df')}${f2(x.pw, 2)} W`, 'semi')}
+      ${tr('비트당 에너지', (x) => `${f2(x.pj, 2)} pJ/b`, 'semi')}
+      ${tr('MZM ×8 대비 모듈 전력', (x) => `${x.dPw >= 0 ? '+' : ''}${f2(x.dPw, 2)} W`, 'semi')}
+      </table></div>
+      <p class="note">MZM ×8: ${bar(t.mzm.pw, '#f2b04a')}${f2(t.mzm.pw, 2)} W · ${f2(t.mzm.pj, 2)} pJ/b (열 효율과 무관 — 균형 MZI 바이어스). 마진은 세 경우 모두 같습니다(락이 디튜닝을 유지). <b>읽는 법:</b> G′가 커지면(효율↓) 히터 전력은 늘고 자기 가열·루프 이득은 줄어 열적으로는 더 안정해집니다 — MRR의 전력 이점은 링 열 격리가 실제로 얼마나 되는지에 달려 있습니다. Conservative는 문헌의 격리 없는 링 상한을 가정한 보수 추정, Experimental ref.는 다른 링(Yuan 2024, R 12 µm)의 측정 효율을 이 링에 적용한 참고값이며, 둘 다 이 링의 측정값이 아닙니다. 별·점수·보정에는 쓰지 않습니다.</p></div>`;
   }
   function panel(l, r, ctx) {
     if (fr4(l)) return null;
@@ -4094,16 +4167,16 @@ KINDS.xcvr = (() => {
       ['레이저 파장 허용', '넓음 (균형 MZI)', `히터가 한 FSR 안에서 추적 (P<sub>2π</sub> ${f2(b.ringH.P2pi, 1)} mW)`, 0, 'semi', `Fab: 다이 공정 이동 + 레이저 파장 σ ${LAS_SIG} nm 가정`],
       [`★ (마진 ≥ ${f2(l.s1.margin, 1)} dB · ≤ ${fmtT(l.s1.pw)} W)`, r1(l, a) <= 1 ? '충족' : '미달', r1(l, b) <= 1 ? '충족' : '미달', -1, 'semi', ''],
       [`★★ (마진 ≥ ${f2(l.s2.margin, 1)} dB · ≤ ${fmtT(l.s2.pw)} W)`, r2(l, a) <= 1 ? '충족' : '미달', r2(l, b) <= 1 ? '충족' : '미달', r2(l, a) <= 1 && r2(l, b) > 1 ? 0 : r2(l, b) <= 1 && r2(l, a) > 1 ? 1 : -1, 'semi', ''],
-      ['Fab 수율 (61 다이)', y ? `${Math.round(y[0].y * 100)} %` : '—', y ? `${Math.round(y[1].y * 100)} %${y[1].hmax ? ` · 히터 ${f2(y[1].hmin, 1)}–${f2(y[1].hmax, 1)} mW` : ''}` : '—', y ? win(y[0].y, y[1].y, true, 0.03) : -1, 'semi', '이 레벨의 ★★★ 판정']
+      ['Fab 수율 (같은 웨이퍼 · 시드 1067 · 69 다이, Monte Carlo 추정)', y ? `${Math.round(y[0].y * 100)} %` : '—', y ? `${Math.round(y[1].y * 100)} %${y[1].hmax ? ` · 히터 ${f2(y[1].hmin, 1)}–${f2(y[1].hmax, 1)} mW` : ''}` : '—', y ? win(y[0].y, y[1].y, true, 0.03) : -1, 'semi', '이 레벨의 ★★★ 판정']
     ];
     const td = (v, w) => `<td class="${w ? 'win' : ''}">${v}</td>`;
-    const tb = rows.map(([k, x, z, w, f, note]) => `<tr><th scope="row">${k}${note ? `<br><span class="note">${note}</span>` : ''}</th>${td(x, w === 0)}${td(z, w === 1)}<td><span class="badge2 b-${f}">${B[f]}</span></td></tr>`).join('');
+    const tb = rows.map(([k, x, z, w, f, note]) => `<tr><th scope="row">${k}${note ? `<br><span class="note">${note}</span>` : ''}</th>${td(x, w === 0)}${td(z, w === 1)}<td>${confBadge(f, true)}</td></tr>`).join('');
     const nm = (w) => rows.filter((x) => x[3] === w).map((x) => x[0].replace(/<[^>]+>/g, '').replace(/ \(.*$/, ''));
     const tie = () => rows.filter((x) => x[3] === -1 && /dB|W/.test(x[1] + x[2]) && !/^변조기 입력|^★|^Fab|링 열 효율/.test(x[0])).map((x) => x[0].replace(/<[^>]+>/g, '').replace(/ \(.*$/, ''));
     return { title, html: `<p class="note" style="margin:0 0 8px">지금 고른 변조기: <b>${r.modName}</b>. 레이저·냉각·패키징은 그대로 두고 변조기만 바꿔 같은 엔진으로 계산합니다. 점수에는 들어가지 않습니다.</p>
       <div class="gtbl"><table class="cmp"><tr><th>항목</th><th>MZM ×8</th><th>MRR ×8</th><th>근거</th></tr>${tb}</table></div>
       <p class="note"><b>MZM이 유리:</b> ${nm(0).join(' · ') || '—'}<br><b>MRR이 유리:</b> ${nm(1).join(' · ') || '—'}${tie().length ? `<br><b>비슷 (모델 분해능 이내):</b> ${tie().join(' · ')}` : ''}<br>DR8에서는 레인마다 광섬유가 따로라 링끼리 파장을 나눌 필요가 없습니다 — 링의 숙제는 레인별 히터·락과 레이저 드리프트 추적뿐입니다. 파장 다중화(WDM8)는 공진 배정·크로스토크·FSR 별칭이 더해지는 다른 아키텍처입니다.</p>`
-      + (y ? '' : '<div class="row-btns"><button class="btn" data-xp-run="1">Fab 수율까지 비교 (61 다이 × 두 변조기)</button></div>') };
+      + (y ? '' : '<div class="row-btns"><button class="btn" data-xp-run="1">Fab 수율까지 비교 (같은 웨이퍼 69 다이 × 두 변조기)</button></div>') + thermalHTML(l, d) + confLegend(['an', 'semi', 'exp', 'asm']) };
   }
   K.panel = (l, r, ctx) => panel(l, r, ctx);
   return K;
@@ -4248,7 +4321,7 @@ KINDS.wdm = (() => {
     const pf = l.pf.mat === 'si' ? l.pf : Object.values(PLATFORMS).find((q) => q.mat === 'si' && Math.abs(q.lam - l.pf.lam) < 1e-6) || l.pf;
     return KINDS.spiral._x.xs(pf, r.c.xN.w).alpha;   // dB/cm
   }
-  function channels(l, p, d, Pline, proc, g) {
+  function channels(l, p, d, Pline, proc, g, ov) {   // ov: assumption overrides for the robustness panel only ({ rxXT })
     const pk = PKG(), si = l.pf.mat === 'si', dl = dlam(l, d), R = d.R, gi = d.grid | 0;
     const cpl = p.ssc + p.cplx + ((d.src | 0) ? MUX_IL : 0) + (proc ? 0.4 * g(2) : 0);
     const Pchip = Pline.map((v) => v - cpl), Ptot = Pchip.reduce((s, v) => s + mW(v), 0);
@@ -4262,7 +4335,7 @@ KINDS.wdm = (() => {
       const IL = (k, j) => -10 * Math.log10(Math.max(1e-9, Tm[k][j].reduce((a, b) => a + b, 0) / 4));
       Pin = Pchip.map((v, j) => { let s = v - tpa - ab * (j + 0.5); for (let k = 0; k < j; k++) s -= IL(k, j); return s; });
       if (pass) {
-        const fsr = opt[0].c.B.fsr, epsRx = Math.pow(10, RXD.xt[gi] / 10), chan = 3.0 + (l.pf.lam > 1.4 ? 0.6 : 0.2);
+        const fsr = opt[0].c.B.fsr, epsRx = Math.pow(10, (ov && ov.rxXT != null ? ov.rxXT : RXD.xt[gi]) / 10), chan = 3.0 + (l.pf.lam > 1.4 ? 0.6 : 0.2);
         return Pin.map((pin, j) => {
           const o = opt[j], own = Tm[j][j], m = Math.abs(own[3] - own[0]);
           let after = 0, eps = 0, alias = Infinity;
@@ -4283,22 +4356,23 @@ KINDS.wdm = (() => {
     return null;
   }
   /* ---------- the module ---------- */
-  function analyse(l, d, proc) {
-    const g = (k) => (proc ? gaussLike(proc, k) : 0), p = parts(l, d), pk = PKG(), dl = dlam(l, d), R = d.R, src = d.src | 0;
-    const tilt = (j) => (src ? 0 : -TILT * Math.pow((j - (N - 1) / 2) / ((N - 1) / 2), 2));
+  // ov (robustness panel only, never the score): { tilt (dB), rxXT (dB), kScale (thermal coupling ×) }
+  function analyse(l, d, proc, ov) {
+    const g = (k) => (proc ? gaussLike(proc, k) : 0), p = parts(l, d), pk = PKG(), dl = dlam(l, d), R = d.R, src = d.src | 0, TL = ov && ov.tilt != null ? ov.tilt : TILT;
+    const tilt = (j) => (src ? 0 : -TL * Math.pow((j - (N - 1) / 2) / ((N - 1) / 2), 2));
     let Pline = Array.from({ length: N }, (_, j) => d.P + tilt(j) + (proc ? (src ? 0.2 : 0.3) * g(20 + j) : 0));
-    let ch = channels(l, p, d, Pline, proc, g);
+    let ch = channels(l, p, d, Pline, proc, g, ov);
     if (src) {   // DFB array: trim each laser so the channel margins come out equal at the same total optical power
       const c = ch.map((x) => x.margin - x.Pline), tot = Pline.reduce((s, v) => s + mW(v), 0);
       let lo = d.P - 20, hi = d.P + 20;
       for (let it = 0; it < 60; it++) { const mu = (lo + hi) / 2, s = c.reduce((a, cj) => a + mW(clamp(mu - cj, d.P - 4, d.P + 4)), 0); if (s > tot) hi = mu; else lo = mu; }
       Pline = c.map((cj) => clamp((lo + hi) / 2 - cj, d.P - 4, d.P + 4));
-      ch = channels(l, p, d, Pline, proc, g);
+      ch = channels(l, p, d, Pline, proc, g, ov);
     }
     const worst = ch.reduce((a, b) => (b.margin < a.margin ? b : a)), o0 = ch[0].o, c0 = o0.c;
     // locking context (nominal process unless Fab)
     const fsr = c0.B.fsr, eff = fsr / o0.P2pi, Rk = radii(l, d, o0.r), pitch = Math.max(d.pitch, pmin(R));
-    const K = Array.from({ length: N }, (_, j) => Array.from({ length: N }, (_, k) => (j === k ? 0 : kappa(c0, Math.abs(j - k) * pitch))));
+    const K = Array.from({ length: N }, (_, j) => Array.from({ length: N }, (_, k) => (j === k ? 0 : kappa(c0, Math.abs(j - k) * pitch) * (ov && ov.kScale ? ov.kScale : 1))));
     const oc = { fsr, eff, o: c0.B.lamOpX(0) - c0.B.lamL, dldT: c0.dldT, bm: (p.ring.d.bm || 0) * 1e-3, K, Rk, dl };
     const loc = proc ? Array.from({ length: N }, (_, k) => LOC_SIG * 1e-3 * g(40 + k)) : null;
     const H = heaters(l, d, oc, procShift(p, R, proc), loc);
@@ -4420,6 +4494,7 @@ KINDS.wdm = (() => {
       if (c.ob2 && c.fab && c.fab.yield < l.fab.y) return { h: '양산 다이에서 탈락하는 모듈이 있습니다', b: `다이마다 링 공진이 공정으로 수 nm씩 함께 움직이고(공통), 링끼리도 σ ${LOC_SIG} nm 어긋납니다. 순환 배정은 공통 이동을 채널 간격 단위로 흡수하지만 링 간 불일치와 FSR − 8Δλ 차이는 히터가 맡습니다. 마진·전력 여유를 확보하세요.` };
       return null;
     },
+    compareRows: (l, r) => [['최악 채널 마진', r.margin, 'dB', 2, 'hi', 'semi'], ['광엔진 전력', r.pw, 'W', 2, 'lo', 'semi'], ['비트당 에너지', r.pj, 'pJ/bit', 2, 'lo', 'semi'], ['링 히터 합', r.H.tot, 'mW', 0, 'lo', 'semi'], ['FSR', r.fsr * 1e3, 'nm', 2, null, 'an'], ['FSR 별칭 채널', r.aliased.length, '개', 0, 'lo', 'semi']],
     card(l, r) { const d = r.d || {}; return { kind: 'wdm', lines: [`마진 ${f2(r.margin, 2)} dB @ λ${r.worst.j} · ${GRID[d.grid | 0]} GHz`, `${f2(r.pw, 2)} W · ${f2(r.pj, 2)} pJ/bit · FSR ${nmS(r.fsr)} nm · 히터 ${f2(r.H.tot, 0)} mW`], model: { margin: +r.margin.toFixed(2), pw: +r.pw.toFixed(3), pj: +r.pj.toFixed(3), grid: GRID[d.grid | 0], R: d.R, fsr: +(r.fsr * 1000).toFixed(3), heat: +r.H.tot.toFixed(1), Rk: r.Rk.map((x) => x.R), pitch: Math.max(d.pitch, pmin(d.R)) } }; },
     aiStarts: (l) => [l.start, { ...l.start, grid: 0 }, { ...l.start, grid: 0, rad: 1, asg: 1 }],
     _x: { analyse, parts, channels, heaters, lockSolve, radii, resp, kappa, dlam, pmin, GRID, SRC, ASG, RAD, TILT, LOC_SIG, HMAX, RXD, MUX_IL, COMB_WPE, N }
@@ -4440,8 +4515,42 @@ KINDS.wdm = (() => {
       ['엔진 전력 · pJ/bit', `${f2(dr.pw, 2)} W · ${f2(dr.pj, 2)}`, `${f2(r.pw, 2)} W · ${f2(r.pj, 2)}`, 'semi', 'DC-DC 포함, 같은 CPO 상수'],
       ['Rx', 'PD ×8 (광섬유마다)', `Demux (IL ${RXD.il} dB, XT ${RXD.xt[d.grid | 0]} dB 가정) → PD ×8`, 'asm', '']
     ];
-    const tb = rows.map(([k, a, b, f, n]) => `<tr><th scope="row">${k}${n ? `<br><span class="note">${n}</span>` : ''}</th><td>${a}</td><td>${b}</td><td><span class="badge2 b-${f}">${B[f]}</span></td></tr>`).join('');
-    return { title: `같은 부품으로: MRR DR8 (3A+ · CPO) vs MRR WDM8 (이 설계)`, html: `<p class="note" style="margin:0 0 8px">3A+는 기준 설계를 링 ×8 · CPO로 바꿔 같은 엔진으로 계산합니다. 점수에는 들어가지 않습니다.</p><div class="gtbl"><table class="cmp"><tr><th>항목</th><th>MRR DR8</th><th>MRR WDM8</th><th>근거</th></tr>${tb}</table></div><p class="note">WDM8은 광섬유·커넥터를 1/8로 줄이는 대신, 링이 한 버스를 나눠 쓰면서 생기는 문제(공진 배정, 이웃 링 크로스토크, FSR 별칭, 히터 열 결합, 다파장 광원의 선 세기 차이)를 설계로 풀어야 합니다.</p>` };
+    const tb = rows.map(([k, a, b, f, n]) => `<tr><th scope="row">${k}${n ? `<br><span class="note">${n}</span>` : ''}</th><td>${a}</td><td>${b}</td><td>${confBadge(f, true)}</td></tr>`).join('');
+    return { title: `같은 부품으로: MRR DR8 (3A+ · CPO) vs MRR WDM8 (이 설계)`, html: `<p class="note" style="margin:0 0 8px">3A+는 기준 설계를 링 ×8 · CPO로 바꿔 같은 엔진으로 계산합니다. 점수에는 들어가지 않습니다.</p><div class="gtbl"><table class="cmp"><tr><th>항목</th><th>MRR DR8</th><th>MRR WDM8</th><th>근거</th></tr>${tb}</table></div><p class="note">WDM8은 광섬유·커넥터를 1/8로 줄이는 대신, 링이 한 버스를 나눠 쓰면서 생기는 문제(공진 배정, 이웃 링 크로스토크, FSR 별칭, 히터 열 결합, 다파장 광원의 선 세기 차이)를 설계로 풀어야 합니다.</p>` + confidence(l, r) };
+  }
+  /* ---------- what this WDM8 result does and does not rest on (v1.0 §4.2) ---------- */
+  const CAUTION_DB = 1.0;   // educational heuristic for "thin margin" — not a foundry or standard requirement
+  const RBC = new Map();
+  function robust(l, d) {
+    const key = l.pf.id + JSON.stringify(d); if (RBC.has(key)) return RBC.get(key);
+    const base = analyse(l, d), gi = d.grid | 0;
+    const cases = [
+      ['Rx Demux 크로스토크 5 dB 나쁨', { rxXT: RXD.xt[gi] + 5 }, `가정 ${RXD.xt[gi]} → ${RXD.xt[gi] + 5} dB`],
+      ...((d.src | 0) ? [] : [['콤 선 세기 기울기 +1 dB', { tilt: TILT + 1 }, `가정 ${TILT} → ${TILT + 1} dB`]]),
+      ['링 간 열 결합 ×2 (3D 확산 불확도)', { kScale: 2 }, '2-1 단면 프로파일 × 2']
+    ].map(([name, ov, how]) => { const r = analyse(l, d, null, ov); return { name, how, dm: r.margin - base.margin, dh: r.H.tot - base.H.tot, lockOK: r.lockOK }; });
+    const out = { base, cases }; if (RBC.size > 30) RBC.clear(); RBC.set(key, out); return out;
+  }
+  function confidence(l, r) {
+    const d = r.d || {}, R = robust(l, d), w = r.worst, head = (h) => `<tr><th colspan="3" class="grp">${h}</th></tr>`;
+    const row = (k, v, c, n) => `<tr><th scope="row">${k}${n ? `<br><span class="note">${n}</span>` : ''}</th><td>${v}</td><td>${confBadge(c, true)}</td></tr>`;
+    const thin = r.margin < CAUTION_DB;
+    return `<div class="tsens"><h4>WDM8 결과의 근거 — 광학 모델 · 제어 구조 · 시스템 견고성</h4>`
+      + (thin ? `<p class="note" style="color:var(--amber)">△ 주의: 최악 채널 마진 ${f2(r.margin, 2)} dB &lt; ${CAUTION_DB} dB — 아래 가정 하나만 나빠져도 링크가 닫힐 수 있습니다 (임계값 ${CAUTION_DB} dB는 교육용 휴리스틱이며 파운드리·표준 요구값이 아닙니다).</p>` : '')
+      + `<div class="gtbl"><table class="cmp"><tr><th>항목</th><th>값</th><th>근거</th></tr>`
+      + head('Optical Model — 계산된 광학')
+      + row('최악 채널 마진', `${f2(r.margin, 2)} dB (λ${w.j})`, 'semi', '버스 위 링 8개의 all-pass 응답 곱 + PAM4 눈')
+      + row('FSR 별칭', r.aliased.length ? `<b class="st-FAIL">${r.aliased.length}채널</b>` : '없음', 'semi', `FSR ${nmS(r.fsr)} nm vs 8·Δλ ${nmS(r.span)} nm`)
+      + row('이웃 링 크로스토크 (최악 채널)', `${f2(w.xtdB, 1)} dB → 페널티 ${f2(w.xtp, 2)} dB`, 'semi', '')
+      + head('Control Architecture — 링 락')
+      + row('락 방식', '정적 락 가정: 온도마다 최적 배정을 즉시 선택', 'asm', (d.asg | 0) ? '순환(배럴) 배정 — 재배정 순간의 링크 중단은 계산하지 않음' : '고정 배정')
+      + row('히터 범위', `${r.lockOK ? '충분' : '<b class="st-FAIL">부족</b>'} (최악 ${f2(r.H.max, 1)} mW ≤ ${HMAX} × P<sub>2π</sub> ${f2(r.P2pi, 1)} mW)`, 'semi', '')
+      + row('링별 모니터 PD', '기본 설계에 없음 (Lab WDM8: NOT VERIFIED)', 'nv', '락 신호를 어디서 얻는지는 검증하지 않음')
+      + row('동적 락 획득 · 재락 중단 · 락 루프 상호작용', 'NOT VERIFIED', 'nv', '락 동역학 시뮬레이터 없음 — 정적 결과만')
+      + head('System Robustness — 가정이 바뀌면')
+      + R.cases.map((c) => row(c.name, `마진 ${c.dm >= 0 ? '+' : ''}${f2(c.dm, 2)} dB${Math.abs(c.dh) > 0.05 ? ` · 히터 합 ${c.dh >= 0 ? '+' : ''}${f2(c.dh, 1)} mW` : ''}${c.lockOK ? '' : ' · <b class="st-FAIL">락 범위 초과</b>'}`, 'asm', c.how)).join('')
+      + row('열 모델', '2-1 2D 단면 프로파일 (긴 히터) — 점 열원인 링에는 상한', 'asm', '3D 열해석 필요 (NOT VERIFIED)')
+      + `</table></div>${confLegend(['semi', 'asm', 'nv'])}</div>`;
   }
   K.panel = (l, r) => panel(l, r);
   return K;
@@ -6460,7 +6569,7 @@ const LEVELS = [
       ['결합과 Q', 't = a에서 Critical coupling(골 깊이 최대). Q<sub>L</sub>는 선폭(λ/Q<sub>L</sub>)과 광자 수명 τ<sub>p</sub> = Q<sub>L</sub>/ω를 정합니다. 결합계수 κ는 필드, κ²가 파워입니다.'],
       ['대역 = 광자 수명 × 디튜닝 × RC', 'Q가 높을수록 정적 기울기는 가파르지만 빛이 오래 머뭅니다. 레이저를 공진에서 떼면(|x| ≈ 0.8–1) 응답에 피크가 생겨 대역이 넓어지고, 접합 C와 저항(드라이버 50 Ω 포함)의 RC가 그 위에 곱해집니다. Q 하나로 대역을 말할 수 없습니다.'],
       ['온도가 링의 비용', 'Si 링은 ∂λ/∂T ≈ 60–80 pm/K로 선폭보다 훨씬 많이 움직입니다. 히터는 공진을 장파장 쪽으로만 옮기고, 공정 오차로 다이마다 공진 위치가 수 nm 달라 한 FSR까지의 히터 여유가 필요합니다. 흡수된 빛은 링을 데워(자기 가열) 레이저가 장파장 쪽에 있으면 열 폭주를 만듭니다.'],
-      ['200G 용어', '이 게임의 112 GBd PAM4는 224 Gb/s 라인 속도입니다(2-3과 같음). IEEE 802.3dj의 200G/레인 광 인터페이스는 FEC·부호화 오버헤드를 포함한 106.25 GBd PAM4(212.5 Gb/s)로 200 Gb/s 순 데이터를 나릅니다 — 라인 속도와 순 처리량을 구분하세요.'],
+      ['200G 용어', '이 게임의 112 GBd PAM4는 224 Gb/s 라인 속도입니다(2-3과 같음). 200 Gb/s는 순 데이터(MAC) 속도이고, 라인에는 부호화·FEC 오버헤드가 더해집니다 — 아래 “1.6T 속도 정의”를 보세요.'],
       ['SiN 플랫폼이라면', 'SiN에는 플라즈마 분산이 없습니다. 이 레벨은 2-2와 같이 Si 활성층의 이종 집적을 가정하고 Si 리브 링을 계산합니다. SiN 자체에 PN 모델을 적용하지 않습니다.']
     ],
     role: '200G/lane PAM4 Tx (컴팩트 · 열 제어 필요)' },
@@ -6581,6 +6690,10 @@ const LEVELS = [
     ],
     role: 'Track B 캡스톤' }
 ];
+// one definition of the rates used everywhere (2-3, 2-3R, 3A, 3A+, 3W, Design Lab). Standard status: P802.3dj task force pages and
+// public summaries checked 2026-10-10 — shown as "in development (completion targeted 2026)"; the final approval was not verified.
+const RATE_DEF = `<b>심볼 → 라인 → 데이터.</b> PAM4는 심볼당 2비트라 <b>112 GBd × 2 = 224 Gb/s 라인 속도</b>(게임의 레인 대표값)입니다. <b>200 Gb/s</b>는 레인의 순 데이터(MAC) 속도이고, 라인에는 256b/257b 부호화와 RS(544,514) FEC 오버헤드가 붙습니다: 200 × 257/256 × 544/514 = <b>212.5 Gb/s = 106.25 GBd PAM4</b>. 내부(inner) FEC를 더한 변형은 113.4375 GBd입니다. 게임의 112 GBd는 그 사이의 둥근 대표값으로 눈·대역 계산에 쓰고, FEC 이득·BER 문턱은 계산하지 않습니다(눈 열림 기준). <b>1.6T</b> = 8 × 200 Gb/s(DR8: 광섬유 8개, WDM8: 한 광섬유에 8파장). 기준: IEEE P802.3dj(200G/400G/800G/1.6T Ethernet) — 2026-10-10 확인 시 공개 자료는 "개발 중, 2026 완료 목표"로 표시되어 있었고 최종 승인 여부는 확인하지 않았습니다. 수치는 표준 문서가 아니라 공개 요약을 따랐습니다.`;
+const RATE_LEVELS = ['2-3', '2-3R', '3A', '3A+', '3W'];
 const STAGES = { 1: 'Stage 1 · Passive', 2: 'Stage 2 · Active', 3: 'Stage 3 · System (Track A)', 4: 'Track B 준비 · 긴 지연선', 5: 'Stage 3 · System (Track B · FMCW LiDAR)' };
 
 // ===== Game shell: campaign, scoring, objectives, coach, fab, AI rival, Design DB, cards =====
@@ -6622,7 +6735,7 @@ const state = {
   plat: PLATFORMS[P.plat] ? P.plat : null,
   id: '1-1',
   mode: MODES[store.get('smq-mode-v1', 'std')] ? store.get('smq-mode-v1', 'std') : 'std',
-  credits: {}, fab: {}, wafer: {}, fromAI: {}, cur: null, fabRunning: false, aiRunning: null, lastLogged: '', land: {}, hintTier: 1
+  credits: {}, fab: {}, wafer: {}, fromAI: {}, seedFix: {}, cur: null, fabRunning: false, aiRunning: null, lastLogged: '', land: {}, hintTier: 1
 };
 { const sid = store.get('smq3-id', '1-1'); if (LMAP[sid] && !LMAP[sid].locked) state.id = sid; }
 { const M = MODES[state.mode]; state.hintTier = clamp(store.get('smq-hint-v1', M.hint) | 0, 0, M.maxHint); }
@@ -6646,6 +6759,7 @@ function lev() {
   }
   return effCache[k];
 }
+window.GAME_KINDS = KINDS;   // read-only engine access for tests and the Learning Guide examples
 window.GAME_LEV = (id) => { if (!LMAP[id] || !state.plat) return null; const sv = state.id; state.id = id; const e = lev(); state.id = sv; return e; };
 // read-only snapshot for the Learning Guide (src/guide.js): it explains and explores, it never writes to the design or the score
 // read-only view for the PIC Design Lab (src/lab/ui.js): platform, cards, saved designs, campaign map refresh
@@ -6819,7 +6933,57 @@ function evaluate() {
   drawView(); renderHUD(); renderObjectives(); renderFabPanel(); renderHint(); drawStrips(false); scheduleIdle();
 }
 let idleT = null;
-function scheduleIdle() { clearTimeout(idleT); idleT = setTimeout(() => { computeChart(); drawStrips(true); renderCoach(); renderPanel(); }, 110); }
+function scheduleIdle() { clearTimeout(idleT); idleT = setTimeout(() => { computeChart(); drawStrips(true); renderCoach(); renderPanel(); renderCompare(); }, 110); }
+/* ---------- baseline comparison (v1.0 §7.4): pin a design, compare the engine's own numbers; no combined score ---------- */
+const CMPC = new Map();
+const cmpEval = (l, K, d) => { const k = state.plat + state.id + state.mode + keyOf(d); if (!CMPC.has(k)) { if (CMPC.size > 40) CMPC.clear(); CMPC.set(k, K.evaluate(l, d, null, { full: true })); } return CMPC.get(k); };
+function renderCompare(runFab) {
+  const box = $('#cmpcard'), c = state.cur, K = kind();
+  box.hidden = !c || !!c.S || !!c.pr || !K.compareRows; if (box.hidden) return;
+  const l = c.l, pins = (PP().pins = PP().pins || {}), pin = pins[state.id];
+  if (!pin) { $('#cmp-body').innerHTML = '<p class="note" style="margin:0 0 8px">지금 설계를 기준으로 고정한 뒤 파라미터를 바꾸면, 같은 엔진으로 계산한 값을 기준과 나란히 봅니다(점수·별과 무관). 같은 웨이퍼(같은 시드·같은 공정 변동)로 두 설계의 수율도 비교할 수 있습니다.</p><div class="row-btns"><button class="btn pri" data-pin="set">현재 설계를 기준으로 고정</button></div>'; return; }
+  let rb; try { rb = cmpEval(l, K, pin.d); } catch (e) { rb = null; }
+  if (!rb) { $('#cmp-body').innerHTML = '<p class="note">기준 설계를 이 레벨에서 다시 계산할 수 없습니다.</p><div class="row-btns"><button class="btn" data-pin="clear">기준 해제</button></div>'; return; }
+  const A = K.compareRows(l, rb), B = K.compareRows(l, c.res), up = [], dn = [];
+  const rows = B.map(([k, v, u, dec, better, conf], i) => {
+    const a = A[i] ? A[i][1] : null, dv = a == null || !Number.isFinite(v) || !Number.isFinite(a) ? null : v - a, tol = Math.pow(10, -dec) / 2;
+    const cls = dv == null || Math.abs(dv) <= tol || !better ? 'dlt-0' : (better === 'hi') === (dv > 0) ? 'dlt-up' : 'dlt-dn';
+    if (cls === 'dlt-up') up.push(k); if (cls === 'dlt-dn') dn.push(k);
+    const fmt = (x) => (Number.isFinite(x) ? (+x).toFixed(dec) : '—');
+    return `<tr><th scope="row">${k}</th><td>${fmt(a)} ${u}</td><td>${fmt(v)} ${u}</td><td class="${cls}">${dv == null ? '—' : (dv > 0 ? '+' : '') + fmt(dv)}${cls === 'dlt-up' ? ' ▲좋아짐' : cls === 'dlt-dn' ? ' ▼나빠짐' : ''}</td><td>${confBadge(conf, true)}</td></tr>`;
+  }).join('');
+  const changed = params().filter((p) => pin.d[p.k] != null && +pin.d[p.k] !== +c.d[p.k]).map((p) => `${p.sym || p.k} ${pFmt(p, pin.d[p.k])} → ${pFmt(p, c.d[p.k])}`);
+  const fab = pin.fab && pin.fab.cur === dhash(c.d) && pin.fab.base === dhash(pin.d) ? pin.fab : null;
+  const seed = state.seedFix[state.id] != null ? state.seedFix[state.id] : (fabLog(state.id)[0] ? fabLog(state.id)[0].seed : 1067);
+  let fh = '';
+  if (fab) {
+    const ca = wilson(fab.pa, fab.n), cb = wilson(fab.pb, fab.n);
+    fh = `<p class="note" style="margin:8px 0 4px"><b>같은 웨이퍼 (시드 ${fab.seed}, ${fab.n} 다이 — 두 설계에 같은 다이별 공정 변동)</b>: 기준 ${pct(fab.pa / fab.n)} % (${pct(ca[0])}–${pct(ca[1])}) · 현재 ${pct(fab.pb / fab.n)} % (${pct(cb[0])}–${pct(cb[1])}). 다이별로: 둘 다 양품 ${fab.both} · 기준만 ${fab.aOnly} · 현재만 ${fab.bOnly} · 둘 다 불량 ${fab.none}. ${fab.aOnly + fab.bOnly <= 3 ? '차이를 만든 다이가 몇 개뿐이라 의미 있는 차이로 보기 어렵습니다.' : '갈린 다이 수를 보세요 — 같은 웨이퍼라 공정 운이 아니라 설계 차이입니다(다른 웨이퍼에서는 달라질 수 있음).'} 크레딧·별에는 반영하지 않습니다.</p>`;
+  }
+  $('#cmp-body').innerHTML = `<p class="note" style="margin:0 0 8px">기준: ${changed.length ? `바뀐 파라미터 ${changed.join(' · ')}` : '지금 설계와 같음'} · 고정 ${String(pin.t).slice(0, 16).replace('T', ' ')}</p>`
+    + `<div class="gtbl"><table class="cmp"><tr><th>항목</th><th>기준</th><th>현재</th><th>Δ</th><th>근거</th></tr>${rows}</table></div>`
+    + `<p class="note"><b>Trade-off:</b> ${up.length ? `좋아진 것 — ${up.join(', ')}` : '좋아진 항목 없음'}${dn.length ? ` / 나빠진 것 — ${dn.join(', ')}` : ''}. 하나의 점수로 합치지 않습니다 — 어떤 항목을 우선할지는 미션 목표와 시스템 요구가 정합니다.</p>`
+    + fh + `<div class="row-btns"><button class="btn" data-pin="fab">같은 웨이퍼로 수율 비교 (시드 ${seed}${fabLog(state.id)[0] || state.seedFix[state.id] != null ? '' : ', 기본'})</button><button class="btn" data-pin="set">지금 설계를 새 기준으로</button><button class="btn" data-pin="load">기준 설계로 되돌리기</button><button class="btn" data-pin="clear">기준 해제</button></div>`;
+  if (runFab) sameWafer(seed, pin);
+}
+function sameWafer(seed, pin) {
+  const c = state.cur, K = kind(), l = c.l, dies = makeWafer(seed, MODES[state.mode].sig);
+  let pa = 0, pb = 0, both = 0, aOnly = 0, bOnly = 0, none = 0;
+  for (const die of dies) {
+    const prc = { ...die, dt: die.dt * l.pf.dt / 0.006 }, a = K.fabPass(l, K.evaluate(l, pin.d, prc)), b = K.fabPass(l, K.evaluate(l, c.d, prc));
+    if (a) pa++; if (b) pb++; if (a && b) both++; else if (a) aOnly++; else if (b) bOnly++; else none++;
+  }
+  pin.fab = { seed, n: dies.length, pa, pb, both, aOnly, bOnly, none, base: dhash(pin.d), cur: dhash(c.d), model: MODEL_VERSION };
+  persist(); renderCompare();
+}
+$('#cmp-body').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-pin]'); if (!b || state.fabRunning || state.aiRunning != null || !state.cur) return;
+  const pins = (PP().pins = PP().pins || {}), a = b.dataset.pin;
+  if (a === 'set') { pins[state.id] = { d: { ...state.cur.d }, t: new Date().toISOString() }; persist(); renderCompare(); }
+  else if (a === 'clear') { delete pins[state.id]; persist(); renderCompare(); }
+  else if (a === 'load' && pins[state.id]) { DESP()[state.id] = { ...pins[state.id].d }; state.fromAI[state.id] = false; persist(); setupLevel(); }
+  else if (a === 'fab' && pins[state.id]) { b.disabled = true; b.textContent = '계산 중…'; setTimeout(() => renderCompare(true), 30); }
+});
 // optional kind panel (e.g. the MZM vs MRR comparison): full design only, recomputed when idle
 function renderPanel(run) {
   const box = $('#xpanel'), K = kind(), c = state.cur;
@@ -7078,12 +7242,38 @@ function drawWafer(dies, done) {
   const cell = (2 * R * 0.94) / 9.4, g = cell * 0.12, all = dies || makeWafer(1);
   all.forEach((die, idx) => { const x = cx + (die.i - 4) * cell, y = cy + (die.j - 4) * cell; ctx.fillStyle = dies && idx < done ? (die.pass ? '#5dd193' : '#ff6b6b') : '#253244'; ctx.fillRect(x - cell / 2 + g, y - cell / 2 + g, cell - 2 * g, cell - 2 * g); });
 }
+/* ---------- Fab Run reproducibility (v1.0 §5): seed log, Wilson interval, fixed seed for same-wafer comparisons ---------- */
+const dhash = (d) => SMQ_STORE.fnv(keyOf(d));
+function fabLog(id) { const pp = PP(); pp.fab = pp.fab || {}; return (pp.fab[id] = pp.fab[id] || []); }
+// 95 % Wilson score interval for k passes of n dies (dies share the wafer offset and bowl → not independent; the interval is optimistic)
+function wilson(k, n) { if (!n) return [0, 1]; const z = 1.96, p = k / n, dn = 1 + z * z / n, c = p + z * z / (2 * n), h = z * Math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)); return [Math.max(0, (c - h) / dn), Math.min(1, (c + h) / dn)]; }
+const pct = (x) => Math.round(x * 100);
+function renderFabRepro() {
+  const box = $('#fab-repro'), c = state.cur; if (!c || c.S || c.pr) { box.innerHTML = ''; return; }
+  const id = state.id, log = fabLog(id), last = log[0], fix = state.seedFix[id];
+  let h = '';
+  if (last) {
+    const ci = wilson(last.pass, last.n), same = last.hash === dhash(c.d);
+    h += `<div>마지막 런: 시드 <b>${last.seed}</b> · ${last.n} 다이 · 양품 <b>${last.pass}</b> · 수율 <b>${pct(last.y)} %</b> (95 % 구간 ${pct(ci[0])}–${pct(ci[1])} %) · ${MODES[last.mode] ? MODES[last.mode].label : last.mode} · ${last.model} · 설계 ${last.hash}${same ? '' : ' <span class="st-WARNING">(지금 설계와 다름)</span>'}</div>`;
+    if (log.length > 1) h += `<details><summary>이전 런 ${log.length - 1}개</summary>${log.slice(1).map((r) => `<div>시드 ${r.seed} · ${r.pass}/${r.n} (${pct(r.y)} %) · 설계 ${r.hash} · ${String(r.t).slice(0, 16).replace('T', ' ')}</div>`).join('')}</details>`;
+  }
+  h += `<div>다음 Tape-out 시드: <b>${fix != null ? fix + ' (고정)' : '새로 뽑음'}</b></div>`;
+  h += `<div class="note" style="font-family:var(--body)">수율은 ${makeWafer(1).length}개 다이의 Monte Carlo 추정입니다. 웨이퍼 오프셋·bowl을 다이가 함께 받으므로(공간 상관) 다이는 독립 표본이 아니고, 구간에는 모델 자체의 불확실성이 들어 있지 않습니다 — 몇 % 차이를 확정적인 성능 차이로 읽지 마세요. 같은 설계·시드·모델 버전이면 결과가 같습니다.</div>`;
+  h += `<div class="row-btns">${last ? `<button class="btn" data-seed="fix">시드 ${last.seed} 고정</button>` : ''}${fix != null ? '<button class="btn" data-seed="free">시드 고정 해제</button>' : ''}</div>`;
+  box.innerHTML = h;
+}
+$('#fab-repro').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-seed]'); if (!b || state.fabRunning) return;
+  const log = fabLog(state.id);
+  if (b.dataset.seed === 'fix' && log[0]) state.seedFix[state.id] = log[0].seed; else delete state.seedFix[state.id];
+  renderFabRepro(); renderCompare();
+});
 function renderFabPanel() {
   const l = lev(), c = state.cur, cr = credits(), btn = $('#btn-fab'), drcBad = c.res.drc && c.res.drc.length;
   if (c.S || c.pr) {
     btn.disabled = true; btn.textContent = 'Tape-out'; $('#yield').textContent = '—'; $('#yield').className = 'yield na'; $('#fab-kv').innerHTML = '';
     $('#fab-note').textContent = c.S ? 'Guided 단계에서는 공정 런이 없습니다. 마지막 단계(Full Design)에서 같은 설계로 Tape-out 합니다.' : c.pr.note;
-    return;
+    renderFabRepro(); return;
   }
   btn.disabled = state.fabRunning || cr <= 0 || drcBad;
   btn.textContent = state.fabRunning ? '공정 진행 중…' : `Tape-out · 크레딧 ${cr}/${credits0()}`;
@@ -7093,20 +7283,24 @@ function renderFabPanel() {
   $('#fab-kv').innerHTML = f ? `양품 <b>${f.pass}</b> / ${f.n} 다이<br>판정 ${crit}<br>목표 ≥ ${Math.round(l.fab.y * 100)}%${stale ? '<br><span style="color:var(--fail)">설계가 바뀌어 수율 점수 미반영</span>' : ''}`
     : `판정 ${crit}<br>목표 ≥ ${Math.round(l.fab.y * 100)}%<br>다이 ${makeWafer(1).length}개 · 9×9 grid`;
   $('#fab-note').textContent = drcBad ? 'DRC를 통과해야 Tape-out할 수 있습니다.' : cr <= 0 ? '크레딧을 모두 썼습니다. 레벨 재시작으로 충전하세요.'
-    : '웨이퍼마다 CD 오프셋, 두께 bowl, 다이 랜덤 변동이 새로 뽑힙니다. 공칭 성능에 여유가 없으면 수율이 무너집니다.';
+    : '웨이퍼마다 CD 오프셋, 두께 bowl, 다이 랜덤 변동이 새로 뽑힙니다(시드를 고정하면 같은 웨이퍼). 공칭 성능에 여유가 없으면 수율이 무너집니다.';
+  renderFabRepro();
 }
 function tapeOut() {
   const c = state.cur, id = state.id, l = lev(), K = kind();
   if (state.fabRunning || c.S || c.pr || (c.res.drc && c.res.drc.length) || credits() <= 0) return;
   state.credits[id] = credits() - 1; state.fabRunning = true;
-  const dies = makeWafer((Date.now() ^ (Math.random() * 1e9)) & 0x7fffffff, MODES[state.mode].sig), d = { ...c.d }, key = c.key;
+  // seed: fixed by the player (same wafer for two designs) or new; recorded with the design hash and model version (reproducible)
+  const seed = state.seedFix[id] != null ? state.seedFix[id] : ((Date.now() ^ (Math.random() * 1e9)) & 0x7fffffff), sig = MODES[state.mode].sig;
+  const dies = makeWafer(seed, sig), d = { ...c.d }, key = c.key;
   let k = 0, pass = 0; $('#yield').textContent = '…'; $('#yield').className = 'yield na'; renderFabPanel();
   const step = () => {
     const t0 = performance.now();
     while (k < dies.length && performance.now() - t0 < 14) { dies[k].pass = K.fabPass(l, K.evaluate(l, d, { ...dies[k], dt: dies[k].dt * l.pf.dt / 0.006 })); if (dies[k].pass) pass++; k++; }
     if (id === state.id) { drawWafer(dies, k); $('#yield').textContent = Math.round(pass / Math.max(1, k) * 100) + '%'; }
     if (k < dies.length) { requestAnimationFrame(step); return; }
-    state.fabRunning = false; state.fab[id] = { key, yield: pass / dies.length, pass, n: dies.length }; state.wafer[id] = dies;
+    state.fabRunning = false; state.fab[id] = { key, yield: pass / dies.length, pass, n: dies.length, seed }; state.wafer[id] = dies;
+    const log = fabLog(id); log.unshift({ seed, plat: state.plat, mode: state.mode, sig, hash: dhash(d), n: dies.length, pass, y: +(pass / dies.length).toFixed(4), model: MODEL_VERSION, t: new Date().toISOString() }); log.length = Math.min(log.length, 10);
     if (id === state.id) { evaluate(); awardStars(); maybeCard(); persist(); renderMap(); renderObjectives(); renderCards(); }
   };
   requestAnimationFrame(step);
@@ -7369,6 +7563,7 @@ function setupLevel() {
   const pre = $('#m-preface'); pre.hidden = !l.preface; pre.innerHTML = l.preface || '';
   const cc = $('#m-concepts'); cc.hidden = !l.concepts;
   if (l.concepts) { const seen = (PP().seen = PP().seen || {}); cc.innerHTML = `<summary>개념 노트 · ${l.concepts.length}개 — ${l.concepts.map((c) => c[0].replace(/<[^>]+>/g, '')).join(', ')}</summary><dl>${l.concepts.map(([t, d]) => `<dt>${t}</dt><dd>${d}</dd>`).join('')}</dl>`; cc.open = !seen[l.id] && !curStep(); seen[l.id] = 1; }   // a guided step carries its own intro, so the notes start folded there
+  { const rb = $('#m-rate'); rb.hidden = !RATE_LEVELS.includes(l.id); if (!rb.hidden) $('#m-rate-b').innerHTML = RATE_DEF; }
   const pf = PLATFORMS[state.plat]; $('#plat-chip').innerHTML = `${pf.short} · ${pf.band}<span>변경</span>`; $('#plat-chip').hidden = false;
   state.land = {}; state.cur = null;
   // a guided step gives no stars, cards, AI or tape-out: those panels step aside until Full Design
@@ -7457,6 +7652,13 @@ function renderUndo() {
 }
 $('#rs-undo').addEventListener('click', (e) => { if (e.target.id !== 'rs-undo-b') return; const r = store.undo(); $('#rs-undo').innerHTML = r.ok ? '<p class="note"><b class="st-PASS">되돌렸습니다.</b> 다시 불러옵니다…</p>' : `<p class="rs-err">${r.err}</p>`; if (r.ok) reloadSoon(); });
 window.GAME_DATA = { open: openData };
+// a model-confidence badge opens the Learning Guide at its model-limits section (F)
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-conf]'); if (!b || !window.GAME_GUIDE) return;
+  const lab = window.LABUI && window.LABUI.isOpen();
+  if (lab) { const g = $('#lab-guide'); if (g) g.click(); } else window.GAME_GUIDE.open();
+  setTimeout(() => { const h = document.querySelector('#g-F-h'); if (h) { h.scrollIntoView({ block: 'start' }); h.focus({ preventScroll: true }); } }, 60);
+});
 
 const UI = store.get('smq3-ui', {}) || {};   // view-only preferences (which sections are open); never progress or designs
 $('#cards').open = !!UI.cards; $('#cards').addEventListener('toggle', () => { UI.cards = $('#cards').open; store.set('smq3-ui', UI); });
@@ -8338,7 +8540,7 @@ window.LABUI = (() => {
   }
   function summary() {
     const s = CHK.sys, n = (st) => CHK.checks.filter((x) => x.status === st).length, a3 = SH().stars('3A+') > 0;
-    return `<table class="ltbl">${row(['총 데이터 속도', `${LAB.LANES} × 200G = 1.6 Tb/s (라인 ${LAB.LANES} × 224 Gb/s)`])}${row(['변조기', C.mod === 'mzm' ? 'TW-MZM ×8 (DR8)' : C.mod === 'wdm' ? 'MRR WDM8 (공유 버스 · 광섬유 1)' : 'MRR ×8 (DR8)'])}${row(['다이', `${des().W.toFixed(1)} × ${des().H.toFixed(1)} mm`])}${row(['광 손실 추정 (칩 배선, 최악 레인)', `${s.extra.toFixed(2)} dB`])}${row(['링크 마진 (레이아웃 반영)', `${s.marginLayout.toFixed(2)} dB`])}${row(['비트당 에너지 (3A+ 모듈 모델)', `${s.pj.toFixed(2)} pJ/bit`])}${row(['검증 요약', `PASS ${n('PASS')} · WARNING ${n('WARNING')} · FAIL ${n('FAIL')} · NOT VERIFIED ${n('NOT VERIFIED')}${valid().ran ? '' : S().ran ? ' (마지막 실행 이후 설계 변경 — 다시 실행)' : ' (검사 미실행)'}`])}${row(['설계 식별 (design hash)', `${C.hash}${S().exported ? ` · 마지막 내보내기 ${S().exported.hash || '(식별 없음, 이전 버전)'} ${valid().exp ? '<span class="st-PASS">현재 설계와 같음</span>' : '<span class="st-WARNING">Stale — 다시 내보내기</span>'}` : ' · 아직 내보내지 않음'}`])}${row(['Design Valid (게임 모델)', MISS.slice(0, 5).every((m) => (S().live || {})[m.id]) ? '<span class="st-PASS">✓ 충족</span>' : '<span class="st-WARNING">미충족</span>'])}${row(['Geometry Rechecked (smq2gds)', gdsMsg()])}${row(['Foundry Readiness', '<span class="st-NOT">NOT VERIFIED</span> — Generic PDK · 추상 금속 · 파운드리 DRC/LVS·RF·열 검사 없음'])}${row(['Project Completion', a3 ? (MISS.every((m) => (S().live || {})[m.id]) ? '<span class="st-PASS">완료 (현재 설계)</span>' : MISS.every((m) => (S().done || {})[m.id]) ? '<span class="st-WARNING">이전에 완료 · 현재 설계는 미충족</span>' : '진행 중') : '3A+ ★ 이후 정식 완료 (지금은 미리보기)'])}</table>`
+    return `<table class="ltbl">${row(['총 데이터 속도', `${LAB.LANES} × 200 Gb/s = 1.6 Tb/s 데이터 (게임 라인 대표값 ${LAB.LANES} × 224 Gb/s = 112 GBd PAM4; 표준 라인은 FEC·부호화 포함 212.5 Gb/s/레인 — 3A+의 “1.6T 속도 정의”)`])}${row(['변조기', C.mod === 'mzm' ? 'TW-MZM ×8 (DR8)' : C.mod === 'wdm' ? 'MRR WDM8 (공유 버스 · 광섬유 1)' : 'MRR ×8 (DR8)'])}${row(['다이', `${des().W.toFixed(1)} × ${des().H.toFixed(1)} mm`])}${row(['광 손실 추정 (칩 배선, 최악 레인)', `${s.extra.toFixed(2)} dB`])}${row(['링크 마진 (레이아웃 반영)', `${s.marginLayout.toFixed(2)} dB`])}${row(['비트당 에너지 (3A+ 모듈 모델)', `${s.pj.toFixed(2)} pJ/bit`])}${row(['검증 요약', `PASS ${n('PASS')} · WARNING ${n('WARNING')} · FAIL ${n('FAIL')} · NOT VERIFIED ${n('NOT VERIFIED')}${valid().ran ? '' : S().ran ? ' (마지막 실행 이후 설계 변경 — 다시 실행)' : ' (검사 미실행)'}`])}${row(['설계 식별 (design hash)', `${C.hash}${S().exported ? ` · 마지막 내보내기 ${S().exported.hash || '(식별 없음, 이전 버전)'} ${valid().exp ? '<span class="st-PASS">현재 설계와 같음</span>' : '<span class="st-WARNING">Stale — 다시 내보내기</span>'}` : ' · 아직 내보내지 않음'}`])}${row(['Design Valid (게임 모델)', MISS.slice(0, 5).every((m) => (S().live || {})[m.id]) ? '<span class="st-PASS">✓ 충족</span>' : '<span class="st-WARNING">미충족</span>'])}${row(['Geometry Rechecked (smq2gds)', gdsMsg()])}${row(['Foundry Readiness', '<span class="st-NOT">NOT VERIFIED</span> — Generic PDK · 추상 금속 · 파운드리 DRC/LVS·RF·열 검사 없음'])}${row(['Project Completion', a3 ? (MISS.every((m) => (S().live || {})[m.id]) ? '<span class="st-PASS">완료 (현재 설계)</span>' : MISS.every((m) => (S().done || {})[m.id]) ? '<span class="st-WARNING">이전에 완료 · 현재 설계는 미충족</span>' : '진행 중') : '3A+ ★ 이후 정식 완료 (지금은 미리보기)'])}</table>`
       + `<p class="note">GDS는 같은 smq-circuit/1 데이터를 tools/smq2gds가 읽어 같은 기본 도형으로 그리고, 다시 읽어 계층·연결·포트·길이·간격·선폭·금속 단락을 검사합니다. 이 결과는 구조 검증이 가능한 Engineering Prototype이며 Tape-out Ready Mask가 아닙니다.</p>`;
   }
   function renderCoach() {

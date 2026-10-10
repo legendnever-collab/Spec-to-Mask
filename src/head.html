@@ -45,12 +45,12 @@ button{font:inherit;color:inherit}
 
 /* grid */
 .game{display:grid;gap:12px;grid-template-columns:minmax(0,1fr);
-  grid-template-areas:"mission" "view" "params" "spec" "xp" "fab" "ai" "db" "cards"}
+  grid-template-areas:"mission" "view" "params" "spec" "xp" "cmp" "fab" "ai" "db" "cards"}
 @media (min-width:920px){
   .game{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);
-    grid-template-areas:"mission params" "view params" "spec fab" "xp xp" "ai db" "cards cards"}
+    grid-template-areas:"mission params" "view params" "spec fab" "xp xp" "cmp cmp" "ai db" "cards cards"}
   /* the controls stay beside the field while the mission text and the view scroll */
-  .game.stepping{grid-template-areas:"mission params" "view params" "spec spec" "xp xp" "cards cards"}
+  .game.stepping{grid-template-areas:"mission params" "view params" "spec spec" "xp xp" "cmp cmp" "cards cards"}
   #params{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
 }
 .game.stepping #fab,.game.stepping #ai,.game.stepping #db{display:none}
@@ -140,6 +140,12 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 /* spectrum */
 #spec{grid-area:spec}
 #xpanel{grid-area:xp}
+#cmpcard{grid-area:cmp}
+.fab-repro{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px;font-family:var(--mono);font-size:11.5px;color:var(--fg-2);line-height:1.7}
+.fab-repro b{color:var(--fg);font-weight:500}
+.fab-repro .row-btns{margin-top:6px}
+.fab-repro .btn{font-family:var(--body);font-size:12px;padding:6px 10px}
+.dlt-up{color:var(--pass)} .dlt-dn{color:var(--fail)} .dlt-0{color:var(--fg-3)}
 .cmp td.win{color:var(--pass);font-weight:600}
 .cmp th[scope=row]{font-weight:500;color:var(--fg)}
 .legend{display:flex;gap:12px;flex-wrap:wrap;font-family:var(--mono);font-size:11.5px;color:var(--fg-2);margin:-4px 0 6px}
@@ -270,6 +276,8 @@ details.sect[open] > summary{margin-bottom:10px}
 .concepts summary{cursor:pointer;padding:8px 11px;font-size:13px;color:var(--amber)}
 .concepts dl{margin:0;padding:0 12px 10px;display:grid;gap:6px}
 .concepts dt{font-weight:600;font-size:12.5px;color:var(--fg)}
+
+.ratedef{margin:0;padding:0 12px 10px;font-size:12.5px;color:var(--fg-2);line-height:1.6;max-width:80ch}
 .concepts dd{margin:0;font-size:12.5px;color:var(--fg-2);line-height:1.6;max-width:72ch}
 .valid{margin:10px 0 0;border:1px solid rgba(100,201,223,.45);border-radius:8px;background:var(--panel-2)}
 .valid summary{cursor:pointer;padding:8px 11px;font-size:13px;color:var(--cyan)}
@@ -399,6 +407,15 @@ details.sect[open] > summary{margin-bottom:10px}
 .roles div b{display:block;color:var(--fg);font-size:12.5px}
 @media (max-width:600px){.gdlg-back{padding:0}.gdlg{height:100vh;height:100dvh;border-radius:0;border:0}.gdlg-h h2{font-size:19px}}
 @media (prefers-reduced-motion:reduce){.bar > i{transition:none}}
+/* model confidence badges (shape + text) */
+.conf{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:10.5px;line-height:1.3;border:1px solid var(--line-2);border-radius:999px;padding:1px 7px;background:transparent;color:var(--fg-2);cursor:pointer;white-space:nowrap}
+.conf:hover{border-color:var(--fg-2)}
+.conf-an{color:#5dd193}.conf-semi{color:#64c9df}.conf-exp{color:#e7ecf3;border-style:solid}.conf-asm{color:#f2b04a;border-style:dashed}.conf-nv{color:#9eabbd;border-style:dotted}
+.conf-legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-family:var(--mono);font-size:11px;color:var(--fg-2);margin:6px 0}
+.conf-legend b{font-weight:400;color:var(--fg)} .conf-legend .conf-hint{color:var(--fg-3);font-family:var(--body)}
+.tsens{margin-top:10px;border-top:1px dashed var(--line);padding-top:10px}
+.tsens h4{margin:0 0 6px;font-size:13.5px;color:var(--fg)}
+.cmp th.grp{background:var(--panel-2);color:var(--cyan);font-size:12px;letter-spacing:.03em;text-align:left}
 /* save state chip, failure banner, data dialog */
 .savechip{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--panel);color:var(--fg-2);cursor:pointer}
 .savechip .sv-dot{width:8px;height:8px;border-radius:50%;background:var(--pass)}
@@ -460,6 +477,7 @@ details.sect[open] > summary{margin-bottom:10px}
       <div class="name" id="m-name"></div>
       <p class="brief" id="m-brief"></p>
       <details class="concepts" id="m-concepts" hidden></details>
+      <details class="concepts" id="m-rate" hidden><summary>1.6T 속도 정의 — 112 GBd · 224 Gb/s 라인 · 200 Gb/s 데이터 · FEC</summary><p class="ratedef" id="m-rate-b"></p></details>
       <div class="locked-note" id="m-locked" hidden></div>
       <div class="objs" id="objs"></div>
       <div id="m-next"></div>
@@ -508,6 +526,11 @@ details.sect[open] > summary{margin-bottom:10px}
       <div id="xp-body"></div>
     </section>
 
+    <section class="card" id="cmpcard" hidden aria-live="polite">
+      <h2><span class="n">02±</span>기준 설계와 비교 (Baseline)</h2>
+      <div id="cmp-body"></div>
+    </section>
+
     <section class="card" id="fab">
       <h2><span class="n">03</span>Fab Run · 보스 스테이지</h2>
       <div class="fab-body">
@@ -522,6 +545,7 @@ details.sect[open] > summary{margin-bottom:10px}
         <button class="btn pri" id="btn-fab">Tape-out</button>
       </div>
       <p class="note" id="fab-note"></p>
+      <div class="fab-repro" id="fab-repro"></div>
     </section>
 
     <section class="card" id="ai">

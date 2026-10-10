@@ -92,7 +92,7 @@ const LEVELS = [
       ['결합과 Q', 't = a에서 Critical coupling(골 깊이 최대). Q<sub>L</sub>는 선폭(λ/Q<sub>L</sub>)과 광자 수명 τ<sub>p</sub> = Q<sub>L</sub>/ω를 정합니다. 결합계수 κ는 필드, κ²가 파워입니다.'],
       ['대역 = 광자 수명 × 디튜닝 × RC', 'Q가 높을수록 정적 기울기는 가파르지만 빛이 오래 머뭅니다. 레이저를 공진에서 떼면(|x| ≈ 0.8–1) 응답에 피크가 생겨 대역이 넓어지고, 접합 C와 저항(드라이버 50 Ω 포함)의 RC가 그 위에 곱해집니다. Q 하나로 대역을 말할 수 없습니다.'],
       ['온도가 링의 비용', 'Si 링은 ∂λ/∂T ≈ 60–80 pm/K로 선폭보다 훨씬 많이 움직입니다. 히터는 공진을 장파장 쪽으로만 옮기고, 공정 오차로 다이마다 공진 위치가 수 nm 달라 한 FSR까지의 히터 여유가 필요합니다. 흡수된 빛은 링을 데워(자기 가열) 레이저가 장파장 쪽에 있으면 열 폭주를 만듭니다.'],
-      ['200G 용어', '이 게임의 112 GBd PAM4는 224 Gb/s 라인 속도입니다(2-3과 같음). IEEE 802.3dj의 200G/레인 광 인터페이스는 FEC·부호화 오버헤드를 포함한 106.25 GBd PAM4(212.5 Gb/s)로 200 Gb/s 순 데이터를 나릅니다 — 라인 속도와 순 처리량을 구분하세요.'],
+      ['200G 용어', '이 게임의 112 GBd PAM4는 224 Gb/s 라인 속도입니다(2-3과 같음). 200 Gb/s는 순 데이터(MAC) 속도이고, 라인에는 부호화·FEC 오버헤드가 더해집니다 — 아래 “1.6T 속도 정의”를 보세요.'],
       ['SiN 플랫폼이라면', 'SiN에는 플라즈마 분산이 없습니다. 이 레벨은 2-2와 같이 Si 활성층의 이종 집적을 가정하고 Si 리브 링을 계산합니다. SiN 자체에 PN 모델을 적용하지 않습니다.']
     ],
     role: '200G/lane PAM4 Tx (컴팩트 · 열 제어 필요)' },
@@ -213,4 +213,8 @@ const LEVELS = [
     ],
     role: 'Track B 캡스톤' }
 ];
+// one definition of the rates used everywhere (2-3, 2-3R, 3A, 3A+, 3W, Design Lab). Standard status: P802.3dj task force pages and
+// public summaries checked 2026-10-10 — shown as "in development (completion targeted 2026)"; the final approval was not verified.
+const RATE_DEF = `<b>심볼 → 라인 → 데이터.</b> PAM4는 심볼당 2비트라 <b>112 GBd × 2 = 224 Gb/s 라인 속도</b>(게임의 레인 대표값)입니다. <b>200 Gb/s</b>는 레인의 순 데이터(MAC) 속도이고, 라인에는 256b/257b 부호화와 RS(544,514) FEC 오버헤드가 붙습니다: 200 × 257/256 × 544/514 = <b>212.5 Gb/s = 106.25 GBd PAM4</b>. 내부(inner) FEC를 더한 변형은 113.4375 GBd입니다. 게임의 112 GBd는 그 사이의 둥근 대표값으로 눈·대역 계산에 쓰고, FEC 이득·BER 문턱은 계산하지 않습니다(눈 열림 기준). <b>1.6T</b> = 8 × 200 Gb/s(DR8: 광섬유 8개, WDM8: 한 광섬유에 8파장). 기준: IEEE P802.3dj(200G/400G/800G/1.6T Ethernet) — 2026-10-10 확인 시 공개 자료는 "개발 중, 2026 완료 목표"로 표시되어 있었고 최종 승인 여부는 확인하지 않았습니다. 수치는 표준 문서가 아니라 공개 요약을 따랐습니다.`;
+const RATE_LEVELS = ['2-3', '2-3R', '3A', '3A+', '3W'];
 const STAGES = { 1: 'Stage 1 · Passive', 2: 'Stage 2 · Active', 3: 'Stage 3 · System (Track A)', 4: 'Track B 준비 · 긴 지연선', 5: 'Stage 3 · System (Track B · FMCW LiDAR)' };

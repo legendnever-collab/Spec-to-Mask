@@ -80,3 +80,13 @@ async function smqDownload(name, text, mime) {
   if (cap) { try { await cap.save({ filename: name, data: text }); return { ok: true, how: 'viewer' }; } catch (e) { return { ok: false, how: e && e.code === 'declined' ? 'declined' : 'blocked' }; } }
   try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: mime || 'application/json' })); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000); return { ok: true, how: 'blob' }; } catch (e) { return { ok: false, how: 'blocked' }; }
 }
+// model-confidence vocabulary shared by every panel (v1.0 §7.7). Shape + text, never colour alone; PASS/FAIL keep their own badges.
+const CONF = {
+  an: ['◆', 'Analytical', '해석식·정의(근사 없이 계산되는 관계)'],
+  semi: ['◇', 'Physics-informed Surrogate', '물리 모델·사전계산 테이블로 계산한 근사값'],
+  exp: ['●', 'Experimental Reference', '문헌 측정값 — 조건(소자·공정)이 게임 소자와 다를 수 있음'],
+  asm: ['△', 'Unverified Assumption', '대표값으로 둔 가정 — 검증하지 않음'],
+  nv: ['○', 'NOT VERIFIED', '이 프로그램이 검사하지 않은 항목 (PASS가 아님)']
+};
+const confBadge = (k, short) => { const c = CONF[k] || CONF.asm; return `<button type="button" class="conf conf-${k}" data-conf="${k}" title="${c[1]} — ${c[2]} (누르면 학습 가이드의 모델 한계)"><span aria-hidden="true">${c[0]}</span> ${short ? c[1].split(' ')[0] : c[1]}</button>`; };
+const confLegend = (keys) => `<div class="conf-legend" role="note" aria-label="모델 신뢰도 범례">${(keys || Object.keys(CONF)).map((k) => `<span><b aria-hidden="true">${CONF[k][0]}</b> ${CONF[k][1]}</span>`).join('')}<span class="conf-hint">PASS/FAIL은 그 모델의 조건을 만족했는지이지, 제조 가능성 검증이 아닙니다.</span></div>`;

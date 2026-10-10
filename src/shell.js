@@ -37,7 +37,7 @@ const state = {
   plat: PLATFORMS[P.plat] ? P.plat : null,
   id: '1-1',
   mode: MODES[store.get('smq-mode-v1', 'std')] ? store.get('smq-mode-v1', 'std') : 'std',
-  credits: {}, fab: {}, wafer: {}, fromAI: {}, cur: null, fabRunning: false, aiRunning: null, lastLogged: '', land: {}, hintTier: 1
+  credits: {}, fab: {}, wafer: {}, fromAI: {}, seedFix: {}, cur: null, fabRunning: false, aiRunning: null, lastLogged: '', land: {}, hintTier: 1
 };
 { const sid = store.get('smq3-id', '1-1'); if (LMAP[sid] && !LMAP[sid].locked) state.id = sid; }
 { const M = MODES[state.mode]; state.hintTier = clamp(store.get('smq-hint-v1', M.hint) | 0, 0, M.maxHint); }
@@ -61,6 +61,7 @@ function lev() {
   }
   return effCache[k];
 }
+window.GAME_KINDS = KINDS;   // read-only engine access for tests and the Learning Guide examples
 window.GAME_LEV = (id) => { if (!LMAP[id] || !state.plat) return null; const sv = state.id; state.id = id; const e = lev(); state.id = sv; return e; };
 // read-only snapshot for the Learning Guide (src/guide.js): it explains and explores, it never writes to the design or the score
 // read-only view for the PIC Design Lab (src/lab/ui.js): platform, cards, saved designs, campaign map refresh
@@ -234,7 +235,57 @@ function evaluate() {
   drawView(); renderHUD(); renderObjectives(); renderFabPanel(); renderHint(); drawStrips(false); scheduleIdle();
 }
 let idleT = null;
-function scheduleIdle() { clearTimeout(idleT); idleT = setTimeout(() => { computeChart(); drawStrips(true); renderCoach(); renderPanel(); }, 110); }
+function scheduleIdle() { clearTimeout(idleT); idleT = setTimeout(() => { computeChart(); drawStrips(true); renderCoach(); renderPanel(); renderCompare(); }, 110); }
+/* ---------- baseline comparison (v1.0 §7.4): pin a design, compare the engine's own numbers; no combined score ---------- */
+const CMPC = new Map();
+const cmpEval = (l, K, d) => { const k = state.plat + state.id + state.mode + keyOf(d); if (!CMPC.has(k)) { if (CMPC.size > 40) CMPC.clear(); CMPC.set(k, K.evaluate(l, d, null, { full: true })); } return CMPC.get(k); };
+function renderCompare(runFab) {
+  const box = $('#cmpcard'), c = state.cur, K = kind();
+  box.hidden = !c || !!c.S || !!c.pr || !K.compareRows; if (box.hidden) return;
+  const l = c.l, pins = (PP().pins = PP().pins || {}), pin = pins[state.id];
+  if (!pin) { $('#cmp-body').innerHTML = '<p class="note" style="margin:0 0 8px">지금 설계를 기준으로 고정한 뒤 파라미터를 바꾸면, 같은 엔진으로 계산한 값을 기준과 나란히 봅니다(점수·별과 무관). 같은 웨이퍼(같은 시드·같은 공정 변동)로 두 설계의 수율도 비교할 수 있습니다.</p><div class="row-btns"><button class="btn pri" data-pin="set">현재 설계를 기준으로 고정</button></div>'; return; }
+  let rb; try { rb = cmpEval(l, K, pin.d); } catch (e) { rb = null; }
+  if (!rb) { $('#cmp-body').innerHTML = '<p class="note">기준 설계를 이 레벨에서 다시 계산할 수 없습니다.</p><div class="row-btns"><button class="btn" data-pin="clear">기준 해제</button></div>'; return; }
+  const A = K.compareRows(l, rb), B = K.compareRows(l, c.res), up = [], dn = [];
+  const rows = B.map(([k, v, u, dec, better, conf], i) => {
+    const a = A[i] ? A[i][1] : null, dv = a == null || !Number.isFinite(v) || !Number.isFinite(a) ? null : v - a, tol = Math.pow(10, -dec) / 2;
+    const cls = dv == null || Math.abs(dv) <= tol || !better ? 'dlt-0' : (better === 'hi') === (dv > 0) ? 'dlt-up' : 'dlt-dn';
+    if (cls === 'dlt-up') up.push(k); if (cls === 'dlt-dn') dn.push(k);
+    const fmt = (x) => (Number.isFinite(x) ? (+x).toFixed(dec) : '—');
+    return `<tr><th scope="row">${k}</th><td>${fmt(a)} ${u}</td><td>${fmt(v)} ${u}</td><td class="${cls}">${dv == null ? '—' : (dv > 0 ? '+' : '') + fmt(dv)}${cls === 'dlt-up' ? ' ▲좋아짐' : cls === 'dlt-dn' ? ' ▼나빠짐' : ''}</td><td>${confBadge(conf, true)}</td></tr>`;
+  }).join('');
+  const changed = params().filter((p) => pin.d[p.k] != null && +pin.d[p.k] !== +c.d[p.k]).map((p) => `${p.sym || p.k} ${pFmt(p, pin.d[p.k])} → ${pFmt(p, c.d[p.k])}`);
+  const fab = pin.fab && pin.fab.cur === dhash(c.d) && pin.fab.base === dhash(pin.d) ? pin.fab : null;
+  const seed = state.seedFix[state.id] != null ? state.seedFix[state.id] : (fabLog(state.id)[0] ? fabLog(state.id)[0].seed : 1067);
+  let fh = '';
+  if (fab) {
+    const ca = wilson(fab.pa, fab.n), cb = wilson(fab.pb, fab.n);
+    fh = `<p class="note" style="margin:8px 0 4px"><b>같은 웨이퍼 (시드 ${fab.seed}, ${fab.n} 다이 — 두 설계에 같은 다이별 공정 변동)</b>: 기준 ${pct(fab.pa / fab.n)} % (${pct(ca[0])}–${pct(ca[1])}) · 현재 ${pct(fab.pb / fab.n)} % (${pct(cb[0])}–${pct(cb[1])}). 다이별로: 둘 다 양품 ${fab.both} · 기준만 ${fab.aOnly} · 현재만 ${fab.bOnly} · 둘 다 불량 ${fab.none}. ${fab.aOnly + fab.bOnly <= 3 ? '차이를 만든 다이가 몇 개뿐이라 의미 있는 차이로 보기 어렵습니다.' : '갈린 다이 수를 보세요 — 같은 웨이퍼라 공정 운이 아니라 설계 차이입니다(다른 웨이퍼에서는 달라질 수 있음).'} 크레딧·별에는 반영하지 않습니다.</p>`;
+  }
+  $('#cmp-body').innerHTML = `<p class="note" style="margin:0 0 8px">기준: ${changed.length ? `바뀐 파라미터 ${changed.join(' · ')}` : '지금 설계와 같음'} · 고정 ${String(pin.t).slice(0, 16).replace('T', ' ')}</p>`
+    + `<div class="gtbl"><table class="cmp"><tr><th>항목</th><th>기준</th><th>현재</th><th>Δ</th><th>근거</th></tr>${rows}</table></div>`
+    + `<p class="note"><b>Trade-off:</b> ${up.length ? `좋아진 것 — ${up.join(', ')}` : '좋아진 항목 없음'}${dn.length ? ` / 나빠진 것 — ${dn.join(', ')}` : ''}. 하나의 점수로 합치지 않습니다 — 어떤 항목을 우선할지는 미션 목표와 시스템 요구가 정합니다.</p>`
+    + fh + `<div class="row-btns"><button class="btn" data-pin="fab">같은 웨이퍼로 수율 비교 (시드 ${seed}${fabLog(state.id)[0] || state.seedFix[state.id] != null ? '' : ', 기본'})</button><button class="btn" data-pin="set">지금 설계를 새 기준으로</button><button class="btn" data-pin="load">기준 설계로 되돌리기</button><button class="btn" data-pin="clear">기준 해제</button></div>`;
+  if (runFab) sameWafer(seed, pin);
+}
+function sameWafer(seed, pin) {
+  const c = state.cur, K = kind(), l = c.l, dies = makeWafer(seed, MODES[state.mode].sig);
+  let pa = 0, pb = 0, both = 0, aOnly = 0, bOnly = 0, none = 0;
+  for (const die of dies) {
+    const prc = { ...die, dt: die.dt * l.pf.dt / 0.006 }, a = K.fabPass(l, K.evaluate(l, pin.d, prc)), b = K.fabPass(l, K.evaluate(l, c.d, prc));
+    if (a) pa++; if (b) pb++; if (a && b) both++; else if (a) aOnly++; else if (b) bOnly++; else none++;
+  }
+  pin.fab = { seed, n: dies.length, pa, pb, both, aOnly, bOnly, none, base: dhash(pin.d), cur: dhash(c.d), model: MODEL_VERSION };
+  persist(); renderCompare();
+}
+$('#cmp-body').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-pin]'); if (!b || state.fabRunning || state.aiRunning != null || !state.cur) return;
+  const pins = (PP().pins = PP().pins || {}), a = b.dataset.pin;
+  if (a === 'set') { pins[state.id] = { d: { ...state.cur.d }, t: new Date().toISOString() }; persist(); renderCompare(); }
+  else if (a === 'clear') { delete pins[state.id]; persist(); renderCompare(); }
+  else if (a === 'load' && pins[state.id]) { DESP()[state.id] = { ...pins[state.id].d }; state.fromAI[state.id] = false; persist(); setupLevel(); }
+  else if (a === 'fab' && pins[state.id]) { b.disabled = true; b.textContent = '계산 중…'; setTimeout(() => renderCompare(true), 30); }
+});
 // optional kind panel (e.g. the MZM vs MRR comparison): full design only, recomputed when idle
 function renderPanel(run) {
   const box = $('#xpanel'), K = kind(), c = state.cur;
@@ -493,12 +544,38 @@ function drawWafer(dies, done) {
   const cell = (2 * R * 0.94) / 9.4, g = cell * 0.12, all = dies || makeWafer(1);
   all.forEach((die, idx) => { const x = cx + (die.i - 4) * cell, y = cy + (die.j - 4) * cell; ctx.fillStyle = dies && idx < done ? (die.pass ? '#5dd193' : '#ff6b6b') : '#253244'; ctx.fillRect(x - cell / 2 + g, y - cell / 2 + g, cell - 2 * g, cell - 2 * g); });
 }
+/* ---------- Fab Run reproducibility (v1.0 §5): seed log, Wilson interval, fixed seed for same-wafer comparisons ---------- */
+const dhash = (d) => SMQ_STORE.fnv(keyOf(d));
+function fabLog(id) { const pp = PP(); pp.fab = pp.fab || {}; return (pp.fab[id] = pp.fab[id] || []); }
+// 95 % Wilson score interval for k passes of n dies (dies share the wafer offset and bowl → not independent; the interval is optimistic)
+function wilson(k, n) { if (!n) return [0, 1]; const z = 1.96, p = k / n, dn = 1 + z * z / n, c = p + z * z / (2 * n), h = z * Math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)); return [Math.max(0, (c - h) / dn), Math.min(1, (c + h) / dn)]; }
+const pct = (x) => Math.round(x * 100);
+function renderFabRepro() {
+  const box = $('#fab-repro'), c = state.cur; if (!c || c.S || c.pr) { box.innerHTML = ''; return; }
+  const id = state.id, log = fabLog(id), last = log[0], fix = state.seedFix[id];
+  let h = '';
+  if (last) {
+    const ci = wilson(last.pass, last.n), same = last.hash === dhash(c.d);
+    h += `<div>마지막 런: 시드 <b>${last.seed}</b> · ${last.n} 다이 · 양품 <b>${last.pass}</b> · 수율 <b>${pct(last.y)} %</b> (95 % 구간 ${pct(ci[0])}–${pct(ci[1])} %) · ${MODES[last.mode] ? MODES[last.mode].label : last.mode} · ${last.model} · 설계 ${last.hash}${same ? '' : ' <span class="st-WARNING">(지금 설계와 다름)</span>'}</div>`;
+    if (log.length > 1) h += `<details><summary>이전 런 ${log.length - 1}개</summary>${log.slice(1).map((r) => `<div>시드 ${r.seed} · ${r.pass}/${r.n} (${pct(r.y)} %) · 설계 ${r.hash} · ${String(r.t).slice(0, 16).replace('T', ' ')}</div>`).join('')}</details>`;
+  }
+  h += `<div>다음 Tape-out 시드: <b>${fix != null ? fix + ' (고정)' : '새로 뽑음'}</b></div>`;
+  h += `<div class="note" style="font-family:var(--body)">수율은 ${makeWafer(1).length}개 다이의 Monte Carlo 추정입니다. 웨이퍼 오프셋·bowl을 다이가 함께 받으므로(공간 상관) 다이는 독립 표본이 아니고, 구간에는 모델 자체의 불확실성이 들어 있지 않습니다 — 몇 % 차이를 확정적인 성능 차이로 읽지 마세요. 같은 설계·시드·모델 버전이면 결과가 같습니다.</div>`;
+  h += `<div class="row-btns">${last ? `<button class="btn" data-seed="fix">시드 ${last.seed} 고정</button>` : ''}${fix != null ? '<button class="btn" data-seed="free">시드 고정 해제</button>' : ''}</div>`;
+  box.innerHTML = h;
+}
+$('#fab-repro').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-seed]'); if (!b || state.fabRunning) return;
+  const log = fabLog(state.id);
+  if (b.dataset.seed === 'fix' && log[0]) state.seedFix[state.id] = log[0].seed; else delete state.seedFix[state.id];
+  renderFabRepro(); renderCompare();
+});
 function renderFabPanel() {
   const l = lev(), c = state.cur, cr = credits(), btn = $('#btn-fab'), drcBad = c.res.drc && c.res.drc.length;
   if (c.S || c.pr) {
     btn.disabled = true; btn.textContent = 'Tape-out'; $('#yield').textContent = '—'; $('#yield').className = 'yield na'; $('#fab-kv').innerHTML = '';
     $('#fab-note').textContent = c.S ? 'Guided 단계에서는 공정 런이 없습니다. 마지막 단계(Full Design)에서 같은 설계로 Tape-out 합니다.' : c.pr.note;
-    return;
+    renderFabRepro(); return;
   }
   btn.disabled = state.fabRunning || cr <= 0 || drcBad;
   btn.textContent = state.fabRunning ? '공정 진행 중…' : `Tape-out · 크레딧 ${cr}/${credits0()}`;
@@ -508,20 +585,24 @@ function renderFabPanel() {
   $('#fab-kv').innerHTML = f ? `양품 <b>${f.pass}</b> / ${f.n} 다이<br>판정 ${crit}<br>목표 ≥ ${Math.round(l.fab.y * 100)}%${stale ? '<br><span style="color:var(--fail)">설계가 바뀌어 수율 점수 미반영</span>' : ''}`
     : `판정 ${crit}<br>목표 ≥ ${Math.round(l.fab.y * 100)}%<br>다이 ${makeWafer(1).length}개 · 9×9 grid`;
   $('#fab-note').textContent = drcBad ? 'DRC를 통과해야 Tape-out할 수 있습니다.' : cr <= 0 ? '크레딧을 모두 썼습니다. 레벨 재시작으로 충전하세요.'
-    : '웨이퍼마다 CD 오프셋, 두께 bowl, 다이 랜덤 변동이 새로 뽑힙니다. 공칭 성능에 여유가 없으면 수율이 무너집니다.';
+    : '웨이퍼마다 CD 오프셋, 두께 bowl, 다이 랜덤 변동이 새로 뽑힙니다(시드를 고정하면 같은 웨이퍼). 공칭 성능에 여유가 없으면 수율이 무너집니다.';
+  renderFabRepro();
 }
 function tapeOut() {
   const c = state.cur, id = state.id, l = lev(), K = kind();
   if (state.fabRunning || c.S || c.pr || (c.res.drc && c.res.drc.length) || credits() <= 0) return;
   state.credits[id] = credits() - 1; state.fabRunning = true;
-  const dies = makeWafer((Date.now() ^ (Math.random() * 1e9)) & 0x7fffffff, MODES[state.mode].sig), d = { ...c.d }, key = c.key;
+  // seed: fixed by the player (same wafer for two designs) or new; recorded with the design hash and model version (reproducible)
+  const seed = state.seedFix[id] != null ? state.seedFix[id] : ((Date.now() ^ (Math.random() * 1e9)) & 0x7fffffff), sig = MODES[state.mode].sig;
+  const dies = makeWafer(seed, sig), d = { ...c.d }, key = c.key;
   let k = 0, pass = 0; $('#yield').textContent = '…'; $('#yield').className = 'yield na'; renderFabPanel();
   const step = () => {
     const t0 = performance.now();
     while (k < dies.length && performance.now() - t0 < 14) { dies[k].pass = K.fabPass(l, K.evaluate(l, d, { ...dies[k], dt: dies[k].dt * l.pf.dt / 0.006 })); if (dies[k].pass) pass++; k++; }
     if (id === state.id) { drawWafer(dies, k); $('#yield').textContent = Math.round(pass / Math.max(1, k) * 100) + '%'; }
     if (k < dies.length) { requestAnimationFrame(step); return; }
-    state.fabRunning = false; state.fab[id] = { key, yield: pass / dies.length, pass, n: dies.length }; state.wafer[id] = dies;
+    state.fabRunning = false; state.fab[id] = { key, yield: pass / dies.length, pass, n: dies.length, seed }; state.wafer[id] = dies;
+    const log = fabLog(id); log.unshift({ seed, plat: state.plat, mode: state.mode, sig, hash: dhash(d), n: dies.length, pass, y: +(pass / dies.length).toFixed(4), model: MODEL_VERSION, t: new Date().toISOString() }); log.length = Math.min(log.length, 10);
     if (id === state.id) { evaluate(); awardStars(); maybeCard(); persist(); renderMap(); renderObjectives(); renderCards(); }
   };
   requestAnimationFrame(step);
@@ -784,6 +865,7 @@ function setupLevel() {
   const pre = $('#m-preface'); pre.hidden = !l.preface; pre.innerHTML = l.preface || '';
   const cc = $('#m-concepts'); cc.hidden = !l.concepts;
   if (l.concepts) { const seen = (PP().seen = PP().seen || {}); cc.innerHTML = `<summary>개념 노트 · ${l.concepts.length}개 — ${l.concepts.map((c) => c[0].replace(/<[^>]+>/g, '')).join(', ')}</summary><dl>${l.concepts.map(([t, d]) => `<dt>${t}</dt><dd>${d}</dd>`).join('')}</dl>`; cc.open = !seen[l.id] && !curStep(); seen[l.id] = 1; }   // a guided step carries its own intro, so the notes start folded there
+  { const rb = $('#m-rate'); rb.hidden = !RATE_LEVELS.includes(l.id); if (!rb.hidden) $('#m-rate-b').innerHTML = RATE_DEF; }
   const pf = PLATFORMS[state.plat]; $('#plat-chip').innerHTML = `${pf.short} · ${pf.band}<span>변경</span>`; $('#plat-chip').hidden = false;
   state.land = {}; state.cur = null;
   // a guided step gives no stars, cards, AI or tape-out: those panels step aside until Full Design
@@ -872,6 +954,13 @@ function renderUndo() {
 }
 $('#rs-undo').addEventListener('click', (e) => { if (e.target.id !== 'rs-undo-b') return; const r = store.undo(); $('#rs-undo').innerHTML = r.ok ? '<p class="note"><b class="st-PASS">되돌렸습니다.</b> 다시 불러옵니다…</p>' : `<p class="rs-err">${r.err}</p>`; if (r.ok) reloadSoon(); });
 window.GAME_DATA = { open: openData };
+// a model-confidence badge opens the Learning Guide at its model-limits section (F)
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-conf]'); if (!b || !window.GAME_GUIDE) return;
+  const lab = window.LABUI && window.LABUI.isOpen();
+  if (lab) { const g = $('#lab-guide'); if (g) g.click(); } else window.GAME_GUIDE.open();
+  setTimeout(() => { const h = document.querySelector('#g-F-h'); if (h) { h.scrollIntoView({ block: 'start' }); h.focus({ preventScroll: true }); } }, 60);
+});
 
 const UI = store.get('smq3-ui', {}) || {};   // view-only preferences (which sections are open); never progress or designs
 $('#cards').open = !!UI.cards; $('#cards').addEventListener('toggle', () => { UI.cards = $('#cards').open; store.set('smq3-ui', UI); });

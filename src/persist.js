@@ -3,6 +3,8 @@
 // (quota, private mode, blocked storage). Nothing is retried silently: the header shows the state and the data dialog
 // offers a full backup. The backup is one versioned JSON (smq-backup/1) of every key the game owns.
 const BUILD = (typeof SMQ_BUILD !== 'undefined' && SMQ_BUILD) || { version: '1.0.0', channel: 'dev', commit: null, date: null, offline: false };
+// model identity recorded with every Fab Run: same design + seed + model version → the same wafer result
+const MODEL_VERSION = 'smq-model-1.0';
 const SMQ_STORE = (() => {
   const W = typeof window !== 'undefined' ? window : null;
   const LS = () => (W ? W.localStorage : null);
