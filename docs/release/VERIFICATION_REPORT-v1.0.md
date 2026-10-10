@@ -128,7 +128,7 @@ Design Valid / Geometry Rechecked / Foundry Readiness: NOT VERIFIED. 기존 GDS 
 | smoke · flow · fab · lab_state · lab · guide × 4플랫폼 | PASS (페이지 오류 0) |
 | bot std/수치 힌트, BOT_MIN=2 (획득 별 기준, 아래): si1310 21레벨, si1550 · sin1310 · sin1550 9레벨 | 모든 레벨 ★★ 이상 획득, 종료 코드 0. ★★★ 미달: si1310 1-4·1-7·2-1·2-3R, si1550 1-7 (Fab 시드 의존) |
 | 화면 (1280 × 800, 400 × 860) | 가로 넘침 0. 캡처 `docs/ux/v1/{desktop,mobile}_backup_incomplete.png`, `_samewafer_stale.png`, `_samewafer_paired.png` |
-| GitHub Actions PR #8 | CI_RESULT |
+| GitHub Actions PR #8 run 38069268591 (d1167ae) | **모두 PASS** — quick(동일성 기준선 5개 readable, IDENTITY 12/12 · 1/1 · 12/12 · 4/4 — blob id가 로컬과 같음, check-run annotation으로 확인), release regression × 4플랫폼(봇 게이트 포함), release artifacts. 그 전 실행(2722c8d, 681a088)은 si1310 봇 게이트 2-1에서 실패 → 아래 “CI 봇 게이트 불안정” |
 
 ### CI 봇 게이트 불안정 (이번 패치 중 발견, 시험 하네스만 수정)
 PR #8 CI에서 si1310 봇 게이트가 2-1에서 실패했습니다(“BELOW ★★: 2-1”, annotation으로 확인). 원인은 게임이 아니라 게이트의 판정 기준입니다: 2-1 코치는 의도적으로 ★★★ 수율을 위해 언더컷(τ 때문에 ★★ 조건을 놓침)을 권하고, ★★ 코치는 다시 트렌치를 권해 봇이 두 설계를 오가다 반복 상한에서 멈춥니다. 마지막 설계가 어느 쪽이냐에 따라 “지금 설계가 ★★를 만족하는가”가 갈렸고, Fab 시드에 따라 이 경로에 들어갑니다. 수정 전 빌드(be4ce8a)에서도 2-1 단독 10회 중 2회 같은 결과(재현), 이전 CI 통과는 운이었습니다. 봇 게이트를 **이 레벨에서 획득한 별(게임 기록)** 기준으로 바꾸고, 마지막 설계의 충족 여부는 함께 출력합니다(★★를 한 번도 얻지 못한 레벨은 여전히 실패). 실패 레벨은 CI annotation으로도 남깁니다(job 로그를 못 받는 환경 대비). 게임·코치 동작은 바꾸지 않았습니다.
