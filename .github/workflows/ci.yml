@@ -1,7 +1,7 @@
 name: CI
 
 # quick: every push / PR — build, artifact integrity, syntax, engine + Design Lab + e2e (Si 1310), Python GDS checks
-# release: manual run with release=true or a v* tag — the four-platform matrix, the bot gate and the release artifacts
+# release: pull requests, manual run with release=true, or a v* tag — the four-platform matrix, the bot gate and the release artifacts
 on:
   pull_request:
   push:
@@ -63,7 +63,8 @@ jobs:
 
   release-matrix:
     name: Release regression (${{ matrix.platform }})
-    if: (github.event_name == 'workflow_dispatch' && inputs.release) || startsWith(github.ref, 'refs/tags/v')
+    # pull requests get the full four-platform evidence before merge; manual release runs and v* tags too
+    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.release) || startsWith(github.ref, 'refs/tags/v')
     needs: quick
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -96,11 +97,13 @@ jobs:
   release-artifacts:
     name: Release artifacts
     needs: release-matrix
+    if: (github.event_name == 'workflow_dispatch' && inputs.release) || startsWith(github.ref, 'refs/tags/v') || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}   # stamp the branch commit, not the PR merge ref
       - uses: actions/setup-node@v4
         with:
           node-version: 22
