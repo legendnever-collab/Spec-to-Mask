@@ -1,0 +1,1406 @@
+{
+ "schema": "smq-circuit/1",
+ "generator": "SPEC-to-MASK Quest · PIC Design Lab",
+ "exported": "2026-10-10T00:00:00Z",
+ "platform": {
+  "id": "si1550",
+  "mat": "si",
+  "lam_um": 1.55,
+  "core_t_um": 0.22,
+  "w0_um": 0.46,
+  "wc_um": 0.5,
+  "clad": "SiO2",
+  "box": "SiO2",
+  "rules_um": {
+   "gap": 0.18,
+   "wmin": 0.4,
+   "edge": 0.05
+  },
+  "route_rules": {
+   "port_width_um": 0.46,
+   "body_width_um": 1,
+   "taper": "linear on the first / last straight (short nets stay at the port width)",
+   "bend": "euler",
+   "R_um": 10,
+   "R_min_rule_um": 2.5,
+   "alpha_body_dB_cm": 0.7805,
+   "alpha_port_dB_cm": 5.2187,
+   "litho_min_width_um": 0.15
+  }
+ },
+ "architecture": {
+  "name": "1.6T WDM8 Tx PIC",
+  "outputs": 1,
+  "lanes": 8,
+  "lane_rate_gbps": 224,
+  "net_rate_gbps": 200,
+  "baud_gbd": 112,
+  "format": "PAM4",
+  "modulator": "wdm",
+  "laser_share": 1,
+  "lasers": 1,
+  "splitter_depth": 0,
+  "monitor_pd": false,
+  "wdm": {
+   "channels": 8,
+   "grid_GHz": 200,
+   "lambda_um": [
+    1.5444,
+    1.546,
+    1.5476,
+    1.5492,
+    1.5508,
+    1.5524,
+    1.554,
+    1.5556
+   ],
+   "fsr_nm": 13.7907,
+   "radii": "stepped",
+   "assignment": "cyclic (barrel shift)",
+   "ring_pitch_um": 40,
+   "source": "comb (ELS)",
+   "model": "3W engine (3W 기준 설계)"
+  }
+ },
+ "die": {
+  "W_um": 900,
+  "H_um": 500,
+  "edge_um": 50,
+  "optical_io": {
+   "input": "W",
+   "output": "E",
+   "fiber_pitch_um": 127
+  },
+  "electrical_io": {
+   "type": "flip-chip bumps (abstract)",
+   "side": "local"
+  },
+  "lane_pitch_um": 127,
+  "lane_stagger_um": 0
+ },
+ "instances": [
+  {
+   "id": "IN0",
+   "type": "ssc",
+   "role": "input",
+   "lane": null,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 60,
+    "tip_um": 0.146,
+    "w_um": 0.46
+   },
+   "placement": {
+    "x_um": 0,
+    "y_um": 271.25,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    0,
+    269.25,
+    60,
+    273.25
+   ],
+   "size_um": [
+    60,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      0,
+      271.25
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      60,
+      271.25
+     ],
+     "angle_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "BUS",
+   "type": "mrr_wdm",
+   "role": "modulator",
+   "lane": null,
+   "source": "2-3R 기준 설계 · 3W 기준 설계 (R 7.1 µm, 200 GHz)",
+   "params": {
+    "rings": [
+     {
+      "pcell": "ring_allpass",
+      "core_mat": "si",
+      "R_um": 7.106,
+      "R_slider_um": 7.1,
+      "gap_um": 0.24,
+      "w_um": 0.5,
+      "bus_w_um": 0.5,
+      "bus_len_um": 34.212,
+      "rib": {
+       "t_um": 0.22,
+       "slab_um": 0.09,
+       "slab_ext_um": 2
+      },
+      "order_m": 76,
+      "heterogeneous_si": false,
+      "junction": {
+       "type": "lateral PN (P inside, N outside)",
+       "coverage": 0.75,
+       "arc_deg": 270,
+       "centred_opposite_coupler": true,
+       "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+      },
+      "heater": {
+       "h_um": 0.5,
+       "iso": 1,
+       "coverage": 0.85,
+       "w_um": 2,
+       "arc_deg": 306,
+       "gap_centred_opposite_coupler": true,
+       "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+      },
+      "lambda_design_um": 1.55,
+      "predicted": {
+       "fsr_nm": 13.7907,
+       "QL": 4822,
+       "Qi": 16317,
+       "Qc": 6846,
+       "kappa2": 0.098,
+       "shift_pm_per_V": 18.569,
+       "Cj_fF": 15.0807,
+       "PhW_mW": 10.1672,
+       "dlambda_dT_pm_K": 75.8307
+      },
+      "model": {
+       "neff": 2.6003,
+       "ng": 3.8806,
+       "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+      },
+      "local_pads": false,
+      "channel": 0
+     },
+     {
+      "pcell": "ring_allpass",
+      "core_mat": "si",
+      "R_um": 7.117,
+      "R_slider_um": 7.1,
+      "gap_um": 0.24,
+      "w_um": 0.5,
+      "bus_w_um": 0.5,
+      "bus_len_um": 34.234,
+      "rib": {
+       "t_um": 0.22,
+       "slab_um": 0.09,
+       "slab_ext_um": 2
+      },
+      "order_m": 76,
+      "heterogeneous_si": false,
+      "junction": {
+       "type": "lateral PN (P inside, N outside)",
+       "coverage": 0.75,
+       "arc_deg": 270,
+       "centred_opposite_coupler": true,
+       "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+      },
+      "heater": {
+       "h_um": 0.5,
+       "iso": 1,
+       "coverage": 0.85,
+       "w_um": 2,
+       "arc_deg": 306,
+       "gap_centred_opposite_coupler": true,
+       "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+      },
+      "lambda_design_um": 1.55,
+      "predicted": {
+       "fsr_nm": 13.7907,
+       "QL": 4822,
+       "Qi": 16317,
+       "Qc": 6846,
+       "kappa2": 0.098,
+       "shift_pm_per_V": 18.569,
+       "Cj_fF": 15.0807,
+       "PhW_mW": 10.1672,
+       "dlambda_dT_pm_K": 75.8307
+      },
+      "model": {
+       "neff": 2.6003,
+       "ng": 3.8806,
+       "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+      },
+      "local_pads": false,
+      "channel": 1
+     },
+     {
+      "pcell": "ring_allpass",
+      "core_mat": "si",
+      "R_um": 7.128,
+      "R_slider_um": 7.1,
+      "gap_um": 0.24,
+      "w_um": 0.5,
+      "bus_w_um": 0.5,
+      "bus_len_um": 34.256,
+      "rib": {
+       "t_um": 0.22,
+       "slab_um": 0.09,
+       "slab_ext_um": 2
+      },
+      "order_m": 76,
+      "heterogeneous_si": false,
+      "junction": {
+       "type": "lateral PN (P inside, N outside)",
+       "coverage": 0.75,
+       "arc_deg": 270,
+       "centred_opposite_coupler": true,
+       "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+      },
+      "heater": {
+       "h_um": 0.5,
+       "iso": 1,
+       "coverage": 0.85,
+       "w_um": 2,
+       "arc_deg": 306,
+       "gap_centred_opposite_coupler": true,
+       "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+      },
+      "lambda_design_um": 1.55,
+      "predicted": {
+       "fsr_nm": 13.7907,
+       "QL": 4822,
+       "Qi": 16317,
+       "Qc": 6846,
+       "kappa2": 0.098,
+       "shift_pm_per_V": 18.569,
+       "Cj_fF": 15.0807,
+       "PhW_mW": 10.1672,
+       "dlambda_dT_pm_K": 75.8307
+      },
+      "model": {
+       "neff": 2.6003,
+       "ng": 3.8806,
+       "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+      },
+      "local_pads": false,
+      "channel": 2
+     },
+     {
+      "pcell": "ring_allpass",
+      "core_mat": "si",
+      "R_um": 7.139,
+      "R_slider_um": 7.1,
+      "gap_um": 0.24,
+      "w_um": 0.5,
+      "bus_w_um": 0.5,
+      "bus_len_um": 34.278,
+      "rib": {
+       "t_um": 0.22,
+       "slab_um": 0.09,
+       "slab_ext_um": 2
+      },
+      "order_m": 76,
+      "heterogeneous_si": false,
+      "junction": {
+       "type": "lateral PN (P inside, N outside)",
+       "coverage": 0.75,
+       "arc_deg": 270,
+       "centred_opposite_coupler": true,
+       "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+      },
+      "heater": {
+       "h_um": 0.5,
+       "iso": 1,
+       "coverage": 0.85,
+       "w_um": 2,
+       "arc_deg": 306,
+       "gap_centred_opposite_coupler": true,
+       "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+      },
+      "lambda_design_um": 1.55,
+      "predicted": {
+       "fsr_nm": 13.7907,
+       "QL": 4822,
+       "Qi": 16317,
+       "Qc": 6846,
+       "kappa2": 0.098,
+       "shift_pm_per_V": 18.569,
+       "Cj_fF": 15.0807,
+       "PhW_mW": 10.1672,
+       "dlambda_dT_pm_K": 75.8307
+      },
+      "model": {
+       "neff": 2.6003,
+       "ng": 3.8806,
+       "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+      },
+      "local_pads": false,
+      "channel": 3
+     },
+     {
+      "pcell": "ring_allpass",
+      "core_mat": "si",
+      "R_um": 7.151,
+      "R_slider_um": 7.1,
+      "gap_um": 0.24,
+      "w_um": 0.5,
+      "bus_w_um": 0.5,
+      "bus_len_um": 34.302,
+      "rib": {
+       "t_um": 0.22,
+       "slab_um": 0.09,
+       "slab_ext_um": 2
+      },
+      "order_m": 76,
+      "heterogeneous_si": false,
+      "junction": {
+       "type": "lateral PN (P inside, N outside)",
+       "coverage": 0.75,
+       "arc_deg": 270,
+       "centred_opposite_coupler": true,
+       "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+      },
+      "heater": {
+       "h_um": 0.5,
+       "iso": 1,
+       "coverage": 0.85,
+       "w_um": 2,
+       "arc_deg": 306,
+       "gap_centred_opposite_coupler": true,
+       "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+      },
+      "lambda_design_um": 1.55,
+      "predicted": {
+       "fsr_nm": 13.7907,
+       "QL": 4822,
+       "Qi": 16317,
+       "Qc": 6846,
+       "kappa2": 0.098,
+       "shift_pm_per_V": 18.569,
+       "Cj_fF": 15.0807,
+       "PhW_mW": 10.1672,
+       "dlambda_dT_pm_K": 75.8307
+      },
+      "model": {
+       "neff": 2.6003,
+       "ng": 3.8806,
+       "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+      },
+      "local_pads": false,
+      "channel": 4
+     },
+     {
+      "pcell": "ring_allpass",
+      "core_mat": "si",
+      "R_um": 7.162,
+      "R_slider_um": 7.1,
+      "gap_um": 0.24,
+      "w_um": 0.5,
+      "bus_w_um": 0.5,
+      "bus_len_um": 34.324,
+      "rib": {
+       "t_um": 0.22,
+       "slab_um": 0.09,
+       "slab_ext_um": 2
+      },
+      "order_m": 76,
+      "heterogeneous_si": false,
+      "junction": {
+       "type": "lateral PN (P inside, N outside)",
+       "coverage": 0.75,
+       "arc_deg": 270,
+       "centred_opposite_coupler": true,
+       "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+      },
+      "heater": {
+       "h_um": 0.5,
+       "iso": 1,
+       "coverage": 0.85,
+       "w_um": 2,
+       "arc_deg": 306,
+       "gap_centred_opposite_coupler": true,
+       "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+      },
+      "lambda_design_um": 1.55,
+      "predicted": {
+       "fsr_nm": 13.7907,
+       "QL": 4822,
+       "Qi": 16317,
+       "Qc": 6846,
+       "kappa2": 0.098,
+       "shift_pm_per_V": 18.569,
+       "Cj_fF": 15.0807,
+       "PhW_mW": 10.1672,
+       "dlambda_dT_pm_K": 75.8307
+      },
+      "model": {
+       "neff": 2.6003,
+       "ng": 3.8806,
+       "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+      },
+      "local_pads": false,
+      "channel": 5
+     },
+     {
+      "pcell": "ring_allpass",
+      "core_mat": "si",
+      "R_um": 7.173,
+      "R_slider_um": 7.1,
+      "gap_um": 0.24,
+      "w_um": 0.5,
+      "bus_w_um": 0.5,
+      "bus_len_um": 34.346,
+      "rib": {
+       "t_um": 0.22,
+       "slab_um": 0.09,
+       "slab_ext_um": 2
+      },
+      "order_m": 76,
+      "heterogeneous_si": false,
+      "junction": {
+       "type": "lateral PN (P inside, N outside)",
+       "coverage": 0.75,
+       "arc_deg": 270,
+       "centred_opposite_coupler": true,
+       "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+      },
+      "heater": {
+       "h_um": 0.5,
+       "iso": 1,
+       "coverage": 0.85,
+       "w_um": 2,
+       "arc_deg": 306,
+       "gap_centred_opposite_coupler": true,
+       "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+      },
+      "lambda_design_um": 1.55,
+      "predicted": {
+       "fsr_nm": 13.7907,
+       "QL": 4822,
+       "Qi": 16317,
+       "Qc": 6846,
+       "kappa2": 0.098,
+       "shift_pm_per_V": 18.569,
+       "Cj_fF": 15.0807,
+       "PhW_mW": 10.1672,
+       "dlambda_dT_pm_K": 75.8307
+      },
+      "model": {
+       "neff": 2.6003,
+       "ng": 3.8806,
+       "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+      },
+      "local_pads": false,
+      "channel": 6
+     },
+     {
+      "pcell": "ring_allpass",
+      "core_mat": "si",
+      "R_um": 7.184,
+      "R_slider_um": 7.1,
+      "gap_um": 0.24,
+      "w_um": 0.5,
+      "bus_w_um": 0.5,
+      "bus_len_um": 34.368,
+      "rib": {
+       "t_um": 0.22,
+       "slab_um": 0.09,
+       "slab_ext_um": 2
+      },
+      "order_m": 76,
+      "heterogeneous_si": false,
+      "junction": {
+       "type": "lateral PN (P inside, N outside)",
+       "coverage": 0.75,
+       "arc_deg": 270,
+       "centred_opposite_coupler": true,
+       "abstraction": "PN implants drawn as annotation layers (generic PDK: not foundry implant rules)"
+      },
+      "heater": {
+       "h_um": 0.5,
+       "iso": 1,
+       "coverage": 0.85,
+       "w_um": 2,
+       "arc_deg": 306,
+       "gap_centred_opposite_coupler": true,
+       "abstraction": "heater arc + leads + pads on an abstract heater layer (TiN 2 µm as in 2-1)"
+      },
+      "lambda_design_um": 1.55,
+      "predicted": {
+       "fsr_nm": 13.7907,
+       "QL": 4822,
+       "Qi": 16317,
+       "Qc": 6846,
+       "kappa2": 0.098,
+       "shift_pm_per_V": 18.569,
+       "Cj_fF": 15.0807,
+       "PhW_mW": 10.1672,
+       "dlambda_dT_pm_K": 75.8307
+      },
+      "model": {
+       "neff": 2.6003,
+       "ng": 3.8806,
+       "approximation": "EIM rib + Marcuse coupled-slab κ over the curved gap; bend radiation (Marcuse); junction Δn from the 2-2 PN model; engineering surrogate, verify with a mode solver / FDTD"
+      },
+      "local_pads": false,
+      "channel": 7
+     }
+    ],
+    "pitch_um": 40,
+    "channels": 8,
+    "grid_GHz": 200,
+    "radii": "stepped",
+    "assignment": "cyclic (barrel shift)",
+    "local": {
+     "prims": [
+      {
+       "t": "L",
+       "a": [
+        0,
+        0
+       ],
+       "b": [
+        15.8,
+        0
+       ],
+       "w0": 0.46,
+       "w1": 0.5,
+       "w": 0.5,
+       "layer": "core"
+      },
+      {
+       "t": "L",
+       "a": [
+        335.8,
+        0
+       ],
+       "b": [
+        351.6,
+        0
+       ],
+       "w0": 0.5,
+       "w1": 0.46,
+       "w": 0.5,
+       "layer": "core"
+      },
+      {
+       "t": "L",
+       "a": [
+        15.8,
+        0
+       ],
+       "b": [
+        18.694,
+        0
+       ],
+       "w": 0.5,
+       "layer": "si"
+      },
+      {
+       "t": "L",
+       "a": [
+        52.906,
+        0
+       ],
+       "b": [
+        58.683,
+        0
+       ],
+       "w": 0.5,
+       "layer": "si"
+      },
+      {
+       "t": "L",
+       "a": [
+        92.917,
+        0
+       ],
+       "b": [
+        98.672,
+        0
+       ],
+       "w": 0.5,
+       "layer": "si"
+      },
+      {
+       "t": "L",
+       "a": [
+        132.928,
+        0
+       ],
+       "b": [
+        138.661,
+        0
+       ],
+       "w": 0.5,
+       "layer": "si"
+      },
+      {
+       "t": "L",
+       "a": [
+        172.939,
+        0
+       ],
+       "b": [
+        178.649,
+        0
+       ],
+       "w": 0.5,
+       "layer": "si"
+      },
+      {
+       "t": "L",
+       "a": [
+        212.951,
+        0
+       ],
+       "b": [
+        218.638,
+        0
+       ],
+       "w": 0.5,
+       "layer": "si"
+      },
+      {
+       "t": "L",
+       "a": [
+        252.962,
+        0
+       ],
+       "b": [
+        258.627,
+        0
+       ],
+       "w": 0.5,
+       "layer": "si"
+      },
+      {
+       "t": "L",
+       "a": [
+        292.973,
+        0
+       ],
+       "b": [
+        298.616,
+        0
+       ],
+       "w": 0.5,
+       "layer": "si"
+      },
+      {
+       "t": "L",
+       "a": [
+        332.984,
+        0
+       ],
+       "b": [
+        335.8,
+        0
+       ],
+       "w": 0.5,
+       "layer": "si"
+      }
+     ],
+     "ring_x_um": [
+      35.8,
+      75.8,
+      115.8,
+      155.8,
+      195.8,
+      235.8,
+      275.8,
+      315.8
+     ],
+     "ring_y_um": [
+      7.846,
+      7.857,
+      7.868,
+      7.879,
+      7.891,
+      7.902,
+      7.913,
+      7.924
+     ],
+     "transition": "linear taper 0.46→0.5 µm at the two bus ends"
+    }
+   },
+   "placement": {
+    "x_um": 236.7,
+    "y_um": 271.25,
+    "rot_deg": 0
+   },
+   "bbox_um": [
+    236.7,
+    268,
+    588.3,
+    296.358
+   ],
+   "size_um": [
+    351.6,
+    28.358
+   ],
+   "ports": [
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      236.7,
+      271.25
+     ],
+     "angle_deg": 180
+    },
+    {
+     "name": "out",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      588.3,
+      271.25
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "rf_s0",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      272.5,
+      279.096
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g0",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      287.606,
+      279.096
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p0",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      261.394,
+      294.202
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n0",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      283.606,
+      294.202
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_s1",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      312.5,
+      279.107
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g1",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      327.617,
+      279.107
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p1",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      301.383,
+      294.224
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n1",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      323.617,
+      294.224
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_s2",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      352.5,
+      279.118
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g2",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      367.628,
+      279.118
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p2",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      341.372,
+      294.246
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n2",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      363.628,
+      294.246
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_s3",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      392.5,
+      279.129
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g3",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      407.639,
+      279.129
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p3",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      381.361,
+      294.268
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n3",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      403.639,
+      294.268
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_s4",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      432.5,
+      279.141
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g4",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      447.651,
+      279.141
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p4",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      421.349,
+      294.292
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n4",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      443.651,
+      294.292
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_s5",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      472.5,
+      279.152
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g5",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      487.662,
+      279.152
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p5",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      461.338,
+      294.314
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n5",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      483.662,
+      294.314
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_s6",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      512.5,
+      279.163
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g6",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      527.673,
+      279.163
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p6",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      501.327,
+      294.336
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n6",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      523.673,
+      294.336
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_s7",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      552.5,
+      279.174
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "rf_g7",
+     "kind": "electrical",
+     "sub": "rf",
+     "xy_um": [
+      567.684,
+      279.174
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_p7",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      541.316,
+      294.358
+     ],
+     "angle_deg": null
+    },
+    {
+     "name": "h_n7",
+     "kind": "electrical",
+     "sub": "dc",
+     "xy_um": [
+      563.684,
+      294.358
+     ],
+     "angle_deg": null
+    }
+   ]
+  },
+  {
+   "id": "OUT0",
+   "type": "ssc",
+   "role": "output",
+   "lane": 0,
+   "source": "1-6 기준 설계",
+   "params": {
+    "Lt_um": 60,
+    "tip_um": 0.146,
+    "w_um": 0.46
+   },
+   "placement": {
+    "x_um": 900,
+    "y_um": 271.25,
+    "rot_deg": 180
+   },
+   "bbox_um": [
+    840,
+    269.25,
+    900,
+    273.25
+   ],
+   "size_um": [
+    60,
+    4
+   ],
+   "ports": [
+    {
+     "name": "fib",
+     "kind": "optical",
+     "sub": "fib",
+     "xy_um": [
+      900,
+      271.25
+     ],
+     "angle_deg": 0
+    },
+    {
+     "name": "in",
+     "kind": "optical",
+     "sub": "o",
+     "xy_um": [
+      840,
+      271.25
+     ],
+     "angle_deg": 180
+    }
+   ]
+  }
+ ],
+ "nets": {
+  "optical": [
+   {
+    "id": "n0",
+    "from": "IN0.out",
+    "to": "BUS.in",
+    "lane": null,
+    "kind": "feed"
+   },
+   {
+    "id": "n1",
+    "from": "BUS.out",
+    "to": "OUT0.in",
+    "lane": 0,
+    "kind": "out"
+   }
+  ],
+  "electrical": [
+   {
+    "id": "BUS.rf_s0",
+    "kind": "rf",
+    "lane": 0,
+    "from": "BUS.rf_s0",
+    "to": "pad:RF0_s"
+   },
+   {
+    "id": "BUS.rf_g0",
+    "kind": "rf",
+    "lane": 0,
+    "from": "BUS.rf_g0",
+    "to": "pad:RF0_g"
+   },
+   {
+    "id": "BUS.rf_s1",
+    "kind": "rf",
+    "lane": 1,
+    "from": "BUS.rf_s1",
+    "to": "pad:RF1_s"
+   },
+   {
+    "id": "BUS.rf_g1",
+    "kind": "rf",
+    "lane": 1,
+    "from": "BUS.rf_g1",
+    "to": "pad:RF1_g"
+   },
+   {
+    "id": "BUS.rf_s2",
+    "kind": "rf",
+    "lane": 2,
+    "from": "BUS.rf_s2",
+    "to": "pad:RF2_s"
+   },
+   {
+    "id": "BUS.rf_g2",
+    "kind": "rf",
+    "lane": 2,
+    "from": "BUS.rf_g2",
+    "to": "pad:RF2_g"
+   },
+   {
+    "id": "BUS.rf_s3",
+    "kind": "rf",
+    "lane": 3,
+    "from": "BUS.rf_s3",
+    "to": "pad:RF3_s"
+   },
+   {
+    "id": "BUS.rf_g3",
+    "kind": "rf",
+    "lane": 3,
+    "from": "BUS.rf_g3",
+    "to": "pad:RF3_g"
+   },
+   {
+    "id": "BUS.rf_s4",
+    "kind": "rf",
+    "lane": 4,
+    "from": "BUS.rf_s4",
+    "to": "pad:RF4_s"
+   },
+   {
+    "id": "BUS.rf_g4",
+    "kind": "rf",
+    "lane": 4,
+    "from": "BUS.rf_g4",
+    "to": "pad:RF4_g"
+   },
+   {
+    "id": "BUS.rf_s5",
+    "kind": "rf",
+    "lane": 5,
+    "from": "BUS.rf_s5",
+    "to": "pad:RF5_s"
+   },
+   {
+    "id": "BUS.rf_g5",
+    "kind": "rf",
+    "lane": 5,
+    "from": "BUS.rf_g5",
+    "to": "pad:RF5_g"
+   },
+   {
+    "id": "BUS.rf_s6",
+    "kind": "rf",
+    "lane": 6,
+    "from": "BUS.rf_s6",
+    "to": "pad:RF6_s"
+   },
+   {
+    "id": "BUS.rf_g6",
+    "kind": "rf",
+    "lane": 6,
+    "from": "BUS.rf_g6",
+    "to": "pad:RF6_g"
+   },
+   {
+    "id": "BUS.rf_s7",
+    "kind": "rf",
+    "lane": 7,
+    "from": "BUS.rf_s7",
+    "to": "pad:RF7_s"
+   },
+   {
+    "id": "BUS.rf_g7",
+    "kind": "rf",
+    "lane": 7,
+    "from": "BUS.rf_g7",
+    "to": "pad:RF7_g"
+   },
+   {
+    "id": "BUS.h_p0",
+    "kind": "dc",
+    "lane": 0,
+    "from": "BUS.h_p0",
+    "to": "pad:DC0_h_p"
+   },
+   {
+    "id": "BUS.h_n0",
+    "kind": "dc",
+    "lane": 0,
+    "from": "BUS.h_n0",
+    "to": "pad:DC0_h_n"
+   },
+   {
+    "id": "BUS.h_p1",
+    "kind": "dc",
+    "lane": 1,
+    "from": "BUS.h_p1",
+    "to": "pad:DC1_h_p"
+   },
+   {
+    "id": "BUS.h_n1",
+    "kind": "dc",
+    "lane": 1,
+    "from": "BUS.h_n1",
+    "to": "pad:DC1_h_n"
+   },
+   {
+    "id": "BUS.h_p2",
+    "kind": "dc",
+    "lane": 2,
+    "from": "BUS.h_p2",
+    "to": "pad:DC2_h_p"
+   },
+   {
+    "id": "BUS.h_n2",
+    "kind": "dc",
+    "lane": 2,
+    "from": "BUS.h_n2",
+    "to": "pad:DC2_h_n"
+   },
+   {
+    "id": "BUS.h_p3",
+    "kind": "dc",
+    "lane": 3,
+    "from": "BUS.h_p3",
+    "to": "pad:DC3_h_p"
+   },
+   {
+    "id": "BUS.h_n3",
+    "kind": "dc",
+    "lane": 3,
+    "from": "BUS.h_n3",
+    "to": "pad:DC3_h_n"
+   },
+   {
+    "id": "BUS.h_p4",
+    "kind": "dc",
+    "lane": 4,
+    "from": "BUS.h_p4",
+    "to": "pad:DC4_h_p"
+   },
+   {
+    "id": "BUS.h_n4",
+    "kind": "dc",
+    "lane": 4,
+    "from": "BUS.h_n4",
+    "to": "pad:DC4_h_n"
+   },
+   {
+    "id": "BUS.h_p5",
+    "kind": "dc",
+    "lane": 5,
+    "from": "BUS.h_p5",
+    "to": "pad:DC5_h_p"
+   },
+   {
+    "id": "BUS.h_n5",
+    "kind": "dc",
+    "lane": 5,
+    "from": "BUS.h_n5",
+    "to": "pad:DC5_h_n"
+   },
+   {
+    "id": "BUS.h_p6",
+    "kind": "dc",
+    "lane": 6,
+    "from": "BUS.h_p6",
+    "to": "pad:DC6_h_p"
+   },
+   {
+    "id": "BUS.h_n6",
+    "kind": "dc",
+    "lane": 6,
+    "from": "BUS.h_n6",
+    "to": "pad:DC6_h_n"
+   },
+   {
+    "id": "BUS.h_p7",
+    "kind": "dc",
+    "lane": 7,
+    "from": "BUS.h_p7",
+    "to": "pad:DC7_h_p"
+   },
+   {
+    "id": "BUS.h_n7",
+    "kind": "dc",
+    "lane": 7,
+    "from": "BUS.h_n7",
+    "to": "pad:DC7_h_n"
+   }
+  ]
+ },
+ "design_hash": "ce20ee2b",
+ "design": {
+  "mod": 2,
+  "share": 0,
+  "edge": 50,
+  "fp": 127,
+  "rf": 1,
+  "rfSide": 0,
+  "pp": 100,
+  "bend": 1,
+  "R": 10,
+  "wr": 1,
+  "jog": 4,
+  "mon": 0,
+  "W": 0.9,
+  "H": 0.5,
+  "rp": 40,
+  "P": 127,
+  "stag": 0
+ }
+}

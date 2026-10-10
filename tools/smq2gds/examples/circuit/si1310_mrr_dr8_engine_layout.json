@@ -30,6 +30,7 @@
  },
  "architecture": {
   "name": "1.6T DR8 Tx PIC",
+  "outputs": 8,
   "lanes": 8,
   "lane_rate_gbps": 224,
   "net_rate_gbps": 200,
@@ -6503,7 +6504,7 @@
   "termination": "on-chip resistor placeholder",
   "not_tape_out_ready": true
  },
- "design_hash": "70283dfd",
+ "design_hash": "cbb62905",
  "design": {
   "mod": 1,
   "share": 0,

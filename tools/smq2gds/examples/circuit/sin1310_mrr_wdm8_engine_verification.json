@@ -1,0 +1,271 @@
+{
+ "schema": "smq-circuit/1#verification",
+ "platform": "sin1310",
+ "design_hash": "33f9462f",
+ "checks": [
+  {
+   "group": "Connectivity",
+   "item": "광 포트 연결 (모든 광 포트 정확히 한 번)",
+   "status": "PASS",
+   "detail": "4개 포트, 2개 광 넷"
+  },
+  {
+   "group": "Connectivity",
+   "item": "포트 종류 (광↔광, 전기↔패드)",
+   "status": "PASS",
+   "detail": "광 넷은 광 포트끼리만 연결"
+  },
+  {
+   "group": "Connectivity",
+   "item": "채널 수 = 8 (입력 → 공유 버스 링 8개 → 출력 1)",
+   "status": "PASS",
+   "detail": "출력까지 이어진 버스의 링 8개 · 파장 8개"
+  },
+  {
+   "group": "Connectivity",
+   "item": "입·출력 일관성",
+   "status": "PASS",
+   "detail": "입력 1 (다파장 광원 1) · 출력 1 (8파장 한 광섬유)"
+  },
+  {
+   "group": "Connectivity",
+   "item": "전기 포트 → 패드 매핑",
+   "status": "PASS",
+   "detail": "32개 전기 포트 → 32개 범프"
+  },
+  {
+   "group": "Geometry",
+   "item": "최소 선폭 (0.78 µm ≥ 0.3 µm, 일반 리소 가정)",
+   "status": "PASS",
+   "detail": "게임의 rules.wmin은 MMI 테이퍼 등 다중모드 구조용 — 단일모드 배선에는 리소 한계를 적용 (Unverified Assumption)"
+  },
+  {
+   "group": "Geometry",
+   "item": "넓은 배선의 굽힘 (w > wc 0.844 µm)",
+   "status": "PASS",
+   "detail": "모든 배선이 단일모드 폭 (테이퍼 공간이 없는 짧은 넷 2개는 w0 유지)"
+  },
+  {
+   "group": "Geometry",
+   "item": "최소 굽힘 반경 R ≥ 15 µm (w0, 90° 방사 < 0.005 dB)",
+   "status": "PASS",
+   "detail": "설정 R 100 µm (Euler: Rmin) · 작은 S-bend 원호 포함"
+  },
+  {
+   "group": "Geometry",
+   "item": "광 배선 생성",
+   "status": "PASS",
+   "detail": "2개 넷 모두 배선"
+  },
+  {
+   "group": "Geometry",
+   "item": "배선 간격 ≥ 0.4 µm",
+   "status": "PASS",
+   "detail": "서로 다른 넷이 4.8 µm 안에 오지 않음"
+  },
+  {
+   "group": "Geometry",
+   "item": "다이 경계 (0.90 × 0.50 mm, 여유 50 µm)",
+   "status": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "Geometry",
+   "item": "소자 겹침",
+   "status": "PASS",
+   "detail": "3개 소자"
+  },
+  {
+   "group": "Geometry",
+   "item": "배선–소자 간섭 (장애물)",
+   "status": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "Geometry",
+   "item": "범프 배치 (다이 안, 간격 ≥ 15 µm)",
+   "status": "PASS",
+   "detail": "32개 범프"
+  },
+  {
+   "group": "Geometry",
+   "item": "RF 배선 교차 (같은 금속층)",
+   "status": "PASS",
+   "detail": "M1 선폭 10 µm · 패드·범프 포함"
+  },
+  {
+   "group": "Geometry",
+   "item": "DC 배선 교차 (같은 금속층)",
+   "status": "PASS",
+   "detail": "M2 한 층, 선폭 5 µm · 평면 팬아웃 (트랙 10 µm 간격 × 8)"
+  },
+  {
+   "group": "Geometry",
+   "item": "RF 금속 – 광 도파로 교차",
+   "status": "WARNING",
+   "detail": "8곳 (산화막 위 금속: 광 손실·RF 결합 미계산) — 링 G 접점 선이 버스를 건넘"
+  },
+  {
+   "group": "Geometry",
+   "item": "DC 금속(M2) – 버스 교차",
+   "status": "WARNING",
+   "detail": "16곳 — 히터 선이 버스를 건너 남쪽 범프 열로 (금속 아래 광 손실 미계산)"
+  },
+  {
+   "group": "System",
+   "item": "레인 속도 224 Gb/s 라인 (200G 순 데이터, 112 GBd PAM4)",
+   "status": "PASS",
+   "detail": "모든 레인 같은 변조기"
+  },
+  {
+   "group": "System",
+   "item": "총 용량 8 × 200G = 1.6 Tb/s",
+   "status": "PASS",
+   "detail": "8개 레인 연결"
+  },
+  {
+   "group": "System",
+   "item": "아키텍처 ↔ 3W 설계",
+   "status": "PASS",
+   "detail": "3W 기준 설계와 같음 (800 GHz · R 5.45 µm · 링 간격 40 µm)"
+  },
+  {
+   "group": "System",
+   "item": "광 파워 버짓 (레이아웃 배선 손실 포함)",
+   "status": "PASS",
+   "detail": "3W 모델 마진 1.60 dB − 배선 손실(최악 경로) 0.00 dB = 1.59 dB"
+  },
+  {
+   "group": "Geometry",
+   "item": "링 간격 ≥ 링 셀 (2R + 20 µm)",
+   "status": "PASS",
+   "detail": "p 40 µm · 셀 31.1 µm"
+  },
+  {
+   "group": "System",
+   "item": "FSR 별칭 (공유 버스, 3W 엔진)",
+   "status": "PASS",
+   "detail": "FSR 12.56 nm · 8Δλ 36.63 nm (800 GHz) · FSR < 8Δλ이지만 다음 차수가 채널 사이에 놓임"
+  },
+  {
+   "group": "System",
+   "item": "이웃 링 크로스토크 (최악 채널)",
+   "status": "PASS",
+   "detail": "ε 0.44 % → 페널티 0.07 dB (Rx Demux XT 포함)"
+  },
+  {
+   "group": "System",
+   "item": "공진 배정 · 링 튜닝 (0–70 °C)",
+   "status": "PASS",
+   "detail": "계단 반경 · 순환 배정(배럴 시프트) · Tx 히터 합 29.7 mW (링당 최대 4.3 mW ≤ 27.4) · 이웃 열 결합 1.5 % @ 40 µm"
+  },
+  {
+   "group": "System",
+   "item": "링 구동선 길이 (집중 소자 조건 ≪ λRF/10)",
+   "status": "PASS",
+   "detail": "최장 91 µm vs λ/10 = 212 µm @56 GHz — 넘으면 반사·공진, 구동기를 링 옆에(플립칩)"
+  },
+  {
+   "group": "Model validity",
+   "item": "RF 전극·급전선 전자기 해석",
+   "status": "NOT VERIFIED",
+   "detail": "CPW·패드·종단은 추상 형상 — EM 시뮬레이션 필요"
+  },
+  {
+   "group": "Model validity",
+   "item": "링별 락 모니터 (드롭 포트 / 링 안 PD)",
+   "status": "NOT VERIFIED",
+   "detail": "8개 링을 각각 잠그려면 링마다 모니터가 필요 — 이 레이아웃에는 그리지 않음"
+  },
+  {
+   "group": "Model validity",
+   "item": "링 락 동역학 · 배정 탐색 · 3D 열 결합",
+   "status": "NOT VERIFIED",
+   "detail": "온도마다 최적 배정을 고른다고 가정(재락 중 중단·탐색 실패 미계산), 열 결합은 2-1 2D 단면 프로파일(상한)"
+  },
+  {
+   "group": "Model validity",
+   "item": "파운드리 DRC (주입·금속·비아 규칙)",
+   "status": "NOT VERIFIED",
+   "detail": "일반 규칙만: 선폭·간격·굽힘·경계·겹침"
+  },
+  {
+   "group": "Model validity",
+   "item": "GDS 재검사",
+   "status": "NOT VERIFIED",
+   "detail": "tools/smq2gds.circuit로 GDS를 만들고 다시 읽어 검사한 결과(engine_verification.json)를 Mission 6에서 불러오면 반영"
+  }
+ ],
+ "summary": {
+  "PASS": 25,
+  "WARNING": 2,
+  "FAIL": 0,
+  "NOT VERIFIED": 5
+ },
+ "performance": {
+  "model": "3A+ engine (3W 기준 설계)",
+  "margin_model_dB": 1.5961,
+  "layout_route_loss_dB_worst": 0.0048,
+  "margin_with_layout_dB": 1.5914,
+  "module_W": 5.0686,
+  "pJ_per_bit": 3.1678,
+  "lanes": [
+   {
+    "lane": 0,
+    "before_mod_dB": 0.0017,
+    "after_mod_dB": 0.0031,
+    "tap_dB": 0,
+    "total_dB": 0.0048
+   },
+   {
+    "lane": 1,
+    "before_mod_dB": 0.0017,
+    "after_mod_dB": 0.0031,
+    "tap_dB": 0,
+    "total_dB": 0.0048
+   },
+   {
+    "lane": 2,
+    "before_mod_dB": 0.0017,
+    "after_mod_dB": 0.0031,
+    "tap_dB": 0,
+    "total_dB": 0.0048
+   },
+   {
+    "lane": 3,
+    "before_mod_dB": 0.0017,
+    "after_mod_dB": 0.0031,
+    "tap_dB": 0,
+    "total_dB": 0.0048
+   },
+   {
+    "lane": 4,
+    "before_mod_dB": 0.0017,
+    "after_mod_dB": 0.0031,
+    "tap_dB": 0,
+    "total_dB": 0.0048
+   },
+   {
+    "lane": 5,
+    "before_mod_dB": 0.0017,
+    "after_mod_dB": 0.0031,
+    "tap_dB": 0,
+    "total_dB": 0.0048
+   },
+   {
+    "lane": 6,
+    "before_mod_dB": 0.0017,
+    "after_mod_dB": 0.0031,
+    "tap_dB": 0,
+    "total_dB": 0.0048
+   },
+   {
+    "lane": 7,
+    "before_mod_dB": 0.0017,
+    "after_mod_dB": 0.0031,
+    "tap_dB": 0,
+    "total_dB": 0.0048
+   }
+  ]
+ }
+}

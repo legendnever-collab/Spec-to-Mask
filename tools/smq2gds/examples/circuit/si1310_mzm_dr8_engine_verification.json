@@ -1,7 +1,7 @@
 {
  "schema": "smq-circuit/1#verification",
  "platform": "si1310",
- "design_hash": "6873d219",
+ "design_hash": "8a2c56b1",
  "checks": [
   {
    "group": "Connectivity",

@@ -29,7 +29,7 @@ python -m smq2gds.circuit ~/Downloads/si1310_engine_layout.json -o out/
 | `--layers F` | 층 지도 yaml (기본 `layers.yaml`; 파운드리 PDK 번호로 바꿔 쓸 수 있음) |
 | `--no-png` | 미리보기 생략 |
 
-예제: `node tools/export_circuit.js all` (4 플랫폼 × MZM DR8 / MRR DR8, 게임과 같은 엔진) → `tools/smq2gds/examples/circuit/`. 생성 결과 예시: [docs/gds/](gds/) (si1310·sin1550 × MZM·MRR: GDS, PNG, verification).
+예제: `node tools/export_circuit.js all` (4 플랫폼 × MZM DR8 / MRR DR8 / MRR WDM8, 게임과 같은 엔진) → `tools/smq2gds/examples/circuit/`. 생성 결과 예시: [docs/gds/](gds/) (si1310·sin1550 × MZM DR8·MRR DR8·MRR WDM8: GDS, PNG, verification). WDM8은 [wdm8.md](wdm8.md).
 
 ## 2. 무엇을 그리나 — 게임과 같은 도형
 
@@ -39,6 +39,7 @@ python -m smq2gds.circuit ~/Downloads/si1310_engine_layout.json -o out/
 | 1×2 MMI (분배 트리) | `smq_mmi_*` | 1-3 PCell(`pcells.mmi`, gdsfactory mmi1x2) — 입력 포트를 원점으로 |
 | TW-MZM | `smq_mzm_*` | 입력 MMI + 거울상 출력 MMI(x = L) + `params.local.prims`(팔 S-bend 4개 + 팔 직선) + `local.rects`(CPW G/S/G → M1, 바이어스 히터, R_T 자리) |
 | 링 (MRR) | `smq_mrrlane_*` ⊃ `smq_ring_*` | 2-3R `ring_allpass`(반경 = 레이아웃 반경) + `local.prims`(버스 ↔ w₀ 전이: Si는 선형 테이퍼, SiN 플랫폼은 SiN/Si 공동 테이퍼 60 µm) |
+| WDM8 공유 버스 | `smq_mrrwdm_*` ⊃ `smq_ring_*` ×(서로 다른 반경 수) | 링 k = 2-3R `ring_allpass` (반경 R<sub>k</sub>, 3W 계단 반경) at `ring_x_um[k]`, 링 사이 Si 버스 필러와 버스 양 끝 전이(`local.prims`) |
 | 모니터 탭 + PD | `smq_tap_pd_*` | `local.prims`(관통 도파로, 2 % 결합 팔, S-bend, PD 아래 도파로) + Ge 사각형 |
 | 광 배선 | `smq_routes_*` | `routing.optical[].prims` (L 직선/테이퍼, C 90° 원호·Euler 코너, A 원호) |
 | 금속 | `smq_metal_*` | `routing.electrical[]` 선(폭 `width_um`: RF 10 µm → M1, DC 5 µm → M2) + 패드/범프 정사각형 |
@@ -70,15 +71,15 @@ GDS가 **열리는 것만으로는 아무것도 PASS가 아닙니다.** `recheck
 | GDS | 입력 일치 | verification의 `design_hash` = layout의 `design_hash` (세 파일이 같은 내보내기) |
 | GDS | 다시 읽기 | top cell 1개, 파일 크기 |
 | GDS | 계층 | top 참조 = 소자 + 2, 소자 셀 수 ≤ 소자 수 |
-| Connectivity | 광 코어 조각 수 | 코어 층(SiN 플랫폼은 SiN ∪ Si) 병합 조각 = 레이저 수(트리 + 레인) + 링 수(링은 간격으로 떨어진 조각) + 탭 결합 팔 수 |
-| Connectivity | 레인 경로 | 레인마다 입력 광섬유 단면과 출력 단면 바로 안쪽 점이 **같은 병합 조각** |
+| Connectivity | 광 코어 조각 수 | 코어 층(SiN 플랫폼은 SiN ∪ Si) 병합 조각 = 레이저 수(트리 + 레인) + 링 수(링은 간격으로 떨어진 조각, WDM8 버스 안의 링 포함) + 탭 결합 팔 수 |
+| Connectivity | 레인 경로 | 출력마다(DR8 8개 · WDM8 1개) 입력 광섬유 단면과 출력 단면 바로 안쪽 점이 **같은 병합 조각** |
 | Geometry | 포트에 도파로 | 모든 광 포트에서 0.05 µm 안쪽에 코어가 있음 |
 | Geometry | 배선 끝점 | 도형으로 다시 계산한 중심선의 첫·끝 점 = 포트 좌표 (1 nm) |
 | Geometry | 배선 길이 | Python 중심선 길이 = 게임 `length_um` (0.1 %) |
 | Geometry | 소자 외곽 | 그려진 셀 참조의 bbox ⊂ 게임 bbox (±0.01 µm) |
 | DRC | 간격 · 선폭 · 굽힘 | 층별 `space_check`(규칙 간격) · `width_check`(Si 0.15 / SiN 0.3 µm, SSC 팁 영역 제외 — 팁은 WARNING으로 따로) · 모든 C/A 반경 ≥ R_min |
 | DRC | 다이 경계 | 코어 bbox가 다이 안, 위·아래 여백 |
-| Connectivity | 출력 단면 | 동쪽 가장자리에 8개 |
+| Connectivity | 출력 단면 | 동쪽 가장자리에 `architecture.outputs`개 (8 / 1) |
 | Electrical | RF (M1) · DC (M2) | 넷마다 [소자 접점, 선 끝, 패드 중심]이 한 병합 조각(끊김 없음), 한 조각에 두 넷 없음(단락 없음) |
 | Electrical | 패드 수 | 패드 = RF + DC 넷 |
 | Model validity | 추상화 | 주입·히터·Ge·금속·종단 = 주석 층 → **NOT VERIFIED** (파운드리 규칙 아님) |
@@ -97,7 +98,7 @@ Mission 6의 **GDS 재검사 결과 불러오기**:
 
 | 명령 | 내용 |
 |---|---|
-| `cd tools && python ../test/py/test_circuit.py` | 8개 예제: 재검사 FAIL 0, 핵심 항목 PASS, `gds_recheck` hash·sha1, **경로 면적 = ∫w ds** (리본·테이퍼·코너·원호를 독립 적분과 비교, 0.2 %), 변조기 셀 1개. 부정 테스트(si1310 MZM, sin1550 MRR): 배선 끝 0.5 µm 어긋남 → 끝점 FAIL · 배선 하나 삭제 → 조각 수·레인 경로 FAIL · 소자 2 µm 이동 → 조각 수·레인 경로 FAIL · RF 패드를 다른 넷 선 위에 → M1 단락 FAIL · 다른 내보내기의 verification → 입력 일치 FAIL. Euler/원호 코너 끝점·접선·최소 반경 |
+| `cd tools && python ../test/py/test_circuit.py` | 12개 예제(WDM8 4개 포함, 링 셀 = 서로 다른 반경 수·링 위치·출력 1): 재검사 FAIL 0, 핵심 항목 PASS, `gds_recheck` hash·sha1, **경로 면적 = ∫w ds** (리본·테이퍼·코너·원호를 독립 적분과 비교, 0.2 %), 변조기 셀 1개. 부정 테스트(si1310 MZM, sin1550 MRR): 배선 끝 0.5 µm 어긋남 → 끝점 FAIL · 배선 하나 삭제 → 조각 수·레인 경로 FAIL · 소자 2 µm 이동 → 조각 수·레인 경로 FAIL · RF 패드를 다른 넷 선 위에 → M1 단락 FAIL · 다른 내보내기의 verification → 입력 일치 FAIL. WDM8 링 셀 3 µm 이동 → 연결 FAIL. Euler/원호 코너 끝점·접선·최소 반경 |
 | `npm run test:py` | 위 + 소자 단위 smq-design/1 테스트 |
 | `node test/t_lab.js` | 1 nm 격자, 소자 로컬 도형 연속·MMI/포트 일치, 내보내기의 금속 폭·design hash, DC 평면 팬아웃(24 변형), 불러온 재검사 → GDS 재검사 PASS/FAIL/다른 설계 |
 | `node test/e2e/lab.js <플랫폼>` | 화면에서 불러오기: gds_recheck 없음 거부, hash 불일치, FAIL, 일치 → GDS Generated ✓, 설계 변경 → stale, 복원 → 일치 |

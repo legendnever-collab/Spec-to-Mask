@@ -1,7 +1,7 @@
 {
  "schema": "smq-circuit/1#verification",
  "platform": "si1310",
- "design_hash": "70283dfd",
+ "design_hash": "cbb62905",
  "checks": [
   {
    "group": "Connectivity",
@@ -31,7 +31,7 @@
    "group": "Connectivity",
    "item": "전기 포트 → 패드 매핑",
    "status": "PASS",
-   "detail": "48개 전기 포트 → 48개 패드"
+   "detail": "48개 전기 포트 → 48개 범프"
   },
   {
    "group": "Geometry",
@@ -234,22 +234,22 @@
  },
  "gds_recheck": {
   "schema": "smq-circuit/1#gds-recheck",
-  "design_hash": "70283dfd",
+  "design_hash": "cbb62905",
   "gds": "engine_layout.gds",
-  "gds_sha1": "522b6f5b8de18eb9f5ea5a9719758890f1429a24",
+  "gds_sha1": "0435aaa05f5990bc2353e3b874f5008910fb6585",
   "cells": 3,
   "checks": [
    {
     "group": "GDS",
     "item": "입력 일치 (layout ↔ verification design_hash)",
     "status": "PASS",
-    "detail": "70283dfd / 70283dfd"
+    "detail": "cbb62905 / cbb62905"
    },
    {
     "group": "GDS",
     "item": "파일 다시 읽기 (top cell 1개)",
     "status": "PASS",
-    "detail": "engine_layout.gds: 49 KB, top ['SMQ_PIC_si1310_MRR_DR8_70283dfd']"
+    "detail": "engine_layout.gds: 49 KB, top ['SMQ_PIC_si1310_MRR_DR8_cbb62905']"
    },
    {
     "group": "GDS",

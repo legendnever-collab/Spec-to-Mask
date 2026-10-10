@@ -18,7 +18,7 @@ const plat=process.argv[2]||'si1310';
  console.log('summary:',$('#pick-sum').textContent.slice(0,200));
  $('#btn-start').click(); await sleep(500);
  console.log('chip',$('#plat-chip').textContent,'| map',$('#map').textContent.replace(/\s+/g,' ').slice(0,160));
- for(const id of (process.argv[3]||'1-1,1-2,1-3,1-4,1-5,1-6,1-7,2-1,2-2,2-3,2-4,2-5,3A,3A+,D-1,D-2,B-1,B-2,B-3').split(',')){
+ for(const id of (process.argv[3]||'1-1,1-2,1-3,1-4,1-5,1-6,1-7,2-1,2-2,2-3,2-4,2-5,3A,3A+,3W,D-1,D-2,B-1,B-2,B-3').split(',')){
   $(`.node[data-id="${id}"]`).click(); await sleep(450);
   console.log(`\n== ${id} ${$('#m-name').textContent} | ${$('#m-eyebrow').textContent} | ${$('#score-big').textContent}`);
   console.log(' pre:',$('#m-preface').hidden?'-':$('#m-preface').textContent.slice(0,60),'| concepts:',$('#m-concepts').hidden?'-':$('#m-concepts').querySelector('summary').textContent.slice(0,80));

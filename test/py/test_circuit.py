@@ -1,14 +1,15 @@
 """GDS backend for the PIC Design Lab (smq-circuit/1 → tools/smq2gds/circuit.py).
 
-For every example (4 platforms × MZM DR8 / MRR DR8, exported by the game engine with node tools/export_circuit.js all):
+For every example (4 platforms × MZM DR8 / MRR DR8 / MRR WDM8, exported by the game engine with node tools/export_circuit.js all):
   * the GDS is written, read back with KLayout and every re-check passes (no FAIL): one top cell, one reference per instance,
     connectivity (merged core pieces, input facet ↔ output facet per lane), a waveguide at every optical port, route end points
     on the ports, route lengths = game, drawn instance extents inside the game's bbox, spacing / width / bend rules, die
     boundary, 8 output facets, RF and DC metal of different nets never touch;
   * the drawn route area equals ∫ w ds of the primitives (an independent check of the ribbon geometry);
-  * the result block (gds_recheck) carries the layout's design_hash and the GDS sha1.
+  * the result block (gds_recheck) carries the layout's design_hash and the GDS sha1;
+  * WDM8: one shared-bus cell, one ring cell per distinct (stepped) radius placed at the exported ring positions, one output facet.
 Negative tests (the re-check must catch them): a route end moved off its port, a missing route, an instance moved away from
-its routes, an RF pad dropped on another net's line, a verification file from another export.
+its routes, an RF pad dropped on another net's line, a verification file from another export, a WDM ring cell moved along the bus.
 
     cd tools && python ../test/py/test_circuit.py      (or: python -m pytest ../test/py -q)
 """
@@ -64,7 +65,7 @@ def _status(ch, prefix):
 
 def check_examples(tmp):
     files = sorted(EX.glob("*_engine_layout.json"))
-    assert len(files) == 8, "run node tools/export_circuit.js all first"
+    assert len(files) == 12, "run node tools/export_circuit.js all first"
     lay = design.layers()
     for f in files:
         L = json.loads(f.read_text(encoding="utf-8"))
@@ -90,8 +91,17 @@ def check_examples(tmp):
         expect = sum(_prim_area(p) for r in L["routing"]["optical"] for p in r["prims"])
         assert abs(area - expect) < 2e-3 * expect, f"{f.name}: route area {area:.2f} vs ∫w ds {expect:.2f} µm²"
         # hierarchy: identical components share one cell (8 modulators → 1 cell)
-        mods = {i.cell_index for i in ly.top_cell().each_inst() if ly.cell(i.cell_index).name.startswith(("smq_mzm", "smq_mrrlane"))}
+        mods = {i.cell_index for i in ly.top_cell().each_inst() if ly.cell(i.cell_index).name.startswith(("smq_mzm", "smq_mrrlane", "smq_mrrwdm"))}
         assert len(mods) == 1, f"{f.name}: modulator cells {len(mods)}"
+        if L["architecture"]["modulator"] == "wdm":   # one shared bus: one output facet, one ring cell per distinct radius at the exported positions
+            bus = [I for I in L["instances"] if I["type"] == "mrr_wdm"][0]
+            rings = [c for c in ly.each_cell() if c.name.startswith("smq_ring_")]
+            radii = {g["R_um"] for g in bus["params"]["rings"]}
+            assert len(rings) == len(radii) and len(bus["params"]["rings"]) == 8, f"{f.name}: ring cells {len(rings)} vs radii {len(radii)}"
+            assert sum(1 for I in L["instances"] if I["role"] == "output") == 1 and _status(ch, "출력 단면 수 = 1") == "PASS", f"{f.name}: WDM output"
+            wcell = [c for c in ly.each_cell() if c.name.startswith("smq_mrrwdm")][0]
+            pos = sorted(round(it.dcplx_trans.disp.x, 3) for it in wcell.each_inst())
+            assert pos == sorted(round(x, 3) for x in bus["params"]["local"]["ring_x_um"]), f"{f.name}: ring positions {pos}"
         print(f"  {f.stem}: {len(res['checks'])} checks, FAIL 0 · route area {area:.1f} µm² (∫w ds {expect:.1f})")
 
 
@@ -132,6 +142,14 @@ def check_negative(tmp):
         _, ch, _ = _run(copy.deepcopy(L0), tmp, f"{name}_otherV", V)
         assert _status(ch, "입력 일치") == "FAIL", f"{name}: mismatched verification not caught"
         print(f"  {name}: off-port end, missing route, moved instance, RF short, foreign verification → FAIL as expected")
+    # WDM8: a ring cell moved 3 µm along the bus leaves a gap in the shared bus → the eight channels no longer reach the output
+    L0 = json.loads((EX / "si1310_mrr_wdm8_engine_layout.json").read_text(encoding="utf-8"))
+    L = copy.deepcopy(L0)
+    bus = [x for x in L["instances"] if x["type"] == "mrr_wdm"][0]
+    bus["params"]["local"]["ring_x_um"][3] += 3.0
+    _, ch, _ = _run(L, tmp, "wdm_ring_moved")
+    assert _status(ch, "광 코어 연결 조각 수") == "FAIL" and _status(ch, "레인 경로") == "FAIL", "WDM: moved ring cell not caught"
+    print("  si1310_mrr_wdm8: ring cell moved off the bus → connectivity FAIL as expected")
 
 
 def check_primitives():

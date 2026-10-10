@@ -1,7 +1,7 @@
 {
  "schema": "smq-circuit/1#verification",
  "platform": "si1550",
- "design_hash": "709041e3",
+ "design_hash": "c75635e7",
  "checks": [
   {
    "group": "Connectivity",
