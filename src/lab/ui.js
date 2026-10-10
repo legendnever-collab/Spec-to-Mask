@@ -55,24 +55,43 @@ window.LABUI = (() => {
       done: (m) => m.electrical },
     { id: 'verification', short: '검증', title: 'Mission 5 · Design Verification', keys: [], adv: [],
       intro: '연결성, 기하(선폭·간격·굽힘·경계·겹침·간섭), 시스템(레인 속도·용량·변조기·파워 버짓·RF) 검사를 실행합니다. 결과는 PASS / WARNING / FAIL / NOT VERIFIED로 나뉘고, 검사하지 않은 항목에는 PASS를 주지 않습니다. FAIL이 없어야 완료입니다.',
-      done: (m, s) => m.verification && !!s.ran },
+      done: (m, v) => m.verification && v.ran },
     { id: 'export', short: '내보내기', title: 'Mission 6 · Circuit Export (→ GDS)', keys: [], adv: [],
-      intro: '설계를 smq-circuit/1 데이터(회로 넷리스트, 소자 파라미터, 포트 연결, 배치, 배선 형상, 플랫폼·규칙, 성능 예측, 검증 결과)로 내보냅니다. tools/smq2gds가 같은 데이터로 PCell 조립·GDS·미리보기·재검사를 하고, 그 결과를 다시 불러오면 GDS Generated가 됩니다.',
-      done: (m, s) => !!s.exported && m.verification }
+      intro: '설계를 smq-circuit/1 데이터(회로 넷리스트, 소자 파라미터, 포트 연결, 배치, 배선 형상, 플랫폼·규칙, 성능 예측, 검증 결과)로 내보냅니다. tools/smq2gds가 같은 데이터로 PCell 조립·GDS·미리보기·재검사를 하고, 그 결과(engine_verification.json)를 다시 불러와 지금 설계와 design hash가 같고 FAIL이 없으면 Geometry Rechecked가 됩니다. 파운드리 준비(Foundry Readiness)는 이 게임이 검증하지 않습니다.',
+      done: (m, v) => v.exp && m.verification }
   ];
-  const progress = () => { if (!SH() || !SH().plat()) return '—'; const s = LS[SH().plat()] || {}, n = MISS.filter((m) => (s.done || {})[m.id]).length; return `미션 ${n}/${MISS.length}`; };
+  // map label: missions valid for the current design (last computed), plus the historical count when it is higher
+  const progress = () => { if (!SH() || !SH().plat()) return '—'; const s = LS[SH().plat()] || {}, n = MISS.filter((m) => (s.live || {})[m.id]).length, h = MISS.filter((m) => (s.done || {})[m.id]).length; return `미션 ${n}/${MISS.length}${h > n ? ` · 이전 ${h}` : ''}`; };
 
   /* ---------------- compute ---------------- */
+  /* Three kinds of state (docs/design_lab.md §상태):
+     - historical achievement s.done[id] — set once a mission was met, never cleared (learning record, like stars);
+     - current validity s.live[id] — recomputed from the design on every change (what the stepper and chips show);
+     - export / verification identity — s.ran = { hash, sig }, s.exported = { at, hash }, s.gds.design_hash.
+     Policy: the same design_hash means the same netlist, placement, routing geometry, parameters and platform, so an export or
+     GDS re-check made for that hash is valid again when the design returns to it. A verification run is valid only while the
+     check results are also identical (sig): system checks read campaign designs (3A+, 3W) that are not part of the geometry hash. */
+  const fnv = (str) => { let h = 0x811c9dc5; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, '0'); };
+  const vsig = (chk) => fnv(JSON.stringify(chk.checks.filter((x) => x.item !== 'GDS 재검사').map((x) => [x.group, x.item, x.status, String(x.detail || '')])));
+  function migrate(s) {   // v1 state: ran = true/false, exported = ISO time → no design identity, so treat both as stale
+    if (s.v === 2) return;
+    if (s.ran != null && typeof s.ran !== 'object') s.ran = null;
+    if (s.exported != null && typeof s.exported !== 'object') s.exported = { at: s.exported, hash: null };
+    s.v = 2;
+  }
+  const valid = () => { const s = S(); return { ran: !!(s.ran && C && s.ran.hash === C.hash && s.ran.sig === CHK.sig), exp: !!(s.exported && C && s.exported.hash === C.hash) }; };
   function recompute() {
     const d = des(), cx = ctx();
     C = LAB.build(cx, d); CHK = LAB.checks(C, cx); MS = LAB.missions(C, CHK);
-    const s = S(); s.done = s.done || {};
-    MISS.forEach((m) => { if (m.done(MS, s)) s.done[m.id] = true; });
+    C.hash = LAB.designHash(C); CHK.sig = vsig(CHK);
+    const s = S(); migrate(s); s.done = s.done || {}; s.live = {};
+    const v = valid();
+    MISS.forEach((m) => { const ok = !!m.done(MS, v); s.live[m.id] = ok; if (ok) s.done[m.id] = true; });
     C.samples = (C.routes || []).map((r) => ({ r, pts: LAB.sample(r.prims, Math.max(1, (C.W + C.H) / 4000)) }));
     save();
   }
   // imported GDS re-check: 'PASS' | 'FAIL' (matches this design) | 'stale' (another design) | null
-  function gdsSt() { const g = S().gds; if (!g || !C) return null; return g.design_hash !== LAB.designHash(C) ? 'stale' : g.summary.FAIL ? 'FAIL' : 'PASS'; }
+  function gdsSt() { const g = S().gds; if (!g || !C) return null; return g.design_hash !== C.hash ? 'stale' : g.summary.FAIL ? 'FAIL' : 'PASS'; }
   function gdsMsg() {
     const g = S().gds, st = gdsSt(); if (!g) return S().gdsErr ? `<span class="st-FAIL">${S().gdsErr}</span>` : '아직 불러온 GDS 재검사 결과가 없습니다.';
     const sm = g.summary, E = (v) => String(v == null ? '' : v).replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[ch]); return `${st === 'stale' ? '<span class="st-WARNING">불러온 결과는 지금과 다른 설계입니다 — 다시 내보내고 GDS를 다시 만드세요.</span> ' : ''}GDS ${E(g.gds)} · sha1 ${E(String(g.gds_sha1).slice(0, 12))} · 셀 ${E(g.cells)}개 · PASS ${sm.PASS} · WARNING ${sm.WARNING} · FAIL ${sm.FAIL}${sm['NOT VERIFIED'] != null ? ` · NOT VERIFIED ${sm['NOT VERIFIED']}` : ''} (hash ${E(g.design_hash)})`;
@@ -86,7 +105,7 @@ window.LABUI = (() => {
     const sm = { PASS: 0, WARNING: 0, FAIL: 0, 'NOT VERIFIED': 0 }; r.checks.forEach((c) => { if (sm[c.status] != null) sm[c.status]++; });   // count from the checks themselves, not the stated summary
     S().gds = { design_hash: r.design_hash, gds: r.gds, gds_sha1: r.gds_sha1, cells: r.cells, summary: sm, checks: r.checks.map(({ group, item, status, detail }) => ({ group, item, status, detail })), at: new Date().toISOString() };
   }
-  function setV(k, v) { const d = des(); if (k === 'mod' && ((v | 0) === 2) !== ((d.mod | 0) === 2)) { S().d = LAB.defaults(ctx(), { mod: v | 0, share: 0 }); S().ran = false; S().exported = null; save(); return; } d[k] = v; if (k === 'mod' || k === 'rf') d.stag = LAB.stagAuto(d); S().ran = false; S().exported = null; save(); }
+  function setV(k, v) { const d = des(); if (k === 'mod' && ((v | 0) === 2) !== ((d.mod | 0) === 2)) { S().d = LAB.defaults(ctx(), { mod: v | 0, share: 0 }); save(); return; } d[k] = v; if (k === 'mod' || k === 'rf') d.stag = LAB.stagAuto(d); save(); }   // no reset: run / export validity follows the design hash
 
   /* ---------------- render ---------------- */
   const pfP = () => PR(SH().pf());
@@ -96,14 +115,22 @@ window.LABUI = (() => {
   function renderHead() {
     const s = S(), mode = s.mode || 'beginner';
     $('#lab-mode').innerHTML = [['beginner', 'Beginner'], ['advanced', 'Advanced']].map(([k, t]) => `<button role="radio" aria-checked="${mode === k}" data-lm="${k}">${t}</button>`).join('');
-    const a3 = SH().stars('3A+') > 0, st = [['Schematic Complete', MS.schematic], ['Floorplan Complete', MS.floorplan], ['Routing Complete', MS.routing], ['Electrical Interface', MS.electrical], ['Verification Complete', MS.verification && !!s.ran]];
+    const a3 = SH().stars('3A+') > 0, v = valid(), L = s.live || {}, H = s.done || {};
+    const st = [['Schematic Complete', L.schematic], ['Floorplan Complete', L.floorplan], ['Routing Complete', L.routing], ['Electrical Interface', L.electrical], ['Verification Complete', L.verification]];
+    // three separate levels of "done": the game model, the re-read GDS geometry, and the foundry (never claimed here)
+    const g = gdsSt(), dv = MISS.slice(0, 5).every((m) => L[m.id]);
     $('#lab-prog').innerHTML = st.map(([t, ok]) => `<span class="${ok ? 'ok' : ''}">${ok ? '✓' : '·'} ${t}</span>`).join('')
-      + (() => { const g = gdsSt(); return `<span class="${g === 'PASS' ? 'ok' : 'pend'}" title="tools/smq2gds.circuit가 GDS를 만들고 다시 읽어 검사한 결과(engine_verification.json)를 Mission 6에서 불러옴">${g === 'PASS' ? '✓' : '·'} GDS Generated${g === 'PASS' ? '' : g === 'FAIL' ? ' (재검사 FAIL)' : g === 'stale' ? ' (다른 설계)' : ''}</span>`; })()
+      + `<span class="lvl ${dv ? 'ok' : 'pend'}" title="게임 모델의 연결·기하·시스템 검사를 지금 설계로 실행했고 FAIL이 없음">${dv ? '✓' : '·'} Design Valid</span>`
+      + `<span class="lvl ${g === 'PASS' ? 'ok' : 'pend'}" title="tools/smq2gds.circuit가 만든 GDS를 다시 읽어 기하·연결을 검사한 결과(engine_verification.json)가 지금 설계(design hash)와 같고 FAIL이 없음">${g === 'PASS' ? '✓' : '·'} Geometry Rechecked${g === 'FAIL' ? ' (재검사 FAIL)' : g === 'stale' ? ' (다른 설계)' : ''}</span>`
+      + '<span class="lvl nv" title="Generic PDK·추상 금속·파운드리 DRC/LVS·RF·열 검사 없음 — 이 GDS는 Tape-out Ready가 아닙니다">○ Foundry Readiness · NOT VERIFIED</span>'
       + `<span class="${a3 ? 'ok' : 'pend'}" title="정식 Project Completion은 Stage 3 설계 완료와 연계">${a3 ? '✓' : '·'} 3A+ ★ 연계 ${a3 ? '' : '(미리보기 모드)'}</span>`;
-    $('#lab-steps').innerHTML = MISS.map((m, j) => `<li><button class="stp ${(s.done || {})[m.id] ? 'done' : ''}" data-ms="${j}" aria-current="${j === cur() ? 'step' : 'false'}" aria-label="미션 ${j + 1} ${m.title}${(s.done || {})[m.id] ? ' (완료)' : ''}"><span class="num">${(s.done || {})[m.id] ? '✓' : j + 1}</span><span class="t">${m.short}</span></button></li>`).join('');
-    const m = MISS[cur()], ok = m.done(MS, s), nx = MISS[cur() + 1];
-    $('#lab-note').innerHTML = `<div class="sn-h"><b>${m.title}</b>${ok ? '<span class="ok">완료 ✓</span>' : ''}</div><div class="sn-b">${m.intro}</div>`
-      + `<div class="row-btns">${m.id === 'verification' ? `<button class="btn ${ok && s.ran ? '' : 'pri'}" data-la="run">${s.ran ? '검사 다시 실행' : '검사 실행'}</button>` : m.id === 'export' ? `<button class="btn ${s.exported ? '' : 'pri'}" data-la="exp-all">smq-circuit/1 내보내기 (3개 파일)</button>` : ''}`
+    $('#lab-steps').innerHTML = MISS.map((m, j) => { const ok = L[m.id], was = !ok && H[m.id];
+      return `<li><button class="stp ${ok ? 'done' : was ? 'was' : ''}" data-ms="${j}" aria-current="${j === cur() ? 'step' : 'false'}" aria-label="미션 ${j + 1} ${m.title}${ok ? ' (현재 설계로 완료)' : was ? ' (이전에 완료 · 지금 설계에서는 미충족)' : ''}" title="${ok ? '현재 설계로 완료' : was ? '이전에 완료했지만 지금 설계에서는 조건을 충족하지 않습니다' : ''}"><span class="num">${ok ? '✓' : was ? '!' : j + 1}</span><span class="t">${m.short}</span></button></li>`; }).join('');
+    const m = MISS[cur()], ok = !!L[m.id], was = !ok && H[m.id], nx = MISS[cur() + 1];
+    const why = was ? (m.id === 'verification' ? (s.ran ? '설계(또는 시스템 검사 결과)가 마지막 검사 이후 바뀌었습니다 — 다시 실행하세요.' : '이 설계로 아직 검사를 실행하지 않았습니다.') : m.id === 'export' ? (!MS.verification ? '지금 설계에 FAIL이 있습니다.' : '내보낸 파일은 다른 설계(design hash)입니다 — 다시 내보내세요.') : '지금 설계가 이 미션의 검사를 통과하지 않습니다 — 아래 표의 FAIL을 보세요.') : '';
+    $('#lab-note').innerHTML = `<div class="sn-h"><b>${m.title}</b>${ok ? '<span class="ok">완료 ✓</span>' : was ? '<span class="was-tag">이전 완료 · 현재 무효</span>' : ''}</div><div class="sn-b">${m.intro}</div>`
+      + (why ? `<p class="note was-why">${why}</p>` : '')
+      + `<div class="row-btns">${m.id === 'verification' ? `<button class="btn ${ok ? '' : 'pri'}" data-la="run">${v.ran ? '검사 다시 실행' : '검사 실행'}</button>` : m.id === 'export' ? `<button class="btn ${v.exp ? '' : 'pri'}" data-la="exp-all">smq-circuit/1 내보내기 (3개 파일)</button>` : ''}`
       + (nx ? `<button class="btn ${ok ? 'pri' : ''}" id="lab-next">다음 미션 → ${nx.short}</button>` : '') + '</div>';
   }
   function renderParams() {
@@ -115,7 +142,7 @@ window.LABUI = (() => {
     if (m.id === 'schematic' && !wdm) { const a = arch3(); h += `<p class="note">아키텍처 출처: <b>${a.src}</b> (${a.mod ? 'MRR' : 'MZM'} ×8, ${SHL[a.share]}). 바꾸면 시스템 예측도 Lab 구성으로 다시 계산합니다.</p><div class="row-btns"><button class="btn" data-la="arch">3A+ 구성으로 되돌리기</button></div>`; }
     if (m.id === 'floorplan') h += `<p class="note">자동 배치 기준 필요한 다이: <b>${(C.need.W / 1000).toFixed(2)} × ${(C.need.H / 1000).toFixed(2)} mm</b>.</p><div class="row-btns"><button class="btn" data-la="fit">필요 크기로 맞춤 (0.1 mm 올림)</button><button class="btn" data-la="auto">자동 배치 값 복원</button></div>`;
     if (m.id === 'routing') h += `<p class="note">배선 폭 w<sub>r</sub> &gt; w<sub>0</sub> ${SH().pf().w0} µm이면 긴 넷의 직선 구간에 선형 테이퍼를 넣어 몸통만 넓힙니다 (짧은 넷은 w<sub>0</sub>). 단일모드 차단 폭 ${SH().pf().wc} µm 이상은 다중모드 — 굽힘은 Euler로.</p>`;
-    if (m.id === 'verification') h += `<div class="row-btns"><button class="btn pri" data-la="run">검사 실행</button></div><p class="note">${S().ran ? '마지막 실행 결과가 아래 표에 있습니다. 설계를 바꾸면 다시 실행해야 합니다.' : '아직 실행하지 않았습니다.'}</p>`;
+    if (m.id === 'verification') { const v = valid(); h += `<div class="row-btns"><button class="btn pri" data-la="run">검사 실행</button></div><p class="note">${v.ran ? '마지막 실행 결과가 아래 표에 있습니다. 설계를 바꾸면 다시 실행해야 합니다.' : S().ran ? '마지막 실행 이후 설계가 바뀌었습니다 — 다시 실행하세요 (아래 표는 지금 설계의 결과입니다).' : '아직 실행하지 않았습니다.'}</p>`; }
     if (m.id === 'export') h += `<div class="row-btns"><button class="btn pri" data-la="exp-all">smq-circuit/1 내보내기 (3개 파일)</button></div><div class="row-btns"><button class="btn" data-la="exp-s">engine_schematic.json</button><button class="btn" data-la="exp-l">engine_layout.json</button><button class="btn" data-la="exp-v">engine_verification.json</button></div><textarea id="lab-json" class="jsonout" hidden readonly aria-label="smq-circuit JSON"></textarea>`
       + `<h4 class="sub">GDS (tools/smq2gds)</h4><p class="note">내려받은 세 파일과 같은 폴더에서: <code>python -m smq2gds.circuit ${SH().plat()}_engine_layout.json -o gds/</code> → engine_layout.gds · engine_preview.png · engine_verification.json(GDS 재검사 포함). 그 verification 파일을 불러오면 지금 설계(design hash)와 맞는지 확인해 반영합니다.</p>`
       + `<div class="row-btns"><label class="btn" for="lab-gds">GDS 재검사 결과 불러오기</label><input type="file" id="lab-gds" accept=".json,application/json" hidden></div><p class="note" id="lab-gds-msg">${gdsMsg()}</p>`;
@@ -180,9 +207,10 @@ window.LABUI = (() => {
     } else if (m.id === 'verification') {
       t = '설계 검증';
       if (!S().ran) h = '<p class="note">“검사 실행”을 누르면 아래에 결과가 나옵니다.</p>';
-      else {
+      if (S().ran) {
+        if (!valid().ran) h = '<p class="note"><b class="st-WARNING">마지막 실행 이후 설계가 바뀌었습니다.</b> 아래는 지금 설계의 결과이며, “검사 실행”을 다시 눌러야 Mission 5가 완료됩니다.</p>';
         const n = (st) => CHK.checks.filter((x) => x.status === st).length;
-        h = `<p>${stBadge('PASS')} ${n('PASS')} · ${stBadge('WARNING')} ${n('WARNING')} · ${stBadge('FAIL')} ${n('FAIL')} · ${stBadge('NOT VERIFIED')} ${n('NOT VERIFIED')}</p>`
+        h += `<p>${stBadge('PASS')} ${n('PASS')} · ${stBadge('WARNING')} ${n('WARNING')} · ${stBadge('FAIL')} ${n('FAIL')} · ${stBadge('NOT VERIFIED')} ${n('NOT VERIFIED')}</p>`
           + ['Connectivity', 'Geometry', 'System', 'Model validity'].map((g) => `<h4>${g}</h4>` + ctab(CHK.checks.filter((x) => x.group === g))).join('')
           + sysTable();
       }
@@ -199,7 +227,7 @@ window.LABUI = (() => {
   }
   function summary() {
     const s = CHK.sys, n = (st) => CHK.checks.filter((x) => x.status === st).length, a3 = SH().stars('3A+') > 0;
-    return `<table class="ltbl">${row(['총 데이터 속도', `${LAB.LANES} × 200G = 1.6 Tb/s (라인 ${LAB.LANES} × 224 Gb/s)`])}${row(['변조기', C.mod === 'mzm' ? 'TW-MZM ×8 (DR8)' : C.mod === 'wdm' ? 'MRR WDM8 (공유 버스 · 광섬유 1)' : 'MRR ×8 (DR8)'])}${row(['다이', `${des().W.toFixed(1)} × ${des().H.toFixed(1)} mm`])}${row(['광 손실 추정 (칩 배선, 최악 레인)', `${s.extra.toFixed(2)} dB`])}${row(['링크 마진 (레이아웃 반영)', `${s.marginLayout.toFixed(2)} dB`])}${row(['비트당 에너지 (3A+ 모듈 모델)', `${s.pj.toFixed(2)} pJ/bit`])}${row(['검증 요약', `PASS ${n('PASS')} · WARNING ${n('WARNING')} · FAIL ${n('FAIL')} · NOT VERIFIED ${n('NOT VERIFIED')}${S().ran ? '' : ' (검사 미실행)'}`])}${row(['GDS 재검사 (smq2gds)', gdsMsg()])}${row(['Project Completion', a3 ? (MISS.every((m) => (S().done || {})[m.id]) ? '<span class="st-PASS">완료</span>' : '진행 중') : '3A+ ★ 이후 정식 완료 (지금은 미리보기)'])}</table>`
+    return `<table class="ltbl">${row(['총 데이터 속도', `${LAB.LANES} × 200G = 1.6 Tb/s (라인 ${LAB.LANES} × 224 Gb/s)`])}${row(['변조기', C.mod === 'mzm' ? 'TW-MZM ×8 (DR8)' : C.mod === 'wdm' ? 'MRR WDM8 (공유 버스 · 광섬유 1)' : 'MRR ×8 (DR8)'])}${row(['다이', `${des().W.toFixed(1)} × ${des().H.toFixed(1)} mm`])}${row(['광 손실 추정 (칩 배선, 최악 레인)', `${s.extra.toFixed(2)} dB`])}${row(['링크 마진 (레이아웃 반영)', `${s.marginLayout.toFixed(2)} dB`])}${row(['비트당 에너지 (3A+ 모듈 모델)', `${s.pj.toFixed(2)} pJ/bit`])}${row(['검증 요약', `PASS ${n('PASS')} · WARNING ${n('WARNING')} · FAIL ${n('FAIL')} · NOT VERIFIED ${n('NOT VERIFIED')}${valid().ran ? '' : S().ran ? ' (마지막 실행 이후 설계 변경 — 다시 실행)' : ' (검사 미실행)'}`])}${row(['설계 식별 (design hash)', `${C.hash}${S().exported ? ` · 마지막 내보내기 ${S().exported.hash || '(식별 없음, 이전 버전)'} ${valid().exp ? '<span class="st-PASS">현재 설계와 같음</span>' : '<span class="st-WARNING">Stale — 다시 내보내기</span>'}` : ' · 아직 내보내지 않음'}`])}${row(['Design Valid (게임 모델)', MISS.slice(0, 5).every((m) => (S().live || {})[m.id]) ? '<span class="st-PASS">✓ 충족</span>' : '<span class="st-WARNING">미충족</span>'])}${row(['Geometry Rechecked (smq2gds)', gdsMsg()])}${row(['Foundry Readiness', '<span class="st-NOT">NOT VERIFIED</span> — Generic PDK · 추상 금속 · 파운드리 DRC/LVS·RF·열 검사 없음'])}${row(['Project Completion', a3 ? (MISS.every((m) => (S().live || {})[m.id]) ? '<span class="st-PASS">완료 (현재 설계)</span>' : MISS.every((m) => (S().done || {})[m.id]) ? '<span class="st-WARNING">이전에 완료 · 현재 설계는 미충족</span>' : '진행 중') : '3A+ ★ 이후 정식 완료 (지금은 미리보기)'])}</table>`
       + `<p class="note">GDS는 같은 smq-circuit/1 데이터를 tools/smq2gds가 읽어 같은 기본 도형으로 그리고, 다시 읽어 계층·연결·포트·길이·간격·선폭·금속 단락을 검사합니다. 이 결과는 구조 검증이 가능한 Engineering Prototype이며 Tape-out Ready Mask가 아닙니다.</p>`;
   }
   function renderCoach() {
@@ -411,10 +439,10 @@ window.LABUI = (() => {
     if (e.target.closest('#lab-guide')) { guide(); return; }
     if (la) {
       const a = la.dataset.la, d = des();
-      if (a === 'fit') { d.W = Math.ceil(C.need.W / 100) / 10; d.H = Math.ceil(C.need.H / 100) / 10; S().ran = false; save(); renderAll(true); }
-      if (a === 'auto') { const nd = LAB.defaults(ctx(), { mod: d.mod, share: d.share }); Object.assign(d, { P: nd.P, stag: nd.stag, edge: nd.edge, fp: nd.fp, W: nd.W, H: nd.H }); S().ran = false; save(); renderAll(true); }
-      if (a === 'arch') { const a3 = arch3(); d.mod = a3.mod; d.share = a3.share; d.stag = LAB.stagAuto(d); S().ran = false; save(); renderAll(true); }
-      if (a === 'run') { S().ran = true; save(); renderAll(); const o = $('#lab-out'); if (o && o.scrollIntoView) o.scrollIntoView({ block: 'start', behavior: 'smooth' }); }   // the result table is below the workspace
+      if (a === 'fit') { d.W = Math.ceil(C.need.W / 100) / 10; d.H = Math.ceil(C.need.H / 100) / 10; save(); renderAll(true); }
+      if (a === 'auto') { const nd = LAB.defaults(ctx(), { mod: d.mod, share: d.share }); Object.assign(d, { P: nd.P, stag: nd.stag, edge: nd.edge, fp: nd.fp, W: nd.W, H: nd.H }); save(); renderAll(true); }
+      if (a === 'arch') { const a3 = arch3(); d.mod = a3.mod; d.share = a3.share; d.stag = LAB.stagAuto(d); save(); renderAll(true); }
+      if (a === 'run') { S().ran = { hash: C.hash, sig: CHK.sig, at: new Date().toISOString() }; save(); renderAll(); const o = $('#lab-out'); if (o && o.scrollIntoView) o.scrollIntoView({ block: 'start', behavior: 'smooth' }); }   // the result table is below the workspace
       if (a.startsWith('exp')) exportFiles(a);
     }
   });
@@ -422,7 +450,7 @@ window.LABUI = (() => {
     const ex = LAB.exportCircuit(C, CHK), files = { 'exp-s': [['engine_schematic.json', ex.schematic]], 'exp-l': [['engine_layout.json', ex.layout]], 'exp-v': [['engine_verification.json', ex.verification]] }[a] || [['engine_schematic.json', ex.schematic], ['engine_layout.json', ex.layout], ['engine_verification.json', ex.verification]];
     files.forEach(([name, obj]) => { const txt = JSON.stringify(obj, null, 1); try { const el = document.createElement('a'); el.href = URL.createObjectURL(new Blob([txt], { type: 'application/json' })); el.download = `${SH().plat()}_${name}`; document.body.appendChild(el); el.click(); setTimeout(() => { URL.revokeObjectURL(el.href); el.remove(); }, 1000); } catch (er) { /* download unavailable */ } });
     const ta = $('#lab-json'); if (ta) { ta.hidden = false; ta.value = JSON.stringify({ schematic: ex.schematic, layout: ex.layout, verification: ex.verification }); }
-    if (a === 'exp-all') { S().exported = new Date().toISOString(); save(); }
+    if (a === 'exp-all') { S().exported = { at: new Date().toISOString(), hash: ex.layout.design_hash }; save(); recompute(); }
     renderHead(); renderOut(); if (SH()) SH().refreshMap();
   }
   // canvas: drag to pan, Ctrl/⌘ + wheel to zoom, click to select

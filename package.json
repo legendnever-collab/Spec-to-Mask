@@ -17,7 +17,7 @@
     "test:mrr": "node test/t_mrr.js",
     "test:dr8": "node test/t_dr8.js",
     "test:wdm": "node test/t_wdm.js",
-    "test:lab": "node test/t_lab.js && node test/e2e/lab.js si1310 && node test/e2e/lab.js sin1550"
+    "test:lab": "node test/t_lab.js && node test/e2e/lab.js si1310 && node test/e2e/lab.js sin1550 && node test/e2e/lab_state.js si1310 && node test/e2e/lab_state.js sin1550"
   },
   "devDependencies": {
     "jsdom": "^24.1.3"
