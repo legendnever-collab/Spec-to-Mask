@@ -16,11 +16,10 @@ const LV = (id, pid, P) => { const L = G.LEVELS.find((x) => x.id === id), S = (P
 G.GAME_LEV = (id) => LV(id, G.__pid);
 const K = G.KINDS.xcvr, X = K._x, M = G.KINDS.mrr._x;
 const BASE = 'fa9f16a';
-const git = (f) => { try { return cp.execSync(`git show ${BASE}:${f}`, { cwd: path.join(__dirname, '..'), stdio: ['ignore', 'pipe', 'ignore'] }).toString(); } catch (e) { return null; } };
-const oldX = git('src/kinds/xcvr.js'), oldP = git('src/data/pspec.json');
+const BL = require('./baseline.js'), ID = BL.identity('test:dr8 MZM path + specs', BASE, 12);   // a missing baseline fails (test/baseline.js)
+const oldX = BL.need(BASE, 'src/kinds/xcvr.js'), oldP = BL.need(BASE, 'src/data/pspec.json');
 let G0 = null;
 if (oldX) { G0 = load(); vm.runInContext(oldX.replace(/^const (\w+) =/gm, 'var $1 ='), G0); G0.GAME_LEV = (id) => LV(id, G.__pid); }
-else console.log(`  note: ${BASE}:src/kinds/xcvr.js not found — MZM identity check skipped`);
 const P0 = oldP ? JSON.parse(oldP) : null;
 const strip = (o) => { const c = { ...o }; delete c.mod; return c; };
 
@@ -30,7 +29,7 @@ for (const pid of Object.keys(G.PLATFORMS)) {
   /* ---- compatibility ---- */
   if (P0) for (const id of ['3A', '3A+']) {
     const a = { ...G.PSPEC[pid][id], start: strip(G.PSPEC[pid][id].start), ref: strip(G.PSPEC[pid][id].ref) };
-    ok(JSON.stringify(a) === JSON.stringify(P0[pid][id]), `${pid} ${id}: specs equal ${BASE} (apart from the mod key)`);
+    ID.hit(); ok(JSON.stringify(a) === JSON.stringify(P0[pid][id]), `${pid} ${id}: specs equal ${BASE} (apart from the mod key)`);
   }
   ok(!K.params(LV('3A', pid)).some((p) => p.k === 'mod') && K.params(l).some((p) => p.k === 'mod'), `${pid}: modulator choice only in DR8 (3A+)`);
   if (G0) {
@@ -43,7 +42,7 @@ for (const pid of Object.keys(G.PLATFORMS)) {
       if (a.margin !== b.margin || a.pw !== b.pw || c.margin !== b.margin || c.pw !== b.pw || K.fabPass(l, a) !== G0.KINDS.xcvr.fabPass(l, b)) same = false;
     }
     const lf = LV('3A', pid); for (const d of [lf.ref, lf.start]) { const a = K.evaluate(lf, d), b = G0.KINDS.xcvr.evaluate(lf, d); if (a.margin !== b.margin || a.pw !== b.pw) same = false; }
-    ok(same, `${pid}: MZM DR8 and 2×FR4 results bit-identical to ${BASE} (${ds.length} designs × 7 process states)`);
+    ID.hit(); ok(same, `${pid}: MZM DR8 and 2×FR4 results bit-identical to ${BASE} (${ds.length} designs × 7 process states)`);
   }
   /* ---- ring in the module ---- */
   const dR = { ...l.ref, mod: 1 }, rR = K.evaluate(l, dR), p = X.parts(l, dR), lr = G.GAME_LEV('2-3R');
@@ -99,5 +98,23 @@ for (const pid of Object.keys(G.PLATFORMS)) {
     ok(pr && /MZM이 유리:<\/b> (?!—)/.test(pr.html) && /MRR이 유리:<\/b> (?!—)/.test(pr.html) && /Fab 수율/.test(pr.html) && ms < 4000, `${pid}: panel with Fab yields lists advantages on both sides (${ms} ms)`);
   }
 }
-console.log(`${n - fail}/${n} checks passed` + (G0 ? '' : ` (${BASE} not available — identity not checked)`));
+/* ---- release review: the thermal numbers in the docs are the engine's, at the stated computation point (v1.0 final patch) ---- */
+{
+  const fs = require('fs'), doc = fs.readFileSync(path.join(__dirname, '../docs/arch_1p6t_dr8.md'), 'utf8'), lim = fs.readFileSync(path.join(__dirname, '../docs/release/MODEL_LIMITATIONS-v1.0.md'), 'utf8');
+  G.__pid = 'si1310'; const pf = G.PLATFORMS.si1310, l = LV('3A+', 'si1310'); G.PQ.setPlatform(pf.mat, pf.t, pf.rules);
+  const ts = X.thermalSens(l, { ...l.ref, mod: 1 }).rows;
+  const tbl = [...doc.matchAll(/^\| (모델 547|160|73) pm\/mW \| ([\d.]+) mW \| ([\d.]+) K \| ([\d.]+) W \| ([\d.]+) W \|$/gm)].map((m) => m.slice(2).map(Number));
+  ok(tbl.length === 3 && tbl.every((t, i) => Math.abs(t[0] - ts[i].heat) < 0.6 && Math.abs(t[1] - ts[i].selfK) < 0.06 && Math.abs(t[2] - ts[i].pw) < 0.006), `arch_1p6t_dr8.md §2.3 = thermalSens (self-heating ${ts.map((x) => x.selfK.toFixed(1)).join(' / ')} K, not the 2-3R 13 dBm value)`);
+  ok(!/\| 97 K \|/.test(doc) && /61\.0 K/.test(lim), 'no module table quotes the 2-3R stand-alone 97 K');
+  // the trace table: module ΔT at the 0.5 dB grid point next to P_mod(70 °C), exact P_mod, and the 2-3R stand-alone 13 dBm value
+  for (const pid of Object.keys(G.PLATFORMS)) {
+    G.__pid = pid; const pq = G.PLATFORMS[pid], l3 = LV('3A+', pid); G.PQ.setPlatform(pq.mat, pq.t, pq.rules);
+    const d = { ...l3.ref, mod: 1 }, a = X.analyse(l3, d), p = X.parts(l3, d), Pm = a.corners.find((c) => c.T === 70).Pmod, at = (P) => M.analyse(p.ring.l, p.ring.d, null, { Pin: P }).selfK;
+    const name = { si1310: 'Si 1310', si1550: 'Si 1550', sin1310: 'SiN 1310', sin1550: 'SiN 1550' }[pid], row = doc.split('\n').find((x) => x.startsWith(`| ${name} `) && /→/.test(x));
+    const v = row ? [...row.matchAll(/([\d.]+) K/g)].map((m) => +m[1]) : [];
+    ok(v.length === 3 && Math.abs(v[0] - a.ringH.selfK) < 0.06 && Math.abs(v[1] - at(Pm)) < 0.06 && Math.abs(v[2] - at(13)) < 0.06, `${pid}: trace row ${v.join(' / ')} K = module ${a.ringH.selfK.toFixed(1)} · exact P_mod ${at(Pm).toFixed(1)} · 13 dBm ${at(13).toFixed(1)}`);
+  }
+}
+ok(ID.done(), 'every MZM identity check ran');
+console.log(`${n - fail}/${n} checks passed` + (G0 ? '' : ` (${BASE} not available — identity NOT RUN)`));
 process.exit(fail ? 1 : 0);

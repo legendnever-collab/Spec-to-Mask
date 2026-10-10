@@ -1,0 +1,8 @@
+participant_id,role,experience_years,platform,date,task_id,completed(Y/N/partial),time_min,assistance(none/hint/explained/took_over),user_errors(count),misinterpretation(none/minor/critical),misinterpretation_note,ease(1-5),comment
+P01,PIC,,si1310,,T1,,,,,,,,
+P01,PIC,,si1310,,T2,,,,,,,,
+P01,PIC,,si1310,,T3,,,,,,,,
+P01,PIC,,si1310,,T4,,,,,,,,
+P01,PIC,,si1310,,T5,,,,,,,,
+P01,PIC,,si1310,,T6,,,,,,,,
+P01,PIC,,si1310,,T7,,,,,,,,

@@ -137,7 +137,7 @@ KINDS.wdm = (() => {
     const pf = l.pf.mat === 'si' ? l.pf : Object.values(PLATFORMS).find((q) => q.mat === 'si' && Math.abs(q.lam - l.pf.lam) < 1e-6) || l.pf;
     return KINDS.spiral._x.xs(pf, r.c.xN.w).alpha;   // dB/cm
   }
-  function channels(l, p, d, Pline, proc, g) {
+  function channels(l, p, d, Pline, proc, g, ov) {   // ov: assumption overrides for the robustness panel only ({ rxXT })
     const pk = PKG(), si = l.pf.mat === 'si', dl = dlam(l, d), R = d.R, gi = d.grid | 0;
     const cpl = p.ssc + p.cplx + ((d.src | 0) ? MUX_IL : 0) + (proc ? 0.4 * g(2) : 0);
     const Pchip = Pline.map((v) => v - cpl), Ptot = Pchip.reduce((s, v) => s + mW(v), 0);
@@ -151,7 +151,7 @@ KINDS.wdm = (() => {
       const IL = (k, j) => -10 * Math.log10(Math.max(1e-9, Tm[k][j].reduce((a, b) => a + b, 0) / 4));
       Pin = Pchip.map((v, j) => { let s = v - tpa - ab * (j + 0.5); for (let k = 0; k < j; k++) s -= IL(k, j); return s; });
       if (pass) {
-        const fsr = opt[0].c.B.fsr, epsRx = Math.pow(10, RXD.xt[gi] / 10), chan = 3.0 + (l.pf.lam > 1.4 ? 0.6 : 0.2);
+        const fsr = opt[0].c.B.fsr, epsRx = Math.pow(10, (ov && ov.rxXT != null ? ov.rxXT : RXD.xt[gi]) / 10), chan = 3.0 + (l.pf.lam > 1.4 ? 0.6 : 0.2);
         return Pin.map((pin, j) => {
           const o = opt[j], own = Tm[j][j], m = Math.abs(own[3] - own[0]);
           let after = 0, eps = 0, alias = Infinity;
@@ -172,22 +172,23 @@ KINDS.wdm = (() => {
     return null;
   }
   /* ---------- the module ---------- */
-  function analyse(l, d, proc) {
-    const g = (k) => (proc ? gaussLike(proc, k) : 0), p = parts(l, d), pk = PKG(), dl = dlam(l, d), R = d.R, src = d.src | 0;
-    const tilt = (j) => (src ? 0 : -TILT * Math.pow((j - (N - 1) / 2) / ((N - 1) / 2), 2));
+  // ov (robustness panel only, never the score): { tilt (dB), rxXT (dB), kScale (thermal coupling ×) }
+  function analyse(l, d, proc, ov) {
+    const g = (k) => (proc ? gaussLike(proc, k) : 0), p = parts(l, d), pk = PKG(), dl = dlam(l, d), R = d.R, src = d.src | 0, TL = ov && ov.tilt != null ? ov.tilt : TILT;
+    const tilt = (j) => (src ? 0 : -TL * Math.pow((j - (N - 1) / 2) / ((N - 1) / 2), 2));
     let Pline = Array.from({ length: N }, (_, j) => d.P + tilt(j) + (proc ? (src ? 0.2 : 0.3) * g(20 + j) : 0));
-    let ch = channels(l, p, d, Pline, proc, g);
+    let ch = channels(l, p, d, Pline, proc, g, ov);
     if (src) {   // DFB array: trim each laser so the channel margins come out equal at the same total optical power
       const c = ch.map((x) => x.margin - x.Pline), tot = Pline.reduce((s, v) => s + mW(v), 0);
       let lo = d.P - 20, hi = d.P + 20;
       for (let it = 0; it < 60; it++) { const mu = (lo + hi) / 2, s = c.reduce((a, cj) => a + mW(clamp(mu - cj, d.P - 4, d.P + 4)), 0); if (s > tot) hi = mu; else lo = mu; }
       Pline = c.map((cj) => clamp((lo + hi) / 2 - cj, d.P - 4, d.P + 4));
-      ch = channels(l, p, d, Pline, proc, g);
+      ch = channels(l, p, d, Pline, proc, g, ov);
     }
     const worst = ch.reduce((a, b) => (b.margin < a.margin ? b : a)), o0 = ch[0].o, c0 = o0.c;
     // locking context (nominal process unless Fab)
     const fsr = c0.B.fsr, eff = fsr / o0.P2pi, Rk = radii(l, d, o0.r), pitch = Math.max(d.pitch, pmin(R));
-    const K = Array.from({ length: N }, (_, j) => Array.from({ length: N }, (_, k) => (j === k ? 0 : kappa(c0, Math.abs(j - k) * pitch))));
+    const K = Array.from({ length: N }, (_, j) => Array.from({ length: N }, (_, k) => (j === k ? 0 : kappa(c0, Math.abs(j - k) * pitch) * (ov && ov.kScale ? ov.kScale : 1))));
     const oc = { fsr, eff, o: c0.B.lamOpX(0) - c0.B.lamL, dldT: c0.dldT, bm: (p.ring.d.bm || 0) * 1e-3, K, Rk, dl };
     const loc = proc ? Array.from({ length: N }, (_, k) => LOC_SIG * 1e-3 * g(40 + k)) : null;
     const H = heaters(l, d, oc, procShift(p, R, proc), loc);
@@ -309,6 +310,7 @@ KINDS.wdm = (() => {
       if (c.ob2 && c.fab && c.fab.yield < l.fab.y) return { h: '양산 다이에서 탈락하는 모듈이 있습니다', b: `다이마다 링 공진이 공정으로 수 nm씩 함께 움직이고(공통), 링끼리도 σ ${LOC_SIG} nm 어긋납니다. 순환 배정은 공통 이동을 채널 간격 단위로 흡수하지만 링 간 불일치와 FSR − 8Δλ 차이는 히터가 맡습니다. 마진·전력 여유를 확보하세요.` };
       return null;
     },
+    compareRows: (l, r) => [['최악 채널 마진', r.margin, 'dB', 2, 'hi', 'semi'], ['광엔진 전력', r.pw, 'W', 2, 'lo', 'semi'], ['비트당 에너지', r.pj, 'pJ/bit', 2, 'lo', 'semi'], ['링 히터 합', r.H.tot, 'mW', 0, 'lo', 'semi'], ['FSR', r.fsr * 1e3, 'nm', 2, null, 'an'], ['FSR 별칭 채널', r.aliased.length, '개', 0, 'lo', 'semi']],
     card(l, r) { const d = r.d || {}; return { kind: 'wdm', lines: [`마진 ${f2(r.margin, 2)} dB @ λ${r.worst.j} · ${GRID[d.grid | 0]} GHz`, `${f2(r.pw, 2)} W · ${f2(r.pj, 2)} pJ/bit · FSR ${nmS(r.fsr)} nm · 히터 ${f2(r.H.tot, 0)} mW`], model: { margin: +r.margin.toFixed(2), pw: +r.pw.toFixed(3), pj: +r.pj.toFixed(3), grid: GRID[d.grid | 0], R: d.R, fsr: +(r.fsr * 1000).toFixed(3), heat: +r.H.tot.toFixed(1), Rk: r.Rk.map((x) => x.R), pitch: Math.max(d.pitch, pmin(d.R)) } }; },
     aiStarts: (l) => [l.start, { ...l.start, grid: 0 }, { ...l.start, grid: 0, rad: 1, asg: 1 }],
     _x: { analyse, parts, channels, heaters, lockSolve, radii, resp, kappa, dlam, pmin, GRID, SRC, ASG, RAD, TILT, LOC_SIG, HMAX, RXD, MUX_IL, COMB_WPE, N }
@@ -329,8 +331,42 @@ KINDS.wdm = (() => {
       ['엔진 전력 · pJ/bit', `${f2(dr.pw, 2)} W · ${f2(dr.pj, 2)}`, `${f2(r.pw, 2)} W · ${f2(r.pj, 2)}`, 'semi', 'DC-DC 포함, 같은 CPO 상수'],
       ['Rx', 'PD ×8 (광섬유마다)', `Demux (IL ${RXD.il} dB, XT ${RXD.xt[d.grid | 0]} dB 가정) → PD ×8`, 'asm', '']
     ];
-    const tb = rows.map(([k, a, b, f, n]) => `<tr><th scope="row">${k}${n ? `<br><span class="note">${n}</span>` : ''}</th><td>${a}</td><td>${b}</td><td><span class="badge2 b-${f}">${B[f]}</span></td></tr>`).join('');
-    return { title: `같은 부품으로: MRR DR8 (3A+ · CPO) vs MRR WDM8 (이 설계)`, html: `<p class="note" style="margin:0 0 8px">3A+는 기준 설계를 링 ×8 · CPO로 바꿔 같은 엔진으로 계산합니다. 점수에는 들어가지 않습니다.</p><div class="gtbl"><table class="cmp"><tr><th>항목</th><th>MRR DR8</th><th>MRR WDM8</th><th>근거</th></tr>${tb}</table></div><p class="note">WDM8은 광섬유·커넥터를 1/8로 줄이는 대신, 링이 한 버스를 나눠 쓰면서 생기는 문제(공진 배정, 이웃 링 크로스토크, FSR 별칭, 히터 열 결합, 다파장 광원의 선 세기 차이)를 설계로 풀어야 합니다.</p>` };
+    const tb = rows.map(([k, a, b, f, n]) => `<tr><th scope="row">${k}${n ? `<br><span class="note">${n}</span>` : ''}</th><td>${a}</td><td>${b}</td><td>${confBadge(f, true)}</td></tr>`).join('');
+    return { title: `같은 부품으로: MRR DR8 (3A+ · CPO) vs MRR WDM8 (이 설계)`, html: `<p class="note" style="margin:0 0 8px">3A+는 기준 설계를 링 ×8 · CPO로 바꿔 같은 엔진으로 계산합니다. 점수에는 들어가지 않습니다.</p><div class="gtbl"><table class="cmp"><tr><th>항목</th><th>MRR DR8</th><th>MRR WDM8</th><th>근거</th></tr>${tb}</table></div><p class="note">WDM8은 광섬유·커넥터를 1/8로 줄이는 대신, 링이 한 버스를 나눠 쓰면서 생기는 문제(공진 배정, 이웃 링 크로스토크, FSR 별칭, 히터 열 결합, 다파장 광원의 선 세기 차이)를 설계로 풀어야 합니다.</p>` + confidence(l, r) };
+  }
+  /* ---------- what this WDM8 result does and does not rest on (v1.0 §4.2) ---------- */
+  const CAUTION_DB = 1.0;   // educational heuristic for "thin margin" — not a foundry or standard requirement
+  const RBC = new Map();
+  function robust(l, d) {
+    const key = l.pf.id + JSON.stringify(d); if (RBC.has(key)) return RBC.get(key);
+    const base = analyse(l, d), gi = d.grid | 0;
+    const cases = [
+      ['Rx Demux 크로스토크 5 dB 나쁨', { rxXT: RXD.xt[gi] + 5 }, `가정 ${RXD.xt[gi]} → ${RXD.xt[gi] + 5} dB`],
+      ...((d.src | 0) ? [] : [['콤 선 세기 기울기 +1 dB', { tilt: TILT + 1 }, `가정 ${TILT} → ${TILT + 1} dB`]]),
+      ['링 간 열 결합 ×2 (3D 확산 불확도)', { kScale: 2 }, '2-1 단면 프로파일 × 2']
+    ].map(([name, ov, how]) => { const r = analyse(l, d, null, ov); return { name, how, dm: r.margin - base.margin, dh: r.H.tot - base.H.tot, lockOK: r.lockOK }; });
+    const out = { base, cases }; if (RBC.size > 30) RBC.clear(); RBC.set(key, out); return out;
+  }
+  function confidence(l, r) {
+    const d = r.d || {}, R = robust(l, d), w = r.worst, head = (h) => `<tr><th colspan="3" class="grp">${h}</th></tr>`;
+    const row = (k, v, c, n) => `<tr><th scope="row">${k}${n ? `<br><span class="note">${n}</span>` : ''}</th><td>${v}</td><td>${confBadge(c, true)}</td></tr>`;
+    const thin = r.margin < CAUTION_DB;
+    return `<div class="tsens"><h4>WDM8 결과의 근거 — 광학 모델 · 제어 구조 · 시스템 견고성</h4>`
+      + (r.margin < 0 ? `<p class="note" style="color:var(--fail)">✕ 최악 채널 마진 ${f2(r.margin, 2)} dB — 지금 설계는 링크가 닫히지 않습니다. 아래 광학 항목에서 원인을 찾으세요.</p>` : thin ? `<p class="note" style="color:var(--amber)">△ 주의: 최악 채널 마진 ${f2(r.margin, 2)} dB &lt; ${CAUTION_DB} dB — 아래 가정 하나만 나빠져도 링크가 닫힐 수 있습니다 (임계값 ${CAUTION_DB} dB는 교육용 휴리스틱이며 파운드리·표준 요구값이 아닙니다).</p>` : '')
+      + `<div class="gtbl"><table class="cmp"><tr><th>항목</th><th>값</th><th>근거</th></tr>`
+      + head('Optical Model — 계산된 광학')
+      + row('최악 채널 마진', `${f2(r.margin, 2)} dB (λ${w.j})`, 'semi', '버스 위 링 8개의 all-pass 응답 곱 + PAM4 눈')
+      + row('FSR 별칭', r.aliased.length ? `<b class="st-FAIL">${r.aliased.length}채널</b>` : '없음', 'semi', `FSR ${nmS(r.fsr)} nm vs 8·Δλ ${nmS(r.span)} nm`)
+      + row('이웃 링 크로스토크 (최악 채널)', `${f2(w.xtdB, 1)} dB → 페널티 ${f2(w.xtp, 2)} dB`, 'semi', '')
+      + head('Control Architecture — 링 락')
+      + row('락 방식', '정적 락 가정: 온도마다 최적 배정을 즉시 선택', 'asm', (d.asg | 0) ? '순환(배럴) 배정 — 재배정 순간의 링크 중단은 계산하지 않음' : '고정 배정')
+      + row('히터 범위', `${r.lockOK ? '충분' : '<b class="st-FAIL">부족</b>'} (최악 ${f2(r.H.max, 1)} mW ≤ ${HMAX} × P<sub>2π</sub> ${f2(r.P2pi, 1)} mW)`, 'semi', '')
+      + row('링별 모니터 PD', '기본 설계에 없음 (Lab WDM8: NOT VERIFIED)', 'nv', '락 신호를 어디서 얻는지는 검증하지 않음')
+      + row('동적 락 획득 · 재락 중단 · 락 루프 상호작용', 'NOT VERIFIED', 'nv', '락 동역학 시뮬레이터 없음 — 정적 결과만')
+      + head('System Robustness — 가정이 바뀌면')
+      + R.cases.map((c) => row(c.name, `마진 ${c.dm >= 0 ? '+' : ''}${f2(c.dm, 2)} dB${Math.abs(c.dh) > 0.05 ? ` · 히터 합 ${c.dh >= 0 ? '+' : ''}${f2(c.dh, 1)} mW` : ''}${c.lockOK ? '' : ' · <b class="st-FAIL">락 범위 초과</b>'}`, 'asm', c.how)).join('')
+      + row('열 모델', '2-1 2D 단면 프로파일 (긴 히터) — 점 열원인 링에는 상한', 'asm', '3D 열해석 필요 (NOT VERIFIED)')
+      + `</table></div>${confLegend(['semi', 'asm', 'nv'])}</div>`;
   }
   K.panel = (l, r) => panel(l, r);
   return K;

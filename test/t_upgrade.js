@@ -69,14 +69,12 @@ for (const pid of Object.keys(G.PLATFORMS)) {
 
 /* ---------------- B. rectangular spiral ---------------- */
 const fs = require('fs'), vm = require('vm'), path = require('path');
-let base = null;
-try { const src = require('child_process').execSync('git show HEAD~0:src/kinds/spiral.js', { cwd: path.join(__dirname, '..'), stdio: ['ignore', 'pipe', 'ignore'] }).toString(); if (!/rectGeom/.test(src)) base = src; } catch (e) { base = null; }
-try { if (!base) base = require('child_process').execSync('git show origin/main:src/kinds/spiral.js', { cwd: path.join(__dirname, '..'), stdio: ['ignore', 'pipe', 'ignore'] }).toString(); } catch (e) { base = null; }
-if (!base) console.log("  note: main spiral.js not found — legacy identity check skipped");
+// baseline = main before the rectangular spiral (5637cd9 = f08011b^1); a missing baseline fails (test/baseline.js)
+const BL = require('./baseline.js'), base = BL.need('5637cd9', 'src/kinds/spiral.js'), ID = BL.identity('test:upgrade circular spiral', '5637cd9', 12);
 let G0 = null; if (base) { G0 = load(); vm.runInContext(base.replace(/^const (\w+) =/gm, 'var $1 ='), G0); }
 for (const pid of Object.keys(G.PLATFORMS)) {
   const K = G.KINDS.spiral, l = LV('D-1', pid), pf = l.pf, S = G.PSPEC[pid]['D-1'];
-  if (G0) for (const d of [S.ref, S.start, S.paper]) { const a = K.evaluate(l, { ...d, lay: 0 }), b = G0.KINDS.spiral.evaluate(l, d); ok(a.IL === b.IL && a.area === b.area && a.xtMode === b.xtMode, `${pid}: circular spiral identical to main`); }
+  if (G0) for (const d of [S.ref, S.start, S.paper]) { const a = K.evaluate(l, { ...d, lay: 0 }), b = G0.KINDS.spiral.evaluate(l, d); ID.hit(); ok(a.IL === b.IL && a.area === b.area && a.xtMode === b.xtMode, `${pid}: circular spiral identical to main (5637cd9)`); }
   const mk = (o) => { const d = { ...S.ref, lay: 2, sb: 1, ...o }; K.fill(l, d); return d; };
   for (const [tag, o] of [['10x30 short', {}], ['10x30 E-W', { port: 1 }], ['5x5', { bp: 0, bw: 5, bh: 5 }], ['compact f .2', { env: 0.2 }], ['arc corners', { lay: 1, rc: pf.mat === 'si' ? 200 : 400 }]]) {
     const d = mk(o), r = K.evaluate(l, d);
@@ -106,5 +104,6 @@ for (const pid of Object.keys(G.PLATFORMS)) {
   // legacy cards stay usable by D-2 / B-1 (they rebuild a circular spiral from the card design)
   const leg = K._x.build(pf, mk({}), 2); ok(Number.isFinite(leg.IL), `${pid}: a rectangular-mode design keeps valid legacy keys for D-2 / B-1`);
 }
-console.log(`${n - fail}/${n} checks passed` + (G0 ? '' : ' (main spiral.js not available — legacy identity not checked)'));
+ok(ID.done(), 'every circular-spiral identity check ran');
+console.log(`${n - fail}/${n} checks passed` + (G0 ? '' : ' (5637cd9 not available — legacy identity NOT RUN)'));
 process.exit(fail ? 1 : 0);

@@ -68,4 +68,11 @@ async function play(id){
 (async()=>{await sleep(300);
  $(`#pick-lam .choice[data-lam="${plat.endsWith('1310')?1.31:1.55}"]`).click(); $(`#pick-mat .choice[data-mat="${plat.startsWith('sin')?'sin':'si'}"]`).click(); $('#btn-start').click(); await sleep(400);
  if(mode!=='std'){$(`#mode-seg button[data-m="${mode}"]`).click(); await sleep(300);}
- for(const id of ids) await play(id); console.log('errors',errs.slice(0,3));process.exit(0);})();
+ // gate = stars EARNED on this level (the game's record), not whether the last design still meets ★★ — on 2-1 the coach
+ // deliberately trades ★★ (τ) for ★★★ yield (undercut), so the final design can alternate after ★★ was already earned
+ const earned=(id)=>{ try{ return (JSON.parse(w.localStorage.getItem('smq3-progress')).by[plat].stars[mode][id]|0); }catch(e){ return 0; } };
+ const res=[]; for(const id of ids){ await play(id); const live=[...w.document.querySelectorAll('.obj')].slice(0,2).every(o=>o.classList.contains('live')), m=earned(id); console.log(`  ${id} earned ${'★'.repeat((m&1)+((m>>1)&1)+((m>>2)&1))||'—'} (bits ${m}) · final design ${live?'meets':'misses'} ★/★★`); res.push([id,(m&3)===3]); }
+ console.log('errors',errs.slice(0,3));
+ // BOT_MIN=2 (CI): fail when a level ends below ★★ or the page threw
+ const below=res.filter(([,ok])=>!ok).map(([id])=>id); if(process.env.BOT_MIN==='2'&&below.length) console.log('BELOW ★★:',below.join(','));
+ process.exit(errs.length||(process.env.BOT_MIN==='2'&&below.length)?1:0);})();

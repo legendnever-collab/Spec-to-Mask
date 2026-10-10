@@ -1,10 +1,7 @@
 // ===== Game shell: campaign, scoring, objectives, coach, fab, AI rival, Design DB, cards =====
 (() => {
 const $ = (s) => document.querySelector(s);
-const store = {
-  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
-  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
-};
+const store = SMQ_STORE;   // src/persist.js: every write reports success; failures show in the header (save chip) and banner
 const MODES = {
   easy: { label: '입문', th: 1.5, area: 1.3, sig: 0.6, credits: 5, maxHint: 3, hint: 2, note: '스펙 1.5배 완화 · 공정 변동 60% · 크레딧 5' },
   std: { label: '표준', th: 1.0, area: 1.0, sig: 1.0, credits: 3, maxHint: 3, hint: 1, note: '기본 스펙 · 크레딧 3' },
@@ -40,7 +37,7 @@ const state = {
   plat: PLATFORMS[P.plat] ? P.plat : null,
   id: '1-1',
   mode: MODES[store.get('smq-mode-v1', 'std')] ? store.get('smq-mode-v1', 'std') : 'std',
-  credits: {}, fab: {}, wafer: {}, fromAI: {}, cur: null, fabRunning: false, aiRunning: null, lastLogged: '', land: {}, hintTier: 1
+  credits: {}, fab: {}, wafer: {}, fromAI: {}, seedFix: {}, cur: null, fabRunning: false, aiRunning: null, lastLogged: '', land: {}, hintTier: 1
 };
 { const sid = store.get('smq3-id', '1-1'); if (LMAP[sid] && !LMAP[sid].locked) state.id = sid; }
 { const M = MODES[state.mode]; state.hintTier = clamp(store.get('smq-hint-v1', M.hint) | 0, 0, M.maxHint); }
@@ -64,11 +61,18 @@ function lev() {
   }
   return effCache[k];
 }
+window.GAME_KINDS = KINDS;   // read-only engine access for tests and the Learning Guide examples
 window.GAME_LEV = (id) => { if (!LMAP[id] || !state.plat) return null; const sv = state.id; state.id = id; const e = lev(); state.id = sv; return e; };
 // read-only snapshot for the Learning Guide (src/guide.js): it explains and explores, it never writes to the design or the score
 // read-only view for the PIC Design Lab (src/lab/ui.js): platform, cards, saved designs, campaign map refresh
 window.GAME_SHELL = { plat: () => state.plat, pf: () => (state.plat ? PLATFORMS[state.plat] : null), cards: () => (state.plat ? PP().cards : {}), stars: (id) => starsOf(id),
-  design: (id) => (state.plat ? { ...(DESP()[id] || {}) } : {}), refreshMap: () => renderMap(), busy: () => state.fabRunning || state.aiRunning != null };
+  design: (id) => (state.plat ? { ...(DESP()[id] || {}) } : {}), refreshMap: () => renderMap(), busy: () => state.fabRunning || state.aiRunning != null,
+  // v1.0 learning layer (src/learn.js): navigation, learning record, view prefs — never stars, scores or designs
+  curId: () => state.id, levels: () => PLAY.map((l) => ({ id: l.id, name: l.name, stage: l.stage, kind: l.kind })),
+  go: (id) => { if (!LMAP[id] || state.fabRunning || state.aiRunning != null) return; if (window.LABUI && window.LABUI.isOpen()) window.LABUI.close(); if (state.id !== id) { state.id = id; state.lastLogged = ''; persist(); } setupLevel(); },
+  review: () => (state.plat ? (PP().review = PP().review || {}) : {}), save: () => persist(), ui: () => UI, saveUI: () => store.set('smq3-ui', UI),
+  onLevel: (f) => levelHooks.push(f), progress: () => progressCount() };
+const levelHooks = [];
 window.GAME_CTX = () => {
   if (!state.plat || !state.cur) return null;
   const c = state.cur, K = kind(), S = c.S;
@@ -140,7 +144,7 @@ function renderMap() {
 // mouse users have no horizontal wheel: arrows page the campaign map (touch scrolls it directly)
 function mapArrows() { const m = $('#map'), max = m.scrollWidth - m.clientWidth; $('#map-l').hidden = !(max > 4 && m.scrollLeft > 4); $('#map-r').hidden = !(max > 4 && m.scrollLeft < max - 4); }
 $('#map').addEventListener('scroll', () => mapArrows(), { passive: true });
-['l', 'r'].forEach((k) => $('#map-' + k).addEventListener('click', () => { const m = $('#map'); m.scrollBy ? m.scrollBy({ left: (k === 'l' ? -1 : 1) * m.clientWidth * 0.8, behavior: 'smooth' }) : (m.scrollLeft += (k === 'l' ? -1 : 1) * m.clientWidth * 0.8); }));
+['l', 'r'].forEach((k) => $('#map-' + k).addEventListener('click', () => { const m = $('#map'); m.scrollBy ? m.scrollBy({ left: (k === 'l' ? -1 : 1) * m.clientWidth * 0.8, behavior: smqMotion() }) : (m.scrollLeft += (k === 'l' ? -1 : 1) * m.clientWidth * 0.8); }));
 window.addEventListener('resize', () => mapArrows());
 $('#map').addEventListener('click', (e) => {
   if (e.target.closest('[data-lab]')) { if (window.LABUI && !state.fabRunning && state.aiRunning == null) { window.LABUI.open(); renderMap(); } return; }
@@ -171,6 +175,7 @@ function setParam(k, v, fromBtn) {
   const p = params().find((x) => x.k === k); if (!p) return;
   const nv = snapP(p, v);
   if (nv === dv()[k] && !fromBtn) return;
+  noteChange(k, dv()[k], nv);
   putV(k, nv); state.fromAI[state.id] = false;
   const K = kind();
   if (!curStep() && K.onParam) K.onParam(lev(), des(), k);   // e.g. a boundary preset writes W and H
@@ -180,7 +185,7 @@ function setParam(k, v, fromBtn) {
     const back = hk ? document.querySelector(hd ? `.nudge[data-k="${hk}"][data-d="${hd}"]` : `#p-${hk}`) : null; if (back) back.focus();
   }
   else { if (fromBtn) $('#p-' + k).value = nv; $('#o-' + k).textContent = pFmt(p, nv); }
-  requestEval(); scheduleCommit();
+  requestEval(); store.pending(); scheduleCommit();
 }
 {
   const list = $('#prm-list');
@@ -220,7 +225,7 @@ function evaluate() {
     if (!G.done[S.id] && S.done(l, res, mem)) { G.done[S.id] = Date.now(); ch = true; }
     state.cur = { l, d, res, sc: { perf: 0, comp: 0, total: 0 }, key: keyOf(d), robust: 0, fabHere: null, S, pr: null };
     if (ch) { persist(); renderGuided(); }
-    drawView(); renderHUD(); renderObjectives(); renderFabPanel(); renderHint(); scheduleIdle();
+    drawView(); renderHUD(); renderObjectives(); renderDelta(); renderFabPanel(); renderHint(); scheduleIdle();
     return;
   }
   const res = K.evaluate(l, d, null, { full: true });
@@ -234,10 +239,75 @@ function evaluate() {
     if (st && st.full && st.fullDone && !pr && !G.done[st.id] && st.fullDone(l, res, { fab: fabHere, ob: objectives() })) { G.done[st.id] = Date.now(); persist(); renderGuided(); }
   }
   if (K.landKeys && K.landKeys(l, d).includes('L') && K.land && !K.cheap) landFor('L');   // MMI coach needs the L sweep
-  drawView(); renderHUD(); renderObjectives(); renderFabPanel(); renderHint(); drawStrips(false); scheduleIdle();
+  drawView(); renderHUD(); renderObjectives(); renderDelta(); renderFabPanel(); renderHint(); drawStrips(false); scheduleIdle();
 }
 let idleT = null;
-function scheduleIdle() { clearTimeout(idleT); idleT = setTimeout(() => { computeChart(); drawStrips(true); renderCoach(); renderPanel(); }, 110); }
+function scheduleIdle() { clearTimeout(idleT); idleT = setTimeout(() => { computeChart(); drawStrips(true); renderCoach(); renderPanel(); renderCompare(); }, 110); }
+/* ---------- baseline comparison (v1.0 §7.4): pin a design, compare the engine's own numbers; no combined score ---------- */
+const CMPC = new Map();
+const cmpEval = (l, K, d) => { const k = state.plat + state.id + state.mode + keyOf(d); if (!CMPC.has(k)) { if (CMPC.size > 40) CMPC.clear(); CMPC.set(k, K.evaluate(l, d, null, { full: true })); } return CMPC.get(k); };
+function renderCompare(runFab) {
+  const box = $('#cmpcard'), c = state.cur, K = kind();
+  box.hidden = !c || !!c.S || !!c.pr || !K.compareRows; if (box.hidden) return;
+  const l = c.l, pins = (PP().pins = PP().pins || {}), pin = pins[state.id];
+  if (!pin) { $('#cmp-body').innerHTML = '<p class="note" style="margin:0 0 8px">지금 설계를 기준으로 고정한 뒤 파라미터를 바꾸면, 같은 엔진으로 계산한 값을 기준과 나란히 봅니다(점수·별과 무관). 같은 웨이퍼(같은 시드·같은 공정 변동)로 두 설계의 수율도 비교할 수 있습니다.</p><div class="row-btns"><button class="btn pri" data-pin="set">현재 설계를 기준으로 고정</button></div>'; return; }
+  let rb; try { rb = cmpEval(l, K, pin.d); } catch (e) { rb = null; }
+  if (!rb) { $('#cmp-body').innerHTML = '<p class="note">기준 설계를 이 레벨에서 다시 계산할 수 없습니다.</p><div class="row-btns"><button class="btn" data-pin="clear">기준 해제</button></div>'; return; }
+  const A = K.compareRows(l, rb), B = K.compareRows(l, c.res), up = [], dn = [];
+  const rows = B.map(([k, v, u, dec, better, conf], i) => {
+    const a = A[i] ? A[i][1] : null, dv = a == null || !Number.isFinite(v) || !Number.isFinite(a) ? null : v - a, tol = Math.pow(10, -dec) / 2;
+    const cls = dv == null || Math.abs(dv) <= tol || !better ? 'dlt-0' : (better === 'hi') === (dv > 0) ? 'dlt-up' : 'dlt-dn';
+    if (cls === 'dlt-up') up.push(k); if (cls === 'dlt-dn') dn.push(k);
+    const fmt = (x) => (Number.isFinite(x) ? (+x).toFixed(dec) : '—');
+    return `<tr><th scope="row">${k}</th><td>${fmt(a)} ${u}</td><td>${fmt(v)} ${u}</td><td class="${cls}">${dv == null ? '—' : (dv > 0 ? '+' : '') + fmt(dv)}${cls === 'dlt-up' ? ' ▲좋아짐' : cls === 'dlt-dn' ? ' ▼나빠짐' : ''}</td><td>${confBadge(conf, true)}</td></tr>`;
+  }).join('');
+  const changed = params().filter((p) => pin.d[p.k] != null && +pin.d[p.k] !== +c.d[p.k]).map((p) => `${p.sym || p.k} ${pFmt(p, pin.d[p.k])} → ${pFmt(p, c.d[p.k])}`);
+  const seed = cmpSeed();
+  // a same-wafer result is shown only while every input that made it is unchanged; otherwise it is marked stale
+  let fab = null, stale = null;
+  if (pin.fab) {
+    const want = fabCond(l, seed, pin, c.d), diff = FAB_COND.filter(([k]) => pin.fab[k] !== want[k]);
+    if (!diff.length) fab = pin.fab;
+    else stale = diff.map(([k, n, show]) => (pin.fab[k] == null ? `${n} (기록 없음)` : show ? `${n} ${show(pin.fab[k])} → ${show(want[k])}` : n));
+  }
+  let fh = '';
+  if (fab) {
+    const ca = wilson(fab.pa, fab.n), cb = wilson(fab.pb, fab.n);
+    fh = `<p class="note" style="margin:8px 0 4px" data-fab-state="current"><b>같은 웨이퍼 쌍 비교 (시드 ${fab.seed}, ${fab.n} 다이 · ${MODES[fab.mode].label} · ${fab.model})</b>: 기준 ${fab.pa}/${fab.n} = ${pct(fab.pa / fab.n)} % (95 % 구간 ${pct(ca[0])}–${pct(ca[1])}) · 현재 ${fab.pb}/${fab.n} = ${pct(fab.pb / fab.n)} % (${pct(cb[0])}–${pct(cb[1])}). 다이별로: 둘 다 양품 ${fab.both} · 기준만 ${fab.aOnly} · 현재만 ${fab.bOnly} · 둘 다 불량 ${fab.none}. ${pairedText('기준', '현재', fab.aOnly, fab.bOnly)} 크레딧·별에는 반영하지 않습니다.</p>`;
+  } else if (stale) {
+    const o = pin.fab;
+    fh = `<p class="note st-WARNING" style="margin:8px 0 4px" data-fab-state="stale"><b>⚠ 이전 같은 웨이퍼 결과는 지금 조건과 맞지 않습니다 (STALE)</b> — 바뀐 것: ${stale.join(' · ')}. 이전 값(시드 ${o.seed}: 기준 ${o.pa}/${o.n} · 현재 ${o.pb}/${o.n})은 지금 설계·조건의 결과가 아닙니다. 아래 버튼으로 다시 계산하세요.</p>`;
+  }
+  $('#cmp-body').innerHTML = `<p class="note" style="margin:0 0 8px">기준: ${changed.length ? `바뀐 파라미터 ${changed.join(' · ')}` : '지금 설계와 같음'} · 고정 ${String(pin.t).slice(0, 16).replace('T', ' ')}</p>`
+    + `<div class="gtbl"><table class="cmp"><tr><th>항목</th><th>기준</th><th>현재</th><th>Δ</th><th>근거</th></tr>${rows}</table></div>`
+    + `<p class="note"><b>Trade-off:</b> ${up.length ? `좋아진 것 — ${up.join(', ')}` : '좋아진 항목 없음'}${dn.length ? ` / 나빠진 것 — ${dn.join(', ')}` : ''}. 하나의 점수로 합치지 않습니다 — 어떤 항목을 우선할지는 미션 목표와 시스템 요구가 정합니다.</p>`
+    + fh + `<div class="row-btns"><button class="btn" data-pin="fab">같은 웨이퍼로 수율 비교 (시드 ${seed}${fabLog(state.id)[0] || state.seedFix[state.id] != null ? '' : ', 기본'})</button><button class="btn" data-pin="set">지금 설계를 새 기준으로</button><button class="btn" data-pin="load">기준 설계로 되돌리기</button><button class="btn" data-pin="clear">기준 해제</button></div>`;
+  if (runFab) sameWafer(seed, pin);
+}
+// the seed the comparison button uses: a fixed seed, else the last Fab Run's, else the panel default
+const cmpSeed = () => (state.seedFix[state.id] != null ? state.seedFix[state.id] : (fabLog(state.id)[0] ? fabLog(state.id)[0].seed : 1067));
+// everything that decides the dies or the verdicts of a same-wafer comparison (Platform, Difficulty, process scale, level
+// spec, Seed, Model Version, both design hashes); a stored result counts only while all of them are equal
+const fabCond = (l, seed, pin, d) => ({ plat: state.plat, mode: state.mode, sig: MODES[state.mode].sig, dt: l.pf.dt, spec: SMQ_STORE.fnv(JSON.stringify(l)), seed, model: MODEL_VERSION, base: dhash(pin.d), cur: dhash(d) });
+const FAB_COND = [['plat', '플랫폼', (x) => x], ['mode', '난이도', (x) => (MODES[x] ? MODES[x].label : x)], ['sig', '공정 변동 크기', (x) => `×${x}`], ['dt', '두께 변동', null], ['spec', '레벨 스펙', null], ['seed', '시드', (x) => x], ['model', '모델 버전', (x) => x], ['base', '기준 설계', null], ['cur', '현재 설계', null]];
+function sameWafer(seed, pin) {
+  const c = state.cur, K = kind(), l = c.l, dies = makeWafer(seed, MODES[state.mode].sig);
+  let pa = 0, pb = 0, both = 0, aOnly = 0, bOnly = 0, none = 0;
+  for (const die of dies) {
+    const prc = { ...die, dt: die.dt * l.pf.dt / 0.006 }, a = K.fabPass(l, K.evaluate(l, pin.d, prc)), b = K.fabPass(l, K.evaluate(l, c.d, prc));
+    if (a) pa++; if (b) pb++; if (a && b) both++; else if (a) aOnly++; else if (b) bOnly++; else none++;
+  }
+  pin.fab = { ...fabCond(l, seed, pin, c.d), n: dies.length, pa, pb, both, aOnly, bOnly, none, t: new Date().toISOString() };
+  persist(); renderCompare();
+}
+$('#cmp-body').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-pin]'); if (!b || state.fabRunning || state.aiRunning != null || !state.cur) return;
+  const pins = (PP().pins = PP().pins || {}), a = b.dataset.pin;
+  if (a === 'set') { pins[state.id] = { d: { ...state.cur.d }, t: new Date().toISOString() }; persist(); renderCompare(); }
+  else if (a === 'clear') { delete pins[state.id]; persist(); renderCompare(); }
+  else if (a === 'load' && pins[state.id]) { DESP()[state.id] = { ...pins[state.id].d }; state.fromAI[state.id] = false; persist(); setupLevel(); }
+  else if (a === 'fab' && pins[state.id]) { b.disabled = true; b.textContent = '계산 중…'; setTimeout(() => renderCompare(true), 30); }
+});
 // optional kind panel (e.g. the MZM vs MRR comparison): full design only, recomputed when idle
 function renderPanel(run) {
   const box = $('#xpanel'), K = kind(), c = state.cur;
@@ -366,8 +436,39 @@ $('#m-next').addEventListener('click', (e) => {
   if (lb && window.LABUI) { window.LABUI.open(); renderMap(); return; }
   if (!b || !LMAP[b.dataset.next]) return;
   state.id = b.dataset.next; state.lastLogged = ''; persist(); setupLevel();
-  const m = $('#mission'); if (m.scrollIntoView) m.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  const m = $('#mission'); if (m.scrollIntoView) m.scrollIntoView({ block: 'start', behavior: smqMotion() });
 });
+/* ---------- parameter → result feedback (v1.0 §6.3 / §7.3): what changed, which mission metrics moved, why, trade-off ---------- */
+// The "before" is taken when a burst of changes to one knob starts (a slider drag is one change); up to three objective rows
+// that moved are shown, status flips first. The physical reason and trade-off come from the Learning Guide's parameter table.
+function metricRows() {
+  const c = state.cur; if (!c) return [];
+  try {
+    const rows = c.S ? c.S.goals(c.l, c.res, stepMem(c.S)) : c.pr ? c.pr.goals(c.l, c.res) : objectives().flatMap((o) => o.items);
+    return rows.filter((x) => !x.na && !x.crit).map((x) => ({ k: String(x.k).replace(/<[^>]+>/g, ''), v: String(x.v).replace(/<[^>]+>/g, ''), ok: !!x.ok }));
+  } catch (e) { return []; }
+}
+function noteChange(k, from, to) {
+  const ch = state.chg, now = Date.now();
+  if (!ch || ch.id !== state.id || ch.k !== k || now - ch.at > 1500 || !!ch.step !== !!curStep()) state.chg = { id: state.id, k, from, to, at: now, before: metricRows(), step: !!curStep() };
+  else { ch.to = to; ch.at = now; }
+}
+const numOf = (v) => { const m = String(v).replace(/−/g, '-').match(/-?\d+(?:\.\d+)?/); return m ? +m[0] : null; };
+function renderDelta() {
+  const box = $('#delta'), ch = state.chg, c = state.cur;
+  if (!ch || !c || ch.id !== state.id || ch.from === ch.to || ch.from == null) { box.hidden = true; return; }
+  const p = params().find((x) => x.k === ch.k); if (!p) { box.hidden = true; return; }
+  const now = metricRows(), prev = new Map(ch.before.map((x) => [x.k, x]));
+  const moved = now.map((x) => { const b = prev.get(x.k); if (!b || b.v === x.v) return null; const a = numOf(b.v), z = numOf(x.v); return { k: x.k, from: b.v, to: x.v, flip: b.ok !== x.ok ? (x.ok ? 'pass' : 'fail') : null, rel: a != null && z != null ? Math.abs(z - a) / Math.max(1e-9, Math.abs(a)) : 0 }; }).filter(Boolean)
+    .sort((a, b) => (!!b.flip - !!a.flip) || b.rel - a.rel).slice(0, 3);
+  const G = window.GAME_GUIDE && window.GAME_GUIDE.content && window.GAME_GUIDE.content[LMAP[state.id].kind], row = G && G.P && G.P[ch.k];
+  const up = +ch.to > +ch.from, why = row ? (up ? row.up : row.dn) : null;
+  box.hidden = false;
+  box.innerHTML = `<div class="dh"><b>바꾼 것</b><span>${p.label}${p.sym ? ` (${p.sym})` : ''}: ${pFmt(p, ch.from)} → ${pFmt(p, ch.to)}</span></div>`
+    + (moved.length ? `<ul aria-label="미션 지표 변화">${moved.map((m) => `<li>${m.k}: ${m.from} → <b>${m.to}</b>${m.flip ? `<span class="flip ${m.flip === 'pass' ? 'st-PASS' : 'st-FAIL'}">${m.flip === 'pass' ? '✓ 이제 충족' : '✕ 이제 미달'}</span>` : ''}</li>`).join('')}</ul>` : '<p>미션 지표는 바뀌지 않았습니다 (이 손잡이는 지금 목표에 직접 걸려 있지 않거나 변화가 표시 자릿수보다 작습니다).</p>')
+    + (why ? `<p><b>물리적으로</b> ${p.sym || p.k} ${up ? '↑' : '↓'}: ${why}</p>` : '')
+    + (row && row.tr ? `<p><b>Trade-off</b> ${row.tr}${row.f ? ` · 관계식 <span style="font-family:var(--mono)">${row.f}</span>` : ''}</p>` : '');
+}
 function renderCards() {
   const slots = LEVELS.slice(), n = PLAY.filter((l) => PP().cards[l.id]).length, last = PLAY.filter((l) => PP().cards[l.id]).sort((a, b) => PP().cards[b.id].t - PP().cards[a.id].t)[0];
   $('#cards-sum').textContent = `${n} / ${PLAY.length} 보유${last ? ` · 최근 ${last.id}` : ''}`;
@@ -386,7 +487,7 @@ function sizeCanvas() {
   cv.width = Math.round(w * DPR); cv.height = Math.round(h * DPR); cv.style.height = h + 'px';
   if (state.cur) drawView();
 }
-function drawView() { const c = state.cur; if (!c || c.l.id !== state.id) return; ((c.S && c.S.draw) || kind().draw)($('#field'), c.l, c.res, { hintTier: state.hintTier, redraw: drawView }); }
+function drawView() { const c = state.cur; if (c) $('#field').setAttribute('aria-label', `${c.l.id} ${c.l.name} 소자 화면 — 점수·핵심 수치는 아래 타일, 목표는 미션 카드에 텍스트로 있습니다`); if (!c || c.l.id !== state.id) return; ((c.S && c.S.draw) || kind().draw)($('#field'), c.l, c.res, { hintTier: state.hintTier, redraw: drawView }); }
 function renderHUD() {
   const c = state.cur, K = kind();
   if (c.S) {
@@ -406,6 +507,8 @@ function renderHUD() {
 function computeChart() {
   const c = state.cur, src = c.S && c.S.chart ? c.S : kind(), out = src.chart(c.l, c.res);
   $('#chart').innerHTML = out.html; $('#legend').innerHTML = out.legend; $('#chart-title').textContent = src.chartTitle(c.l, c.res);
+  // text alternative: the chart title and its legend (the numbers behind it are in the tiles and objectives as text)
+  const svg = $('#chart svg'); if (svg) { svg.setAttribute('role', 'img'); svg.setAttribute('aria-label', `${$('#chart-title').textContent} — ${$('#legend').textContent.replace(/\s+/g, ' ').trim()}`); }
 }
 function renderHint() {
   const h = $('#hint'), c = state.cur; h.hidden = state.hintTier < 2 || !c || c.l.id !== state.id;
@@ -468,7 +571,7 @@ function renderCoach() {
   const go = !state.cur.S && !state.cur.pr && /Tape-out|공정 변동/.test(m.h) && !$('#btn-fab').disabled ? '<div class="row-btns" style="margin-top:6px"><button class="btn" data-go="fab">Fab Run으로 ↓</button></div>' : '';
   box.innerHTML = `<div class="coach-h"><span class="badge">코치 · ${HINTS[state.hintTier]}</span><b>${m.h}</b></div><p>${m.b}</p>${go}`;
 }
-$('#coach').addEventListener('click', (e) => { if (!e.target.closest('[data-go="fab"]')) return; const f = $('#fab'); if (f.scrollIntoView) f.scrollIntoView({ block: 'center', behavior: 'smooth' }); setTimeout(() => $('#btn-fab').focus({ preventScroll: true }), 350); });
+$('#coach').addEventListener('click', (e) => { if (!e.target.closest('[data-go="fab"]')) return; const f = $('#fab'); if (f.scrollIntoView) f.scrollIntoView({ block: 'center', behavior: smqMotion() }); setTimeout(() => $('#btn-fab').focus({ preventScroll: true }), 350); });
 /* ---------- mini status bar: score, stars and the coach headline stay in sight while the field is scrolled away ---------- */
 const mini = { off: true, dir: '▲' };
 function renderMini() {
@@ -486,7 +589,7 @@ let miniRaf = 0;
 function miniCheck() { miniRaf = 0; const r = $('#view').getBoundingClientRect(); const off = !r.height || r.bottom > 80; if (off !== mini.off) { mini.off = off; renderMini(); } }
 const miniSched = () => { if (!miniRaf) miniRaf = requestAnimationFrame(miniCheck); };
 window.addEventListener('scroll', miniSched, { passive: true }); window.addEventListener('resize', miniSched);
-$('#mb-go').addEventListener('click', () => { const v = $('#view'); if (v.scrollIntoView) v.scrollIntoView({ block: 'center', behavior: 'smooth' }); });
+$('#mb-go').addEventListener('click', () => { const v = $('#view'); if (v.scrollIntoView) v.scrollIntoView({ block: 'center', behavior: smqMotion() }); });
 
 /* ---------- Fab run ---------- */
 function drawWafer(dies, done) {
@@ -496,12 +599,38 @@ function drawWafer(dies, done) {
   const cell = (2 * R * 0.94) / 9.4, g = cell * 0.12, all = dies || makeWafer(1);
   all.forEach((die, idx) => { const x = cx + (die.i - 4) * cell, y = cy + (die.j - 4) * cell; ctx.fillStyle = dies && idx < done ? (die.pass ? '#5dd193' : '#ff6b6b') : '#253244'; ctx.fillRect(x - cell / 2 + g, y - cell / 2 + g, cell - 2 * g, cell - 2 * g); });
 }
+/* ---------- Fab Run reproducibility (v1.0 §5): seed log, Wilson interval, fixed seed for same-wafer comparisons ---------- */
+const dhash = (d) => SMQ_STORE.fnv(keyOf(d));
+function fabLog(id) { const pp = PP(); pp.fab = pp.fab || {}; return (pp.fab[id] = pp.fab[id] || []); }
+// 95 % Wilson score interval for k passes of n dies (dies share the wafer offset and bowl → not independent; the interval is optimistic)
+function wilson(k, n) { if (!n) return [0, 1]; const z = 1.96, p = k / n, dn = 1 + z * z / n, c = p + z * z / (2 * n), h = z * Math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)); return [Math.max(0, (c - h) / dn), Math.min(1, (c + h) / dn)]; }
+const pct = (x) => Math.round(x * 100);
+function renderFabRepro() {
+  const box = $('#fab-repro'), c = state.cur; if (!c || c.S || c.pr) { box.innerHTML = ''; return; }
+  const id = state.id, log = fabLog(id), last = log[0], fix = state.seedFix[id];
+  let h = '';
+  if (last) {
+    const ci = wilson(last.pass, last.n), same = last.hash === dhash(c.d);
+    h += `<div>마지막 런: 시드 <b>${last.seed}</b> · ${last.n} 다이 · 양품 <b>${last.pass}</b> · 수율 <b>${pct(last.y)} %</b> (95 % 구간 ${pct(ci[0])}–${pct(ci[1])} %) · ${MODES[last.mode] ? MODES[last.mode].label : last.mode} · ${last.model} · 설계 ${last.hash}${same ? '' : ' <span class="st-WARNING">(지금 설계와 다름)</span>'}</div>`;
+    if (log.length > 1) h += `<details><summary>이전 런 ${log.length - 1}개</summary>${log.slice(1).map((r) => `<div>시드 ${r.seed} · ${r.pass}/${r.n} (${pct(r.y)} %) · 설계 ${r.hash} · ${String(r.t).slice(0, 16).replace('T', ' ')}</div>`).join('')}</details>`;
+  }
+  h += `<div>다음 Tape-out 시드: <b>${fix != null ? fix + ' (고정)' : '새로 뽑음'}</b></div>`;
+  h += `<div class="note" style="font-family:var(--body)">수율은 ${makeWafer(1).length}개 다이의 Monte Carlo 추정입니다. 웨이퍼 오프셋·bowl을 다이가 함께 받으므로(공간 상관) 다이는 독립 표본이 아니고, 구간에는 모델 자체의 불확실성이 들어 있지 않습니다 — 몇 % 차이를 확정적인 성능 차이로 읽지 마세요. 같은 설계·시드·모델 버전이면 결과가 같습니다.</div>`;
+  h += `<div class="row-btns">${last ? `<button class="btn" data-seed="fix">시드 ${last.seed} 고정</button>` : ''}${fix != null ? '<button class="btn" data-seed="free">시드 고정 해제</button>' : ''}</div>`;
+  box.innerHTML = h;
+}
+$('#fab-repro').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-seed]'); if (!b || state.fabRunning) return;
+  const log = fabLog(state.id);
+  if (b.dataset.seed === 'fix' && log[0]) state.seedFix[state.id] = log[0].seed; else delete state.seedFix[state.id];
+  renderFabRepro(); renderCompare();
+});
 function renderFabPanel() {
   const l = lev(), c = state.cur, cr = credits(), btn = $('#btn-fab'), drcBad = c.res.drc && c.res.drc.length;
   if (c.S || c.pr) {
     btn.disabled = true; btn.textContent = 'Tape-out'; $('#yield').textContent = '—'; $('#yield').className = 'yield na'; $('#fab-kv').innerHTML = '';
     $('#fab-note').textContent = c.S ? 'Guided 단계에서는 공정 런이 없습니다. 마지막 단계(Full Design)에서 같은 설계로 Tape-out 합니다.' : c.pr.note;
-    return;
+    renderFabRepro(); return;
   }
   btn.disabled = state.fabRunning || cr <= 0 || drcBad;
   btn.textContent = state.fabRunning ? '공정 진행 중…' : `Tape-out · 크레딧 ${cr}/${credits0()}`;
@@ -511,20 +640,24 @@ function renderFabPanel() {
   $('#fab-kv').innerHTML = f ? `양품 <b>${f.pass}</b> / ${f.n} 다이<br>판정 ${crit}<br>목표 ≥ ${Math.round(l.fab.y * 100)}%${stale ? '<br><span style="color:var(--fail)">설계가 바뀌어 수율 점수 미반영</span>' : ''}`
     : `판정 ${crit}<br>목표 ≥ ${Math.round(l.fab.y * 100)}%<br>다이 ${makeWafer(1).length}개 · 9×9 grid`;
   $('#fab-note').textContent = drcBad ? 'DRC를 통과해야 Tape-out할 수 있습니다.' : cr <= 0 ? '크레딧을 모두 썼습니다. 레벨 재시작으로 충전하세요.'
-    : '웨이퍼마다 CD 오프셋, 두께 bowl, 다이 랜덤 변동이 새로 뽑힙니다. 공칭 성능에 여유가 없으면 수율이 무너집니다.';
+    : '웨이퍼마다 CD 오프셋, 두께 bowl, 다이 랜덤 변동이 새로 뽑힙니다(시드를 고정하면 같은 웨이퍼). 공칭 성능에 여유가 없으면 수율이 무너집니다.';
+  renderFabRepro();
 }
 function tapeOut() {
   const c = state.cur, id = state.id, l = lev(), K = kind();
   if (state.fabRunning || c.S || c.pr || (c.res.drc && c.res.drc.length) || credits() <= 0) return;
   state.credits[id] = credits() - 1; state.fabRunning = true;
-  const dies = makeWafer((Date.now() ^ (Math.random() * 1e9)) & 0x7fffffff, MODES[state.mode].sig), d = { ...c.d }, key = c.key;
+  // seed: fixed by the player (same wafer for two designs) or new; recorded with the design hash and model version (reproducible)
+  const seed = state.seedFix[id] != null ? state.seedFix[id] : ((Date.now() ^ (Math.random() * 1e9)) & 0x7fffffff), sig = MODES[state.mode].sig;
+  const dies = makeWafer(seed, sig), d = { ...c.d }, key = c.key;
   let k = 0, pass = 0; $('#yield').textContent = '…'; $('#yield').className = 'yield na'; renderFabPanel();
   const step = () => {
     const t0 = performance.now();
     while (k < dies.length && performance.now() - t0 < 14) { dies[k].pass = K.fabPass(l, K.evaluate(l, d, { ...dies[k], dt: dies[k].dt * l.pf.dt / 0.006 })); if (dies[k].pass) pass++; k++; }
     if (id === state.id) { drawWafer(dies, k); $('#yield').textContent = Math.round(pass / Math.max(1, k) * 100) + '%'; }
     if (k < dies.length) { requestAnimationFrame(step); return; }
-    state.fabRunning = false; state.fab[id] = { key, yield: pass / dies.length, pass, n: dies.length }; state.wafer[id] = dies;
+    state.fabRunning = false; state.fab[id] = { key, yield: pass / dies.length, pass, n: dies.length, seed }; state.wafer[id] = dies;
+    const log = fabLog(id); log.unshift({ seed, plat: state.plat, mode: state.mode, sig, hash: dhash(d), n: dies.length, pass, y: +(pass / dies.length).toFixed(4), model: MODEL_VERSION, t: new Date().toISOString() }); log.length = Math.min(log.length, 10);
     if (id === state.id) { evaluate(); awardStars(); maybeCard(); persist(); renderMap(); renderObjectives(); renderCards(); }
   };
   requestAnimationFrame(step);
@@ -787,20 +920,121 @@ function setupLevel() {
   const pre = $('#m-preface'); pre.hidden = !l.preface; pre.innerHTML = l.preface || '';
   const cc = $('#m-concepts'); cc.hidden = !l.concepts;
   if (l.concepts) { const seen = (PP().seen = PP().seen || {}); cc.innerHTML = `<summary>개념 노트 · ${l.concepts.length}개 — ${l.concepts.map((c) => c[0].replace(/<[^>]+>/g, '')).join(', ')}</summary><dl>${l.concepts.map(([t, d]) => `<dt>${t}</dt><dd>${d}</dd>`).join('')}</dl>`; cc.open = !seen[l.id] && !curStep(); seen[l.id] = 1; }   // a guided step carries its own intro, so the notes start folded there
+  { const rb = $('#m-rate'); rb.hidden = !RATE_LEVELS.includes(l.id); if (!rb.hidden) $('#m-rate-b').innerHTML = RATE_DEF; }
   const pf = PLATFORMS[state.plat]; $('#plat-chip').innerHTML = `${pf.short} · ${pf.band}<span>변경</span>`; $('#plat-chip').hidden = false;
-  state.land = {}; state.cur = null;
+  state.land = {}; state.cur = null; state.chg = null;
   // a guided step gives no stars, cards, AI or tape-out: those panels step aside until Full Design
   $('main.game').classList.toggle('stepping', !!curStep());
   renderMap(); renderGuided(); renderParams(); syncParamUI(); renderModeSeg(); renderHintSeg(); sizeCanvas();
   const w = state.wafer[state.id]; drawWafer(w, w ? w.length : 0);
   evaluate(); renderAI(); renderDB(); renderCards();
+  levelHooks.forEach((f) => { try { f(state.id); } catch (e) { /* learning layer must not break the level */ } });
 }
 const hot = window.claude && window.claude.hot;
 if (hot && hot.snapshot) hot.snapshot(() => ({ id: state.id, DES }));
+/* ---------- save state and full backup / restore (src/persist.js) ---------- */
+const progressCount = () => Object.values(P.by || {}).reduce((a, ns) => a + Object.values((ns && ns.stars) || {}).reduce((b, o) => b + Object.values(o || {}).reduce((c, m) => c + popcount(m | 0), 0), 0) + Object.keys((ns && ns.cards) || {}).length, 0);
+const kb = (n) => (n >= 1e6 ? (n / 1e6).toFixed(2) + ' MB' : (n / 1e3).toFixed(1) + ' kB');
+const tstr = (t) => { if (!t) return '—'; const d = new Date(t); return isNaN(d) ? String(t) : d.toLocaleString('ko-KR', { hour12: false }); };
+function renderSave(st) {
+  st = st || store.status();
+  const chip = $('#save-chip'), adv = st.state === 'saved' ? store.backupAdvice(progressCount()) : null;
+  const k = st.state === 'failed' ? 'failed' : st.state === 'saving' ? 'saving' : adv ? 'advice' : 'saved';
+  chip.dataset.st = k;
+  $('#save-txt').textContent = { saved: '저장됨', saving: '저장 중…', failed: '저장 실패', advice: '백업 권장' }[k];
+  chip.title = k === 'failed' ? `저장 실패: ${st.err || ''} — 누르면 전체 백업` : k === 'advice' ? `${adv} — 누르면 전체 백업` : '저장 상태 · 전체 백업 / 복원';
+  const w = $('#save-warn'); w.hidden = st.state !== 'failed';
+  if (!w.hidden) $('#save-warn-t').textContent = `${st.available ? '' : '이 브라우저가 저장소를 막았습니다(시크릿 창·정책). '}${st.err || ''} — 지금까지의 작업은 이 창에만 남아 있고, 창을 닫으면 마지막 저장 이후의 변경이 사라집니다. 전체 백업을 내려받아 보관하세요.`;
+  if (DATA.isOpen()) renderDataStatus(st, adv);
+}
+const DATA = smqModal($('#data-dlg'));
+function renderDataStatus(st, adv) {
+  st = st || store.status(); const u = store.usage(), m = st.meta || {};
+  const name = { 'smq3-id': '현재 레벨', 'smq-mode-v1': '난이도', 'smq-hint-v1': '힌트 단계', 'smq-guide-depth': '가이드 깊이', 'smq3-progress': '진행 기록 (별·카드·학습 기록)', 'smq3-designs': '레벨 설계', 'smq3-db': 'Design DB', 'smq3-lab': 'Design Lab 프로젝트', 'smq3-ui': '화면 설정', 'smq3-meta': '백업 메타', 'smq3-undo': '복원 직전 데이터' };
+  $('#data-status').innerHTML = `<table class="ltbl"><tr><th>상태</th><td>${st.state === 'failed' ? `<b class="st-FAIL">✕ 저장 실패</b> · ${st.err || ''}${st.failed.length ? ` (${st.failed.join(', ')})` : ''}` : st.state === 'saving' ? '저장 중…' : '<b class="st-PASS">✓ 저장됨</b>'}${st.lastOk ? ` · 마지막 저장 ${tstr(st.lastOk)}` : ''}</td></tr>`
+    + (() => { const q = st.quarantine || [], c = (st.corrupt || []).filter((x) => !q.some((y) => y.key === x.key)); if (!q.length && !c.length) return '';
+      return `<tr><th>읽을 수 없는 데이터</th><td><b class="st-WARNING">⚠ ${[...q.map((x) => `${name[x.key] || x.key} — 원문 ${x.n}건 ${kb(x.bytes)} 보관`), ...c.map((x) => `${name[x.key] || x.key} — ${x.kind === 'read' ? '브라우저가 읽기를 거부' : '읽을 수 없음'}`)].join(' · ')}</b>`
+        + `<br><span class="note">게임은 이 항목을 기본값으로 시작했습니다. 손상 원문은 지우지 않고 보관했으며 전체 백업의 <code>unreadable</code>에 그대로 들어갑니다 — 백업을 내려받아 두세요.${st.quarantineKept === false ? ` <b class="st-FAIL">원문 보관 실패(${st.quarantineErr}) — 지금 바로 백업을 내려받으세요.</b>` : ''}</span>`
+        + (q.length ? ' <button class="btn" id="bk-qclear">보관한 원문 지우기</button>' : '') + '</td></tr>'; })()
+    + `<tr><th>마지막 전체 백업</th><td>${m.lastBackup ? tstr(m.lastBackup) : '없음'}${adv ? ` · <span class="st-WARNING">${adv}</span>` : ''}</td></tr>`
+    + `<tr><th>사용량</th><td>${kb(u.total)} (브라우저 한도 보통 ≈ 5 MB)<br><span class="note">${Object.entries(u.by).map(([k2, v]) => `${name[k2] || k2} ${kb(v)}`).join(' · ')}</span></td></tr>`
+    + `<tr><th>빌드</th><td>v${BUILD.version} · ${BUILD.commit ? BUILD.commit.slice(0, 10) + ' · ' + String(BUILD.date || '').slice(0, 10) : BUILD.channel + ' build'}${BUILD.offline ? ' · 오프라인(외부 폰트 없음)' : ''}</td></tr></table>`;
+}
+function openData(focusSel) { renderDataStatus(); renderUndo(); DATA.open(focusSel || '#bk-dl'); }
+$('#save-chip').addEventListener('click', () => openData());
+$('#save-warn-b').addEventListener('click', () => openData('#bk-dl'));
+store.subscribe(renderSave);
+const bkName = () => `spec-to-mask-backup-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '')}.json`;
+// an incomplete backup is never reported as a plain success
+const bkWarn = (b) => (b.complete === false ? `<b class="st-WARNING">⚠ 불완전한 백업</b> — 읽을 수 없는 항목: ${(b.problems || []).map((p) => p.key).join(', ')}. 정상 데이터로는 들어가지 않았고, 원문은 백업의 <code>unreadable</code>에 그대로 보관했습니다. ` : '');
+$('#data-status').addEventListener('click', (e) => {
+  if (e.target.id !== 'bk-qclear') return;
+  if (!confirm('보관한 손상 원문을 이 브라우저에서 지웁니다. 원문이 들어 있는 전체 백업을 이미 내려받았나요?')) return;
+  store.clearQuarantine(); renderDataStatus(); renderSave();
+});
+$('#bk-dl').addEventListener('click', async () => {
+  persist(); persistDB();   // the backup must contain what is on screen
+  const b = store.makeBackup($('#bk-ui').checked), txt = JSON.stringify(b, null, 1), msg = $('#bk-msg');
+  const r = await smqDownload(bkName(), txt);
+  $('#bk-ta').hidden = false; $('#bk-ta').value = txt;
+  if (r.ok) { store.markBackup(); msg.innerHTML = `${bkWarn(b)}<b>${bkName()}</b> 저장을 시작했습니다 — 별 ${b.summary.stars} · 카드 ${b.summary.cards} · 설계 ${b.summary.designs} · DB ${b.summary.db}건 · ${kb(txt.length)}. 같은 내용이 아래에 있습니다.`; }
+  else msg.innerHTML = bkWarn(b) + (r.how === 'declined' ? '저장을 취소했습니다.' : '이 화면에서는 파일 저장이 막혀 있습니다 — 아래 JSON을 전부 선택해 복사(Ctrl/⌘+C)한 뒤 .json 파일로 보관하세요.');
+  renderSave();
+});
+$('#bk-copy').addEventListener('click', async () => {
+  persist(); persistDB();
+  const b = store.makeBackup($('#bk-ui').checked), txt = JSON.stringify(b), ok = await smqCopy(txt, $('#bk-ta'));
+  if (ok) store.markBackup();
+  $('#bk-msg').innerHTML = bkWarn(b) + (ok ? `클립보드에 복사했습니다 (${kb(txt.length)}). 메모장 등에 붙여 .json으로 보관하세요.` : '클립보드를 쓸 수 없습니다 — 아래 선택된 JSON을 Ctrl/⌘+C로 복사하세요 (복사 후에는 백업으로 기록되지 않으니 보관을 확인하세요).');
+  renderSave();
+});
+let RS = null;   // parsed + validated backup awaiting confirmation
+const ctxV = () => ({ platforms: PLATFORMS, levels: LMAP });
+function checkRestore(txt) {
+  const out = $('#rs-out'); RS = null; let b;
+  try { b = JSON.parse(txt); } catch (e) { out.innerHTML = '<p class="rs-err">JSON으로 읽을 수 없습니다 (파일이 잘렸거나 다른 형식).</p>'; return; }
+  const v = store.validate(b, ctxV());
+  if (!v.ok) { out.innerHTML = `<p class="rs-err"><b>복원할 수 없습니다.</b> ${v.errors.slice(0, 6).join(' ')}</p><p class="note">지금 데이터는 바뀌지 않았습니다.</p>`; return; }
+  persist(); persistDB();
+  const cur = store.makeBackup(false).summary, nb = v.summary, rowS = (lab, a, c) => `<tr><td>${lab}</td><td class="num">${a}</td><td class="num">${c}</td></tr>`;
+  RS = b;
+  out.innerHTML = `<p>백업 <b>${b.app_version ? 'v' + b.app_version : ''}</b> · ${tstr(b.created)} · ${b.schema}${b.includes_ui ? ' · 화면 설정 포함' : ''} · 체크섬 일치${v.incomplete ? ' · <b class="st-WARNING">⚠ 불완전한 백업</b>' : ''}</p>`
+    + `<table class="ltbl"><tr><th>항목</th><th>백업</th><th>지금 이 브라우저</th></tr>${rowS('플랫폼', nb.platforms.map((x) => x.id).join(', ') || '—', cur.platforms.map((x) => x.id).join(', ') || '—')}${rowS('별', nb.stars, cur.stars)}${rowS('부품 카드', nb.cards, cur.cards)}${rowS('레벨 설계', nb.designs, cur.designs)}${rowS('Design DB 레코드', nb.db, cur.db)}${rowS('Design Lab 미션 (이전 완료 포함)', nb.labMissions, cur.labMissions)}</table>`
+    + (v.warnings.length ? `<p class="rs-warn">${v.warnings.slice(0, 5).join(' ')}</p>` : '')
+    + (v.incomplete ? '<p class="note">불완전한 백업의 손상 원문은 복원 시 이 브라우저의 보관함(smq3-quarantine)에도 복사되어 나중에 복구할 수 있습니다.</p>' : '')
+    + `<p class="note">복원하면 위 “지금” 데이터가 백업 내용으로 <b>바뀝니다</b>(합치기 아님). 복원 직전 데이터는 자동 보관되어 “복원 되돌리기”로 돌아갈 수 있습니다.</p>`
+    + '<label class="chk"><input type="checkbox" id="rs-ok"> 지금 데이터를 이 백업으로 바꾸는 것을 확인했습니다</label><label class="chk"><input type="checkbox" id="rs-had"> 지금 데이터를 이미 따로 백업했습니다 (보관 공간이 없을 때만 필요)</label>'
+    + '<div class="row-btns"><button class="btn pri" id="rs-go" disabled>이 백업으로 복원</button></div><p class="note" id="rs-msg" aria-live="polite"></p>';
+}
+$('#rs-check').addEventListener('click', () => checkRestore($('#rs-ta').value));
+$('#rs-file').addEventListener('change', (e) => { const f = e.target.files && e.target.files[0]; if (!f) return; const rd = new FileReader(); rd.onload = () => { $('#rs-ta').value = String(rd.result); checkRestore(String(rd.result)); }; rd.readAsText(f); e.target.value = ''; });
+$('#rs-out').addEventListener('change', (e) => { if (e.target.id === 'rs-ok') $('#rs-go').disabled = !e.target.checked; });
+const reloadSoon = () => setTimeout(() => { try { location.reload(); } catch (e) { /* the page keeps the old state until reopened */ } }, 900);
+$('#rs-out').addEventListener('click', (e) => {
+  if (e.target.id !== 'rs-go' || !RS || state.fabRunning || state.aiRunning != null) return;
+  const r = store.restore(RS, { ctx: ctxV(), allowNoUndo: !!($('#rs-had') && $('#rs-had').checked) }), msg = $('#rs-msg');
+  if (!r.ok) { msg.innerHTML = `<span class="rs-err">${r.err}</span> 지금 데이터는 그대로입니다.`; return; }
+  msg.innerHTML = `<b class="st-PASS">복원했습니다.</b> ${r.undoSaved ? '복원 직전 데이터를 보관했습니다. ' : ''}${r.rawKept > 0 ? `손상 원문 ${r.rawKept}건을 보관함에 복사했습니다. ` : r.rawKept < 0 ? '<b class="st-FAIL">손상 원문을 보관함에 복사하지 못했습니다 — 백업 파일을 지우지 마세요.</b> ' : ''}새 데이터로 다시 불러옵니다…`; RS = null; reloadSoon();
+});
+function renderUndo() {
+  const u = store.undoInfo(), box = $('#rs-undo');
+  box.innerHTML = u ? `<p class="note">복원 직전 데이터가 보관되어 있습니다 (${tstr(u.at)}). <button class="btn" id="rs-undo-b">복원 되돌리기</button></p>` : '';
+}
+$('#rs-undo').addEventListener('click', (e) => { if (e.target.id !== 'rs-undo-b') return; const r = store.undo(); $('#rs-undo').innerHTML = r.ok ? '<p class="note"><b class="st-PASS">되돌렸습니다.</b> 다시 불러옵니다…</p>' : `<p class="rs-err">${r.err}</p>`; if (r.ok) reloadSoon(); });
+window.GAME_DATA = { open: openData };
+// a model-confidence badge opens the Learning Guide at its model-limits section (F)
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-conf]'); if (!b || !window.GAME_GUIDE) return;
+  const lab = window.LABUI && window.LABUI.isOpen();
+  if (lab) { const g = $('#lab-guide'); if (g) g.click(); } else window.GAME_GUIDE.open();
+  setTimeout(() => { const h = document.querySelector('#g-F-h'); if (h) { if (h.scrollIntoView) h.scrollIntoView({ block: 'start' }); h.focus({ preventScroll: true }); } }, 60);
+});
+
 const UI = store.get('smq3-ui', {}) || {};   // view-only preferences (which sections are open); never progress or designs
 $('#cards').open = !!UI.cards; $('#cards').addEventListener('toggle', () => { UI.cards = $('#cards').open; store.set('smq3-ui', UI); });
 $('#scope').addEventListener('toggle', () => { UI.scope = $('#scope').open; store.set('smq3-ui', UI); }); $('#scope').open = !!UI.scope;
 function start(data) {
+  renderSave();
   if (data && data.DES) { DES = data.DES; if (LMAP[data.id] && !LMAP[data.id].locked) state.id = data.id; }
   if (!state.plat) { showSetup(true); } else { applyPlatform(); showSetup(false); setupLevel(); }
   let lastW = 0; new ResizeObserver(() => { const w = $('#cwrap').clientWidth; if (w && w !== lastW) { lastW = w; sizeCanvas(); } }).observe($('#cwrap'));   // w = 0 while the Design Lab hides the game

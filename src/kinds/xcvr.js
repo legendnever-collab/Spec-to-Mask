@@ -70,17 +70,17 @@ KINDS.xcvr = (() => {
   const xtPen = (xt) => -10 * Math.log10(Math.max(0.05, 1 - 3 * Math.pow(10, xt / 10)));
   // ----- DR8 microring lane: 2-3R engine at the module's modulator input power (cached) -----
   const RINGC = new Map();
-  function ringAt(p, Pmod) {
-    const key = p.ring.l.pf.id + JSON.stringify(p.ring.d) + JSON.stringify(p.ring.l.ref || {}) + '|' + Pmod.toFixed(2);
+  function ringAt(p, Pmod, gs) {
+    const key = p.ring.l.pf.id + JSON.stringify(p.ring.d) + JSON.stringify(p.ring.l.ref || {}) + '|' + Pmod.toFixed(2) + (gs && gs !== 1 ? '|g' + gs.toFixed(4) : '');
     let r = RINGC.get(key);
-    if (!r) { r = KINDS.mrr._x.analyse(p.ring.l, p.ring.d, null, { Pin: Pmod }); if (RINGC.size > 600) RINGC.clear(); RINGC.set(key, r); }
+    if (!r) { r = KINDS.mrr._x.analyse(p.ring.l, p.ring.d, null, gs && gs !== 1 ? { Pin: Pmod, gs } : { Pin: Pmod }); if (RINGC.size > 600) RINGC.clear(); RINGC.set(key, r); }
     return r;
   }
   // optics on a 0.5 dB input-power grid, linear in between (the eye simulation is the expensive part; gain, penalty and loop gain
   // vary smoothly with input power), so Fab Run dies with scattered laser power reuse the cached grid points
   const PG = 0.5;
-  function ringOpt(p, Pmod) {
-    const a = Math.floor(Pmod / PG) * PG, f = (Pmod - a) / PG, r0 = ringAt(p, a), r1 = ringAt(p, a + PG), mix = (x, y) => x + (y - x) * f;
+  function ringOpt(p, Pmod, gs) {
+    const a = Math.floor(Pmod / PG) * PG, f = (Pmod - a) / PG, r0 = ringAt(p, a, gs), r1 = ringAt(p, a + PG, gs), mix = (x, y) => x + (y - x) * f;
     return { gain: mix(r0.omaDbm - a, r1.omaDbm - a - PG), pen: mix(r0.pen, r1.pen), gth: mix(r0.gth, r1.gth), Ebit: r0.Ebit, P2pi: r0.P2pi, omaDyn: mix(r0.omaDynDbm - a, r1.omaDynDbm - a - PG), r: f < 0.5 ? r0 : r1 };
   }
   // ring resonance sensitivity to the die's width / Si-thickness offsets (linear; checked against the full core in test/t_dr8.js)
@@ -93,8 +93,8 @@ KINDS.xcvr = (() => {
   }
   const procShift = (p, proc) => { if (!proc) return 0; const s = ringSens(p), pf = p.ring.l.pf; return s.w * (proc.dw || 0) + s.t * (proc.dt || 0) * 0.006 / (pf.dt || 0.006); };   // µm
   // ring heater power (mW) at case temperature T: red-only, one FSR reaches the next order; the laser moves by dλ_DFB/dT when uncooled
-  function ringHeat(l, p, Pmod, proc, T, tc, dLas) {
-    const c = KINDS.mrr._x.core(p.ring.l, p.ring.d, { Pin: Pmod }), fsr = c.B.fsr, dl = (tc ? 0 : DLAS(l.pf) * 1e-3 * (T - 25)) + (dLas || 0) * 1e-3;
+  function ringHeat(l, p, Pmod, proc, T, tc, dLas, gs) {
+    const c = KINDS.mrr._x.core(p.ring.l, p.ring.d, gs && gs !== 1 ? { Pin: Pmod, gs } : { Pin: Pmod }), fsr = c.B.fsr, dl = (tc ? 0 : DLAS(l.pf) * 1e-3 * (T - 25)) + (dLas || 0) * 1e-3;
     const s = c.lamOp + dl - c.unheated(T) - procShift(p, proc);
     return (((s % fsr) + fsr) % fsr) / fsr * c.H.P2pi;
   }
@@ -102,7 +102,8 @@ KINDS.xcvr = (() => {
   // driver: same driver class as the MZM (pk.drv) minus the load-energy difference vs the 2-3 reference TW-MZM (terminated line V²/R_T
   // vs ring C·V²); the driver IC's own overhead dominates either way
   function mzmLoadE() { const l23 = gl('2-3'); if (!l23) return 0; const m = KINDS.mzm.evaluate(l23, l23.ref); return 2 * (m.v0 * m.v0 / 4) * (5 / 9) / l23.ref.RT / BIT; }
-  function analyse(l, d, proc) {
+  function analyse(l, d, proc, opt) {
+    const gs = opt && opt.gs;   // thermal-model sensitivity (G′ scale) for the comparison panel only; scores never pass it
     const g = (k) => (proc ? gaussLike(proc, k) : 0), p = parts(l, d), F = fr4(l), si = l.pf.mat === 'si';
     const share = SH[l.arch][d.share | 0], nLas = LANES / share, tc = d.tc | 0, pk = F ? PKG[0] : PKG[d.pkg | 0], mlse = F && (d.dsp | 0) === 1;
     const chan = F ? 4.0 + (l.pf.lam > 1.4 ? 1.0 : 0.3) : 3.0 + (l.pf.lam > 1.4 ? 0.6 : 0.2);
@@ -128,7 +129,7 @@ KINDS.xcvr = (() => {
       const { Pmod, tpa, split } = pmodAt(T);
       // ring optics at the nominal process: the lock holds the design detuning on every die, like the MZM part the module only adds the
       // ±0.3 dB modulation spread below; the die's process shift reaches the module through the ring heater (ringHeat)
-      const ring = p.ring ? ringOpt(p, Pmod) : null, gain = ring ? ring.gain : p.gain, mpen = ring ? ring.pen : p.pen;
+      const ring = p.ring ? ringOpt(p, Pmod, gs) : null, gain = ring ? ring.gain : p.gain, mpen = ring ? ring.pen : p.pen;
       const oma = Pmod + gain + (proc ? 0.3 * g(4) : 0);
       for (let c = 0; c < chs; c++) {
         const il = F ? m.il[c] + resid[c] : 0, xt = F ? m.xt[c] : -60;
@@ -149,8 +150,8 @@ KINDS.xcvr = (() => {
       // every ring is locked at its design detuning; heater = worst case temperature of the 0–70 °C range, nominal process
       // (Fab Run: the die's ring process shift and the laser wavelength tolerance)
       const dLas = proc ? LAS_SIG * g(5) : 0, ref = corners.find((c) => c.T === THI).ring;
-      const hs = TGRID.map((T) => ringHeat(l, p, pmodAt(T).Pmod, proc, T, tc, dLas)), Eload = mzmLoadE(), Er = ref.Ebit * 1e-15;
-      const rr = ringOpt(p, pmodAt(THI).Pmod).r;
+      const hs = TGRID.map((T) => ringHeat(l, p, pmodAt(T).Pmod, proc, T, tc, dLas, gs)), Eload = mzmLoadE(), Er = ref.Ebit * 1e-15;
+      const rr = ringOpt(p, pmodAt(THI).Pmod, gs).r;
       ringH = { max: Math.max(...hs), mean: hs.reduce((a, b) => a + b, 0) / hs.length, P2pi: ref.P2pi, Eload: Eload * 1e15, Er: Er * 1e15, dLas,
         eff: rr.fsr * 1e6 / rr.P2pi, selfK: rr.selfK, R: rr.Rlay, h: rr.c.hd.h, iso: rr.c.hd.iso | 0 };
       biasW = LANES * ringH.max / 1000; drvLane = pk.drv - (Eload - Er) * BIT; ctrl += LANES * RLOCK / 1000;
@@ -259,9 +260,10 @@ KINDS.xcvr = (() => {
       if (c.ob2 && c.fab && c.fab.yield < l.fab.y) return { h: '양산·환경 코너에서 탈락하는 모듈이 있습니다', b: '레이저 노화와 결합 오차, 다이마다 다른 Demux 트리밍 결과가 겹치면 공칭 마진이 금방 사라집니다. 마진 여유를 1 dB 이상 확보하세요.' };
       return null;
     },
+    compareRows: (l, r) => [['최악 레인 마진', r.margin, 'dB', 2, 'hi', 'semi'], ['모듈 전력', r.pw, 'W', 2, 'lo', 'semi'], ['비트당 에너지', r.pj, 'pJ/bit', 2, 'lo', 'semi'], ['히터 (8레인)', r.PW.heat, 'W', 3, 'lo', 'semi'], ['레이저 (전력)', r.PW.laser + r.PW.tec, 'W', 2, 'lo', 'asm'], ['레이저 수', r.nLas, '개', 0, null, 'an']].concat(r.mrr ? [['링 히터 (레인 최악)', r.ringH.max, 'mW', 1, 'lo', 'semi']] : []),
     card(l, r) { return { kind: 'xcvr', lines: [`마진 ${f2(r.margin, 2)} dB @ ${cornerTxt(l, r.worst)}`, `${f2(r.pw, 1)} W · ${f2(r.pj, 1)} pJ/bit · 레이저 ${r.nLas}개${fr4(l) ? '' : r.mrr ? ' · MRR' : ' · MZM'}`], model: { margin: +r.margin.toFixed(2), pw: +r.pw.toFixed(2), pj: +r.pj.toFixed(2), nLas: r.nLas, mod: fr4(l) ? 'mzm' : r.mrr ? 'mrr' : 'mzm' } }; },
     aiStarts: (l) => [l.start, fr4(l) ? { ...l.start, P: 16, share: 1, mt: 1 } : { ...l.start, P: 17, share: 2, pkg: 2 }].concat(fr4(l) ? [] : [{ ...l.start, P: 16, share: 1, pkg: 2, mod: 1 }]),
-    _x: { analyse, parts, mux, muxDrift, PKG, SH, ringAt, ringOpt, ringHeat, ringSens, procShift, mzmLoadE, DLAS, LAS_SIG, RLOCK, MODS }
+    _x: { thermalSens, analyse, parts, mux, muxDrift, PKG, SH, ringAt, ringOpt, ringHeat, ringSens, procShift, mzmLoadE, DLAS, LAS_SIG, RLOCK, MODS }
   };
 
   /* ---------- DR8: MZM ×8 vs MRR ×8 in the same architecture (laser count / power, TEC, packaging) ---------- */
@@ -270,8 +272,42 @@ KINDS.xcvr = (() => {
     const key = l.pf.id + JSON.stringify(d) + JSON.stringify(l.fab) + JSON.stringify(Object.keys(cards()));
     if (XPC.has(key)) return XPC.get(key);
     const dies = makeWafer(11 * 97, 1), out = {};
-    for (const mod of [0, 1]) { let n = 0, ok = 0, hs = []; for (const die of dies) { const r = analyse(l, { ...d, mod }, die); n++; if (K.fabPass(l, r)) ok++; if (r.ringH) hs.push(r.ringH.max); } out[mod] = { y: ok / n, hmax: hs.length ? Math.max(...hs) : 0, hmin: hs.length ? Math.min(...hs) : 0 }; }
+    const pv = {};   // per-die verdicts: the same dies for both modulators → a paired comparison
+    for (const mod of [0, 1]) { let n = 0, ok = 0, hs = []; pv[mod] = []; for (const die of dies) { const r = analyse(l, { ...d, mod }, die); n++; const f = K.fabPass(l, r); pv[mod].push(f); if (f) ok++; if (r.ringH) hs.push(r.ringH.max); } out[mod] = { y: ok / n, n, ok, hmax: hs.length ? Math.max(...hs) : 0, hmin: hs.length ? Math.min(...hs) : 0 }; }
+    out.aOnly = pv[0].filter((f, i) => f && !pv[1][i]).length; out.bOnly = pv[0].filter((f, i) => !f && pv[1][i]).length;
     if (XPC.size > 20) XPC.clear(); XPC.set(key, out); return out;
+  }
+  /* ---------- MRR thermal-model sensitivity (v1.0 §4.1): the same engine with the ring's thermal conductance G′ re-scaled ----------
+     nominal = the 2-1 cross-section G′ around the circumference (optimistic: no 3D spread or lead loss);
+     conservative = G′ raised until the ring reaches 160 pm/mW (upper end reported for un-isolated rings; an engineering assumption);
+     experimental reference = 73 pm/mW measured by Yuan et al. 2024 on a different ring (R 12 µm, no isolation).
+     Heater power, self-heating, loop gain and module power are recomputed, not scaled after the fact. Never part of the score. */
+  const TSC = new Map(), TS_REF = [['nom', null, 'Nominal model', 'semi'], ['cons', 160, 'Conservative (160 pm/mW)', 'asm'], ['exp', 73, 'Experimental ref. (73 pm/mW)', 'exp']];
+  function thermalSens(l, d) {
+    const key = l.pf.id + JSON.stringify(d) + JSON.stringify(Object.keys(cards())); if (TSC.has(key)) return TSC.get(key);
+    const mz = analyse(l, { ...d, mod: 0 }), b0 = analyse(l, { ...d, mod: 1 }), eff0 = b0.ringH.eff;
+    const rows = TS_REF.map(([id, eff, name, conf]) => {
+      const gs = eff ? Math.max(1, eff0 / eff) : 1, b = gs === 1 ? b0 : analyse(l, { ...d, mod: 1 }, null, { gs });
+      return { id, name, conf, gs, eff: b.ringH.eff, heat: b.ringH.max, heatW: b.PW.heat, selfK: b.ringH.selfK, gth: b.gth, stable: b.stable, pw: b.pw, pj: b.pj, margin: b.margin, dPw: b.pw - mz.pw };
+    });
+    const out = { rows, mzm: { pw: mz.pw, pj: mz.pj, heatW: mz.PW.heat } };
+    if (TSC.size > 20) TSC.clear(); TSC.set(key, out); return out;
+  }
+  function thermalHTML(l, d) {
+    const t = thermalSens(l, d), R = t.rows, mx = Math.max(t.mzm.pw, ...R.map((x) => x.pw)) * 1.08;
+    const bar = (v, c) => `<span style="display:inline-block;height:8px;width:${Math.max(2, 100 * v / mx).toFixed(1)}px;background:${c};border-radius:2px;vertical-align:middle;margin-right:6px"></span>`;
+    const tr = (k, f, conf) => `<tr><th scope="row">${k}</th>${R.map(f).map((v) => `<td>${v}</td>`).join('')}<td>${conf ? confBadge(conf, true) : ''}</td></tr>`;
+    return `<div class="tsens"><h4>MRR 열 민감도 (Thermal Sensitivity) — 같은 엔진, 링 열 컨덕턴스 G′만 바꿔 다시 계산</h4>
+      <div class="gtbl"><table class="cmp"><tr><th>항목</th>${R.map((x) => `<th>${x.name}<br>${confBadge(x.conf, true)}</th>`).join('')}<th>근거</th></tr>
+      ${tr('히터 효율', (x) => `${f2(x.eff, 0)} pm/mW${x.gs > 1 ? ` <span class="note">(G′ ×${f2(x.gs, 2)})</span>` : ''}`)}
+      ${tr('링 히터 (레인, 0–70 °C 최악)', (x) => `${f2(x.heat, 1)} mW`, 'semi')}
+      ${tr('국부 온도 상승 (자기 가열)', (x) => `${f2(x.selfK, 1)} K`, 'semi')}
+      ${tr('열 되먹임 안정 (루프 이득 g<sub>th</sub>)', (x) => `${f2(x.gth, 2)} ${x.stable ? '· 안정' : '· <b class="st-FAIL">열 폭주</b>'}`, 'semi')}
+      ${tr('모듈 전력', (x) => `${bar(x.pw, '#64c9df')}${f2(x.pw, 2)} W`, 'semi')}
+      ${tr('비트당 에너지', (x) => `${f2(x.pj, 2)} pJ/b`, 'semi')}
+      ${tr('MZM ×8 대비 모듈 전력', (x) => `${x.dPw >= 0 ? '+' : ''}${f2(x.dPw, 2)} W`, 'semi')}
+      </table></div>
+      <p class="note">MZM ×8: ${bar(t.mzm.pw, '#f2b04a')}${f2(t.mzm.pw, 2)} W · ${f2(t.mzm.pj, 2)} pJ/b (열 효율과 무관 — 균형 MZI 바이어스). 마진은 세 경우 모두 같습니다(락이 디튜닝을 유지). <b>읽는 법:</b> G′가 커지면(효율↓) 히터 전력은 늘고 자기 가열·루프 이득은 줄어 열적으로는 더 안정해집니다 — MRR의 전력 이점은 링 열 격리가 실제로 얼마나 되는지에 달려 있습니다. Conservative는 문헌의 격리 없는 링 상한을 가정한 보수 추정, Experimental ref.는 다른 링(Yuan 2024, R 12 µm)의 측정 효율을 이 링에 적용한 참고값이며, 둘 다 이 링의 측정값이 아닙니다. 자기 가열은 링 코어의 평균 온도 상승 ΔT = P<sub>abs</sub>/(G′·L)(흡수 전력, PAM4 평균, 정상 상태)로, 70 °C 코너의 변조기 입력 P<sub>mod</sub>(0.5 dB 격자점)에서 계산합니다 — 2-3R 레벨 화면의 값은 13 dBm 입력 기준이라 다릅니다. 별·점수·보정에는 쓰지 않습니다.</p></div>`;
   }
   function panel(l, r, ctx) {
     if (fr4(l)) return null;
@@ -279,6 +315,8 @@ KINDS.xcvr = (() => {
     const title = `같은 DR8 아키텍처에서 MZM ×8 vs MRR ×8 — 레이저 ${a.nLas}개 · ${d.P} dBm · ${d.tc ? 'TEC' : '비냉각'} · ${a.pk.short}`;
     const y = ctx.run ? yields(l, d) : XPC.get(l.pf.id + JSON.stringify(d) + JSON.stringify(l.fab) + JSON.stringify(Object.keys(cards()))) || null;
     const win = (x, z, hi, tol) => (Math.abs(x - z) <= tol ? -1 : hi ? (x > z ? 0 : 1) : (x < z ? 0 : 1));
+    // paired yield: highlighted only when the dies whose verdicts differ lean one way (exact sign test p < 0.05); otherwise "비슷"
+    const pairWin = (aOnly, bOnly) => { const t = pairedSign(aOnly, bOnly); return t.k && t.p < 0.05 ? (t.dir > 0 ? 1 : 0) : -1; };
     const B = { an: 'Analytical', semi: 'Physics-informed Surrogate', asm: 'Unverified Assumption' };
     const rows = [
       ['변조기 입력 P<sub>mod</sub> (최악 코너)', `${f2(wa.Pmod, 1)} dBm`, `${f2(wb.Pmod, 1)} dBm`, -1, 'an', '같은 레이저·분기·결합 — 두 변조기가 같은 빛을 받습니다'],
@@ -294,16 +332,16 @@ KINDS.xcvr = (() => {
       ['레이저 파장 허용', '넓음 (균형 MZI)', `히터가 한 FSR 안에서 추적 (P<sub>2π</sub> ${f2(b.ringH.P2pi, 1)} mW)`, 0, 'semi', `Fab: 다이 공정 이동 + 레이저 파장 σ ${LAS_SIG} nm 가정`],
       [`★ (마진 ≥ ${f2(l.s1.margin, 1)} dB · ≤ ${fmtT(l.s1.pw)} W)`, r1(l, a) <= 1 ? '충족' : '미달', r1(l, b) <= 1 ? '충족' : '미달', -1, 'semi', ''],
       [`★★ (마진 ≥ ${f2(l.s2.margin, 1)} dB · ≤ ${fmtT(l.s2.pw)} W)`, r2(l, a) <= 1 ? '충족' : '미달', r2(l, b) <= 1 ? '충족' : '미달', r2(l, a) <= 1 && r2(l, b) > 1 ? 0 : r2(l, b) <= 1 && r2(l, a) > 1 ? 1 : -1, 'semi', ''],
-      ['Fab 수율 (61 다이)', y ? `${Math.round(y[0].y * 100)} %` : '—', y ? `${Math.round(y[1].y * 100)} %${y[1].hmax ? ` · 히터 ${f2(y[1].hmin, 1)}–${f2(y[1].hmax, 1)} mW` : ''}` : '—', y ? win(y[0].y, y[1].y, true, 0.03) : -1, 'semi', '이 레벨의 ★★★ 판정']
+      ['Fab 수율 (같은 웨이퍼 쌍 비교 · 시드 1067 · 69 다이, Monte Carlo 추정)', y ? `${y[0].ok}/${y[0].n} = ${Math.round(y[0].y * 100)} %` : '—', y ? `${y[1].ok}/${y[1].n} = ${Math.round(y[1].y * 100)} %${y[1].hmax ? ` · 히터 ${f2(y[1].hmin, 1)}–${f2(y[1].hmax, 1)} mW` : ''}` : '—', y ? pairWin(y.aOnly, y.bOnly) : -1, 'semi', `이 레벨의 ★★★ 판정${y ? ` · ${pairedText('MZM', 'MRR', y.aOnly, y.bOnly, true)}` : ''}`]
     ];
     const td = (v, w) => `<td class="${w ? 'win' : ''}">${v}</td>`;
-    const tb = rows.map(([k, x, z, w, f, note]) => `<tr><th scope="row">${k}${note ? `<br><span class="note">${note}</span>` : ''}</th>${td(x, w === 0)}${td(z, w === 1)}<td><span class="badge2 b-${f}">${B[f]}</span></td></tr>`).join('');
+    const tb = rows.map(([k, x, z, w, f, note]) => `<tr><th scope="row">${k}${note ? `<br><span class="note">${note}</span>` : ''}</th>${td(x, w === 0)}${td(z, w === 1)}<td>${confBadge(f, true)}</td></tr>`).join('');
     const nm = (w) => rows.filter((x) => x[3] === w).map((x) => x[0].replace(/<[^>]+>/g, '').replace(/ \(.*$/, ''));
     const tie = () => rows.filter((x) => x[3] === -1 && /dB|W/.test(x[1] + x[2]) && !/^변조기 입력|^★|^Fab|링 열 효율/.test(x[0])).map((x) => x[0].replace(/<[^>]+>/g, '').replace(/ \(.*$/, ''));
     return { title, html: `<p class="note" style="margin:0 0 8px">지금 고른 변조기: <b>${r.modName}</b>. 레이저·냉각·패키징은 그대로 두고 변조기만 바꿔 같은 엔진으로 계산합니다. 점수에는 들어가지 않습니다.</p>
       <div class="gtbl"><table class="cmp"><tr><th>항목</th><th>MZM ×8</th><th>MRR ×8</th><th>근거</th></tr>${tb}</table></div>
       <p class="note"><b>MZM이 유리:</b> ${nm(0).join(' · ') || '—'}<br><b>MRR이 유리:</b> ${nm(1).join(' · ') || '—'}${tie().length ? `<br><b>비슷 (모델 분해능 이내):</b> ${tie().join(' · ')}` : ''}<br>DR8에서는 레인마다 광섬유가 따로라 링끼리 파장을 나눌 필요가 없습니다 — 링의 숙제는 레인별 히터·락과 레이저 드리프트 추적뿐입니다. 파장 다중화(WDM8)는 공진 배정·크로스토크·FSR 별칭이 더해지는 다른 아키텍처입니다.</p>`
-      + (y ? '' : '<div class="row-btns"><button class="btn" data-xp-run="1">Fab 수율까지 비교 (61 다이 × 두 변조기)</button></div>') };
+      + (y ? '' : '<div class="row-btns"><button class="btn" data-xp-run="1">Fab 수율까지 비교 (같은 웨이퍼 69 다이 × 두 변조기)</button></div>') + thermalHTML(l, d) + confLegend(['an', 'semi', 'exp', 'asm']) };
   }
   K.panel = (l, r, ctx) => panel(l, r, ctx);
   return K;

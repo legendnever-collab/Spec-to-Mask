@@ -1,5 +1,7 @@
 # 검증 · 회귀 보고서 — Phase A–E 와 사용성 정리
 
+> v1.0 사내 교육 릴리스의 보고서는 [docs/release/VERIFICATION_REPORT-v1.0.md](release/VERIFICATION_REPORT-v1.0.md)입니다. 이 문서는 v0.x(Phase A–E) 기록입니다.
+
 마스터 지시서 §15·§16(산출물 10)에 대응하는 종합 보고서입니다. 각 Phase의 상세 검증은 해당 문서에 있고, 여기에는 무엇을 어떤 시험이 지키는지와 현재 결과, 남은 항목을 모읍니다.
 
 ## 1. Phase별 산출물과 지키는 시험

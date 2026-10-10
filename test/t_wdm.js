@@ -12,8 +12,8 @@ let fail = 0, n = 0;
 const ok = (c, msg) => { n++; if (!c) { fail++; console.log('  FAIL', msg); } else if (process.env.V) console.log('  ok', msg); };
 const fs = require('fs'), path = require('path'), { execSync } = require('child_process');
 const K = G.KINDS.wdm, X = K._x;
-let base = null;
-try { base = JSON.parse(execSync('git show ad7188f:src/data/pspec.json', { cwd: path.join(__dirname, '..'), stdio: ['ignore', 'pipe', 'ignore'] }).toString()); } catch (e) { base = null; }
+// baseline = Phase D main (ad7188f); a missing baseline fails (test/baseline.js)
+const BL = require('./baseline.js'), bsrc = BL.need('ad7188f', 'src/data/pspec.json'), base = bsrc ? JSON.parse(bsrc) : null, ID = BL.identity('test:wdm spec identity', 'ad7188f', Object.keys(G.PLATFORMS).length);
 for (const pid of Object.keys(G.PLATFORMS)) {
   const pf = G.PLATFORMS[pid], S = G.PSPEC[pid];
   const LV = (id) => ({ ...G.LEVELS.find((x) => x.id === id), ...S[id], pf });
@@ -21,9 +21,9 @@ for (const pid of Object.keys(G.PLATFORMS)) {
   const l = LV('3W'), ref = l.ref, ev = (d) => K.evaluate(l, { ...ref, ...d });
   ok(!!S['3W'] && l.kind === 'wdm' && l.stage === 3, `${pid}: level 3W in Stage 3 with calibrated specs`);
   /* spec identity of the other Stage 3 levels (3A from the original baseline, 3A+ apart from the Phase B mod key) */
-  if (base && base[pid]) {
+  if (base) {
     const other = Object.keys(base[pid]).filter((k) => JSON.stringify(S[k]) !== JSON.stringify(base[pid][k]));
-    ok(!other.length && Object.keys(S).filter((k) => !(k in base[pid])).join() === '3W', `${pid}: every other level's specs unchanged (Phase D baseline), only 3W added${other.length ? ' — changed: ' + other.join(',') : ''}`);
+    ID.hit(); ok(!!base[pid] && !other.length && Object.keys(S).filter((k) => !(k in base[pid])).join() === '3W', `${pid}: every other level's specs unchanged (Phase D baseline), only 3W added${other.length ? ' — changed: ' + other.join(',') : ''}`);
   }
   /* FSR */
   const r0 = ev({}), c = r0.ch[0].o.c, fsrF = pf.lam * pf.lam / (c.x.ng * 2 * Math.PI * r0.Rlay);
@@ -87,5 +87,6 @@ for (const pid of Object.keys(G.PLATFORMS)) {
     ok(p / m >= l.fab.y, `${pid}: Fab yield of the reference ${(p / m * 100).toFixed(0)} % ≥ target ${(l.fab.y * 100).toFixed(0)} %`);
   }
 }
+ok(ID.done(), 'every spec identity check ran');
 console.log(`${n - fail}/${n} checks passed`);
 process.exit(fail ? 1 : 0);

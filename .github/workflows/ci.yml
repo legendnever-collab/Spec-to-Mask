@@ -1,0 +1,136 @@
+name: CI
+
+# quick: every push / PR — build, artifact integrity, syntax, engine + Design Lab + e2e (Si 1310), Python GDS checks
+# release: pull requests, manual run with release=true, or a v* tag — the four-platform matrix, the bot gate and the release artifacts
+on:
+  pull_request:
+  push:
+    branches: [main, 'feature/**', 'feat/**']
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'Run the four-platform release regression and build the release artifacts'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quick:
+    name: Build + regression (si1310) + GDS
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # the identity checks read fixed baseline commits (test/baseline.js); a missing baseline fails the job
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: tools/smq2gds/requirements-ci.txt
+      - run: pip install -r tools/smq2gds/requirements-ci.txt
+      - name: Build the single HTML
+        run: npm run build
+      - name: Build artifact integrity (committed dist/index.html = build of the sources)
+        run: git diff --exit-code -- dist/index.html
+      - name: JavaScript syntax (sources, tests, tools, assembled script; no external scripts)
+        run: node tools/check_syntax.js
+      - name: Identity baselines readable (evidence in the job summary)
+        run: node tools/check_baselines.js
+      - name: Engine regression (upgrade identity, MRR, DR8, WDM8) — every identity block must report its full count
+        shell: bash
+        run: |
+          set -o pipefail
+          for t in upgrade mrr dr8 wdm; do npm run test:$t 2>&1 | tee -a identity.log; done
+          { echo '### Identity checks run'; echo; echo '```'; grep -E 'BASELINE|IDENTITY|checks passed' identity.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          test "$(grep -c '^  IDENTITY test:' identity.log)" -eq 4
+          grep -E '^  (BASELINE|IDENTITY) ' identity.log | sed 's/^  /::notice title=identity evidence::/'
+      - name: Missing-baseline regression (no history → fail, never a silent skip)
+        run: npm run test:baseline
+      - name: Design Lab (engine, e2e, state integrity)
+        run: npm run test:lab
+      - name: e2e (si1310) — smoke, flow, guide, migrate, backup, fab, learning
+        run: |
+          npm run test:smoke
+          node test/e2e/flow.js si1310
+          npm run test:guide
+          npm run test:migrate
+          npm run test:backup
+          npm run test:fab
+          npm run test:learn
+      - name: Python GDS structure checks (smq2gds re-read, hierarchy, ports, connectivity)
+        run: npm run test:py
+
+  release-matrix:
+    name: Release regression (${{ matrix.platform }})
+    # pull requests get the full four-platform evidence before merge; manual release runs and v* tags too
+    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.release) || startsWith(github.ref, 'refs/tags/v')
+    needs: quick
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [si1310, si1550, sin1310, sin1550]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci && npm run build
+      - name: smoke / flow / guide / lab / fab (${{ matrix.platform }})
+        run: |
+          node test/e2e/smoke.js ${{ matrix.platform }}
+          node test/e2e/flow.js ${{ matrix.platform }}
+          node test/e2e/guide.js ${{ matrix.platform }}
+          node test/e2e/lab.js ${{ matrix.platform }}
+          node test/e2e/lab_state.js ${{ matrix.platform }}
+          node test/e2e/fab.js ${{ matrix.platform }}
+      - name: Bot gate — standard difficulty, numeric hints, every level ≥ ★★
+        env:
+          BOT_MIN: '2'
+        run: |
+          if [ "${{ matrix.platform }}" = si1310 ]; then IDS=1-1,1-2,1-3,1-4,1-5,1-6,1-7,2-1,2-2,2-3,2-3R,2-4,2-5,3A,3A+,3W,D-1,D-2,B-1,B-2,B-3; else IDS=1-7,2-3,2-3R,2-5,3A,3A+,3W,D-1,B-3; fi
+          # the log stays in the job; a failing level is also raised as an annotation (readable through the checks API)
+          if node test/e2e/bot.js std 2 "$IDS" ${{ matrix.platform }} > bot.log 2>&1; then cat bot.log; else
+            cat bot.log
+            grep -E '^BELOW|^errors' bot.log | sed 's/^/::error title=bot gate::/'
+            for id in $(grep '^BELOW' bot.log | sed 's/^BELOW ★★: //; s/,/ /g'); do grep -F " $id final " bot.log | cut -c1-600 | sed 's/^/::error title=bot level::/'; done
+            exit 1
+          fi
+
+  release-artifacts:
+    name: Release artifacts
+    needs: release-matrix
+    if: (github.event_name == 'workflow_dispatch' && inputs.release) || startsWith(github.ref, 'refs/tags/v') || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}   # stamp the branch commit, not the PR merge ref
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: sh tools/release.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: spec-to-mask-release
+          path: release/

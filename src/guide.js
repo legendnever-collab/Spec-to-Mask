@@ -441,7 +441,7 @@
   /* ---------- UI ---------- */
   const dlg = $('#guide-dlg'), box = dlg.querySelector('.gdlg'), body = $('#guide-body');
   let lastFocus = null, ctx = null, depth = 'basic';
-  try { const v = localStorage.getItem('smq-guide-depth'); if (v === 'deep' || v === 'basic') depth = v; } catch (e) { /* storage unavailable */ }
+  try { const v = String(localStorage.getItem('smq-guide-depth') || '').replace(/"/g, ''); if (v === 'deep' || v === 'basic') depth = v; } catch (e) { /* storage unavailable */ }   // raw (v0.x) or JSON (SMQ_STORE)
   const fn = (v, c) => (typeof v === 'function' ? v(c) : v);
   const lvName = (id) => { const L = ctx && ctx.levels.find((x) => x.id === id); return L ? `${id} ${L.name}` : id; };
   const sec = (id, n, title, html) => `<section class="gsec" id="g-${id}" aria-labelledby="g-${id}-h"><h3 id="g-${id}-h" tabindex="-1"><span class="n">${n}</span>${title}</h3>${html}</section>`;
@@ -612,7 +612,7 @@
     if (!f.length) return; const first = f[0], last = f[f.length - 1];
     if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   });
-  $('#guide-depth').addEventListener('click', (e) => { const b = e.target.closest('[data-depth]'); if (!b) return; depth = b.dataset.depth; try { localStorage.setItem('smq-guide-depth', depth); } catch (er) { /* ignore */ } box.dataset.depth = depth; [...$('#guide-depth').querySelectorAll('button')].forEach((x) => x.setAttribute('aria-checked', String(x.dataset.depth === depth))); });
+  $('#guide-depth').addEventListener('click', (e) => { const b = e.target.closest('[data-depth]'); if (!b) return; depth = b.dataset.depth; SMQ_STORE.set('smq-guide-depth', depth); box.dataset.depth = depth; [...$('#guide-depth').querySelectorAll('button')].forEach((x) => x.setAttribute('aria-checked', String(x.dataset.depth === depth))); });
   $('#guide-toc').addEventListener('click', (e) => { const a = e.target.closest('[data-sec]'); if (!a) return; e.preventDefault(); const h = $(`#g-${a.dataset.sec}-h`); if (h) { h.scrollIntoView({ block: 'start', behavior: 'smooth' }); h.focus({ preventScroll: true }); } });
   $('#guide-pop').addEventListener('click', () => {   // static copy in a separate window (offline: everything inline, examples omitted)
     const css = [...document.querySelectorAll('style')].map((s) => s.textContent).join('\n'), cl = body.cloneNode(true);
