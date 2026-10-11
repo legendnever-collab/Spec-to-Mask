@@ -51,7 +51,9 @@ button{font:inherit;color:inherit}
     grid-template-areas:"mission params" "view params" "spec fab" "xp xp" "cmp cmp" "ai db" "cards cards"}
   /* the controls stay beside the field while the mission text and the view scroll */
   .game.stepping{grid-template-areas:"mission params" "view params" "spec spec" "xp xp" "cmp cmp" "cards cards"}
-  #params{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
+  /* A sticky grid item travels through the whole grid container, so the card used to slide down over 03 Fab Run
+     (and cover Tape-out). The wrapper owns the "params" area; the card sticks inside it and stops above Fab Run. */
+  #params{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
 }
 .game.stepping #fab,.game.stepping #ai,.game.stepping #db{display:none}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;min-width:0}
@@ -110,7 +112,7 @@ button{font:inherit;color:inherit}
 @media (max-width:360px){.minibar .mb-t{display:none}}
 
 /* params */
-#params{grid-area:params}
+.pcol{grid-area:params;min-width:0}
 .prm{padding:9px 0;border-bottom:1px dashed var(--line)}
 .prm:last-of-type{border-bottom:0}
 .prm-h{display:flex;justify-content:space-between;align-items:baseline;gap:2px 8px;flex-wrap:wrap}
@@ -548,6 +550,7 @@ details.sect[open] > summary{margin-bottom:10px}
       <div class="tiles" id="tiles"></div>
     </section>
 
+    <div class="pcol" id="pcol">
     <section class="card" id="params">
       <h2><span class="n">01</span>설계 파라미터</h2>
       <div class="hint-ctl"><span class="eyebrow">힌트</span><div class="seg" id="hint-seg" role="radiogroup" aria-label="힌트 단계"></div></div>
@@ -562,6 +565,7 @@ details.sect[open] > summary{margin-bottom:10px}
       <div class="hint" id="hint" hidden></div>
       <p class="note">힌트 단계: 방향 = 코치가 다음 한 수를 알려줌 · 수치 = 목표값과 가이드선 · 지형도 = 주요 파라미터를 훑은 성능 곡선(탭하면 그 값으로 이동). −/+ 버튼은 길게 누르면 연속으로 움직이고, 슬라이더에 초점을 두면 방향키로 한 칸씩 움직입니다.</p>
     </section>
+    </div>
 
     <section class="card" id="spec">
       <h2><span class="n">02</span><span id="chart-title">스펙트럼</span></h2>
