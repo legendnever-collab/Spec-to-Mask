@@ -898,8 +898,13 @@ function renderGuided() {
   const note = $('#m-stepnote');
   if (mode === 'full') { note.innerHTML = `<b>Full Design</b> · 모든 파라미터를 한꺼번에 다룹니다. 학습 단계 ${ndone}/${ss.length} 완료${ndone < ss.length ? ' — 단계 번호를 누르면 그 단계부터 Guided 학습을 합니다.' : '.'}`; return; }
   const done = G.done[S.id], nx = ss[i + 1];
+  // optional, per step: S.map (where everything goes, this step highlighted), S.knobs (what each knob changes and where to look), S.how (order of moves)
+  const sg = UI.sg || {}, fold = (k) => (sg[k] === false ? '' : ' open');
   note.innerHTML = `<div class="sn-h"><b>STEP ${i + 1} · ${S.title}</b>${done ? '<span class="ok">완료 ✓</span>' : ''}</div><div class="sn-b">${S.intro}</div>`
-    + (nx ? `<div class="row-btns"><button class="btn ${done ? 'pri' : ''}" id="step-next">다음 단계 → ${nx.short}</button></div>` : '');
+    + (S.map ? `<div class="sn-map">${S.map}</div>` : '')
+    + (S.knobs && S.knobs.length ? `<details class="sn-d" data-sg="knobs"${fold('knobs')}><summary>이 단계의 손잡이 — 움직이면 무엇이 바뀌나</summary><ul class="knobs">${S.knobs.map((k) => `<li><span class="k-sym">${k.sym}</span><div><b>${k.name}</b> — ${k.does}${k.see ? `<div class="k-see">화면에서: ${k.see}</div>` : ''}</div></li>`).join('')}</ul></details>` : '')
+    + (S.how && S.how.length ? `<details class="sn-d" data-sg="how"${fold('how')}><summary>이렇게 진행하세요</summary><ol class="how">${S.how.map((h) => `<li>${h}</li>`).join('')}</ol></details>` : '')
+    + (nx ?`<div class="row-btns"><button class="btn ${done ? 'pri' : ''}" id="step-next">다음 단계 → ${nx.short}</button></div>` : '');
 }
 $('#m-guided').addEventListener('click', (e) => {
   if (state.fabRunning || state.aiRunning != null) return;
@@ -1033,6 +1038,8 @@ document.addEventListener('click', (e) => {
 const UI = store.get('smq3-ui', {}) || {};   // view-only preferences (which sections are open); never progress or designs
 $('#cards').open = !!UI.cards; $('#cards').addEventListener('toggle', () => { UI.cards = $('#cards').open; store.set('smq3-ui', UI); });
 $('#scope').addEventListener('toggle', () => { UI.scope = $('#scope').open; store.set('smq3-ui', UI); }); $('#scope').open = !!UI.scope;
+// guided-step help folds (knobs / how-to): open by default, the choice is kept for every step (toggle does not bubble → capture)
+$('#m-stepnote').addEventListener('toggle', (e) => { const d = e.target.closest && e.target.closest('details[data-sg]'); if (!d) return; UI.sg = { ...(UI.sg || {}), [d.dataset.sg]: d.open }; store.set('smq3-ui', UI); }, true);
 function start(data) {
   renderSave();
   if (data && data.DES) { DES = data.DES; if (LMAP[data.id] && !LMAP[data.id].locked) state.id = data.id; }

@@ -308,6 +308,35 @@ details.sect[open] > summary{margin-bottom:10px}
 .stepnote .sn-h b{color:var(--cyan)}
 .stepnote .ok{color:var(--pass);font-size:12px}
 .stepnote .row-btns{margin-top:8px}
+/* step help: route map (where every colour must end up), knobs, how-to */
+.sn-map{margin:8px 0 4px}
+.rmap{display:grid;grid-template-columns:auto auto auto auto auto;grid-template-areas:"h1 h2 h3 h4 h5" "in f1 ga fa oa" "in f1 gb fb ob";
+  column-gap:18px;row-gap:5px;align-items:center;justify-content:start;font-family:var(--mono);font-size:11px;color:var(--fg-2);overflow-x:auto;padding:2px 0 2px}
+.rmap .rm-h{font-size:10px;letter-spacing:.06em;color:var(--fg-3);white-space:nowrap}
+.rmap .rm-c{position:relative;display:flex;flex-direction:column;gap:3px;justify-content:center;opacity:.42;transition:opacity .15s}
+.rmap .rm-c.on{opacity:1}
+.rmap .rm-arr::before{content:"→";position:absolute;left:-14px;top:50%;transform:translateY(-50%);color:var(--fg-3)}
+.rmap .rm-in{grid-area:in;opacity:1}
+.rmap .rm-f{border:1px solid var(--line-2);border-radius:6px;padding:4px 7px;text-align:center;background:var(--panel-2);color:var(--fg);font-weight:600;white-space:nowrap}
+.rmap .rm-f small{display:block;font-weight:400;font-size:9.5px;color:var(--fg-3)}
+.rmap .rm-c.on.rm-f{border-color:var(--cyan);box-shadow:0 0 0 1px rgba(100,201,223,.35)}
+.rm-ch{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;border:1px solid var(--line);border-radius:999px;padding:1px 8px 1px 6px;background:var(--panel-2)}
+.rm-ch::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+.rm-ch b{font-weight:400;color:var(--fg-3)}
+.rmap .rm-g{flex-direction:row;align-items:center;justify-content:flex-start;gap:0;white-space:nowrap}
+.rm-g span{margin-left:3px}
+.rm-g i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:3px;background:var(--c)}
+.rm-cap{margin:6px 0 0;font-size:12.5px;color:var(--fg-2)}
+@media (max-width:520px){.rmap{column-gap:15px;font-size:10.5px}.rmap .rm-ch b,.rmap .rm-g span,.rmap .rm-h .lg{display:none}.rm-ch{padding:1px 6px 1px 5px}}
+.sn-d{margin-top:8px;border-top:1px dashed var(--line);padding-top:6px}
+.sn-d>summary{cursor:pointer;color:var(--cyan);font-size:12.5px}
+.knobs{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:7px}
+.knobs li{display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:start}
+.knobs .k-sym{font-family:var(--mono);font-size:12px;color:var(--amber);border:1px solid rgba(242,176,74,.45);border-radius:5px;padding:0 6px;min-width:34px;text-align:center;white-space:nowrap}
+.knobs b{color:var(--fg);font-weight:600}
+.knobs .k-see{font-size:12px;color:var(--fg-3)}
+.how{margin:6px 0 0;padding-left:20px;display:grid;gap:4px}
+.how li::marker{color:var(--amber);font-family:var(--mono)}
 .obj.goals{grid-column:1/-1}
 /* PIC Design Lab */
 #lab{display:grid;gap:12px}

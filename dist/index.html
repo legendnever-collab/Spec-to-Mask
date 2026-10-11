@@ -308,6 +308,35 @@ details.sect[open] > summary{margin-bottom:10px}
 .stepnote .sn-h b{color:var(--cyan)}
 .stepnote .ok{color:var(--pass);font-size:12px}
 .stepnote .row-btns{margin-top:8px}
+/* step help: route map (where every colour must end up), knobs, how-to */
+.sn-map{margin:8px 0 4px}
+.rmap{display:grid;grid-template-columns:auto auto auto auto auto;grid-template-areas:"h1 h2 h3 h4 h5" "in f1 ga fa oa" "in f1 gb fb ob";
+  column-gap:18px;row-gap:5px;align-items:center;justify-content:start;font-family:var(--mono);font-size:11px;color:var(--fg-2);overflow-x:auto;padding:2px 0 2px}
+.rmap .rm-h{font-size:10px;letter-spacing:.06em;color:var(--fg-3);white-space:nowrap}
+.rmap .rm-c{position:relative;display:flex;flex-direction:column;gap:3px;justify-content:center;opacity:.42;transition:opacity .15s}
+.rmap .rm-c.on{opacity:1}
+.rmap .rm-arr::before{content:"→";position:absolute;left:-14px;top:50%;transform:translateY(-50%);color:var(--fg-3)}
+.rmap .rm-in{grid-area:in;opacity:1}
+.rmap .rm-f{border:1px solid var(--line-2);border-radius:6px;padding:4px 7px;text-align:center;background:var(--panel-2);color:var(--fg);font-weight:600;white-space:nowrap}
+.rmap .rm-f small{display:block;font-weight:400;font-size:9.5px;color:var(--fg-3)}
+.rmap .rm-c.on.rm-f{border-color:var(--cyan);box-shadow:0 0 0 1px rgba(100,201,223,.35)}
+.rm-ch{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;border:1px solid var(--line);border-radius:999px;padding:1px 8px 1px 6px;background:var(--panel-2)}
+.rm-ch::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+.rm-ch b{font-weight:400;color:var(--fg-3)}
+.rmap .rm-g{flex-direction:row;align-items:center;justify-content:flex-start;gap:0;white-space:nowrap}
+.rm-g span{margin-left:3px}
+.rm-g i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:3px;background:var(--c)}
+.rm-cap{margin:6px 0 0;font-size:12.5px;color:var(--fg-2)}
+@media (max-width:520px){.rmap{column-gap:15px;font-size:10.5px}.rmap .rm-ch b,.rmap .rm-g span,.rmap .rm-h .lg{display:none}.rm-ch{padding:1px 6px 1px 5px}}
+.sn-d{margin-top:8px;border-top:1px dashed var(--line);padding-top:6px}
+.sn-d>summary{cursor:pointer;color:var(--cyan);font-size:12.5px}
+.knobs{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:7px}
+.knobs li{display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:start}
+.knobs .k-sym{font-family:var(--mono);font-size:12px;color:var(--amber);border:1px solid rgba(242,176,74,.45);border-radius:5px;padding:0 6px;min-width:34px;text-align:center;white-space:nowrap}
+.knobs b{color:var(--fg);font-weight:600}
+.knobs .k-see{font-size:12px;color:var(--fg-3)}
+.how{margin:6px 0 0;padding-left:20px;display:grid;gap:4px}
+.how li::marker{color:var(--amber);font-family:var(--mono)}
 .obj.goals{grid-column:1/-1}
 /* PIC Design Lab */
 #lab{display:grid;gap:12px}
@@ -2363,11 +2392,51 @@ KINDS.cwdm = (() => {
     const h = 6 * DPR, bw = w || 46 * DPR;
     p.forEach((v, i) => { ctx.fillStyle = 'rgba(255,255,255,0.06)'; ctx.fillRect(x, y + (i - p.length / 2) * (h + 1.5 * DPR), bw, h); ctx.fillStyle = cols[i]; ctx.fillRect(x, y + (i - p.length / 2) * (h + 1.5 * DPR), bw * clamp(v, 0, 1), h); });
   }
+  // colour key for the four channels ("which colour is which wavelength"), wraps to two rows when narrow
+  function chLegend(ctx, x, y, maxW) {
+    const item = 92 * DPR, per = Math.max(2, Math.min(4, Math.floor((maxW - 44 * DPR) / item)));
+    txt(ctx, '색 =', x, y, { size: 10, color: 'rgba(158,171,189,0.95)' });
+    CH.forEach((c, i) => {
+      const cx = x + 30 * DPR + (i % per) * item, cy = y + Math.floor(i / per) * 14 * DPR;
+      ctx.fillStyle = COLS[i]; ctx.beginPath(); ctx.arc(cx + 4 * DPR, cy, 4 * DPR, 0, 2 * Math.PI); ctx.fill();
+      txt(ctx, `CH${i + 1} ${Math.round(c * 1000)} nm`, cx + 12 * DPR, cy, { size: 10, color: COLS[i] });
+    });
+  }
+  // one output: title, then a row per channel — colour dot, name, power bar, % (power at the channel centre)
+  function portList(ctx, x, y, title, p, w, wide) {
+    const rh = 12 * DPR, top = y - (p.length * rh) / 2, lab = 30 * DPR, pct = wide ? 40 * DPR : 34 * DPR, bw = w - lab - pct;
+    txt(ctx, title, x, top - 9 * DPR, { size: 10, color: 'rgba(231,236,243,0.9)' });
+    p.forEach((v, i) => {
+      const yy = top + i * rh + rh / 2, on = v >= 0.05;
+      txt(ctx, `CH${i + 1}`, x, yy, { size: 9.5, color: on ? COLS[i] : 'rgba(158,171,189,0.45)' });
+      ctx.fillStyle = 'rgba(255,255,255,0.06)'; ctx.fillRect(x + lab, yy - 3.5 * DPR, bw, 7 * DPR);
+      ctx.fillStyle = COLS[i]; ctx.fillRect(x + lab, yy - 3.5 * DPR, bw * clamp(v, 0, 1), 7 * DPR);
+      txt(ctx, `${Math.round(v * 100)}%`, x + w, yy, { size: 9.5, align: 'right', color: on ? 'rgba(231,236,243,0.9)' : 'rgba(158,171,189,0.45)' });
+    });
+  }
 
   function stepDefs(l) {
     use(l);
     const w0 = l.pf.w0, lA = CH[0], lB = CH[1], lm = (lA + lB) / 2;
     const ngm = ngLam(w0, lm), L40 = lm * lm / (ngm * 0.04), neA = neffAt(w0, T0, lA), dLtrim = LC / (2 * neffAt(w0, T0, LC)) * 0.5;
+    // step help (map / knobs / how) — explanation only, no target values (those stay in the coach at tier ≥ 2)
+    const [c1, c2, c3, c4] = CH.map(NM), neC = neffAt(w0, T0, LC);
+    // how far a 0.01 µm change of ΔL slides the response: δλ = FSR · n_eff · δL / λ (it moves the curve as well as the FSR)
+    const slide = (fsr) => (fsr * neC * 0.01 / LC).toFixed(1);
+    const chip = (i) => `<span class="rm-ch" style="--c:${COLS[i]}">CH${i + 1} <b>${NM(CH[i])}</b></span>`;
+    const grp = (a, b) => `<i style="--c:${COLS[a]}"></i><i style="--c:${COLS[b]}"></i><span>CH${a + 1}·CH${b + 1}</span>`;
+    // where every colour must end up; `on` = the parts this step builds
+    function routeMap(on, cap) {
+      const o = (k) => (on.includes(k) ? ' on' : '');
+      return `<div class="rmap" role="img" aria-label="경로 지도: 입력 CH1–CH4 → F1이 CH1·CH3 / CH2·CH4로 나눔 → F2A·F2B가 각 묶음을 한 색씩 → 출력 포트 4개">`
+        + [['입력', ' (광섬유 1개)'], ['1단', ''], ['두 묶음', ''], ['2단', ''], ['출력', ' 포트 (한 색씩)']].map(([h, x], j) => `<span class="rm-h" style="grid-area:h${j + 1}">${h}${x ? `<span class="lg">${x}</span>` : ''}</span>`).join('')
+        + `<div class="rm-c rm-in">${[0, 1, 2, 3].map((i) => chip(i)).join('')}</div>`
+        + `<div class="rm-c rm-f rm-arr${o('f1')}" style="grid-area:f1">F1<small>홀/짝</small></div>`
+        + `<div class="rm-c rm-g rm-arr${o('g')}" style="grid-area:ga">${grp(0, 2)}</div><div class="rm-c rm-g rm-arr${o('g')}" style="grid-area:gb">${grp(1, 3)}</div>`
+        + `<div class="rm-c rm-f rm-arr${o('f2')}" style="grid-area:fa">F2A</div><div class="rm-c rm-f rm-arr${o('f2')}" style="grid-area:fb">F2B</div>`
+        + `<div class="rm-c rm-o rm-arr${o('out')}" style="grid-area:oa">${chip(0)}${chip(2)}</div><div class="rm-c rm-o rm-arr${o('out')}" style="grid-area:ob">${chip(1)}${chip(3)}</div>`
+        + `</div><p class="rm-cap">${cap}</p>`;
+    }
 
     /* ---------- Step 1: single 2×2 MZI ---------- */
     const pL = { k: 'mL', label: '팔 길이 차 ΔL (위 팔이 더 김)', sym: 'ΔL', min: 2, max: 40, step: 0.01, dec: 2, unit: 'µm' };
@@ -2376,7 +2445,16 @@ KINDS.cwdm = (() => {
       return { d: { ...d }, pa, pb, phA: ph(lA), phB: ph(lB), fsr: fsrNm(lm, ngm, d.mL) }; };
     const s1 = {
       id: 'mzi', short: '단일 MZI', title: '단일 2×2 MZI — 간섭과 FSR', local: ['mL', 'mP'], aspect: 0.6,
-      intro: `Input → 3-dB 커플러 → 두 팔(ΔL) → 3-dB 커플러 → Bar / Cross. ① 입력 빛이 두 팔로 반씩 나뉩니다 ② 긴 팔에 위상이 더 쌓입니다: Δφ(λ) = 2πn<sub>eff</sub>ΔL/λ + φ ③ 두 빛이 두 번째 커플러에서 다시 만나 간섭합니다 ④ Bar = sin²(Δφ/2), Cross = cos²(Δφ/2) — Δφ가 파장마다 다르므로 출력 비율이 파장에 따라 바뀝니다. 조절 변수는 ΔL과 φ 두 개입니다. 목표: λ<sub>A</sub> ${NM(lA)} nm는 Bar로, λ<sub>B</sub> ${NM(lB)} nm는 Cross로.`,
+      intro: `<b>이 레벨에서 할 일:</b> 광섬유 하나에 섞여 들어오는 네 가지 색(파장 채널 CH1–CH4, 20 nm 간격)을 출력 포트 네 개로 <b>한 색씩</b> 보내는 것입니다(아래 지도). 이 일을 하는 필터 F1·F2A·F2B는 모두 <b>MZI</b>라는 같은 부품이므로, 먼저 MZI 하나로 두 색 — λ<sub>A</sub> = CH1 ${NM(lA)} nm, λ<sub>B</sub> = CH2 ${NM(lB)} nm — 을 서로 다른 출구로 보내 보며 원리를 익힙니다.<br>`
+        + `<b>MZI가 색을 가르는 원리:</b> ① 3-dB 커플러가 빛을 두 팔로 반씩 나눕니다 ② 위 팔이 ΔL만큼 길어 그 팔의 빛이 위상이 더 늦어집니다: Δφ(λ) = 2πn<sub>eff</sub>ΔL/λ + φ ③ 두 번째 커플러에서 두 빛이 다시 만나 간섭합니다 ④ Δφ = π면 전부 Bar, Δφ = 0이면 전부 Cross로 나갑니다(Bar = sin²(Δφ/2)). Δφ는 λ로 나눈 값이라 <b>색마다 다르고, 그래서 색마다 나가는 출구가 달라집니다.</b> 목표: λ<sub>A</sub>는 Bar로, λ<sub>B</sub>는 Cross로.`,
+      map: routeMap(['f1'], `Step 1은 연습입니다 — 지도의 상자 하나(MZI 하나)가 두 색을 두 출구로 가르는 원리를 봅니다. 실제 네 색 분리는 Step 2(F1)부터입니다.`),
+      knobs: [
+        { sym: 'ΔL', name: '팔 길이 차', does: `색이 바뀔 때 위상차 Δφ가 얼마나 빨리 도는지를 정합니다. 그 결과 Bar/Cross 줄무늬의 반복 주기 <b>FSR = λ²/(n<sub>g</sub>ΔL)</b>가 정해집니다 — ΔL을 늘리면 줄무늬가 촘촘해집니다(FSR↓). 곡선의 위치도 함께 장파장(오른쪽)으로 밀립니다(FSR 40 nm 근처에서 ΔL 0.01 µm당 약 ${slide(40)} nm).`, see: '아래 두 위상 다이얼 바늘 사이의 각도(= 2π × 20 nm ÷ FSR), 스펙트럼 위 FSR 괄호' },
+        { sym: 'φ', name: '위상 오프셋', does: '모든 색에 같은 위상을 더해 줄무늬 전체를 <b>모양 그대로 옆으로</b> 옮깁니다. FSR은 바뀌지 않습니다. φ를 키우면 장파장(오른쪽)으로, 0.5π가 FSR의 ¼만큼입니다(FSR 40 nm면 10 nm).', see: '두 다이얼 바늘이 같은 각도만큼 함께 돕니다. 스펙트럼의 회색 점선은 φ = 0일 때 곡선' }],
+      how: [
+        `<b>ΔL로 간격부터.</b> 두 색은 20 nm 떨어져 있습니다. 20 nm가 정확히 반 주기(FSR = 40 nm)가 되면 두 색의 위상차가 π — 한 색이 Bar 끝에 있을 때 다른 색은 반드시 Cross 끝에 있습니다. 두 다이얼 바늘이 <b>서로 정반대(180°)</b>를 가리킬 때까지 ΔL을 움직이세요.`,
+        `<b>φ로 위치를 맞춥니다.</b> 두 바늘을 함께 돌려 λ<sub>A</sub>(청록) 바늘이 π(왼쪽 = Bar 100%)를 가리키게 하면, λ<sub>B</sub>(초록)는 저절로 0(오른쪽 = Cross 100%)에 옵니다.`,
+        '<b>순서가 중요합니다.</b> ΔL은 간격과 위치를 함께 바꾸고 φ는 위치만 바꾸므로, 언제나 ΔL 먼저 → φ 마지막.'],
       doneText: 'MZI 하나가 파장에 따라 출력을 바꾸는 필터임을 확인했습니다. 주기(FSR)는 ΔL이, 통과 중심은 φ가 정합니다. 다음 단계에서 같은 MZI로 네 채널을 두 그룹으로 나눕니다.',
       init: () => ({ mL: +(L40 / 2).toFixed(2), mP: 0 }),
       params: () => [pL, pP],
@@ -2453,7 +2531,16 @@ KINDS.cwdm = (() => {
     const grpTxt = (A) => (A === 0 ? ['Bar', 'Cross'] : ['Cross', 'Bar']);
     const s2 = {
       id: 'f1', short: 'F1 인터리버', title: 'F1 인터리버 — 네 채널을 홀/짝 두 그룹으로', fixed: { ord: 1 }, aspect: 0.56,
-      intro: `이제 같은 MZI에 네 채널(CH1–CH4, 20 nm 간격)을 넣습니다. 목표는 CH1+CH3(Group A)와 CH2+CH4(Group B)를 서로 다른 출력으로 보내는 것 — 이웃 채널끼리는 위상차가 π, 한 칸 건너 채널끼리는 2π여야 하므로 FSR = 2 × 20 nm = 40 nm입니다. ΔL₁과 φ₁만 조절합니다(1차 MZI 고정). 여기서 정한 값은 실제 1-7 설계의 1단 필터에 그대로 기록됩니다.`,
+      intro: `이제 네 색이 모두 들어옵니다: CH1 ${c1} · CH2 ${c2} · CH3 ${c3} · CH4 ${c4} nm. MZI는 출구가 둘(Bar·Cross)뿐이라 넷을 한 번에 가를 수 없으므로 두 번에 나눕니다. 1단 F1의 일은 <b>“한 칸 건너” 짝을 지어 둘로 나누기</b> — CH1·CH3(Group A)은 한 출구로, CH2·CH4(Group B)는 다른 출구로. 이웃한 색(20 nm 차이)은 반대 출구, 한 칸 건넌 색(40 nm 차이)은 같은 출구로 가야 하므로 F1의 FSR은 40 nm입니다. 어느 묶음이 Bar로 가든 상관없습니다. ΔL₁·φ₁만 움직이며(1차 MZI 고정), 여기서 정한 값은 실제 1-7 설계의 F1에 그대로 기록됩니다.`,
+      map: routeMap(['f1', 'g'], '이 단계: <b>F1</b>만 만듭니다. 네 색 → 두 묶음(CH1·CH3 / CH2·CH4). 묶음을 다시 한 색씩 나누는 F2A·F2B는 Step 3.'),
+      knobs: [
+        { sym: 'ΔL₁', name: 'F1 지연 (팔 길이 차)', does: `F1 줄무늬의 주기 FSR을 정합니다. FSR이 40 nm면 CH1과 CH3(40 nm 차이)의 위상차가 정확히 한 바퀴(2π) → <b>같은 출구</b>, 이웃한 색은 반 바퀴(π) → <b>반대 출구</b>가 됩니다. 늘리면 FSR↓, 그리고 곡선 전체가 오른쪽으로 밀립니다(0.01 µm당 약 ${slide(40)} nm).`, see: '‘F1 FSR’ 타일, 스펙트럼에서 Bar(주황)·Cross(분홍) 봉우리 사이 간격' },
+        { sym: 'φ₁', name: 'F1 위상 트림', does: 'F1 곡선을 모양 그대로 옆으로 옮겨, 봉우리를 채널 중심(밝은 띠)에 올립니다. 키우면 오른쪽으로, 0.5π = 10 nm(FSR 40 nm의 ¼).', see: '그림 오른쪽 출구별 막대 — Bar 출구에 두 색, Cross 출구에 나머지 두 색만 남으면 성공' }],
+      how: [
+        'ΔL₁로 ‘F1 FSR’을 40 nm 근처(±2 nm)로 맞춥니다. 이때 곡선 위치도 움직이니 아직 채널이 섞여 있어도 괜찮습니다.',
+        'φ₁로 곡선을 옮겨 CH1(청록) 막대가 한 출구에서 가득 차게 합니다. CH3(주황)은 정확히 한 주기 떨어져 있어 같은 출구에 함께 따라옵니다.',
+        '확인: 출구마다 막대가 두 색씩(A: CH1·CH3, B: CH2·CH4)이면 완료. 네 색이 두 출구에 반씩 퍼져 있으면 FSR부터 다시 보세요.',
+        '<b>왜 “앞 둘 / 뒤 둘”로 나누지 않을까?</b> MZI 응답은 둥근 사인 곡선이 주기적으로 반복됩니다. 이 곡선은 이웃 색을 번갈아 나누는 일(인터리버)에는 잘 맞지만, 40 nm 폭을 평평하게 통과시키는 일은 하지 못합니다.'],
       doneText: 'F1이 채널을 홀/짝 그룹으로 나눕니다. 다음 단계에서는 각 그룹을 다시 둘로 나눠 1×4 Demux를 완성합니다.',
       params: () => [P.dL1, P.t1],
       evaluate: (l, d) => ev2(d),
@@ -2472,14 +2559,18 @@ KINDS.cwdm = (() => {
       tiles: (l, r) => [['F1 FSR', `${r.fsr.toFixed(1)}<small>nm</small>`], ['Group A 최소', `${(Math.min(r.T[0][r.A], r.T[2][r.A]) * 100).toFixed(1)}<small>%</small>`], ['Group B 최소', `${(Math.min(r.T[1][1 - r.A], r.T[3][1 - r.A]) * 100).toFixed(1)}<small>%</small>`], ['ΔL₁ 목표', `${r.L1.toFixed(2)}<small>µm</small>`]],
       hint: (l, r) => `FSR = λ²/(n<sub>g</sub>ΔL₁) = 40 nm → <b>ΔL₁ ≈ ${r.L1.toFixed(2)} µm</b> (n<sub>g</sub> ${r.ng.toFixed(3)})<br>그다음 φ₁로 CH1의 피크를 한 포트에 맞추면 CH3도 같은 포트(2π 차이)에 옵니다.`,
       draw(cv, l, r) {
-        const ctx = bg(cv), W = cv.width, H = cv.height, pad = 12 * DPR, d = r.d, yT = H * 0.36, yB = H * 0.62;
+        const ctx = bg(cv), W = cv.width, H = cv.height, pad = 12 * DPR, d = r.d, yT = H * 0.4, yB = H * 0.64, wide = W / DPR >= 520;
+        chLegend(ctx, pad, 16 * DPR, W - 2 * pad);
         CH.forEach((c, i) => { ctx.strokeStyle = COLS[i]; ctx.lineWidth = 2 * DPR; ctx.beginPath(); ctx.moveTo(pad, yT - 9 * DPR + i * 6 * DPR); ctx.lineTo(pad + 52 * DPR, yT); ctx.stroke(); });
         cvPill(ctx, 'IN CH1–4', pad, yT - 24 * DPR, 'left');
-        drawMZI(ctx, pad + 52 * DPR, W - pad - 120 * DPR, yT, yB, Math.min(H * 0.14, (5 + d.dL1 * 0.8) * DPR), `F1 · ΔL₁ ${d.dL1.toFixed(2)} µm · φ₁ ${d.t1.toFixed(2)}π`, r.T, COLS);
-        const [ga, gb] = grpTxt(r.A), x = W - pad - 112 * DPR;
-        [[yT, 0, 'Bar'], [yB, 1, 'Cross']].forEach(([y, j, n]) => { portBars(ctx, x + 50 * DPR, y, r.T.map((p) => p[j]), COLS, 58 * DPR); txt(ctx, n, x, y, { size: 10 }); });
-        txt(ctx, `Group A (CH1+CH3) → ${ga} · Group B (CH2+CH4) → ${gb}`, pad, H - 14 * DPR, { size: 10, color: r.sep >= 0.95 ? '#5dd193' : '#f2b04a' });
-        if (r.sep < 0.95) txt(ctx, '채널이 섞여 있습니다: 막대가 두 포트에 나뉘어 있음', pad, H - 30 * DPR, { size: 10, color: '#ff6b6b' });
+        const listW = wide ? 150 * DPR : 112 * DPR;
+        drawMZI(ctx, pad + 52 * DPR, W - pad - listW - 8 * DPR, yT, yB, Math.min(H * 0.14, (5 + d.dL1 * 0.8) * DPR), `F1 · ΔL₁ ${d.dL1.toFixed(2)} µm · φ₁ ${d.t1.toFixed(2)}π`, r.T, COLS);
+        const [ga, gb] = grpTxt(r.A), x = W - pad - listW;
+        // each exit: which colours actually leave there (name + %), so "CH1·CH3 → one exit" can be read directly
+        [[yT, 0, 'Bar 출구'], [yB, 1, 'Cross 출구']].forEach(([y, j, n]) => portList(ctx, x, y, n, r.T.map((p) => p[j]), listW, wide));
+        const ok = r.sep >= 0.95;
+        txt(ctx, ok ? `✓ Group A (CH1·CH3) → ${ga} · Group B (CH2·CH4) → ${gb}` : '목표: 한 출구엔 CH1·CH3, 다른 출구엔 CH2·CH4 (어느 쪽이든 상관없음)', pad, H - 14 * DPR, { size: 10, color: ok ? '#5dd193' : '#f2b04a' });
+        if (!ok) txt(ctx, '지금은 색이 섞여 있습니다 — 한 색이 두 출구에 나뉘어 나감', pad, H - 30 * DPR, { size: 10, color: '#ff6b6b' });
       },
       chartTitle: () => 'F1 출력 스펙트럼 (dB) — 채널 중심의 점이 원하는 포트에 와야 함',
       chart(l, r) {
@@ -2508,7 +2599,17 @@ KINDS.cwdm = (() => {
     };
     const s3 = {
       id: 'f2', short: 'F2A · F2B', title: 'F2A / F2B — 그룹 안의 두 채널 나누기 (1×4 Demux 완성)', fixed: { ord: 1 }, aspect: 0.56,
-      intro: `F1의 두 출력에는 각각 40 nm 떨어진 두 채널이 남아 있습니다(F2A: CH1/CH3, F2B: CH2/CH4). 이 두 채널을 가르려면 위상차가 π여야 하므로 FSR = 2 × 40 nm = 80 nm — ΔL₂는 ΔL₁의 절반입니다. F2A와 F2B는 같은 ΔL₂를 쓰지만 통과시킬 채널이 20 nm 어긋나 있어서(CH1 vs CH2) 위상 트림 φ₂ₐ, φ₂ᵦ를 따로 맞춰야 합니다.`,
+      intro: `F1을 지나면 출구마다 <b>두 색</b>이 남습니다. F1의 Bar 출구는 <b>F2A</b>로, Cross 출구는 <b>F2B</b>로 이어집니다(Step 2에서 CH1·CH3을 Bar로 보냈다면 F2A가 CH1·CH3, F2B가 CH2·CH4를 받습니다). 이제 F2A·F2B가 각자 받은 두 색을 자기 두 출구로 하나씩 보내면, 네 색이 네 포트로 하나씩 갈라진 <b>1×4 Demux</b>가 완성됩니다. 한 F2 안의 두 색은 40 nm 떨어져 있으므로 이번에는 40 nm가 반 주기, 즉 F2의 FSR은 80 nm입니다(ΔL₂ ≈ ΔL₁의 절반).`,
+      map: routeMap(['g', 'f2', 'out'], '이 단계: <b>F2A·F2B</b>를 만듭니다. 각 묶음의 두 색 → 서로 다른 두 출력 포트. F1(Step 2 값)은 그대로 쓰입니다.'),
+      knobs: [
+        { sym: 'ΔL₂', name: '2단 지연 (F2A·F2B 공통)', does: `F2의 주기 FSR을 정합니다. 80 nm면 40 nm 떨어진 두 색의 위상차가 반 바퀴(π) → <b>서로 다른 출구</b>. 한 값이 F2A와 F2B에 함께 들어갑니다. 늘리면 FSR↓, 곡선은 오른쪽으로 밀립니다(0.01 µm당 약 ${slide(80)} nm).`, see: '‘F2 FSR’ 타일, ‘ΔL₂ / ΔL₁’ 타일(≈ 0.5 근처)' },
+        { sym: 'φ₂ₐ', name: 'F2A 위상 트림', does: 'F2A 곡선만 옆으로 옮깁니다. 키우면 오른쪽으로, 0.5π = 20 nm(FSR 80 nm의 ¼).', see: '그림 위쪽 두 출력(F2A) — 출력마다 한 색만 남아야 합니다' },
+        { sym: 'φ₂ᵦ', name: 'F2B 위상 트림', does: 'F2B 곡선만 옆으로 옮깁니다. F2B가 받는 색은 F2A의 색보다 20 nm(F2 주기의 ¼) 옆에 있어서, 맞는 값은 φ₂ₐ와 약 0.5π 다릅니다. 같은 값을 그대로 쓰면 F2B의 두 색이 반씩 섞입니다.', see: '그림 아래쪽 두 출력(F2B)' }],
+      how: [
+        '목표 2번째 줄(F1이 여전히 홀/짝을 가름)이 초록인지 먼저 봅니다. 빨강이면 Step 2로 돌아가 F1부터.',
+        'ΔL₂로 ‘F2 FSR’을 80 nm 근처(±4 nm)로 맞춥니다.',
+        'φ₂ₐ로 위쪽 두 출력이 한 색씩이 되게 → φ₂ᵦ로 아래쪽 두 출력도 한 색씩. 각 출력 옆 라벨이 초록(한 색 ≥ 95%)이면 그 출력은 완료입니다.',
+        '완료 뒤 스펙트럼을 보세요: 채널 <b>중심</b>에서는 네 색이 갈렸지만, 밝은 띠(±6.5 nm)의 <b>가장자리</b>에서는 옆 색이 아직 꽤 새어 듭니다 — Step 4에서 해결합니다.'],
       doneText: '네 채널이 네 포트로 갈라지는 1×4 CWDM Demux 트리를 완성했습니다. 하지만 통과대역 가장자리(±6.5 nm)에서는 아직 크로스토크가 큽니다 — 다음 단계의 Lattice 필터가 그 해법입니다.',
       params: () => [P.dL2, P.t2a, P.t2b],
       evaluate: (l, d) => ev3(d),
@@ -2533,22 +2634,34 @@ KINDS.cwdm = (() => {
       tiles: (l, r) => [['F2 FSR', `${r.fsr.toFixed(1)}<small>nm</small>`], ['채널 중심 최악', r.distinct ? `${(r.worst * 100).toFixed(1)}<small>%</small>` : '겹침'], ['가장자리 최악 XT', `${r.xtBand.toFixed(1)}<small>dB</small>`], ['ΔL₂ / ΔL₁', `${(r.d.dL2 / r.d.dL1).toFixed(3)}`]],
       hint: (l, r) => `F2: FSR 80 nm → <b>ΔL₂ ≈ ${r.L2.toFixed(2)} µm</b> (= ΔL₁/2 근처)<br>F2A는 F1 ${r.f1.A === 0 ? 'Bar' : 'Cross'}의 CH1/CH3, F2B는 CH2/CH4를 받습니다 → φ₂ₐ·φ₂ᵦ를 따로 맞춥니다.`,
       draw(cv, l, r) {
-        const ctx = bg(cv), W = cv.width, H = cv.height, pad = 12 * DPR, d = r.d, bw = Math.min(150 * DPR, W * 0.24), bh = 38 * DPR;
-        const f1 = [pad + 50 * DPR, H * 0.5], fa = [W * 0.46, H * 0.25], fb = [W * 0.46, H * 0.75];
+        const ctx = bg(cv), W = cv.width, H = cv.height, pad = 12 * DPR, d = r.d, wide = W / DPR >= 520, bh = 38 * DPR;
+        const bw = wide ? Math.min(124 * DPR, W * 0.2) : W * 0.2, labW = wide ? 122 * DPR : 54 * DPR, barW = wide ? 56 * DPR : 40 * DPR;
+        chLegend(ctx, pad, 16 * DPR, W - 2 * pad);
+        const top = wide ? 30 * DPR : 44 * DPR, f1 = [pad + 50 * DPR, top + (H - top) * 0.5], fa = [W * (wide ? 0.34 : 0.42), top + (H - top) * 0.27], fb = [fa[0], top + (H - top) * 0.75];
         const box = (x, y, t1, t2, ok) => { ctx.strokeStyle = ok ? 'rgba(93,209,147,0.8)' : 'rgba(214,226,242,0.6)'; ctx.lineWidth = 1.4 * DPR; ctx.strokeRect(x, y - bh / 2, bw, bh); txt(ctx, t1, x + bw / 2, y - 7 * DPR, { align: 'center', size: 10 }); txt(ctx, t2, x + bw / 2, y + 8 * DPR, { align: 'center', size: 9, color: 'rgba(158,171,189,0.95)' }); };
         ctx.strokeStyle = 'rgba(214,226,242,0.45)'; ctx.lineWidth = 1.2 * DPR;
         ctx.beginPath(); ctx.moveTo(pad, f1[1]); ctx.lineTo(f1[0], f1[1]); ctx.moveTo(f1[0] + bw, f1[1] - 8 * DPR); ctx.bezierCurveTo(f1[0] + bw + 30 * DPR, f1[1] - 8 * DPR, fa[0] - 30 * DPR, fa[1], fa[0], fa[1]);
         ctx.moveTo(f1[0] + bw, f1[1] + 8 * DPR); ctx.bezierCurveTo(f1[0] + bw + 30 * DPR, f1[1] + 8 * DPR, fb[0] - 30 * DPR, fb[1], fb[0], fb[1]); ctx.stroke();
-        box(f1[0], f1[1], 'F1', `ΔL₁ ${d.dL1.toFixed(2)} · ${d.t1.toFixed(2)}π`, r.f1.sep >= 0.95);
-        box(fa[0], fa[1], 'F2A', `ΔL₂ ${d.dL2.toFixed(2)} · ${d.t2a.toFixed(2)}π`, f2obj(r, 'a') >= 0.95); box(fb[0], fb[1], 'F2B', `ΔL₂ ${d.dL2.toFixed(2)} · ${d.t2b.toFixed(2)}π`, f2obj(r, 'b') >= 0.95);
+        const sh = (s) => (wide ? s : s.replace(/^ΔL\S* [\d.]+ · /, ''));
+        box(f1[0], f1[1], 'F1', sh(`ΔL₁ ${d.dL1.toFixed(2)} · ${d.t1.toFixed(2)}π`), r.f1.sep >= 0.95);
+        box(fa[0], fa[1], 'F2A', sh(`ΔL₂ ${d.dL2.toFixed(2)} · ${d.t2a.toFixed(2)}π`), f2obj(r, 'a') >= 0.95); box(fb[0], fb[1], 'F2B', sh(`ΔL₂ ${d.dL2.toFixed(2)} · ${d.t2b.toFixed(2)}π`), f2obj(r, 'b') >= 0.95);
+        // what each F2 receives: F1's bar → F2A, cross → F2B (names the group once F1 sorts them)
+        const gTxt = (j) => (r.f1.sep >= 0.95 ? ((j === r.f1.A) ? 'CH1·CH3' : 'CH2·CH4') : '섞임');
+        txt(ctx, `← F1 Bar: ${gTxt(0)}`, fa[0], fa[1] - bh / 2 - 7 * DPR, { size: 9, color: 'rgba(158,171,189,0.95)' });
+        txt(ctx, `← F1 Cross: ${gTxt(1)}`, fb[0], fb[1] + bh / 2 + 9 * DPR, { size: 9, color: 'rgba(158,171,189,0.95)' });
         cvPill(ctx, 'IN', pad, f1[1] - 13 * DPR, 'left');
-        const ox = fa[0] + bw, bx = W - pad - 64 * DPR;
-        [[fa, -9, 0], [fa, 9, 1], [fb, -9, 2], [fb, 9, 3]].forEach(([F, off, port]) => {
-          const y = F[1] + off * DPR * 1.6, ch = r.port.indexOf(port); ctx.strokeStyle = ch >= 0 && r.distinct ? COLS[ch] : 'rgba(214,226,242,0.45)'; ctx.lineWidth = 1.6 * DPR;
+        // each of the four outputs: the colour that leaves there and its share of that channel's output (goal: one colour ≥ 95%)
+        const ox = fa[0] + bw, bx = W - pad - labW - barW - 6 * DPR;
+        [[fa, -9, 0], [fa, 9, 1], [fb, -9, 2], [fb, 9, 3]].forEach(([F, off, port], n) => {
+          const y = F[1] + off * DPR * 1.9, ch = r.port.indexOf(port); ctx.strokeStyle = ch >= 0 && r.distinct ? COLS[ch] : 'rgba(214,226,242,0.45)'; ctx.lineWidth = 1.6 * DPR;
           ctx.beginPath(); ctx.moveTo(ox, F[1] + off * DPR); ctx.lineTo(bx - 8 * DPR, y); ctx.stroke();
-          portBars(ctx, bx, y, r.T.map((p) => p[port]), COLS, 60 * DPR);
+          portBars(ctx, bx, y, r.T.map((p) => p[port]), COLS, barW);
+          const sh2 = r.Tn.map((p) => p[port]), tot = r.T.reduce((a, p) => a + p[port], 0) || 1, mine = r.T.map((p) => p[port] / tot);
+          const top1 = mine.indexOf(Math.max(...mine)), good = ch >= 0 && r.distinct && sh2[ch] >= 0.95;
+          const lab = good ? `${wide ? `출력 ${n + 1} · ` : ''}CH${ch + 1} ${Math.round(sh2[ch] * 100)}%` : `${wide ? `출력 ${n + 1} · ` : ''}섞임${wide ? ` (CH${top1 + 1} ${Math.round(mine[top1] * 100)}%)` : ''}`;
+          txt(ctx, lab, bx + barW + 6 * DPR, y, { size: 9.5, color: good ? COLS[ch] : '#ff6b6b' });
         });
-        txt(ctx, '포트별 채널 전력 (막대 = CH1·2·3·4)', W - pad, H - 10 * DPR, { align: 'right', size: 9.5, color: 'rgba(158,171,189,0.9)' });
+        if (wide) txt(ctx, '목표: 출력 4개에 한 색씩 (막대 = 그 출력으로 나가는 CH1·2·3·4 전력)', W - pad, H - 10 * DPR, { align: 'right', size: 9.5, color: 'rgba(158,171,189,0.9)' });
       },
       chartTitle: () => '1×4 트리 포트 스펙트럼 (1차 MZI) — 사인형 응답의 가장자리 누설에 주목',
       chart: (l, r) => portChart(l, r.d, r.a.pm)
@@ -2559,7 +2672,15 @@ KINDS.cwdm = (() => {
     const ev4 = (d) => { const a = analyse(l, d, null); return { d: { ...d }, a, il: Math.max(...a.il), xt: Math.max(...a.xt), size: area(d) }; };
     const s4 = {
       id: 'lat', short: 'Lattice 차수', title: '고차 Lattice — flat-top 통과대역과 크로스토크', aspect: 0.56,
-      intro: `1차 MZI의 응답은 사인형이라 채널 중심에서만 완벽하고, ±6.5 nm 가장자리에서는 이웃 채널이 약 ${LEAK[1]} dB 새어 들어옵니다. 커플러를 N+1개(결합비 κ가 서로 다른), 지연을 N단 쌓은 N차 Lattice는 통과대역을 평평하게(flat-top) 만들어 가장자리 누설을 줄입니다 — 대신 커플러·지연이 늘어 면적과 삽입 손실이 커집니다. 차수를 바꾸면 필터의 설계 위상(ph₀)이 달라지므로 φ₁·φ₂ₐ·φ₂ᵦ를 다시 맞춰야 합니다. 1·2·3차를 모두 비교하고 ★ 크로스토크를 달성하세요.`,
+      intro: `실제 CWDM 레이저의 파장은 제조 산포와 온도 때문에 채널 중심에서 ±6.5 nm까지 벗어날 수 있습니다. 그래서 필터는 중심 한 점이 아니라 <b>그 폭 전체(스펙트럼의 밝은 띠)</b>에서 자기 색은 통과시키고 옆 색은 막아야 합니다. 1차 MZI의 응답은 둥근 사인형이라 중심에서만 완벽하고, 띠 가장자리에서는 옆 색이 약 ${LEAK[1]} dB 새어 듭니다(크로스토크). 커플러 N+1개(결합비 κ가 서로 다름)와 지연 N단을 이어 붙인 <b>N차 Lattice</b>는 통과대역 윗부분을 평평하게(flat-top), 경사를 가파르게 만들어 이 누설을 줄입니다 — 대신 커플러·지연이 늘어 면적과 삽입 손실이 커집니다. 1·2·3차를 모두 비교하고 ★ 크로스토크를 달성하세요.`,
+      map: routeMap(['f1', 'g', 'f2', 'out'], '이 단계: 길은 그대로, <b>F1·F2A·F2B 세 필터를 모두</b> N차로 바꿔 각 출력에 옆 색이 덜 섞이게 합니다. ΔL₁·ΔL₂는 앞 단계 값을 씁니다.'),
+      knobs: [
+        { sym: 'N', name: '필터 차수 (세 필터 공통)', does: `각 필터를 이루는 MZI 단의 수. 올리면 통과대역이 평평해지고 가장자리가 가팔라져, 띠 가장자리 누설 한계가 1차 ${LEAK[1]} → 2차 ${LEAK[2]} → 3차 ${LEAK[3]} dB로 내려갑니다(이상적 커플러). 대가: 커플러·지연이 늘어 면적과 삽입 손실↑.`, see: '위 그래프에서 차수별 F1 곡선 모양(실선 = 현재 차수), ‘면적’ 타일' },
+        { sym: 'φ₁ φ₂ₐ φ₂ᵦ', name: '세 위상 트림', does: '차수를 바꾸면 필터 안의 설계 위상이 달라져 곡선 위치가 밀립니다. 세 트림을 다시 맞춰 각 통과대역을 채널 띠 한가운데로 되돌립니다. 역할은 Step 2·3과 같습니다(곡선을 옆으로 이동).', see: '아래 그래프 — 네 포트 곡선이 각자 자기 밝은 띠를 덮는지, 옆 색 곡선이 띠 안에서 ★ XT 점선 아래로 내려가는지' }],
+      how: [
+        'N을 1 → 2 → 3으로 바꾸며 위 그래프에서 통과대역 모양이 둥근 산에서 평평한 고원으로 바뀌는 것을 비교합니다(목표 1번째 줄).',
+        '차수를 바꿀 때마다 φ₁ → φ₂ₐ → φ₂ᵦ 순서로 다시 맞춥니다. 앞 단(F1)이 어긋나면 뒤 단도 엉키므로 F1부터.',
+        '‘최악 XT’가 ★ 기준 아래, ‘최악 IL’이 ★ 기준 아래면 완료입니다.'],
       doneText: '차수가 높을수록 통과대역이 평평해져 가장자리 크로스토크가 줄어드는 것을 실제 전달함수로 확인했습니다. 마지막 단계에서 모든 변수를 열고 Fab Run까지 갑니다.',
       params: () => [P.ord, P.t1, P.t2a, P.t2b],
       evaluate: (l, d) => ev4(d),
@@ -2607,6 +2728,16 @@ KINDS.cwdm = (() => {
     const s5 = {
       id: 'full', full: true, short: 'Full · Fab', title: 'Full CWDM 설계 · Fab Run',
       intro: `모든 변수(차수, ΔL₁·ΔL₂, 세 위상 트림, 지연 암 폭 wₐ)가 열리고 점수·AI 라이벌·Fab Run이 켜집니다. ★ IL·XT → ★★ 더 엄격한 XT와 면적 → ★★★ Tape-out 수율. 스펙트럼의 점선은 공정 코너(CD +8 nm, 두께 +${Math.round(l.pf.dt / 2 * 1000)} nm)에서 같은 설계가 얼마나 밀리는지 보여줍니다. <b>Phase Trim과 TO 히터는 다릅니다.</b> 지금의 φ는 마스크에 그려지는 설계 위상(지연 팔에 δL = φ·λ/(2n<sub>eff</sub>), 예: 0.5π ≈ ${(dLtrim * 1000).toFixed(0)} nm 더 긴 경로)으로 <i>공칭</i> 정렬만 할 뿐, 칩마다 다른 공정 오차는 고칠 수 없습니다. Stage 2-1의 TO 히터는 제작 후 다이마다 전력으로 위상을 다시 맞추는 <i>능동 보정</i>입니다. 이 단계는 ★ 설계로 Tape-out을 한 번 해 보면 완료됩니다.`,
+      map: routeMap(['f1', 'g', 'f2', 'out'], '이 단계: 전체 Demux를 한꺼번에 다룹니다. 길과 손잡이의 역할은 Step 2–4와 같고, 새로 열리는 것은 지연 팔의 폭 wₐ입니다.'),
+      knobs: [
+        { sym: 'N', name: '필터 차수', does: '통과대역의 평평함 ↔ 면적·손실 (Step 4).' },
+        { sym: 'ΔL₁ ΔL₂', name: '지연', does: 'F1(40 nm) · F2(80 nm)의 주기 FSR (Step 2·3). 곡선 위치도 함께 밀리므로 바꾼 뒤엔 트림을 다시 봅니다.' },
+        { sym: 'φ₁ φ₂ₐ φ₂ᵦ', name: '위상 트림', does: '각 필터 곡선을 옆으로 옮겨 채널 띠 중앙에 맞춤 (Step 2·3·4).' },
+        { sym: 'wₐ', name: '지연 팔 폭', does: '넓히면 폭(CD) 오차가 n<sub>eff</sub>를 덜 흔들어(∂n<sub>eff</sub>/∂w↓) 채널이 덜 밀립니다 → 수율에 유리. 대신 n<sub>g</sub>가 바뀌어 FSR이 달라지므로 ΔL₁·ΔL₂와 트림을 다시 맞춰야 합니다.', see: '‘CD 10 nm당 채널 이동’ 타일, 스펙트럼의 점선(공정 코너에서 같은 설계가 밀린 모습)' }],
+      how: [
+        '★: 앞 단계 값이 그대로 들어와 있습니다. 최악 IL·XT를 ★ 기준 아래로.',
+        '★★: 더 엄격한 XT — 3차 lattice와 정밀한 트림, 그리고 면적.',
+        '★★★(Tape-out 수율): wₐ를 넓혀 폭 오차에 둔감하게 → ΔL·트림 다시 맞춤 → Tape-out. 두께 오차는 패시브 설계로는 막을 수 없어서, ★★★는 패시브만으로는 거의 닿지 않습니다(Stage 2-1 히터가 해법).'],
       fullDone: (l, r, c) => !!c.fab && c.ob[0].pass
     };
     return [s1, s2, s3, s4, s5];
@@ -6683,7 +6814,7 @@ const LEVELS = [
     role: '광섬유 I/O (Tx·Rx)' },
   { id: '1-7', stage: 1, kind: 'cwdm', finale: true, name: '네 가지 색', dev: 'CWDM Demux · MZI Lattice Tree',
     band: (pf) => `CWDM ${pf.ch.map(nm).join('/')} nm ±6.5 nm`,
-    brief: '네 파장 채널을 네 포트로 나누세요. 1단 인터리버(FSR 40 nm)가 홀짝을, 2단 필터(FSR 80 nm)가 나머지를 가릅니다. 지연 ΔL이 FSR을, 위상 트림이 중심 파장을 정합니다. 사인형 응답으로는 크로스토크가 부족하니 lattice 차수를 올려야 합니다.',
+    brief: '광섬유 하나에 <b>네 가지 색</b>(파장 채널 CH1–CH4, 20 nm 간격)이 섞여 들어옵니다. 각 색을 <b>자기 출력 포트 하나로만</b> 보내는 1×4 분파기(Demux)를 만드세요. MZI 필터는 출구가 둘뿐이라 두 번에 나눕니다: ① 1단 F1이 네 색을 “한 칸 건너” 두 묶음(CH1·CH3 / CH2·CH4)으로 — 그래서 주기 FSR 40 nm ② 2단 F2A·F2B가 각 묶음의 두 색(40 nm 차이)을 한 색씩으로 — FSR 80 nm. 각 필터에서 지연 ΔL은 주기(FSR)를, 위상 트림 φ는 곡선의 위치를 정합니다. 마지막으로 lattice 차수를 올려 채널 가장자리에서 옆 색이 새는 크로스토크를 줄입니다.',
     preface: '<b>Stage 1 피날레 · Active 맛보기.</b> 지금까지 익힌 패시브 소자(도파로, 커플러, 지연선)만으로 파장 필터를 만들어 봅니다. 이 레벨의 ★★★(수율)는 패시브 설계만으로는 거의 닿지 않도록 되어 있습니다 — 두께가 몇 nm만 달라도 채널 전체가 밀리기 때문입니다. 이 벽을 넘는 방법(히터로 위상을 맞추는 TO 위상기)이 Stage 2 Active의 첫 레벨입니다.',
     concepts: [['FSR', 'MZI의 투과 주기. FSR = λ²/(n<sub>g</sub>ΔL). 지연 길이가 길수록 주기가 짧아집니다.'], ['Lattice 필터', '커플러와 지연을 여러 단 쌓으면 통과대역이 평평해져(flat-top) 이웃 채널 누설이 줄어듭니다.'], ['왜 Active가 필요한가', '공정 오차로 생긴 위상 오차는 칩마다 다릅니다. 만든 뒤 히터로 위상을 보정하는 것이 현실적인 해법입니다.']],
     role: '2×FR4 Rx Demux · Tx Mux' },
@@ -7754,8 +7885,13 @@ function renderGuided() {
   const note = $('#m-stepnote');
   if (mode === 'full') { note.innerHTML = `<b>Full Design</b> · 모든 파라미터를 한꺼번에 다룹니다. 학습 단계 ${ndone}/${ss.length} 완료${ndone < ss.length ? ' — 단계 번호를 누르면 그 단계부터 Guided 학습을 합니다.' : '.'}`; return; }
   const done = G.done[S.id], nx = ss[i + 1];
+  // optional, per step: S.map (where everything goes, this step highlighted), S.knobs (what each knob changes and where to look), S.how (order of moves)
+  const sg = UI.sg || {}, fold = (k) => (sg[k] === false ? '' : ' open');
   note.innerHTML = `<div class="sn-h"><b>STEP ${i + 1} · ${S.title}</b>${done ? '<span class="ok">완료 ✓</span>' : ''}</div><div class="sn-b">${S.intro}</div>`
-    + (nx ? `<div class="row-btns"><button class="btn ${done ? 'pri' : ''}" id="step-next">다음 단계 → ${nx.short}</button></div>` : '');
+    + (S.map ? `<div class="sn-map">${S.map}</div>` : '')
+    + (S.knobs && S.knobs.length ? `<details class="sn-d" data-sg="knobs"${fold('knobs')}><summary>이 단계의 손잡이 — 움직이면 무엇이 바뀌나</summary><ul class="knobs">${S.knobs.map((k) => `<li><span class="k-sym">${k.sym}</span><div><b>${k.name}</b> — ${k.does}${k.see ? `<div class="k-see">화면에서: ${k.see}</div>` : ''}</div></li>`).join('')}</ul></details>` : '')
+    + (S.how && S.how.length ? `<details class="sn-d" data-sg="how"${fold('how')}><summary>이렇게 진행하세요</summary><ol class="how">${S.how.map((h) => `<li>${h}</li>`).join('')}</ol></details>` : '')
+    + (nx ?`<div class="row-btns"><button class="btn ${done ? 'pri' : ''}" id="step-next">다음 단계 → ${nx.short}</button></div>` : '');
 }
 $('#m-guided').addEventListener('click', (e) => {
   if (state.fabRunning || state.aiRunning != null) return;
@@ -7889,6 +8025,8 @@ document.addEventListener('click', (e) => {
 const UI = store.get('smq3-ui', {}) || {};   // view-only preferences (which sections are open); never progress or designs
 $('#cards').open = !!UI.cards; $('#cards').addEventListener('toggle', () => { UI.cards = $('#cards').open; store.set('smq3-ui', UI); });
 $('#scope').addEventListener('toggle', () => { UI.scope = $('#scope').open; store.set('smq3-ui', UI); }); $('#scope').open = !!UI.scope;
+// guided-step help folds (knobs / how-to): open by default, the choice is kept for every step (toggle does not bubble → capture)
+$('#m-stepnote').addEventListener('toggle', (e) => { const d = e.target.closest && e.target.closest('details[data-sg]'); if (!d) return; UI.sg = { ...(UI.sg || {}), [d.dataset.sg]: d.open }; store.set('smq3-ui', UI); }, true);
 function start(data) {
   renderSave();
   if (data && data.DES) { DES = data.DES; if (LMAP[data.id] && !LMAP[data.id].locked) state.id = data.id; }
