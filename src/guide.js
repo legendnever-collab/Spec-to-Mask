@@ -501,6 +501,16 @@
     return `<h4>원리·논문</h4><ul class="grefs">${(G.refs || []).map(it).join('')}${(G.refs || []).includes('chrost') ? '' : it('chrost')}</ul><h4>설계·검증 도구 (외부 Solver로 확장)</h4><ul class="grefs">${TOOLREFS.map(it).join('')}</ul>`
       + '<p class="note">외부 링크 없이도 A–F는 오프라인으로 동작합니다. 이 가이드의 설명과 그림은 위 자료의 원리와 식을 확인한 뒤 자체 한국어 설명과 자체 모식도로 재구성했으며, 외부 그림을 재사용하지 않았습니다.</p>';
   }
+  // S: the guided step on screen — what it is about, where the light goes, what each knob does, in which order to move them
+  function secS(c) {
+    const S = c.stepDoc; if (!S) return '';
+    return `<p class="note">Guided 학습 ${S.idx + 1}/${S.n}단계 — 메인 화면에는 할 일만 짧게 두고, 이유와 방법은 여기에 모았습니다.</p>`
+      + (S.intro ? `<h4>무엇을 왜 하나</h4><div class="g-intro">${String(S.intro).split(/<br\s*\/?>/).map((x) => `<p>${x}</p>`).join('')}</div>` : '')
+      + (S.map ? `<h4>빛의 경로</h4><div class="sn-map">${S.map}</div>` : '')
+      + (S.knobs && S.knobs.length ? `<h4>손잡이 — 움직이면 무엇이 바뀌나</h4><ul class="knobs">${S.knobs.map((k) => `<li><span class="k-sym">${k.sym}</span><div><b>${k.name}</b> — ${k.does}${k.see ? `<div class="k-see">화면에서: ${k.see}</div>` : ''}</div></li>`).join('')}</ul>` : '')
+      + (S.how && S.how.length ? `<h4>이렇게 진행하세요</h4><ol class="how">${S.how.map((h) => `<li>${h}</li>`).join('')}</ol>` : '')
+      + (S.done ? `<h4>이 단계를 마치면</h4><p>${S.done}</p>` : '');
+  }
   const SECS = [['A', 'Learning Objectives · 학습 목표', secA], ['B', 'Physical Principle · 물리 원리', secB], ['C', 'Parameters · 설계 변수', secC], ['D', 'Interactive Example · 직접 해보기', secD], ['E', 'Game Mission · 게임 목표와 연결', secE], ['F', 'Model Limitations · 모델의 한계', secF], ['G', 'References · 더 읽을거리', secG]];
 
   /* ---------- interactive examples ---------- */
@@ -582,18 +592,20 @@
     $('#guide-title').textContent = `${c.id} · ${c.lvl.name}`;
     $('#guide-sub').innerHTML = `${c.lvl.dev} · ${l.bandLabel} · ${c.pf.short}<br><span class="note">Learning Guide = 원리와 변수 · Coach = 지금 설계의 다음 한 수 · Hint = 목표 수치와 방향 · Physics Engine = 평가</span>`;
     box.dataset.depth = depth; [...$('#guide-depth').querySelectorAll('button')].forEach((b) => b.setAttribute('aria-checked', String(b.dataset.depth === depth)));
-    $('#guide-toc').innerHTML = SECS.map(([id, title]) => `<a href="#g-${id}" data-sec="${id}">${id} · ${title.split(' · ')[1] || title}</a>`).join('');
-    body.innerHTML = SECS.map(([id, title, f], i) => { let h = ''; try { h = f(c, G); } catch (e) { h = `<p class="note">이 절을 만들 수 없습니다: ${e.message}</p>`; } return sec(id, id, title, h); }).join('');
+    const secs = (c.stepDoc ? [['S', `Step ${c.stepDoc.idx + 1} · 지금 단계 해설`, secS]] : []).concat(SECS);
+    $('#guide-toc').innerHTML = secs.map(([id, title]) => `<a href="#g-${id}" data-sec="${id}">${id} · ${title.split(' · ')[1] || title}</a>`).join('');
+    body.innerHTML = secs.map(([id, title, f], i) => { let h = ''; try { h = f(c, G); } catch (e) { h = `<p class="note">이 절을 만들 수 없습니다: ${e.message}</p>`; } return sec(id, id, title, h); }).join('');
     try { wireGeneric(c, G); } catch (e) { /* example unavailable for this state */ }
     try { if (G.ixCustom === 'cwdm') wireCwdm(c); if (G.ixCustom === 'mmi') wireMmi(c); if (G.ixCustom === 'spiral') wireSpiral(c); } catch (e) { /* custom example unavailable */ }
     body.scrollTop = 0;
   }
-  function open() {
+  function open(at) {   // at: a section id to start on (e.g. 'S' from the step's "원리 자세히" button); the button press is the event otherwise
     ctx = window.GAME_CTX ? window.GAME_CTX() : null; if (!ctx) return;
     lastFocus = document.activeElement; render();
     dlg.hidden = false; document.body.style.overflow = 'hidden';
     ['#gamewrap', '.top', 'footer'].forEach((s) => { const e = $(s); if (e) { e.setAttribute('aria-hidden', 'true'); e.inert = true; } });
-    $('#guide-close').focus();
+    const h = typeof at === 'string' && $(`#g-${at}-h`);
+    if (h) { h.scrollIntoView({ block: 'start' }); h.focus({ preventScroll: true }); } else $('#guide-close').focus();
   }
   function close() {
     if (dlg.hidden) return;

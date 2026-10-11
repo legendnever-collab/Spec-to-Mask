@@ -290,10 +290,11 @@ KINDS.cwdm = (() => {
   }
   // colour key for the four channels ("which colour is which wavelength"), wraps to two rows when narrow
   function chLegend(ctx, x, y, maxW) {
-    const item = 92 * DPR, per = Math.max(2, Math.min(4, Math.floor((maxW - 44 * DPR) / item)));
     txt(ctx, '색 =', x, y, { size: 10, color: 'rgba(158,171,189,0.95)' });
+    const lab = (i) => `CH${i + 1} ${Math.round(CH[i] * 1000)} nm`, x0 = x + ctx.measureText('색 =').width + 8 * DPR;
+    const item = Math.max(...CH.map((c, i) => ctx.measureText(lab(i)).width)) + 24 * DPR, per = Math.max(2, Math.min(4, Math.floor((maxW - (x0 - x)) / item)));
     CH.forEach((c, i) => {
-      const cx = x + 30 * DPR + (i % per) * item, cy = y + Math.floor(i / per) * 14 * DPR;
+      const cx = x0 + (i % per) * item, cy = y + Math.floor(i / per) * 16 * DPR;
       ctx.fillStyle = COLS[i]; ctx.beginPath(); ctx.arc(cx + 4 * DPR, cy, 4 * DPR, 0, 2 * Math.PI); ctx.fill();
       txt(ctx, `CH${i + 1} ${Math.round(c * 1000)} nm`, cx + 12 * DPR, cy, { size: 10, color: COLS[i] });
     });
@@ -341,6 +342,7 @@ KINDS.cwdm = (() => {
       return { d: { ...d }, pa, pb, phA: ph(lA), phB: ph(lB), fsr: fsrNm(lm, ngm, d.mL) }; };
     const s1 = {
       id: 'mzi', short: '단일 MZI', title: '단일 2×2 MZI — 간섭과 FSR', local: ['mL', 'mP'], aspect: 0.6,
+      task: `MZI 하나로 두 색을 가르세요: λ<sub>A</sub>(CH1 ${NM(lA)} nm)는 Bar로, λ<sub>B</sub>(CH2 ${NM(lB)} nm)는 Cross로.`,
       intro: `<b>이 레벨에서 할 일:</b> 광섬유 하나에 섞여 들어오는 네 가지 색(파장 채널 CH1–CH4, 20 nm 간격)을 출력 포트 네 개로 <b>한 색씩</b> 보내는 것입니다(아래 지도). 이 일을 하는 필터 F1·F2A·F2B는 모두 <b>MZI</b>라는 같은 부품이므로, 먼저 MZI 하나로 두 색 — λ<sub>A</sub> = CH1 ${NM(lA)} nm, λ<sub>B</sub> = CH2 ${NM(lB)} nm — 을 서로 다른 출구로 보내 보며 원리를 익힙니다.<br>`
         + `<b>MZI가 색을 가르는 원리:</b> ① 3-dB 커플러가 빛을 두 팔로 반씩 나눕니다 ② 위 팔이 ΔL만큼 길어 그 팔의 빛이 위상이 더 늦어집니다: Δφ(λ) = 2πn<sub>eff</sub>ΔL/λ + φ ③ 두 번째 커플러에서 두 빛이 다시 만나 간섭합니다 ④ Δφ = π면 전부 Bar, Δφ = 0이면 전부 Cross로 나갑니다(Bar = sin²(Δφ/2)). Δφ는 λ로 나눈 값이라 <b>색마다 다르고, 그래서 색마다 나가는 출구가 달라집니다.</b> 목표: λ<sub>A</sub>는 Bar로, λ<sub>B</sub>는 Cross로.`,
       map: routeMap(['f1'], `Step 1은 연습입니다 — 지도의 상자 하나(MZI 하나)가 두 색을 두 출구로 가르는 원리를 봅니다. 실제 네 색 분리는 Step 2(F1)부터입니다.`),
@@ -427,6 +429,7 @@ KINDS.cwdm = (() => {
     const grpTxt = (A) => (A === 0 ? ['Bar', 'Cross'] : ['Cross', 'Bar']);
     const s2 = {
       id: 'f1', short: 'F1 인터리버', title: 'F1 인터리버 — 네 채널을 홀/짝 두 그룹으로', fixed: { ord: 1 }, aspect: 0.56,
+      task: 'F1을 맞추세요: 네 색을 두 묶음으로 — CH1·CH3은 한 출구로, CH2·CH4는 다른 출구로.',
       intro: `이제 네 색이 모두 들어옵니다: CH1 ${c1} · CH2 ${c2} · CH3 ${c3} · CH4 ${c4} nm. MZI는 출구가 둘(Bar·Cross)뿐이라 넷을 한 번에 가를 수 없으므로 두 번에 나눕니다. 1단 F1의 일은 <b>“한 칸 건너” 짝을 지어 둘로 나누기</b> — CH1·CH3(Group A)은 한 출구로, CH2·CH4(Group B)는 다른 출구로. 이웃한 색(20 nm 차이)은 반대 출구, 한 칸 건넌 색(40 nm 차이)은 같은 출구로 가야 하므로 F1의 FSR은 40 nm입니다. 어느 묶음이 Bar로 가든 상관없습니다. ΔL₁·φ₁만 움직이며(1차 MZI 고정), 여기서 정한 값은 실제 1-7 설계의 F1에 그대로 기록됩니다.`,
       map: routeMap(['f1', 'g'], '이 단계: <b>F1</b>만 만듭니다. 네 색 → 두 묶음(CH1·CH3 / CH2·CH4). 묶음을 다시 한 색씩 나누는 F2A·F2B는 Step 3.'),
       knobs: [
@@ -495,6 +498,7 @@ KINDS.cwdm = (() => {
     };
     const s3 = {
       id: 'f2', short: 'F2A · F2B', title: 'F2A / F2B — 그룹 안의 두 채널 나누기 (1×4 Demux 완성)', fixed: { ord: 1 }, aspect: 0.56,
+      task: 'F2A·F2B를 맞추세요: 각 묶음의 두 색을 서로 다른 출력으로 — 출력 4개에 한 색씩.',
       intro: `F1을 지나면 출구마다 <b>두 색</b>이 남습니다. F1의 Bar 출구는 <b>F2A</b>로, Cross 출구는 <b>F2B</b>로 이어집니다(Step 2에서 CH1·CH3을 Bar로 보냈다면 F2A가 CH1·CH3, F2B가 CH2·CH4를 받습니다). 이제 F2A·F2B가 각자 받은 두 색을 자기 두 출구로 하나씩 보내면, 네 색이 네 포트로 하나씩 갈라진 <b>1×4 Demux</b>가 완성됩니다. 한 F2 안의 두 색은 40 nm 떨어져 있으므로 이번에는 40 nm가 반 주기, 즉 F2의 FSR은 80 nm입니다(ΔL₂ ≈ ΔL₁의 절반).`,
       map: routeMap(['g', 'f2', 'out'], '이 단계: <b>F2A·F2B</b>를 만듭니다. 각 묶음의 두 색 → 서로 다른 두 출력 포트. F1(Step 2 값)은 그대로 쓰입니다.'),
       knobs: [
@@ -568,6 +572,7 @@ KINDS.cwdm = (() => {
     const ev4 = (d) => { const a = analyse(l, d, null); return { d: { ...d }, a, il: Math.max(...a.il), xt: Math.max(...a.xt), size: area(d) }; };
     const s4 = {
       id: 'lat', short: 'Lattice 차수', title: '고차 Lattice — flat-top 통과대역과 크로스토크', aspect: 0.56,
+      task: '필터 차수를 1·2·3차로 바꿔 비교하고, 채널 가장자리(±6.5 nm)의 크로스토크를 ★ 기준 아래로 낮추세요.',
       intro: `실제 CWDM 레이저의 파장은 제조 산포와 온도 때문에 채널 중심에서 ±6.5 nm까지 벗어날 수 있습니다. 그래서 필터는 중심 한 점이 아니라 <b>그 폭 전체(스펙트럼의 밝은 띠)</b>에서 자기 색은 통과시키고 옆 색은 막아야 합니다. 1차 MZI의 응답은 둥근 사인형이라 중심에서만 완벽하고, 띠 가장자리에서는 옆 색이 약 ${LEAK[1]} dB 새어 듭니다(크로스토크). 커플러 N+1개(결합비 κ가 서로 다름)와 지연 N단을 이어 붙인 <b>N차 Lattice</b>는 통과대역 윗부분을 평평하게(flat-top), 경사를 가파르게 만들어 이 누설을 줄입니다 — 대신 커플러·지연이 늘어 면적과 삽입 손실이 커집니다. 1·2·3차를 모두 비교하고 ★ 크로스토크를 달성하세요.`,
       map: routeMap(['f1', 'g', 'f2', 'out'], '이 단계: 길은 그대로, <b>F1·F2A·F2B 세 필터를 모두</b> N차로 바꿔 각 출력에 옆 색이 덜 섞이게 합니다. ΔL₁·ΔL₂는 앞 단계 값을 씁니다.'),
       knobs: [

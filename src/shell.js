@@ -81,6 +81,8 @@ window.GAME_CTX = () => {
     params: params().map((p) => ({ ...p })), d: { ...c.d }, res: c.res, stars: starsOf(state.id), levels: LEVELS, hasCard: (id) => !!PP().cards[id],
     ev: (d, full) => (S ? S.evaluate(c.l, d) : K.evaluate(c.l, d, null, full ? { full: true } : undefined)), tiles: (r) => (S ? (S.tiles ? S.tiles(c.l, r) : []) : K.tiles(c.l, r)),
     step: S ? { id: S.id, title: S.title, idx: stepIdx(), n: stepsOf().length, goals: S.goals(c.l, c.res, stepMem(S)) } : null,
+    // the explanation of the guided step on screen (also the final Full · Fab step): principle, route map, knobs, order of moves
+    stepDoc: (() => { if (stepMode(state.id) !== 'guided') return null; const ss = stepsOf(), i = stepIdx(), T = ss[i]; return T ? { idx: i, n: ss.length, title: T.title, intro: T.intro, map: T.map, knobs: T.knobs, how: T.how, done: T.doneText } : null; })(),
     practice: c.pr ? { title: c.pr.title, note: c.pr.note, goals: c.pr.goals(c.l, c.res) } : null, ob,
     valid: (typeof VALID !== 'undefined' && VALID.by && (VALID.by[state.plat] || {})[state.id]) || null, canvas: $('#field') };
 };
@@ -414,22 +416,89 @@ function renderObjectives() {
     $('#objs').innerHTML = `<div class="obj goals ${done ? 'got live' : g.every((x) => x.ok) ? 'live' : ''}"><div class="obj-h"><span class="st">${c.S ? `STEP ${stepIdx() + 1} 목표` : '연습 모드'}</span><span class="tag">${c.S ? (done ? '단계 완료 ✓' : '물리 엔진 결과로 판정') : '별·카드·AI 없음'}</span></div>
       <ul>${g.map((x) => `<li class="${x.na ? 'na' : x.ok ? 'ok' : 'no'}"><span class="k">${x.k}</span><span class="v">${x.v}</span></li>`).join('')}</ul></div>`;
     $('#m-next').innerHTML = '';
+    renderDo();
     return;
   }
   const ob = objectives(), got = starsOf(state.id);
-  renderNext(got);
+  renderNext(got); renderDo();
   $('#objs').innerHTML = ob.map((o, i) => `<div class="obj ${got & (1 << i) ? 'got' : ''} ${o.pass ? 'live' : ''}">
       <div class="obj-h"><span class="st">${'★'.repeat(o.t) + '☆'.repeat(3 - o.t)}</span><span class="tag">${o.pass ? '현재 설계 달성' : o.tag}</span></div>
       <ul>${o.items.map((x) => `<li class="${x.na ? 'na' : x.ok ? 'ok' : 'no'}${x.crit ? ' crit' : ''}"><span class="k">${x.k}</span><span class="v">${x.v}</span></li>`).join('')}</ul></div>`).join('');
 }
-// once a level has a star, offer the way forward right under the objectives (the map stays the free route)
-function renderNext(got) {
-  const box = $('#m-next'), i = PLAY.findIndex((l) => l.id === state.id), nx = PLAY[i + 1], l = LMAP[state.id];
-  if (!got || i < 0) { box.innerHTML = ''; return; }
-  const lab = window.LABUI && (state.id === '3A+' || state.id === '3W'), newStage = nx && nx.stage !== l.stage;
-  const what = nx ? `다음${newStage ? ' Stage' : ''}: <b>${nx.id}</b> ${nx.name}${newStage ? ` <span class="eyebrow">${STAGES[nx.stage]}</span>` : ''}` : '마지막 레벨입니다 — 지도에서 다른 트랙이나 Design Lab으로 갈 수 있습니다.';
-  box.innerHTML = `<div class="nextlv"><span><b>${'★'.repeat(popcount(got))} 획득</b> · ${what}</span><span class="row-btns" style="margin:0">${lab ? '<button class="btn" data-open-lab="1">Design Lab에서 PIC 그리기</button>' : ''}${nx ? `<button class="btn pri" data-next="${nx.id}">다음 레벨 →</button>` : ''}</span></div>`;
+// once a level has a star, the way forward lives in the "지금 할 일" bar (renderDo) and the Fab card; #m-next stays empty
+function renderNext() { $('#m-next').innerHTML = ''; }
+/* ---------- "지금 할 일": one phase, one sentence, the button for the next move ---------- */
+const stripT = (h) => String(h).replace(/<[^>]+>/g, '');
+function nextLevel() {
+  const i = PLAY.findIndex((l) => l.id === state.id), nx = PLAY[i + 1], l = LMAP[state.id];
+  return nx ? { id: nx.id, name: nx.name, stage: nx.stage !== l.stage ? STAGES[nx.stage] : '' } : null;
 }
+// how to raise the Fab yield: the kind's own advice when it has one, a verified one-knob margin move, then the general levers
+function yieldTips() {
+  const c = state.cur, l = lev(), K = kind(), f = c.fabHere, t = Math.max(1, state.hintTier), ob = objectives(), r = c.res, out = [];
+  const q12 = Math.max(K.q1(l, r), K.q2(l, r)), margin = 1 - q12;
+  let km = null; try { km = K.coach(l, r, { tier: t, ob1: ob[0].pass, ob2: ob[1].pass, land: landData(), fab: f, missions: missionsOf(state.id) }); } catch (e) { km = null; }
+  if (!ob[0].pass) out.push('<b>먼저 ★ 기본 스펙</b> — 공정 변동이 없을 때(공칭)부터 판정선을 넘지 못하면, 변동과 상관없이 대부분의 다이가 탈락합니다. 위의 ★ 항목부터 맞추세요.');
+  if (km) out.push(`<b>${km.h}</b> — ${km.b}`);
+  if (ob[0].pass) {
+    const mv = bestMove((x) => Math.max(K.q1(l, x), K.q2(l, x)), false);
+    out.push(`<b>판정선에서 멀어지기</b> — ${margin > 0 ? `지금 ★★ 기준 대비 공칭 여유는 ${Math.round(margin * 100)}%입니다.` : '지금 공칭 성능이 ★★ 기준에 못 미쳐 판정선과의 여유가 작습니다.'} 공정 변동은 성능을 판정선 쪽으로 밀기 때문에, 여유가 클수록 더 많은 다이가 남습니다.${mv && mv.v < q12 - 0.01 ? moveText(mv, t, q12, '★★') : ''}`);
+  }
+  const G = window.GAME_GUIDE && window.GAME_GUIDE.content[LMAP[state.id].kind], hit = G && (G.miss || []).find(([re]) => re.test('수율 Fab 공정'));
+  if (hit) out.push(`<b>변동에 둔감한 구조</b> — 이 소자에서 수율에 크게 듣는 변수: <b>${hit[1]}</b> (${hit[2]}). 원리 배우기의 C·E에 이유가 있습니다.`);
+  out.push('<b>같은 웨이퍼로 비교</b> — 아래 재현성에서 시드를 고정하면 두 설계를 같은 공정 변동으로 비교할 수 있습니다.');
+  return out;
+}
+function doState() {
+  const c = state.cur; if (!c) return null;
+  if (c.pr) return { k: '연습 모드', h: c.pr.title || '연습', b: c.pr.note || '' };
+  if (c.S) {
+    const ss = stepsOf(), i = stepIdx(), done = guideNS(state.id).done[c.S.id], nx = ss[i + 1];
+    if (done && nx) return { ok: true, k: `STEP ${i + 1}/${ss.length} 완료 ✓`, h: '이 단계 목표를 모두 달성했습니다', b: c.S.doneText || '', acts: [['step-next', `다음 단계 → ${nx.short}`, 'pri']] };
+    return { k: `STEP ${i + 1}/${ss.length} · 지금 할 일`, h: c.S.task || c.S.title, b: '<b>01 설계 파라미터</b>를 움직여 아래 목표를 모두 초록(✓)으로 만드세요. 막히면 코치가 다음 한 수를 알려 줍니다.', acts: [['guide', '이 단계 원리 자세히 보기']] };
+  }
+  const l = lev(), ob = objectives(), got = starsOf(state.id), f = c.fabHere, nx = nextLevel(), lab = window.LABUI && (state.id === '3A+' || state.id === '3W') && got;
+  const nxt = got && nx ? [['next', `다음 레벨 → ${nx.id} ${nx.name}`, '']] : [];
+  const labA = lab ? [['lab', 'Design Lab에서 PIC 그리기', '']] : [];
+  const bad = (o) => o.items.filter((x) => !x.ok && !x.na && !x.crit).map((x) => stripT(x.k));
+  if (!ob[0].pass) return { k: '지금 할 일 · ★ 기본 스펙', h: '★ 목표를 맞추세요', b: `아직 안 된 항목: <b>${bad(ob[0]).join(' · ') || '—'}</b><br><b>01 설계 파라미터</b>를 움직이세요. 화면의 <b>코치</b>가 다음 한 수를 알려 줍니다.`, acts: nxt };
+  // after ★ two goals remain and either can come first: ★★ (performance + size) and ★★★ (★ + Fab yield)
+  const ai = state.fromAI[state.id] ? ' · AI 설계(별 없음)' : '', yT = Math.round(l.fab.y * 100);
+  const fabLine = !f ? `<b>★★★</b> Tape-out 수율 ≥ ${yT}% — 아직 안 해 봄` : `<b>★★★</b> 수율 ${Math.round(f.yield * 100)}% → 목표 ${yT}%`;
+  const fabAct = f ? ['fab', 'Fab Run 결과 · 수율 올리기 ↓'] : ['fab', 'Tape-out 하러 가기 ↓'];
+  if (!ob[1].pass && !ob[2].pass) return { k: `★ 달성 · 남은 목표 ★★ · ★★★${ai}`, h: '★★(고성능) 또는 ★★★(수율)에 도전하세요', b: `<ul><li><b>★★</b> 아직: ${bad(ob[1]).join(' · ') || '—'}</li><li>${fabLine}</li></ul>`, acts: [[...fabAct, '']].concat(nxt, labA) };
+  if (!ob[1].pass) return { k: `★ · ★★★ 달성 · 남은 목표 ★★${ai}`, h: '★★ 고성능 목표만 남았습니다', b: `아직 안 된 항목: <b>${bad(ob[1]).join(' · ') || '—'}</b>${nxt.length ? '<br>여기서 멈추고 다음 레벨로 가도 됩니다.' : ''}`, acts: nxt.concat(labA) };
+  if (!f) return { k: `★★ 달성 · 다음 목표 ★★★${ai}`, h: 'Tape-out으로 수율(★★★)에 도전하세요', b: `공정 변동이 있는 웨이퍼에서 다이 ${makeWafer(1).length}개를 같은 판정선(${kind().fabCrit(l)})으로 검사합니다. 수율 목표 ≥ ${yT}%.`, acts: [['fab', 'Tape-out 하러 가기 ↓', 'pri']].concat(nxt, labA) };
+  if (f.yield < l.fab.y) return { k: `수율 ${Math.round(f.yield * 100)}% · 목표 ${yT}%${ai}`, h: '수율을 올려 ★★★에 도전하세요', b: '설계를 고친 뒤 다시 Tape-out 합니다. 무엇을 바꿀지는 <b>03 Fab Run</b> 결과 아래에 정리되어 있습니다.', acts: [['fab', 'Fab Run 결과 · 수율 올리기 ↓', 'pri']].concat(nxt, labA) };
+  return { ok: true, k: got ? `${'★'.repeat(popcount(got))} 달성${ai}` : `목표 조건 모두 충족${ai}`, h: got === 7 ? '세 별 모두 달성!' : '이 설계로 목표를 모두 넘었습니다', b: nx ? `다음: <b>${nx.id} ${nx.name}</b>${nx.stage ? ` — 새 Stage(${nx.stage})` : ''}` : '마지막 레벨입니다 — 지도에서 다른 트랙이나 Design Lab으로 갈 수 있습니다.', acts: (nx ? [['next', `다음 레벨 → ${nx.id} ${nx.name}`, 'pri']] : []).concat(labA) };
+}
+const actBtn = ([a, t, cls], id) => `<button class="btn ${cls || ''}" data-act="${a}"${id && a === 'step-next' ? ' id="step-next"' : ''}>${t}</button>`;
+function renderDo() {
+  const box = $('#m-do'), s = doState(); box.hidden = !s; if (!s) return;
+  box.className = 'mdo' + (s.ok ? ' ok' : '');
+  box.innerHTML = `<div class="do-k">${s.k}</div><div class="do-h">${s.h}</div>${s.b ? `<div class="do-b">${s.b}</div>` : ''}${(s.acts || []).length ? `<div class="act-btns">${s.acts.map((a) => actBtn(a, true)).join('')}</div>` : ''}`;
+  renderFabNext();
+}
+// the Fab card, after a run: pass → the way on; short of the target → what to change before the next Tape-out
+function renderFabNext() {
+  const box = $('#fab-next'), c = state.cur, f = c && !c.S && !c.pr ? c.fabHere : null; box.hidden = !f || state.fabRunning; if (box.hidden) return;
+  const l = lev(), ok = f.yield >= l.fab.y, nx = nextLevel(), got = starsOf(state.id);
+  box.className = 'fab-next' + (ok ? ' ok' : '');
+  box.innerHTML = ok
+    ? `<div class="fn-h">수율 ${Math.round(f.yield * 100)}% ≥ 목표 ${Math.round(l.fab.y * 100)}% — ${state.fromAI[state.id] ? '수율 목표 통과 (AI 설계라 별은 주지 않습니다)' : objectives()[2].pass ? '★★★ 달성' : '수율 목표 통과 (★ 기본 스펙도 맞추면 ★★★)'}</div><div>공정 변동 속에서도 다이 ${f.pass}/${f.n}개가 판정선을 지켰습니다.</div>${nx ? `<div class="act-btns">${actBtn(['next', `다음 레벨 → ${nx.id} ${nx.name}`, 'pri'])}</div>` : ''}`
+    : `<div class="fn-h">수율 ${Math.round(f.yield * 100)}% — 목표 ${Math.round(l.fab.y * 100)}%까지 ${Math.round((l.fab.y - f.yield) * 100)}%p 부족 (탈락 다이 ${f.n - f.pass}/${f.n})</div><div>수율을 올리려면:</div><ol>${yieldTips().map((x) => `<li>${x}</li>`).join('')}</ol>`
+      + `<div class="act-btns">${actBtn(['params', '설계 파라미터로 ↑', 'pri'])}${got && nx ? actBtn(['next', `다음 레벨 → ${nx.id} ${nx.name}`, '']) : ''}</div>`;
+}
+function doAct(a) {
+  if (state.fabRunning || state.aiRunning != null) return;
+  if (a === 'step-next') { const G = guideNS(state.id); G.cur = Math.min(stepsOf().length - 1, stepIdx() + 1); state.lastLogged = ''; persist(); setupLevel(); const m = $('#mission'); if (m.scrollIntoView) m.scrollIntoView({ block: 'start', behavior: smqMotion() }); return; }
+  if (a === 'next') { const nx = nextLevel(); if (!nx || !LMAP[nx.id]) return; state.id = nx.id; state.lastLogged = ''; persist(); setupLevel(); const m = $('#mission'); if (m.scrollIntoView) m.scrollIntoView({ block: 'start', behavior: smqMotion() }); return; }
+  if (a === 'fab') { const f = $('#fab'); if (f.scrollIntoView) f.scrollIntoView({ block: 'center', behavior: smqMotion() }); setTimeout(() => $('#btn-fab').focus({ preventScroll: true }), 350); return; }
+  if (a === 'params') { const p = $('#params'); if (p.scrollIntoView) p.scrollIntoView({ block: 'start', behavior: smqMotion() }); const s = p.querySelector('input[type=range]'); if (s) setTimeout(() => s.focus({ preventScroll: true }), 350); return; }
+  if (a === 'guide' && window.GAME_GUIDE) { window.GAME_GUIDE.open('S'); return; }
+  if (a === 'lab' && window.LABUI) { window.LABUI.open(); renderMap(); }
+}
+['#m-do', '#fab-next', '#coach', '#m-stepnote'].forEach((sel) => $(sel).addEventListener('click', (e) => { const b = e.target.closest('[data-act]'); if (b) doAct(b.dataset.act); }));
 $('#m-next').addEventListener('click', (e) => {
   if (state.fabRunning || state.aiRunning != null) return;
   const b = e.target.closest('[data-next]'), lb = e.target.closest('[data-open-lab]');
@@ -541,7 +610,7 @@ function coachMsg() {
   const t = state.hintTier; if (!t || !state.cur) return null;
   const l = lev(), K = kind(), c = state.cur, r = c.res;
   if (c.S) {
-    if (guideNS(state.id).done[c.S.id]) return { h: '단계 완료 — 다음 단계로 가세요', b: (c.S.doneText || '이 단계의 목표를 물리 엔진 결과로 확인했습니다.') + ' 위의 <b>다음 단계 →</b> 버튼으로 넘어갑니다.' };
+    if (guideNS(state.id).done[c.S.id]) return { h: '단계 완료 — 다음 단계로 가세요', b: (c.S.doneText || '이 단계의 목표를 물리 엔진 결과로 확인했습니다.') + ' <b>다음 단계 →</b> 버튼으로 넘어갑니다.' };
     return c.S.coach(l, r, { tier: t, mem: stepMem(c.S) });
   }
   if (c.pr) return K.coach(l, r, { tier: t, practice: c.pr, land: landData() }) || { h: c.pr.title || '연습 모드', b: c.pr.note };
@@ -568,10 +637,10 @@ function coachMsg() {
 }
 function renderCoach() {
   const box = $('#coach'), m = coachMsg(); box.hidden = !m; state.coachH = m ? m.h : ''; renderMini(); if (!m) return;
-  const go = !state.cur.S && !state.cur.pr && /Tape-out|공정 변동/.test(m.h) && !$('#btn-fab').disabled ? '<div class="row-btns" style="margin-top:6px"><button class="btn" data-go="fab">Fab Run으로 ↓</button></div>' : '';
+  const s = doState(), pa = s && (s.acts || []).find((a) => a[0] === 'step-next' || (a[0] === 'fab' && !$('#btn-fab').disabled) || (a[0] === 'next' && s.ok));
+  const go = pa ? `<div class="row-btns" style="margin-top:8px">${actBtn(pa)}</div>` : '';
   box.innerHTML = `<div class="coach-h"><span class="badge">코치 · ${HINTS[state.hintTier]}</span><b>${m.h}</b></div><p>${m.b}</p>${go}`;
 }
-$('#coach').addEventListener('click', (e) => { if (!e.target.closest('[data-go="fab"]')) return; const f = $('#fab'); if (f.scrollIntoView) f.scrollIntoView({ block: 'center', behavior: smqMotion() }); setTimeout(() => $('#btn-fab').focus({ preventScroll: true }), 350); });
 /* ---------- mini status bar: score, stars and the coach headline stay in sight while the field is scrolled away ---------- */
 const mini = { off: true, dir: '▲' };
 function renderMini() {
@@ -630,7 +699,7 @@ function renderFabPanel() {
   if (c.S || c.pr) {
     btn.disabled = true; btn.textContent = 'Tape-out'; $('#yield').textContent = '—'; $('#yield').className = 'yield na'; $('#fab-kv').innerHTML = '';
     $('#fab-note').textContent = c.S ? 'Guided 단계에서는 공정 런이 없습니다. 마지막 단계(Full Design)에서 같은 설계로 Tape-out 합니다.' : c.pr.note;
-    renderFabRepro(); return;
+    renderFabRepro(); renderFabNext(); return;
   }
   btn.disabled = state.fabRunning || cr <= 0 || drcBad;
   btn.textContent = state.fabRunning ? '공정 진행 중…' : `Tape-out · 크레딧 ${cr}/${credits0()}`;
@@ -641,7 +710,7 @@ function renderFabPanel() {
     : `판정 ${crit}<br>목표 ≥ ${Math.round(l.fab.y * 100)}%<br>다이 ${makeWafer(1).length}개 · 9×9 grid`;
   $('#fab-note').textContent = drcBad ? 'DRC를 통과해야 Tape-out할 수 있습니다.' : cr <= 0 ? '크레딧을 모두 썼습니다. 레벨 재시작으로 충전하세요.'
     : '웨이퍼마다 CD 오프셋, 두께 bowl, 다이 랜덤 변동이 새로 뽑힙니다(시드를 고정하면 같은 웨이퍼). 공칭 성능에 여유가 없으면 수율이 무너집니다.';
-  renderFabRepro();
+  renderFabRepro(); renderFabNext();
 }
 function tapeOut() {
   const c = state.cur, id = state.id, l = lev(), K = kind();
@@ -898,13 +967,9 @@ function renderGuided() {
   const note = $('#m-stepnote');
   if (mode === 'full') { note.innerHTML = `<b>Full Design</b> · 모든 파라미터를 한꺼번에 다룹니다. 학습 단계 ${ndone}/${ss.length} 완료${ndone < ss.length ? ' — 단계 번호를 누르면 그 단계부터 Guided 학습을 합니다.' : '.'}`; return; }
   const done = G.done[S.id], nx = ss[i + 1];
-  // optional, per step: S.map (where everything goes, this step highlighted), S.knobs (what each knob changes and where to look), S.how (order of moves)
-  const sg = UI.sg || {}, fold = (k) => (sg[k] === false ? '' : ' open');
-  note.innerHTML = `<div class="sn-h"><b>STEP ${i + 1} · ${S.title}</b>${done ? '<span class="ok">완료 ✓</span>' : ''}</div><div class="sn-b">${S.intro}</div>`
-    + (S.map ? `<div class="sn-map">${S.map}</div>` : '')
-    + (S.knobs && S.knobs.length ? `<details class="sn-d" data-sg="knobs"${fold('knobs')}><summary>이 단계의 손잡이 — 움직이면 무엇이 바뀌나</summary><ul class="knobs">${S.knobs.map((k) => `<li><span class="k-sym">${k.sym}</span><div><b>${k.name}</b> — ${k.does}${k.see ? `<div class="k-see">화면에서: ${k.see}</div>` : ''}</div></li>`).join('')}</ul></details>` : '')
-    + (S.how && S.how.length ? `<details class="sn-d" data-sg="how"${fold('how')}><summary>이렇게 진행하세요</summary><ol class="how">${S.how.map((h) => `<li>${h}</li>`).join('')}</ol></details>` : '')
-    + (nx ?`<div class="row-btns"><button class="btn ${done ? 'pri' : ''}" id="step-next">다음 단계 → ${nx.short}</button></div>` : '');
+  // the main screen keeps the step short (title + route map); its principle, knobs and order of moves live in the Learning Guide (section S)
+  note.innerHTML = `<div class="sn-h"><b>STEP ${i + 1} · ${S.title}</b>${done ? '<span class="ok">완료 ✓</span>' : ''}</div>`
+    + (S.map ? `<div class="sn-map">${S.map}</div>` : '');   // the "원리 자세히" button sits in the 지금 할 일 bar above
 }
 $('#m-guided').addEventListener('click', (e) => {
   if (state.fabRunning || state.aiRunning != null) return;
@@ -924,6 +989,9 @@ function setupLevel() {
   $('#m-eyebrow').textContent = `${l.id} · ${l.dev} · ${l.bandLabel}`; $('#m-name').textContent = l.name; $('#m-brief').innerHTML = l.brief;
   const pre = $('#m-preface'); pre.hidden = !l.preface; pre.innerHTML = l.preface || '';
   const cc = $('#m-concepts'); cc.hidden = !l.concepts;
+  // level background is folded under "레벨 소개" (its first sentence stays visible): the screen leads with 지금 할 일
+  { const seen = (PP().seen = PP().seen || {}), t = stripT(l.brief || ''), m = t.match(/^.{12,}?[.!?。](?=\s|$)/);
+    $('#m-about-s').textContent = m ? m[0] : t.length > 90 ? t.slice(0, 88) + '…' : t; $('#m-about').open = false; seen[l.id] = seen[l.id] || 0; }
   if (l.concepts) { const seen = (PP().seen = PP().seen || {}); cc.innerHTML = `<summary>개념 노트 · ${l.concepts.length}개 — ${l.concepts.map((c) => c[0].replace(/<[^>]+>/g, '')).join(', ')}</summary><dl>${l.concepts.map(([t, d]) => `<dt>${t}</dt><dd>${d}</dd>`).join('')}</dl>`; cc.open = !seen[l.id] && !curStep(); seen[l.id] = 1; }   // a guided step carries its own intro, so the notes start folded there
   { const rb = $('#m-rate'); rb.hidden = !RATE_LEVELS.includes(l.id); if (!rb.hidden) $('#m-rate-b').innerHTML = RATE_DEF; }
   const pf = PLATFORMS[state.plat]; $('#plat-chip').innerHTML = `${pf.short} · ${pf.band}<span>변경</span>`; $('#plat-chip').hidden = false;
@@ -1038,8 +1106,6 @@ document.addEventListener('click', (e) => {
 const UI = store.get('smq3-ui', {}) || {};   // view-only preferences (which sections are open); never progress or designs
 $('#cards').open = !!UI.cards; $('#cards').addEventListener('toggle', () => { UI.cards = $('#cards').open; store.set('smq3-ui', UI); });
 $('#scope').addEventListener('toggle', () => { UI.scope = $('#scope').open; store.set('smq3-ui', UI); }); $('#scope').open = !!UI.scope;
-// guided-step help folds (knobs / how-to): open by default, the choice is kept for every step (toggle does not bubble → capture)
-$('#m-stepnote').addEventListener('toggle', (e) => { const d = e.target.closest && e.target.closest('details[data-sg]'); if (!d) return; UI.sg = { ...(UI.sg || {}), [d.dataset.sg]: d.open }; store.set('smq3-ui', UI); }, true);
 function start(data) {
   renderSave();
   if (data && data.DES) { DES = data.DES; if (LMAP[data.id] && !LMAP[data.id].locked) state.id = data.id; }

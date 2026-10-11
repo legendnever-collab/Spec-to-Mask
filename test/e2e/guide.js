@@ -1,4 +1,4 @@
-// Learning Guide e2e: every level opens a guide with sections A–G, every live parameter has an explanation row,
+// Learning Guide e2e: every level opens a guide with sections A–G (plus S, the current step's explanation, on a Guided step), every live parameter has an explanation row,
 // the interactive example renders, references carry links, and closing the guide leaves the design and score untouched.
 // node test/e2e/guide.js [platform] [ids]
 const {JSDOM}=require('jsdom');const fs=require('fs');
@@ -21,7 +21,10 @@ let fail=0;const bad=(m)=>{fail++;console.log('  FAIL',m);};
   const before=JSON.stringify(JSON.parse(w.localStorage.getItem('smq3-designs')||'{}')), score=$('#score-big').textContent;
   $('#btn-guide').focus(); $('#btn-guide').click(); await sleep(120);
   const dlg=$('#guide-dlg'); if(dlg.hidden) return bad(id+' guide did not open');
-  const secs=[...w.document.querySelectorAll('#guide-body .gsec')].map(s=>s.id); if(secs.join()!=='g-A,g-B,g-C,g-D,g-E,g-F,g-G') bad(id+' sections '+secs);
+  // a level opened on a Guided step adds section S (that step's explanation) before A–G
+  const secs=[...w.document.querySelectorAll('#guide-body .gsec')].map(s=>s.id), stepping=!!$('main.game.stepping')||!$('#m-guided').hidden&&!!$('.stp[aria-current="step"]');
+  if(secs.filter(x=>x!=='g-S').join()!=='g-A,g-B,g-C,g-D,g-E,g-F,g-G'||(secs.includes('g-S')&&(secs[0]!=='g-S'||!stepping))) bad(id+' sections '+secs);
+  if(secs.includes('g-S')&&!/무엇을 왜 하나/.test($('#g-S').textContent)) bad(id+' step section S has no explanation');
   const rows=[...w.document.querySelectorAll('#g-C tr[data-k]')], miss=rows.filter(r=>r.classList.contains('miss')).map(r=>r.dataset.k);
   const nP=w.document.querySelectorAll('#prm-list .prm').length; if(rows.length!==nP) bad(`${id} param rows ${rows.length} vs controls ${nP}`); if(miss.length) bad(id+' params without explanation: '+miss);
   rows.forEach(r=>{const u=r.children[2].textContent.trim(); if(!u) bad(id+' empty unit cell '+r.dataset.k);});
