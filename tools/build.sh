@@ -21,6 +21,8 @@ fi
     sed "/^if (typeof module !== 'undefined')/d" "$f"; echo
   done
   echo '</script>'
+  echo '</body>'
+  echo '</html>'
 } > "$OUT"
 CHK=$(mktemp --suffix=.js)
 sed -n '/<script>/,/<\/script>/p' "$OUT" | sed '1d;$d' > "$CHK"
