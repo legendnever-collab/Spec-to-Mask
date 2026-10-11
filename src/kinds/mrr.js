@@ -242,12 +242,17 @@ KINDS.mrr = (() => {
       for (let s = 8; s < nsym; s++) { lv[(sym[s] + 3) / 2].push(z(s)); raw[(sym[s] + 3) / 2].push(at(s * sps + ph)); }
       let worst = Infinity; for (let k = 0; k < 3; k++) worst = Math.min(worst, Math.min(...lv[k + 1]) - Math.max(...lv[k]));
       const ne = Math.sqrt(cc.reduce((a, v) => a + v * v, 0)), ratio = worst / (2 / 3) / ne;
-      if (ratio > best.ratio) best = { ratio, ph, c: cc, ne, raw };
+      if (ratio > best.ratio) best = { ratio, ph, c: cc, ne, raw, lv };
       dynFrac = Math.max(dynFrac, (mean(raw[3]) - mean(raw[0])) / 2);   // best unequalised sampling phase
     }
     const traces = []; for (let s = 8; s < Math.min(nsym - 2, 72); s++) { const tr = []; for (let k = -sps / 2; k <= sps * 1.5; k++) tr.push(at(s * sps + best.ph + k)); traces.push(tr); }
+    // display only (no metric uses these): the same waveform after the receiver's 5-tap FFE — the eye the penalty judges — and
+    // the three inner eyes at the decision instant ([top of the lower level, bottom of the upper level], ideal spacing 2/3)
+    const eqAt = (i) => { let v = 0; for (let k = 0; k < ntap; k++) v += best.c[k] * at(i + (hh - k) * sps); return v; };
+    const eq = []; for (let s = 8; s < Math.min(nsym - 2, 72); s++) { const tr = []; for (let k = -sps / 2; k <= sps * 1.5; k++) tr.push(eqAt(s * sps + best.ph + k)); eq.push(tr); }
+    const eyes = [0, 1, 2].map((k) => [Math.max(...best.lv[k]), Math.min(...best.lv[k + 1])]);
     let mx = -Infinity, mn = Infinity; for (let i = 0; i < n; i++) { if (y[i] > mx) mx = y[i]; if (y[i] < mn) mn = y[i]; }
-    return { ratio: best.ratio, ph: best.ph, taps: best.c, ne: best.ne, dynFrac, ext: (mx - mn) / 2, traces, sps, T0, T3 };
+    return { ratio: best.ratio, ph: best.ph, taps: best.c, ne: best.ne, dynFrac, ext: (mx - mn) / 2, traces, eq, eyes, sps, T0, T3 };
   }
 
   /* ---------- full analysis ---------- */
@@ -300,12 +305,28 @@ KINDS.mrr = (() => {
     ctx.beginPath(); ctx.moveTo(o.x0 != null ? o.x0 : cxp - rad * 2.2, busY); ctx.lineTo(o.x1 != null ? o.x1 : cxp + rad * 2.2, busY); ctx.stroke();
     return { busY };
   }
+  // the eye the penalty judges: after the receiver's 5-tap FFE (solid) over the raw modulator waveform (faint). At the decision
+  // instant the three inner eyes are marked — green = open (its % of the ideal 2/3 spacing), red = closed. The penalty
+  // −10·log10(worst eye / (2/3) / √Σc²) also counts the FFE's noise gain √Σc², which a picture cannot show.
   function eyeDraw(ctx, eye, x0, y0, w, h, label, good) {
-    const tr = eye.traces, n = tr[0].length, lo = Math.min(...tr.flat()), hi = Math.max(...tr.flat()), sp = Math.max(hi - lo, 1e-6);
-    const X = (i) => x0 + i / (n - 1) * w, Y = (v) => y0 + (1 - (v - lo + 0.08 * sp) / (sp * 1.16)) * h;
-    ctx.strokeStyle = 'rgba(100,201,223,0.16)'; ctx.lineWidth = 1.2 * DPR;
+    const n = eye.traces[0].length, X = (i) => x0 + i / (n - 1) * w, xs = X(eye.sps / 2);
+    const scale = (trs) => { const lo = Math.min(...trs.flat()), hi = Math.max(...trs.flat()), sp = Math.max(hi - lo, 1e-6); return (v) => y0 + (1 - (v - lo + 0.08 * sp) / (sp * 1.16)) * h; };
+    const Yr = scale(eye.traces); ctx.strokeStyle = 'rgba(158,171,189,0.07)'; ctx.lineWidth = 1 * DPR;
+    eye.traces.forEach((t) => { ctx.beginPath(); t.forEach((v, i) => (i ? ctx.lineTo(X(i), Yr(v)) : ctx.moveTo(X(i), Yr(v)))); ctx.stroke(); });
+    // the equalised eye on a fixed axis around the four PAM4 levels (±1, ±1/3): overshoot beyond ±1.5 is clipped so the
+    // decision region keeps its true proportion on screen
+    const tr = eye.eq || eye.traces, Y = eye.eq ? (v) => y0 + (1 - (clamp(v, -1.5, 1.5) + 1.5) / 3) * h : scale(tr); ctx.strokeStyle = 'rgba(100,201,223,0.16)'; ctx.lineWidth = 1.1 * DPR;
     tr.forEach((t) => { ctx.beginPath(); t.forEach((v, i) => (i ? ctx.lineTo(X(i), Y(v)) : ctx.moveTo(X(i), Y(v)))); ctx.stroke(); });
-    ctx.strokeStyle = 'rgba(242,176,74,0.7)'; ctx.setLineDash([3 * DPR, 3 * DPR]); ctx.beginPath(); ctx.moveTo(X(eye.sps / 2), y0); ctx.lineTo(X(eye.sps / 2), y0 + h); ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle = 'rgba(242,176,74,0.7)'; ctx.setLineDash([3 * DPR, 3 * DPR]); ctx.beginPath(); ctx.moveTo(xs, y0); ctx.lineTo(xs, y0 + h); ctx.stroke(); ctx.setLineDash([]);
+    if (eye.eq && eye.eyes) {
+      const op = eye.eyes.map(([a, b]) => (b - a) / (2 / 3)), wi = op.indexOf(Math.min(...op));
+      eye.eyes.forEach(([a, b], k) => {
+        const yA = Y(a), yB = Y(b), ok = b > a, col = ok ? (k === wi ? '#5dd193' : 'rgba(93,209,147,0.75)') : '#ff6b6b';
+        ctx.fillStyle = col; ctx.fillRect(xs - 3 * DPR, Math.min(yA, yB), 6 * DPR, Math.max(2 * DPR, Math.abs(yA - yB)));
+        txt(ctx, ok ? `${Math.round(op[k] * 100)}%` : '닫힘', xs + 8 * DPR, (yA + yB) / 2, { size: 9.5, color: col });
+      });
+      txt(ctx, `진한 선: 수신 FFE 후(판정) · 옅은 선: FFE 전 파형 · 막대: 눈 열림 · 페널티는 가장 좁은 눈 ÷ FFE 잡음 증폭 ×${f2(eye.ne, 2)}`, x0, y0 + h - 4 * DPR, { size: 9, color: 'rgba(158,171,189,0.9)', base: 'bottom' });
+    }
     cvPill(ctx, label, x0, y0 - 8 * DPR, 'left', good ? '#5dd193' : '#f2b04a');
   }
   function numbers(ctx, rows, x, y, w) {   // label left, value right; on a narrow canvas the font shrinks, then the value drops under its label
@@ -348,16 +369,62 @@ KINDS.mrr = (() => {
     if (!best || best.q >= q0 * 0.995) for (let i = 0; i < ps.length; i++) for (let j = i + 1; j < ps.length; j++) for (const a of [-5, 5]) for (const b of [-5, 5]) tryC([[ps[i], a], [ps[j], b]]);
     return best && best.q < q0 * 0.995 ? { ...best, q0 } : null;
   }
+  // narrow ridges (two goals that trade against each other, e.g. eye penalty vs OMA along V_pp): a short coordinate descent
+  // with ±1/2/4 slider steps over the knobs, two rounds — finds the few-step combination a coarse scan steps over.
+  // The combined move is shown only when the end point lowers q (verified).
+  function polish(KK, l, d, keys, q) {
+    const ps = KK.params(l).filter((p) => keys.includes(p.k)), q0 = q(KK.evaluate(l, d)); let cur = { ...d }, best = q0;
+    for (let it = 0; it < 2; it++) for (const p of ps) for (const m of [-4, -2, -1, 1, 2, 4]) { const nd = { ...cur, [p.k]: snapP(p, cur[p.k] + m * p.step) }; if (nd[p.k] === cur[p.k]) continue; const v = q(KK.evaluate(l, nd)); if (v < best - 1e-9) { best = v; cur = nd; } }
+    const ch = ps.filter((p) => cur[p.k] !== d[p.k]);
+    return best < q0 * 0.995 && ch.length ? { ps: ch, v: ch.map((p) => cur[p.k]), q0, q: best } : null;
+  }
+  // when no 1–2 knob nudge helps (a local optimum): a two-move path — first the single knob value that most improves the worst
+  // failing metric (even at some cost elsewhere), then the best follow-up on another knob. Shown only when the end point
+  // really lowers the coach objective q (verified like every other suggestion).
+  function twoStage(KK, l, d, keys, q, worst) {
+    const ps = KK.params(l).filter((p) => keys.includes(p.k)), q0 = q(KK.evaluate(l, d)); let first = null;
+    for (const p of ps) for (let i = 0; i <= 7; i++) { const v = snapP(p, p.min + (p.max - p.min) * i / 7); if (v === d[p.k]) continue; const w = worst(KK.evaluate(l, { ...d, [p.k]: v })); if (!first || w < first.w) first = { p, v, w }; }
+    if (!first) return null;
+    const d1 = { ...d, [first.p.k]: first.v }, b = lineBestOf(KK, l, d1, keys.filter((k) => k !== first.p.k), q, 7), qEnd = b ? b.q : q(KK.evaluate(l, d1));
+    if (qEnd >= q0 * 0.995) return null;
+    return b ? { ps: [first.p, b.p], v: [first.v, b.v], q0, q: qEnd } : { ps: [first.p], v: [first.v], q0, q: qEnd };
+  }
   /* ---------- guided steps ---------- */
   function stepDefs(l) {
     const lam = l.pf.lam, st = l.st || {}, fsrT = st.fsr || 10, tr = TRng(l);
     const P0 = P(l), pk = (k) => P0.find((p) => p.k === k);
     const evS = (l2, d, o) => analyse(l2, d, null, { noEye: true, noAlign: true, ...o });
+    // the picture every step shares: how a ring modulator makes PAM4 (schematic Lorentzian dips, not computed), and the six design
+    // questions of this level with the current one highlighted — explanation only, no target values
+    const RQ = [['공진은 어디에, 몇 nm마다?', 'R'], ['골은 얼마나 깊고 넓게?', 'g'], ['전압으로 골을 얼마나 옮기나?', 'ΔN · V<sub>b</sub> · V<sub>pp</sub> · x'], ['112 GBd를 따라가나?', 'Q · RC · x'], ['온도가 바뀌어도?', '히터 · Δλ<sub>b</sub>'], ['다이마다 달라도? (Fab)', '전부 함께']];
+    function principle() {
+      const W = 330, H = 148, x0 = 24, x1 = 248, yT = 18, yB = 108, Y = (T) => yB - T * (yB - yT), w = 17, D = 0.92, xL = 128, cs = [150, 160, 171, 183], col = ['#64c9df', '#5dd193', '#f2b04a', '#ff8d9c'];
+      const Tf = (x, c) => 1 - D / (1 + ((x - c) / w) ** 2), path = (c) => Array.from({ length: 113 }, (_, i) => { const x = x0 + (x1 - x0) * i / 112; return `${i ? 'L' : 'M'}${x.toFixed(1)},${Y(Tf(x, c)).toFixed(1)}`; }).join('');
+      let s = `<svg class="ring-pr" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="링 변조기 원리: 레이저는 공진 골의 사면에 고정, 전압이 골을 장파장 쪽으로 옮기면 레이저가 보는 투과가 네 레벨로 바뀜">`;
+      s += `<line x1="${x0}" x2="${x1}" y1="${yB}" y2="${yB}" stroke="var(--line-2)"/><line x1="${x0}" x2="${x0}" y1="${yT - 4}" y2="${yB}" stroke="var(--line-2)"/>`;
+      cs.forEach((c, k) => { s += `<path d="${path(c)}" fill="none" stroke="${col[k]}" stroke-width="${k === 0 ? 2.2 : 1.4}" opacity="${k === 0 ? 1 : 0.8}"/>`; });
+      s += `<line x1="${xL}" x2="${xL}" y1="${yT - 6}" y2="${yB}" stroke="var(--fg)" stroke-width="1.6" stroke-dasharray="3 3"/>`;
+      s += `<text x="${xL + 5}" y="${yT - 8}" font-size="11" fill="var(--fg)">레이저 λ (고정)</text>`;
+      s += `<path d="M152,${yB + 13} L188,${yB + 13}" stroke="var(--rose)" stroke-width="1.4" marker-end="url(#mrr-ra)"/><defs><marker id="mrr-ra" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="var(--rose)"/></marker></defs>`;
+      s += `<text x="194" y="${yB + 17}" font-size="11" fill="var(--rose)">전압↑ → 골이 빨강 쪽으로</text><text x="150" y="${Y(1 - D) + 14}" text-anchor="middle" font-size="10.5" fill="var(--fg-3)">공진 골</text>`;
+      cs.forEach((c, k) => { const yy = Y(Tf(xL, c)); s += `<circle cx="${xL}" cy="${yy.toFixed(1)}" r="3.4" fill="${col[k]}"/><line x1="${xL + 4}" x2="${x1 + 14}" y1="${yy.toFixed(1)}" y2="${yy.toFixed(1)}" stroke="${col[k]}" stroke-width="1" stroke-dasharray="2 3" opacity=".8"/>`; });
+      s += `<text x="${x1 + 18}" y="${Y(Tf(xL, cs[1])) - 2}" font-size="11" fill="var(--fg-2)">출력 세기</text><text x="${x1 + 18}" y="${Y(Tf(xL, cs[1])) + 12}" font-size="11" fill="var(--fg-2)">= PAM4</text><text x="${x1 + 18}" y="${Y(Tf(xL, cs[1])) + 26}" font-size="11" fill="var(--fg-2)">4 레벨</text>`;
+      s += `<text x="${x0}" y="${H - 3}" font-size="10.5" fill="var(--fg-3)">파장 λ →</text><text x="${x0 - 2}" y="${yT - 8}" font-size="10.5" fill="var(--fg-3)">투과</text>`;
+      return s + '</svg>';
+    }
+    const ringMap = (i, cap) => `<div class="ringmap">${principle()}<ol class="rq">${RQ.map(([q, k], j) => `<li class="${j === i ? 'on' : j < i ? 'past' : ''}"><span>${q}</span><small>${k}</small></li>`).join('')}</ol></div><p class="rm-cap">${cap}</p>`;
     /* Step 1 — resonance and FSR */
     const s1 = {
       id: 'res', short: '공진 · FSR', title: 'Ring 공진 — 공진 조건과 FSR', aspect: 0.56,
       task: `반경 R을 움직여 링의 FSR을 목표 ${fsrT} nm 근처로 맞추세요.`,
-      intro: `둘레 L = 2πR의 고리를 한 바퀴 돈 빛이 제자리에서 같은 위상이 되면(mλ = n<sub>eff</sub>L) 빛이 쌓여 공진합니다. 버스 도파로의 투과 스펙트럼에는 공진마다 좁은 골(dip)이 생기고, 그 간격이 FSR ≈ λ²/(n<sub>g</sub>L)입니다. 반경 R만 바꾸면서 FSR과 공진 차수 m이 어떻게 바뀌는지 보고, FSR을 목표 ${fsrT} nm 근처로 맞추세요 (작은 링 = 넓은 FSR = 다음 단계들에서 열 튜닝이 쉬워짐).`,
+      aim: `FSR이 ${fsrT} ± 0.5 nm면 됩니다. 실제로 쓰는 공진은 레이저 옆의 하나뿐이고, FSR은 그 공진을 히터로 옮길 수 있는 범위(5단계)와 다이마다 다른 공진 위치를 흡수할 여유(Fab)를 정하는 값이기 때문입니다.`,
+      verdict: (l2, r) => ({ got: `반경 ${f2(r.d.R, 2)} µm에서 FSR ${NMf(r.fsr)} nm — 공진 골이 ${NMf(r.fsr)} nm마다 반복됩니다.`,
+        enough: `이 단계의 일은 공진 간격을 정하는 것뿐입니다. 정확한 공진 위치는 게임이 레이아웃 반경을 미세 조정해 레이저 옆에 맞추고, 남는 오차는 5단계의 히터가 맡습니다.`,
+        next: '아직 골의 깊이와 폭(결합)을 정하지 않았습니다 — 골이 얕으면 레이저를 비탈에 둬도 세기 차이가 생기지 않습니다. → 2단계 결합 · Q' }),
+      intro: `<b>링 변조기가 하는 일:</b> 레이저 빛(파장 고정)이 지나가는 버스 도파로 옆에 작은 고리(링)를 둡니다. 링이 공진하는 파장에서는 빛이 링으로 들어가 버스 출력에 좁은 <b>골(dip)</b>이 생깁니다. 레이저를 이 골의 비탈(사면)에 두고 전압으로 골을 옆으로 살짝 옮기면, 레이저가 보는 투과 세기가 바뀌어 신호(PAM4 네 레벨)가 됩니다 — 위 그림.<br><b>이 단계:</b> 골이 몇 nm마다 생기는지 정합니다. 둘레 L = 2πR을 한 바퀴 돈 빛이 제자리에서 같은 위상이 되면(mλ = n<sub>eff</sub>L) 공진하고, 골 사이 간격이 FSR ≈ λ²/(n<sub>g</sub>L)입니다. 반경 R로 FSR을 목표 ${fsrT} nm 근처로 맞추세요 — 작은 링일수록 FSR이 넓어 나중에 온도를 히터로 맞추기 쉬워집니다.`,
+      map: ringMap(0, '이 단계: ① 공진 위치·간격 — 그림의 골이 몇 nm마다 반복되는지(FSR)를 정합니다.'),
+      knobs: [{ sym: 'R', name: '링 반경', does: '고리 둘레(L = 2πR)를 정합니다. 줄이면 FSR(골 사이 간격)이 넓어져, 같은 히터 전력으로 더 많은 nm를 옮길 수 있습니다(5단계). 너무 작으면 굽힘 손실이 늘어납니다. 공진 하나를 레이저 근처에 두는 미세 조정(레이아웃 반경)은 게임이 자동으로 합니다.', see: 'FSR 타일, 스펙트럼의 골 간격, 굽힘 손실 줄' }],
+      how: ['FSR 타일을 보며 R을 움직입니다 — FSR이 목표보다 넓으면 R을 키우고, 좁으면 줄입니다(FSR ∝ 1/R).', '목표 ±0.5 nm 안에 들어오면 완료입니다. 굽힘 손실이 1 dB/mm를 넘으면 링이 너무 작은 것입니다.'],
       doneText: '공진 조건 mλ = n<sub>eff</sub>L과 FSR = λ²/(n<sub>g</sub>L)을 확인했습니다. 다음은 골의 깊이와 폭을 정하는 결합(κ)과 손실입니다.',
       params: () => [pk('R')],
       evaluate: (l2, d) => evS(l2, d, { noAlign: false, natural: true }),
@@ -369,7 +436,7 @@ KINDS.mrr = (() => {
       coach(l2, r, c) {
         const fsr = r.fsr * 1e3; if (Math.abs(fsr - fsrT) <= 0.5) return null;
         const Rt = r.d.R * fsr / fsrT;
-        return { h: fsr > fsrT ? 'FSR이 넓습니다 — 링이 작습니다' : 'FSR이 좁습니다 — 링이 큽니다', b: `FSR = λ²/(n<sub>g</sub>·2πR)은 반경에 반비례합니다. 지금 ${fsr.toFixed(2)} nm.` + (c.tier >= 2 ? ` 권장: R = ${Rt.toFixed(2)} µm (기준: n<sub>g</sub> ${r.c.x.ng.toFixed(3)}로 FSR ${fsrT} nm).` : ` R을 ${fsr > fsrT ? '키우세요' : '줄이세요'}.`) };
+        return { h: fsr > fsrT ? 'FSR이 넓습니다 — 링이 작습니다' : 'FSR이 좁습니다 — 링이 큽니다', b: `FSR = λ²/(n<sub>g</sub>·2πR)은 반경에 반비례합니다. 지금 ${fsr.toFixed(2)} nm.` + (c.tier >= 2 ? ` 권장: R = ${Rt.toFixed(2)} µm (기준: n<sub>g</sub> ${r.c.x.ng.toFixed(3)}로 FSR ${fsrT} nm).` : ` 추천: ${dirWord(pk('R'), Rt, r.d.R)}세요.`) };
       },
       meta: (l2, r) => `${l2.pf.mat === 'si' ? '' : '이종 집적 '}Si 리브 ${Math.round(r.c.x.w * 1000)}×220 nm (슬랩 90 nm) · EIM: n<sub>eff</sub> <b>${r.c.x.neff.toFixed(4)}</b>, n<sub>g</sub> <b>${r.c.x.ng.toFixed(3)}</b> · λ ${Math.round(lam * 1000)} nm`,
       tiles: (l2, r) => [['FSR', `${NMf(r.fsr)}<small>nm</small>`], ['공진 차수 m', `${r.m}`], ['둘레 L', `${f2(2 * Math.PI * r.d.R, 1)}<small>µm</small>`], ['n<sub>eff</sub> · n<sub>g</sub>', `${r.c.x.neff.toFixed(3)} · ${r.c.x.ng.toFixed(3)}`]],
@@ -388,7 +455,14 @@ KINDS.mrr = (() => {
     const s2 = {
       id: 'q', short: '결합 · Q', title: '결합과 Q — Under / Critical / Over coupling', aspect: 0.56,
       task: '간격 g를 움직여 Under · Critical · Over coupling을 모두 지나 보고, 공진 골이 15 dB 이상 깊은 지점을 찾으세요.',
-      intro: '버스와 링 사이 간격 g가 결합계수 κ(필드, |κ|² = 한 번 지날 때 건너가는 파워 비율)를 정합니다. 링 한 바퀴의 필드 투과 a(손실)와 버스 자기결합 t = √(1−κ²)의 대소가 공진 골의 모양을 정합니다: t = a 이면 Critical coupling(골이 0까지 내려감), t > a 이면 Under-coupled, t < a 이면 Over-coupled. Q<sub>L</sub>는 선폭 = λ/Q<sub>L</sub>을, 1/Q<sub>L</sub> = 1/Q<sub>i</sub> + 1/Q<sub>c</sub>로 손실과 결합 모두가 정합니다. 세 영역을 모두 지나가 보고, 골이 15 dB 이상 깊은 지점을 찾으세요.',
+      aim: '골 깊이 ≥ 15 dB면 레이저를 비탈에 두었을 때 켜짐·꺼짐의 세기 차이를 충분히 만들 수 있습니다(ER의 상한이 골 깊이). Under·Critical·Over를 모두 보는 이유는, 4단계에서 고속을 위해 일부러 Over 쪽(넓은 골)을 고르게 되기 때문입니다.',
+      verdict: (l2, r) => ({ got: `간격 ${Math.round(r.d.g * 1000)} nm에서 ${regimeTxt[r.regime]} · 골 깊이 ${f2(r.erRes, 1)} dB · Q<sub>L</sub> ${Math.round(r.QL)} (선폭 ${f2(r.fwhm * 1e6, 0)} pm).`,
+        enough: '골이 이만큼 깊으면 세기 변조의 “재료”는 충분합니다. 결합이 손실보다 강할수록(Over) 골이 넓어지고 빛이 빨리 빠져나간다는 것도 확인했습니다.',
+        next: '아직 아무것도 변조하지 않았습니다 — 전압으로 골을 옮겨 레이저가 보는 세기를 바꿔야 신호가 됩니다. → 3단계 전기광학' }),
+      intro: '<b>이 단계:</b> 골의 <b>깊이</b>와 <b>폭</b>을 정합니다. 버스와 링 사이 간격 g가 좁을수록 빛이 링으로 많이 넘어갑니다(결합 κ²). 링을 한 바퀴 돌며 잃는 빛(손실)과 넘어오는 빛(결합)이 맞먹을 때(<b>Critical coupling</b>, t = a) 골이 가장 깊습니다. 결합이 손실보다 약하면 Under-coupled(골이 얕음), 강하면 Over-coupled(골이 넓어지고 다시 얕아짐)입니다.<br>골의 폭(선폭 = λ/Q<sub>L</sub>)은 빛이 링에 머무는 시간과 같은 이야기입니다 — 좁을수록(Q<sub>L</sub>↑) 오래 머물러 느려집니다. 4단계에서 이것을 속도와 맞바꿉니다. 1/Q<sub>L</sub> = 1/Q<sub>i</sub>(손실) + 1/Q<sub>c</sub>(결합).',
+      map: ringMap(1, '이 단계: ② 골의 깊이와 폭 — 그림 속 골의 모양을 정합니다.'),
+      knobs: [{ sym: 'g', name: '버스–링 간격', does: '좁히면 결합이 지수적으로 커져 Under → Critical → Over 순으로 바뀝니다. Over 쪽으로 갈수록 골이 넓어지고(Q<sub>L</sub>↓) 빛이 빨리 빠져나가 고속에 유리하지만, 골은 다시 얕아집니다(ER↓).', see: '그림 가운데의 영역 이름, 스펙트럼의 골 깊이, κ²·t와 a 타일(t > a면 Under, t < a면 Over)' }],
+      how: ['g를 가장 넓은 쪽에서 시작합니다 — Under-coupled, 골이 얕습니다.', '천천히 좁히며 골이 가장 깊어지는 곳(Critical)을 지나고, 더 좁혀 Over-coupled도 봅니다.', '세 영역을 모두 본 뒤 골 깊이가 15 dB 이상인 간격으로 돌아오면 완료입니다.'],
       doneText: '결합과 손실의 균형이 골의 깊이(ER)와 폭(Q)을 정한다는 것을 확인했습니다. 실제 고속 변조기는 대역폭 때문에 보통 Over-coupled 쪽을 씁니다 — 4단계에서 그 이유를 봅니다.',
       params: () => [pk('g')],
       evaluate: (l2, d) => evS(l2, d, { R: d.R }),
@@ -402,8 +476,11 @@ KINDS.mrr = (() => {
         const seen = (c.mem && c.mem.seen) || [], miss = ['under', 'critical', 'over'].filter((x) => !seen.includes(x));
         // numeric suggestion (tier ≥ 2): scan the gap slider for the nearest gap in the wanted regime (deepest dip for critical)
         const scan = (want) => { let best = null; const p = pk('g'); for (let i = 0; i <= 80; i++) { const g = snapP(p, p.min + (p.max - p.min) * i / 80), x = evS(l2, { ...r.d, g }, { R: r.d.R }); const sc = want === 'critical' ? -x.erRes : x.regime === want ? Math.abs(g - r.d.g) : 1e9; if (sc < 1e8 && (!best || sc < best.sc)) best = { g, sc }; } return best; };
-        if (miss.length) { const b = c.tier >= 2 ? scan(miss[0]) : null; return { h: `아직 못 본 영역: ${miss.map((x) => regimeTxt[x]).join(', ')}`, b: '간격을 넓히면 κ가 지수적으로 줄어 Under-coupled로, 좁히면 Over-coupled로 갑니다. 그 사이 한 점에서 t = a가 됩니다.' + (b ? ` 권장: g = ${b.g.toFixed(3)} µm (기준: ${regimeTxt[miss[0]]}).` : '') }; }
-        if (r.erRes < 15) { const b = c.tier >= 2 ? scan('critical') : null; return { h: 'Critical coupling 근처를 찾으세요', b: `지금 t = ${r.c.B.t.toFixed(4)}, a = ${r.c.B.a[0].toFixed(4)} → ${r.regime === 'under' ? '결합이 손실보다 약합니다: 간격을 줄이세요.' : '결합이 손실보다 강합니다: 간격을 넓히세요.'}` + (b ? ` 권장: g = ${b.g.toFixed(3)} µm (기준: t = a).` : '') }; }
+        // direction toward the wanted regime: wider gap → under, narrower → over; critical lies between (t = a)
+        const toward = (want) => (want === 'under' ? 1 : want === 'over' ? -1 : r.regime === 'under' ? -1 : 1), pg = pk('g');
+        const dirTxt = (want) => { const b = scan(want), v = b ? b.g : r.d.g + toward(want) * 0.25 * (pg.max - pg.min); return ` 추천: ${dirWord(pg, v, r.d.g)}세요.`; };
+        if (miss.length) { const b = c.tier >= 2 ? scan(miss[0]) : null; return { h: `아직 못 본 영역: ${miss.map((x) => regimeTxt[x]).join(', ')}`, b: '간격을 넓히면 κ가 지수적으로 줄어 Under-coupled로, 좁히면 Over-coupled로 갑니다. 그 사이 한 점에서 t = a가 됩니다.' + (b ? ` 권장: g = ${b.g.toFixed(3)} µm (기준: ${regimeTxt[miss[0]]}).` : dirTxt(miss[0])) }; }
+        if (r.erRes < 15) { const b = c.tier >= 2 ? scan('critical') : null; return { h: 'Critical coupling 근처를 찾으세요', b: `지금 t = ${r.c.B.t.toFixed(4)}, a = ${r.c.B.a[0].toFixed(4)} → ${r.regime === 'under' ? '결합이 손실보다 약합니다 — 간격을 줄입니다.' : '결합이 손실보다 강합니다 — 간격을 넓힙니다.'}` + (b ? ` 권장: g = ${b.g.toFixed(3)} µm (기준: t = a).` : dirTxt('critical')) }; }
         return null;
       },
       meta: (l2, r) => `R ${r.d.R.toFixed(2)} µm · 결합: κ(d) = κ₀e<sup>−γd</sup>, d(z) = g + z²/2R 적분 (γ ${r.c.x.g.toFixed(2)} /µm) · 손실: 도핑(2-2 모델, 바이어스 ${r.d.vb} V) + 측벽 ${SWL} dB/mm + 굽힘 + 히터 금속`,
@@ -423,7 +500,17 @@ KINDS.mrr = (() => {
     const s3 = {
       id: 'eo', short: '전기광학', title: 'PN 접합으로 공진 옮기기 — 정적 변조', aspect: 0.56,
       task: '바이어스 · 구동 진폭 · 디튜닝으로 PAM4 네 레벨의 정적 OMA와 ER을 확보하세요 — 삽입 손실은 기준 이하로.',
-      intro: '2-2의 PN 접합이 링 둘레의 η = 75%를 덮습니다. 역바이어스를 키우면 공핍이 넓어져 자유 캐리어가 빠지고 n<sub>eff</sub>가 올라가 공진이 장파장 쪽(빨강)으로 이동합니다(Δλ = λΔn<sub>eff</sub>/n<sub>g</sub>). 레이저를 공진 옆에(디튜닝 x = 2(λ<sub>L</sub> − λ<sub>r</sub>)/FWHM) 두면 이 이동이 투과 세기 변화가 됩니다. 바이어스, 구동 진폭, 디튜닝으로 PAM4 네 레벨의 정적 OMA와 ER을 확보하세요. 여기서 보는 것은 DC 특성뿐입니다 — 기울기가 가파르다고 고속에서 좋은 것은 아닙니다(다음 단계).',
+      aim: (l2) => `정적 OMA ≥ ${dbm(l2.s1.omaS)} dBm · ER ≥ ${fmtT(l2.s1.er)} dB · IL ≤ ${fmtT(l2.s1.il)} dB — 전압으로 만든 세기 차이(신호의 크기)가 충분하고, 레이저를 둔 자리의 손실이 크지 않은지를 봅니다. 기준은 같은 엔진의 기준 설계에 여유를 둔 값입니다. 여기서는 느린(DC) 신호만 봅니다.`,
+      verdict: (l2, r) => ({ got: `공진 이동 ${f2(r.shiftPmV, 1)} pm/V × ${f2(r.d.vpp, 2)} V로 정적 OMA ${f2(r.omaDbm, 1)} dBm · ER ${f2(r.er, 1)} dB · IL ${f2(r.IL, 1)} dB, 네 레벨이 순서대로 벌어졌습니다.`,
+        enough: '신호의 크기는 충분합니다 — DC에서는 레벨 사이가 기준 이상 벌어집니다.',
+        next: `빠르게 바꿨을 때도 따라오는지는 아직 모릅니다. 비탈이 가파르다는 것은 골이 좁다(Q<sub>L</sub> ${Math.round(r.QL)})는 뜻이고, 그만큼 빛이 링에 오래 머물러 112 GBd에서는 눈이 닫힐 수 있습니다. → 4단계 112 GBd PAM4` }),
+      intro: '<b>이 단계:</b> 전압으로 골을 옆으로 옮겨 빛 세기를 바꿉니다. 링에 감긴 PN 접합(2-2)에 역바이어스를 걸면 캐리어가 빠져 굴절률이 오르고, 공진이 장파장(빨강) 쪽으로 이동합니다(Δλ = λΔn<sub>eff</sub>/n<sub>g</sub>). 레이저가 골의 비탈에 있어야 이 이동이 세기 변화(OMA)가 됩니다 — 레이저 위치는 디튜닝 x(선폭 단위, 음수 = 파랑 쪽)로 정합니다.<br>여기서는 느린(DC) 특성만 봅니다. 비탈이 가파를수록 정적 세기 변화는 크지만, 고속에서도 좋은지는 다음 단계에서 봅니다.',
+      map: ringMap(2, '이 단계: ③ 전압으로 골을 옮겨, 레이저 위 네 점(PAM4 레벨) 사이를 벌립니다.'),
+      knobs: [{ sym: 'x', name: '레이저 디튜닝', does: '레이저가 골의 어디에 있는지(선폭 단위). 골 바닥(x ≈ 0)은 손실이 크고, 너무 멀면 세기 변화가 작습니다. 정적 기울기는 |x| ≈ 0.58에서 가장 가파릅니다. 파랑 쪽(x < 0)에 두세요 — 자기 가열에 대해 안정한 쪽입니다(★★에서 중요).', see: '아래 스펙트럼: 레이저 세로선 위의 네 점 = PAM4 네 레벨' },
+        { sym: 'V<sub>pp</sub>', name: '구동 진폭', does: '골이 움직이는 거리. 키우면 OMA·ER이 커지지만, 골이 레이저를 넘어가면 레벨 순서가 뒤집히고, 비탈의 휘어짐 때문에 레벨 간격이 고르지 않게 됩니다.', see: '‘공진 이동’ 타일(pm/V) × V<sub>pp</sub>를 선폭과 비교' },
+        { sym: 'V<sub>b</sub>', name: 'DC 역바이어스', does: '가장 낮은 레벨의 전압. 키우면 접합 용량이 줄어 빨라지지만(4단계), 볼트당 이동은 줄어듭니다.' },
+        { sym: 'ΔN', name: '접합 도핑', does: '올리면 볼트당 이동(pm/V)이 커지지만, 캐리어 흡수(손실)와 접합 용량이 함께 커집니다.', see: 'C<sub>j</sub> 타일' }],
+      how: ['x를 음수로 — 골의 파랑 쪽 비탈에 둡니다.', 'V<sub>pp</sub>를 키워 OMA를 늘립니다. ‘레벨 역전’이 뜨면 줄이세요.', '삽입 손실이 크면 |x|를 키워 레이저를 골 바닥에서 떼고, ER이 부족하면 V<sub>pp</sub>나 도핑 ΔN을 올립니다(손실·용량이 느는 대가).', 'OMA · ER · IL 세 목표가 모두 초록이면 완료입니다.'],
       doneText: '공진 이동(pm/V)과 레이저 디튜닝으로 세기 변조를 만들었습니다. 다음 단계에서 같은 설계를 112 GBd로 구동하면 광자 수명과 RC가 끼어듭니다.',
       params: () => [pk('dop'), pk('vb'), pk('vpp'), pk('det')],
       evaluate: (l2, d) => evS(l2, d, { R: d.R }),
@@ -451,7 +538,18 @@ KINDS.mrr = (() => {
     const s4 = {
       id: 'pam4', short: '200G PAM4', title: '112 GBd PAM4 — 광자 수명, RC, 디튜닝', aspect: 0.5,
       task: '112 GBd로 구동합니다. 결합 간격 · 디튜닝 · 진폭으로 대역폭을 확보하고 눈(eye)을 여세요(페널티·OMA 목표).',
-      intro: '이제 112 GBd PAM4(224 Gb/s 라인 속도 — FEC·부호화 오버헤드 후 200G급 레인)로 구동합니다. 링 안의 빛은 광자 수명 τ<sub>p</sub> = Q<sub>L</sub>λ/(2πc)만큼 머물러 빠른 변화를 따라가지 못하고, 접합 C<sub>j</sub>와 저항(R<sub>j</sub> + 드라이버 50 Ω)이 전압을 늦춥니다. 레이저를 공진에서 떼어 두면(디튜닝) 응답에 피크가 생겨 대역이 넓어지기도 합니다. Q가 높을수록 정적 기울기는 가파르지만 눈은 닫힐 수 있습니다 — 결합 간격과 디튜닝, 진폭으로 눈을 여세요.',
+      aim: (l2) => `눈 페널티 ≤ ${fmtT(l2.s2.pen)} dB가 기준입니다. 페널티는 수신기의 5-tap FFE로 보정한 뒤, 가장 좁은 눈이 이상적인 눈(레벨 간격 2/3)의 몇 %인지에서 나옵니다(FFE 잡음 증폭 포함, 페널티 = −10·log₁₀ 비). 즉 ${fmtT(l2.s2.pen)} dB는 “이상적인 눈보다 수신 광파워가 ${fmtT(l2.s2.pen)} dB 더 필요하다”는 뜻이고, Stage 3(3A+)의 링크 마진 = 수신 OMA − 페널티 − 감도에서 그대로 빠집니다. 화면의 진한 선이 이 판정에 쓰는 FFE 후 눈입니다(옅은 선 = FFE 전 파형). FFE가 심볼 간 간섭을 많이 되돌릴수록 잡음도 그만큼 키우므로(×√Σc²), 막대가 비슷하게 열려 있어도 잡음 증폭이 큰 설계(대개 Q가 높은 링)는 페널티가 커집니다.`,
+      verdict: (l2, r) => ({ got: `EO 대역 ${f2(r.bw, 1)} GHz · FFE 후 가장 좁은 눈 ${Math.round(Math.max(r.eye ? r.eye.ratio : 0, 0) * 100)}% → 페널티 ${f2(r.pen, 2)} dB · OMA ${f2(r.omaDbm, 1)} dBm.`,
+        enough: `페널티 ${f2(r.pen, 2)} dB가 기준 ${fmtT(l2.s2.pen)} dB 안입니다. 이 기준은 같은 엔진에서 가장 잘 만든 기준 설계의 페널티에 여유(×1.25 또는 +0.4 dB 중 큰 쪽)를 둔 값입니다. 눈이 완전히 열려 보이지 않아도 됩니다 — 실제 200G/lane 송신기도 기준 등화기 후 수 dB의 페널티를 허용합니다(참고: IEEE 802.3dj 제안의 TDECQ 상한 ≈ 3.4 dB, 15-tap FFE, 계산법이 달라 직접 비교는 안 됨).`,
+        next: '이 결과는 한 온도에서, 공진이 레이저 옆에 정확히 있을 때의 이야기입니다. 칩 온도가 1 °C만 바뀌어도 공진이 수십 pm 움직여 레이저가 비탈에서 벗어납니다. → 5단계 온도 · 히터' }),
+      intro: '<b>이 단계:</b> 같은 설계를 112 GBd(초당 1120억 심볼) PAM4로 구동합니다. 두 가지가 속도를 막습니다. ① <b>광자 수명</b> — 골이 좁을수록(Q<sub>L</sub>↑) 빛이 링에 오래 머물러 빠른 변화를 따라가지 못합니다. ② <b>RC</b> — 접합 용량 C<sub>j</sub>와 저항(접합 + 드라이버 50 Ω)이 전압 변화를 늦춥니다. 레이저를 골에서 조금 더 떼면(|x| ≈ 0.8–1) 응답에 피크가 생겨 대역이 넓어지기도 합니다.<br>그래서 2단계의 깊고 좁은 골이 고속에서는 오히려 불리할 수 있습니다 — 간격·디튜닝·진폭으로 눈(eye)을 여세요. 결과는 112 GBd PAM4(224 Gb/s 라인 — FEC·부호화 오버헤드 뒤 200G급 레인)의 눈과 OMA로 봅니다.',
+      map: ringMap(3, '이 단계: ④ 같은 일을 112 GBd 속도로 — 골이 너무 좁으면 빛이 따라오지 못합니다.'),
+      knobs: [{ sym: 'g', name: '버스–링 간격', does: '좁히면 Over-coupled 쪽으로 가서 Q<sub>L</sub>이 낮아집니다 → 광자 수명 한계 f<sub>Q</sub>↑(빨라짐), 대신 정적 기울기·ER↓. 반대로 넓혀 Q가 높으면 빛이 오래 머물러 눈 페널티가 크게 나빠집니다 — 이 단계에서 가장 크게 듣는 손잡이입니다.', see: 'f<sub>Q</sub> · f<sub>RC</sub> 타일 — 둘 중 작은 쪽이 병목' },
+        { sym: 'x', name: '레이저 디튜닝', does: '|x|를 0.8–1 근처로 키우면 응답 피크로 대역이 넓어지고, 더 키우면 OMA가 줄어듭니다.', see: 'EO 응답 그래프의 −3 dB 지점' },
+        { sym: 'V<sub>pp</sub>', name: '구동 진폭', does: '키우면 OMA가 커집니다. 다만 레이저가 골에서 멀수록(|x|↑) 진폭을 키울 때 비탈의 휘어짐으로 레벨이 압축돼 눈 페널티가 빠르게 커집니다.', see: '눈 그림, 눈 페널티 타일' },
+        { sym: 'V<sub>b</sub>', name: 'DC 역바이어스', does: '키우면 C<sub>j</sub>↓ → f<sub>RC</sub>↑.' },
+        { sym: 'ΔN', name: '접합 도핑', does: '볼트당 이동↑, 대신 C<sub>j</sub>↑(RC 느려짐)·손실↑.' }],
+      how: ['f<sub>Q</sub> · f<sub>RC</sub> 타일에서 작은 쪽이 병목입니다. f<sub>Q</sub>가 작으면 g를 줄이고, f<sub>RC</sub>가 작으면 V<sub>b</sub>를 키웁니다.', 'EO 대역이 목표를 넘으면 눈 페널티와 OMA를 맞춥니다. 페널티가 크면 먼저 g를 줄여 Q를 낮춰 보고, |x|가 클 때는 V<sub>pp</sub>를 줄입니다. OMA가 모자라면 V<sub>pp</sub>를 키우거나 |x|를 조금 줄입니다.', '코치가 두 손잡이를 함께 움직이라고 하면, 말한 방향으로 둘을 한 칸씩 같이 움직이세요. 이 단계의 손잡이들은 서로 묶여 있습니다.'],
       doneText: '고속에서는 Q·디튜닝·RC가 함께 대역을 정한다는 것을 확인했습니다. 마지막 학습 단계는 링의 가장 큰 약점인 온도입니다.',
       params: () => [pk('g'), pk('det'), pk('vpp'), pk('vb'), pk('dop')],
       evaluate: (l2, d) => analyse(l2, d, null, { noAlign: true, R: d.R }),
@@ -459,6 +557,7 @@ KINDS.mrr = (() => {
         { k: `EO 대역폭 ≥ ${fmtT(l2.s1.bw)} GHz`, v: `${f2(r.bw, 1)} GHz`, ok: r.bw >= l2.s1.bw },
         { k: `PAM4 눈 페널티 ≤ ${fmtT(l2.s2.pen)} dB (5-tap FFE)`, v: `${f2(r.pen, 2)} dB`, ok: r.pen <= l2.s2.pen },
         { k: `OMA<sub>outer</sub> (정착 레벨, TDECQ 방식) ≥ ${dbm(l2.s2.oma)} dBm`, v: `${f2(r.omaDbm, 2)} dBm`, ok: r.oma >= l2.s2.oma },
+        { k: '참고: FFE 후 가장 좁은 눈 열림 ÷ FFE 잡음 증폭 (이상적 = 100 %)', v: r.eye ? `${Math.round(Math.max(r.eye.ratio * r.eye.ne, 0) * 100)} % ÷ ${f2(r.eye.ne, 2)} = ${Math.round(Math.max(r.eye.ratio, 0) * 100)} %` : '—', ok: true, na: true },
         { k: '참고: 동적 OMA (파형 극값, 오버슈트 포함)', v: `${f2(r.omaDynDbm, 2)} dBm`, ok: true, na: true }],
       done: (l2, r) => r.bw >= l2.s1.bw && r.pen <= l2.s2.pen && r.oma >= l2.s2.oma,
       coach(l2, r, c) {
@@ -467,8 +566,10 @@ KINDS.mrr = (() => {
         const KK = { params: () => s4.params(), evaluate: (ll, dd) => analyse(ll, dd, null, { noAlign: true, R: dd.R }) };
         let b = lineBestOf(KK, l2, d, ['g', 'det', 'vpp', 'dop', 'vb'], q, 10);
         if (!b) {   // coupled knobs: try pairs, then a deterministic random search — only verified improvements are shown
-          const b2 = localBest(KK, l2, d, ['g', 'det', 'vpp', 'vb', 'dop'], q) || [['g', 'vpp'], ['g', 'det'], ['det', 'vpp']].map((ks) => pairBest(KK, l2, d, ks, q, 8)).filter(Boolean).sort((x, y) => x.q - y.q)[0];
-          if (b2) return { h: '손잡이 하나로는 더 나아지지 않습니다', b: 'Q(간격)를 낮추면 대역은 늘지만 기울기가 줄고, 디튜닝·진폭은 OMA와 레벨 압축을 함께 바꿉니다. 여러 손잡이를 함께 움직이세요.' + recText2(b2, t) };
+          const b2 = localBest(KK, l2, d, ['g', 'det', 'vpp', 'vb', 'dop'], q) || polish(KK, l2, d, ['g', 'det', 'vpp', 'vb', 'dop'], q) || [['g', 'vpp'], ['g', 'det'], ['det', 'vpp']].map((ks) => pairBest(KK, l2, d, ks, q, 8)).filter(Boolean).sort((x, y) => x.q - y.q)[0];
+          if (b2) return { h: '손잡이 하나로는 더 나아지지 않습니다', b: 'Q(간격)를 낮추면 대역은 늘지만 기울기가 줄고, 디튜닝·진폭은 OMA와 레벨 압축을 함께 바꿉니다. 여러 손잡이를 함께 움직이세요.' + recText2(b2, t, d) };
+          const wi = rs(r).indexOf(Math.max(...rs(r))), b3 = twoStage(KK, l2, d, ['g', 'det', 'vpp', 'vb', 'dop'], q, (x) => rs(x)[wi]);
+          if (b3) return { h: '조금씩 옮겨서는 더 나아지지 않는 지점입니다', b: `가장 모자란 ${['EO 대역', '눈 페널티', 'OMA'][wi]}부터 크게 고친 뒤 다른 손잡이로 나머지를 맞추는 길이 있습니다(계산으로 확인).` + recText2(b3, t, d) };
         }
         if (r.bw < l2.s1.bw) return { h: r.fQ < r.fRC ? '광자 수명이 대역을 막습니다 (Q가 높음)' : 'RC가 대역을 막습니다', b: (r.fQ < r.fRC ? `Q<sub>L</sub> ${Math.round(r.QL)} → 공진 중심 한계 ${Math.round(r.fQ)} GHz. 간격을 줄여 Over-coupling 쪽으로 가면 Q<sub>L</sub>이 낮아져 빛이 빨리 빠져나갑니다(대신 ER·기울기↓). 디튜닝을 키우면 응답 피크로 대역이 조금 넓어집니다.` : `C<sub>j</sub> ${f2(r.Cj, 1)} fF · (R<sub>j</sub> + 50 Ω) → f<sub>RC</sub> ${Math.round(r.fRC)} GHz. 바이어스를 키우면 공핍이 넓어져 C가 줄어듭니다.`) + recText(b, t, d) };
         return { h: r.pen > l2.s2.pen ? '눈이 덜 열렸습니다' : 'OMA가 부족합니다', b: 'PAM4 레벨은 Lorentzian 사면에서 고르지 않게 압축되고(비선형), 광자 수명·RC는 심볼 간 간섭을 만듭니다. 진폭을 키우면 OMA는 늘지만 레벨 압축이 커집니다.' + recText(b, t, d) };
@@ -488,16 +589,29 @@ KINDS.mrr = (() => {
       const base = analyse(l2, d, null, {}), c = base.c, T = d.sT, lamR = c.unheated(T) + d.sP / c.H.P2pi * c.B.fsr;
       const r = analyse(l2, d, null, { R: c.lay.R, lamR0: lamR, sL: d.sL });
       const detEff = 2 * (c.lam + d.sL * 1e-6 - lamR) / base.fwhm;
-      const ok = r.oma >= 0.8 * base.oma && r.pen <= l2.s2.pen && Math.abs(detEff - d.det) < 0.4;
+      // "recovered" = back to this design's own nominal operation: aligned within the window, OMA ≥ 80 % and eye penalty within
+      // 0.1 dB of nominal — and the nominal eye itself open (step 4 within 0.1 dB). Residual detuning inside the window always costs
+      // a few hundredths of a dB, so an absolute spec here would fail every design that passes step 4 with less margin than that.
+      const eyeOK = base.pen <= l2.s2.pen + 0.1, ok = eyeOK && r.oma >= 0.8 * base.oma && r.pen <= Math.max(l2.s2.pen, base.pen) + 0.1 && Math.abs(detEff - d.det) < 0.4;
       const need = c.need(T) + (d.sL || 0) * 1e-6, Pneed = ((need % c.B.fsr) + c.B.fsr) % c.B.fsr / c.B.fsr * c.H.P2pi;
-      return { ...r, base, T, detEff, ok, Pneed, lamR };
+      return { ...r, base, T, detEff, ok, eyeOK, Pneed, lamR };
     };
     const binOf = (T) => (T <= tr[0] + 5 ? 'cold' : T >= tr[1] - 5 ? 'hot' : Math.abs(T - (tr[0] + tr[1]) / 2) <= 5 ? 'mid' : null);
     const BIN = { cold: `저온 ${tr[0]}–${tr[0] + 5} °C`, mid: `중간 ${(tr[0] + tr[1]) / 2 - 5}–${(tr[0] + tr[1]) / 2 + 5} °C`, hot: `고온 ${tr[1] - 5}–${tr[1]} °C` };
     const s5 = {
       id: 'thermal', short: '온도 · 히터', title: '열 안정성 — 온도 드리프트, 히터, 레이저 파장', aspect: 0.56, local: ['sT', 'sP', 'sL'],
       task: `온도를 저온 · 중간 · 고온으로 옮기며 히터 전력(필요하면 레이저 파장)으로 동작점을 되찾으세요 — 히터 예산 ${fmtT(l.s2.ph)} mW 이하.`,
-      intro: `실리콘 링의 공진은 온도에 따라 ∂λ/∂T ≈ ${(lam * cross(l.pf).dndT / cross(l.pf).ng * 1e6).toFixed(0)} pm/K 움직입니다 — 선폭(수십~수백 pm)보다 훨씬 큽니다. 레이저(외부 광원, 파장 고정)는 그대로이므로 몇 도만 바뀌어도 변조가 멈춥니다. 히터는 공진을 장파장 쪽으로만 옮길 수 있고, 한 FSR이면 어떤 공진 차수든 맞출 수 있습니다(P<sub>2π</sub>). 온도를 저온·중간·고온으로 옮기며 히터 전력(필요하면 레이저 파장 미세 조정)으로 동작점을 되찾고, 각 온도에서 쓴 히터 전력이 예산 ${fmtT(l.s2.ph)} mW 이하인지 확인하세요.`,
+      aim: (l2) => `저온 · 중간 · 고온 각각에서, 히터 ${fmtT(l2.s2.ph)} mW 이하로 이 설계의 공칭 동작(정렬 + 4단계의 눈)을 되찾을 수 있는지 봅니다. 히터 예산은 기준 설계가 0–70 °C 전체를 덮는 데 드는 전력에 30 % 여유를 둔 값입니다.`,
+      verdict: (l2, r, mem) => { const rec = (mem && mem.rec) || {}; return { got: `저온 ${rec.cold != null ? rec.cold + ' mW' : '—'} · 중간 ${rec.mid != null ? rec.mid + ' mW' : '—'} · 고온 ${rec.hot != null ? rec.hot + ' mW' : '—'}로 동작점을 되찾았습니다(1 °C당 공진 이동 ${f2(r.dldTpm, 0)} pm).`,
+        enough: `세 온도 모두 예산 ${fmtT(l2.s2.ph)} mW 안이므로, 이 칩은 0–70 °C 어디서든 히터로 공진을 레이저 옆에 붙잡아 둘 수 있습니다.`,
+        next: '여기까지는 “모든 칩이 똑같이 만들어졌다”는 가정입니다. 실제로는 폭·두께·도핑 오차로 다이마다 공진이 수 nm씩 다른 곳에 생기고, 흡수된 빛이 링을 데우는 자기 가열도 있습니다. 모든 손잡이를 함께 맞추고 공정 오차를 겹친 수율을 봅니다. → Full · Fab' }; },
+      intro: `<b>이 단계:</b> 링의 가장 큰 약점, 온도입니다. 실리콘 링의 공진은 1 °C에 약 ${(lam * cross(l.pf).dndT / cross(l.pf).ng * 1e6).toFixed(0)} pm 움직이는데, 골의 폭은 수십~수백 pm뿐입니다. 레이저(외부 광원) 파장은 그대로이므로 몇 도만 바뀌어도 레이저가 골에서 벗어나 변조가 멈춥니다.<br>그래서 링 위의 히터로 공진을 레이저 옆으로 다시 끌어옵니다. 히터는 공진을 <b>장파장(빨강) 쪽으로만</b> 옮길 수 있으므로, 가장 뜨거울 때(히터가 필요 없을 때)에도 공진이 레이저보다 Δλ<sub>b</sub>만큼 파랑 쪽에 있게 두고, 온도가 내려가면 히터를 올립니다. 모자라면 한 FSR 옆의 다음 공진을 씁니다(P<sub>2π</sub>면 어떤 차수든). 저온·중간·고온에서 동작점을 되찾고, 쓴 히터 전력이 예산 ${fmtT(l.s2.ph)} mW 이하인지 확인하세요.`,
+      map: ringMap(4, '이 단계: ⑤ 온도가 바뀌면 골 전체가 움직입니다 — 히터로 레이저 옆에 되돌려 놓습니다.'),
+      knobs: [{ sym: 'T', name: '칩 온도', does: '내리면 공진이 파랑 쪽으로 이동합니다(∂λ/∂T > 0).', see: '그림의 파장 눈금: ‘공진’ 막대와 ‘레이저’ 막대 사이' },
+        { sym: 'P<sub>h</sub>', name: '히터 전력', does: '올리면 공진이 빨강 쪽으로 이동합니다(P<sub>2π</sub>에서 한 FSR).', see: '‘필요 히터 @T’ 타일, 동작점 ‘복구됨/어긋남’' },
+        { sym: 'Δλ<sub>L</sub>', name: '레이저 파장 미세 조정', does: '히터 예산이 모자랄 때 레이저를 파랑 쪽으로 옮기면, 공진을 덜 끌어와도 됩니다.' },
+        { sym: 'Δλ<sub>b</sub>', name: '공진 배치 여유', does: '최고 온도에서 공진을 레이저보다 얼마나 파랑 쪽에 둘지. 키우면 공정 오차를 견디기 쉽지만 낮은 온도에서 히터를 더 씁니다.' }],
+      how: ['온도 T를 저온 끝으로 옮깁니다 — 공진이 레이저에서 벗어납니다.', '히터 P<sub>h</sub>를 ‘필요 히터 @T’ 타일 값까지 올립니다. 정렬 창이 몇 pm뿐이라 가까이 가면 −/+ 버튼(또는 방향키)으로 한 칸씩 맞춰 동작점이 ‘복구됨’이 되게 합니다. ‘복구’는 이 설계의 공칭 성능으로 돌아왔다는 뜻이라, 공칭에서 4단계의 눈이 열려 있어야 합니다.', '중간·고온에서 반복합니다. 히터가 예산을 넘으면 레이저 파장 Δλ<sub>L</sub>을 음수(파랑 쪽)로 조금 옮기세요.'],
       doneText: '링의 작은 크기와 낮은 구동 에너지 뒤에는 온도 제어 비용이 있다는 것을 확인했습니다. 이제 모든 변수를 열고 공정 오차까지 겹친 Fab Run으로 갑니다.',
       init: (l2, d) => ({ sT: Math.round((tr[0] + tr[1]) / 2), sP: 0, sL: 0 }),
       params: () => [pT, pH, pL, pk('bm')],
@@ -508,12 +622,14 @@ KINDS.mrr = (() => {
       done: (l2, r, mem) => ['cold', 'mid', 'hot'].every((b) => (mem.rec || {})[b] != null),
       coach(l2, r, c) {
         if (r.ok) { const miss = ['cold', 'mid', 'hot'].filter((b) => (((c.mem && c.mem.rec) || {})[b]) == null), Tn = { cold: tr[0] + 2, mid: Math.round((tr[0] + tr[1]) / 2), hot: tr[1] - 2 };
-          return miss.length ? { h: '이 온도에서는 복구됐습니다', b: `남은 온도 구간: ${miss.map((b) => BIN[b]).join(', ')}. 온도를 옮기면 공진이 다시 벗어납니다 — 거기서 히터로 되찾으세요.` + (c.tier >= 2 ? ` 권장: T = ${Tn[miss[0]]} °C (기준: ${BIN[miss[0]]}).` : '') } : null; }
-        const dP = r.Pneed - r.d.sP;
-        return { h: r.Pneed > l2.s2.ph ? '히터 예산을 넘습니다 — 레이저 파장이나 배치 여유를 바꾸세요' : '공진이 레이저에서 벗어나 있습니다', b: `지금 T = ${r.T} °C에서 공진이 레이저 기준 ${f2((r.detEff - r.d.det) * r.base.fwhm / 2 * 1e6, 0)} pm 어긋나 있습니다. 히터는 빨강 쪽으로만 옮길 수 있고, 모자라면 한 FSR(${NMf(r.fsr, 1)} nm) 옆의 다음 공진을 씁니다.` + (c.tier >= 2 ? (r.Pneed > l2.s2.ph ? ` 필요 ${f2(r.Pneed, 2)} mW는 예산 초과 — 레이저를 파랑 쪽으로 옮기거나 Δλ<sub>b</sub>를 줄이세요. 권장: Δλ<sub>L</sub> = ${Math.round(r.d.sL - (r.Pneed - l2.s2.ph * 0.9) * r.eff * 1e3 / 5) * 5} pm (기준: 히터 예산 안).` : ` 권장: P<sub>h</sub> = ${f2(r.Pneed, 2)} mW (기준: 필요 이동 ÷ FSR × P<sub>2π</sub>).`) : ` 히터를 ${dP > 0 ? '올리세요' : '내리세요'}.`) };
+          return miss.length ? { h: '이 온도에서는 복구됐습니다', b: `남은 온도 구간: ${miss.map((b) => BIN[b]).join(', ')}. 온도를 옮기면 공진이 다시 벗어납니다 — 거기서 히터로 되찾으세요.` + (c.tier >= 2 ? ` 권장: T = ${Tn[miss[0]]} °C (기준: ${BIN[miss[0]]}).` : ` 추천: ${dirWord(pT, Tn[miss[0]], r.T)}세요.`) } : null; }
+        // aligned, yet not "recovered": the operating point needs the step-4 eye too — send the player there instead of the heater
+        if (!r.eyeOK) return { h: '이 설계는 공칭에서도 고속 눈이 열리지 않습니다', b: `온도와 상관없이 112 GBd 눈 페널티가 ${f2(r.base.pen, 2)} dB로 4단계 목표(${fmtT(l2.s2.pen)} dB)를 넘습니다 — 히터로 되돌려도 ‘복구’로 칠 수 없습니다. 위 단계 번호 4를 눌러 고속 PAM4부터 맞추세요.` };
+        if (Math.abs(r.detEff - r.d.det) < 0.4 && r.Pneed <= l2.s2.ph) return { h: '정렬 창 안이지만 성능이 덜 돌아왔습니다', b: `공칭 대비 눈 페널티 ${f2(r.pen - r.base.pen, 2)} dB${r.oma < 0.8 * r.base.oma ? ', OMA도 공칭의 80 % 미만' : ''}. 히터를 ‘필요 히터 @T’ 타일 값에 더 가깝게 −/+ 버튼으로 한 칸씩 맞추세요.` + (c.tier >= 2 ? ` 권장: P<sub>h</sub> = ${f2(r.Pneed, 2)} mW.` : ` 추천: ${dirWord(pH, r.Pneed, r.d.sP)}세요.`) };
+        return { h: r.Pneed > l2.s2.ph ? '히터 예산을 넘습니다 — 레이저 파장이나 배치 여유를 바꾸세요' : '공진이 레이저에서 벗어나 있습니다', b: `지금 T = ${r.T} °C에서 공진이 레이저 기준 ${f2((r.detEff - r.d.det) * r.base.fwhm / 2 * 1e6, 0)} pm 어긋나 있습니다. 히터는 빨강 쪽으로만 옮길 수 있고, 모자라면 한 FSR(${NMf(r.fsr, 1)} nm) 옆의 다음 공진을 씁니다.` + (c.tier >= 2 ? (r.Pneed > l2.s2.ph ? ` 필요 ${f2(r.Pneed, 2)} mW는 예산 초과 — 레이저를 파랑 쪽으로 옮기거나 Δλ<sub>b</sub>를 줄이세요. 권장: Δλ<sub>L</sub> = ${Math.round(r.d.sL - (r.Pneed - l2.s2.ph * 0.9) * r.eff * 1e3 / 5) * 5} pm (기준: 히터 예산 안).` : ` 권장: P<sub>h</sub> = ${f2(r.Pneed, 2)} mW (기준: 필요 이동 ÷ FSR × P<sub>2π</sub>).`) : r.Pneed > l2.s2.ph ? ` 추천: ${dirWord(pL, r.d.sL - 100, r.d.sL)}세요(레이저를 파랑 쪽으로).` : ` 추천: ${dirWord(pH, r.Pneed, r.d.sP)}세요 — ‘필요 히터 @T’ 타일 값까지. 정렬 창은 몇 pm뿐이라 가까이 가면 −/+ 버튼으로 한 칸씩 맞춥니다.`) };
       },
       meta: (l2, r) => `∂λ/∂T ${f2(r.dldTpm, 1)} pm/K · ${r.c.hd.src} (h ${r.c.hd.h} µm, ${['격리 없음', '트렌치', '언더컷'][r.c.hd.iso]}) → P<sub>2π</sub> ${f2(r.P2pi, 1)} mW, ${f2(r.eff, 3)} nm/mW · 자기 가열 ${f2(r.selfK, 1)} K (흡수 ${f2(r.c.Pabs * 1e3, 1)} mW) · ELS 파장 고정 가정`,
-      tiles: (l2, r) => [['∂λ/∂T', `${f2(r.dldTpm, 1)}<small>pm/K</small>`], ['튜닝 효율', `${f2(r.eff, 3)}<small>nm/mW</small>`], ['필요 히터 @T', `${f2(r.Pneed, 1)}<small>mW</small>`], ['선폭 · 드리프트 범위', `${f2(r.base.fwhm * 1e6, 0)}<small>pm</small> · ${f2(r.dldTpm * (tr[1] - tr[0]) / 1e3, 2)}<small>nm</small>`]],
+      tiles: (l2, r) => [['∂λ/∂T', `${f2(r.dldTpm, 1)}<small>pm/K</small>`], ['튜닝 효율', `${f2(r.eff, 3)}<small>nm/mW</small>`], ['필요 히터 @T', `${f2(r.Pneed, 2)}<small>mW</small>`], ['선폭 · 드리프트 범위', `${f2(r.base.fwhm * 1e6, 0)}<small>pm</small> · ${f2(r.dldTpm * (tr[1] - tr[0]) / 1e3, 2)}<small>nm</small>`]],
       hint: (l2, r) => `∂λ/∂T = λ(∂n<sub>eff</sub>/∂T)/n<sub>g</sub> · 히터: Δλ = (P/P<sub>2π</sub>)·FSR, P<sub>2π</sub> = λG′/(∂n<sub>eff</sub>/∂T) (반경과 무관) → 작은 링(FSR↑)일수록 nm/mW↑<br>최고 온도에서 히터 0이 되도록 공진을 Δλ<sub>b</sub>만큼 파랑 쪽에 두고, 온도가 내려가면 히터로 올립니다`,
       draw(cv, l2, r) {
         const ctx = bg(cv), W = cv.width, H = cv.height, pad = 12 * DPR, rad = Math.min(H * 0.27, W * 0.14), cxp = W * 0.24, cyp = H * 0.42;
@@ -543,14 +659,23 @@ KINDS.mrr = (() => {
         return { html, legend: legendHTML([['var(--cyan)', `정적 OMA, 히터 ${f2(r.d.sP, 1)} mW 고정`], ['var(--pass)', '매 온도 히터 락 (설계 OMA)'], ['var(--amber)', `필요 히터 전력 (0–${f2(hmax, 0)} mW 축 환산)`]]) };
       }
     };
-    const s6 = { id: 'full', full: true, short: 'Full · Fab', title: 'Full MRR 설계 · Fab Run', intro: '모든 변수를 열고 반경·결합·바이어스·진폭·디튜닝·배치 여유를 함께 맞춥니다. ★는 정적 특성(IL·ER·EO 대역), ★★는 112 GBd PAM4 눈·동적 OMA·온도 범위 전체의 히터 전력·열적 안정, ★★★는 공정 오차(폭·두께·도핑)와 온도를 겹친 Fab Run 수율입니다.', fullDone: (l2, r, c) => !!c.fab && c.ob[0].pass };
+    const s6 = { id: 'full', full: true, short: 'Full · Fab', title: 'Full MRR 설계 · Fab Run',
+      intro: `<b>이제 모든 손잡이가 열립니다.</b> 앞 단계에서 맞춘 값이 그대로 들어 있습니다. 별은 차례로 — ★ 정적 특성(IL · ER · EO 대역), ★★ 112 GBd 눈 · OMA · ${tr[0]}–${tr[1]} °C 전체의 히터 전력 · 열적 안정, ★★★ 공정 오차(폭·두께·도핑·간격)와 온도를 겹친 Fab Run 수율.<br>새로 보는 것은 두 가지입니다. <b>자기 가열</b> — 링이 흡수한 빛이 링을 데웁니다. 레이저가 빨강 쪽(x > 0)에 있으면 데워진 공진이 레이저 쪽으로 끌려와 더 흡수하는 되먹임이 생겨 열 폭주로 갈 수 있고(‘열적 안정’ 줄의 루프 이득 ≥ 1), 파랑 쪽(x < 0)이면 되먹임이 반대라 안정합니다. <b>공정 오차</b> — 다이마다 공진이 수 nm씩 다른 곳에 생기므로, 히터(빨강 쪽만)가 어느 다이든 닿을 수 있게 배치 여유 Δλ<sub>b</sub>와 FSR을 정해야 합니다.`,
+      map: ringMap(5, '이 단계: ⑥ 여섯 질문을 한 설계로 — 그리고 다이마다 다른 공정 오차까지.'),
+      knobs: [{ sym: 'R', name: '링 반경', does: '줄이면 FSR이 넓어져 같은 히터로 더 넓게 옮깁니다 → ★★ 히터 전력, ★★★ 수율에 유리. 너무 작으면 굽힘 손실.' },
+        { sym: 'g', name: '버스–링 간격', does: '골 폭 ↔ 속도. 좁히면 Q<sub>L</sub>↓ → EO 대역↑(★), 대신 ER·기울기↓.' },
+        { sym: 'ΔN · V<sub>b</sub> · V<sub>pp</sub>', name: '접합 · 전압', does: '골이 움직이는 거리와 속도(RC) — ★ ER, ★★ OMA · 눈 페널티.' },
+        { sym: 'x', name: '레이저 디튜닝', does: '손실 · 기울기 · 대역을 정하고, 부호가 자기 가열의 되먹임 방향을 정합니다(x < 0이면 안정, x > 0이면 열 폭주 위험).' },
+        { sym: 'Δλ<sub>b</sub>', name: '공진 배치 여유', does: '공정 오차를 흡수할 여유 ↔ 낮은 온도의 히터 전력 — ★★ 히터, ★★★ 수율.' }],
+      how: ['★: 막힌 항목부터 — EO 대역이 모자라면 g를 줄이거나(Q↓) V<sub>b</sub>를 키우고(C↓), IL이 크면 |x|를 키우고, ER이 모자라면 V<sub>pp</sub>를 키웁니다.', '★★: 먼저 x가 음수인지 봅니다(열 폭주 방지). 최악 히터 전력이 크면 R을 줄여 FSR을 넓히거나 Δλ<sub>b</sub>를 줄입니다. 눈 페널티·OMA는 4단계 요령대로 — g로 Q를 낮추고, V<sub>pp</sub>와 |x|로 OMA와 페널티의 균형을 잡습니다.', '★★★: Tape-out 뒤 수율이 낮으면, 다이마다 흩어진 공진을 히터(빨강 쪽만)로 모두 잡을 수 있도록 Δλ<sub>b</sub>로 분포의 가운데를 맞추고, FSR을 넓혀(R↓) 어느 다이든 한 FSR 안에서 닿게 합니다.', '막히면 코치를 따라가세요. 코치가 제안하는 이동은 엔진으로 계산해 실제로 좋아지는 것만 나옵니다.'],
+      fullDone: (l2, r, c) => !!c.fab && c.ob[0].pass };
     return [s1, s2, s3, s4, s5, s6];
   }
   // full-design / step-3/4 view: eye (or static levels) + ring top view + numbers
   function drawFull(cv, l, r, withEye) {
     const ctx = bg(cv), W = cv.width, H = cv.height, pad = 12 * DPR, narrow = W / DPR < 520;
     const ex = pad, ey = pad + 22 * DPR, ew = (narrow ? W : W * 0.58) - 2 * pad, eh = H - ey - pad;
-    if (withEye && r.eye) eyeDraw(ctx, r.eye, ex, ey, ew, eh, `112 GBd PAM4 · 눈 ${Math.round(Math.max(r.eye.ratio, 0) * 100)}% · 페널티 ${r.pen.toFixed(1)} dB${narrow ? ` · EO ${Math.round(r.bw)} GHz` : ''}`, r.pen <= l.s2.pen);
+    if (withEye && r.eye) eyeDraw(ctx, r.eye, ex, ey, ew, eh, `112 GBd · FFE 후 눈 ${Math.round(Math.max(r.eye.ratio * r.eye.ne, 0) * 100)}% ÷ ×${f2(r.eye.ne, 2)} = ${Math.round(Math.max(r.eye.ratio, 0) * 100)}% → 페널티 ${r.pen.toFixed(1)} dB (기준 ${fmtT(l.s2.pen)})`, r.pen <= l.s2.pen);
     else {   // static transfer: T vs drive voltage at the laser
       const vs = [], c = r.c; for (let i = 0; i <= 60; i++) { const v = c.d.vb - 0.2 * c.d.vpp + 1.4 * c.d.vpp * i / 60, q = rates(c, 0, Math.max(0, v)), z = cx.div([0, q.mu], [-(q.gi + q.ge), q.Delta]), so = [1 + q.mu * z[1], -q.mu * z[0]]; vs.push([v, so[0] * so[0] + so[1] * so[1]]); }
       const X = (v) => ex + (v - vs[0][0]) / (vs[vs.length - 1][0] - vs[0][0]) * ew, Y = (t) => ey + (1 - t) * eh;
@@ -592,9 +717,11 @@ KINDS.mrr = (() => {
     coach(l, r, c) {
       const t = c.tier, d = r.d, rs1 = (x) => [x.IL / l.s1.il, l.s1.er / Math.max(x.er, 1e-3), l.s1.bw / Math.max(x.bw, 1e-3)], rs2 = (x) => [x.pen / l.s2.pen, l.s2.oma / Math.max(x.oma, 1e-6), x.PhW / l.s2.ph, x.gth >= 1 ? 2 : 0];
       const q1 = (x) => smooth(rs1(x)), q2s = (x) => keepStar(r1(l, x), smooth(rs2(x)));
+      // ★★ moves keep ★ at the recommended value; when going ~60 % further would break a ★ item, say which (computed, not guessed)
+      const over = (bb) => { if (!bb) return ''; const ps = bb.p ? [bb.p] : bb.ps || [], vs = bb.p ? [bb.v] : bb.v || [], nd = { ...d }; ps.forEach((p, i) => { nd[p.k] = snapP(p, vs[i] + 0.6 * (vs[i] - d[p.k])); }); if (ps.every((p, i) => nd[p.k] === vs[i])) return ''; const x = K.evaluate(l, nd), o = K.objectives(l, x).t1.filter((it) => !it.ok); return o.length ? ` 너무 많이 옮기면 ★의 ${o.map((it) => it.k.replace(/<[^>]+>/g, '').split(/ [≤≥]/)[0]).join(' · ')}이(가) 다시 깨집니다 — 조금씩 옮기며 ★ 목표를 지켜보세요.` : ''; };
       if (!c.ob1) {
         const b = lineBestOf(K, l, d, ['g', 'det', 'vpp', 'dop', 'vb', 'R'], q1, 10);
-        if (!b) { const b2 = localBest(K, l, d, ['g', 'det', 'vpp', 'vb', 'dop', 'R'], q1) || [['g', 'vpp'], ['g', 'det'], ['det', 'vpp']].map((ks) => pairBest(K, l, d, ks, q1, 8)).filter(Boolean).sort((x, y) => x.q - y.q)[0]; if (b2) return { h: '★: 손잡이 하나로는 더 나아지지 않습니다', b: '대역·ER·IL이 서로 묶여 있습니다 — 여러 손잡이를 함께 움직이세요.' + recText2(b2, t) }; }
+        if (!b) { const b2 = localBest(K, l, d, ['g', 'det', 'vpp', 'vb', 'dop', 'R'], q1) || polish(K, l, d, ['g', 'det', 'vpp', 'vb', 'dop'], q1) || [['g', 'vpp'], ['g', 'det'], ['det', 'vpp']].map((ks) => pairBest(K, l, d, ks, q1, 8)).filter(Boolean).sort((x, y) => x.q - y.q)[0]; if (b2) return { h: '★: 손잡이 하나로는 더 나아지지 않습니다', b: '대역·ER·IL이 서로 묶여 있습니다 — 여러 손잡이를 함께 움직이세요.' + recText2(b2, t, d) }; }
         if (r.bw < l.s1.bw) return { h: r.fQ < r.fRC ? 'EO 대역이 부족합니다 — 광자 수명' : 'EO 대역이 부족합니다 — RC', b: (r.fQ < r.fRC ? `Q<sub>L</sub> ${Math.round(r.QL)}: 빛이 링에 오래 머뭅니다. 간격을 줄여 Over-coupling으로 Q<sub>L</sub>을 낮추거나 디튜닝을 키우세요.` : `f<sub>RC</sub> ${Math.round(r.fRC)} GHz: 바이어스를 키워 C<sub>j</sub>를 줄이거나 반경을 줄이세요(C ∝ 둘레).`) + recText(b, t, d) };
         if (r.IL > l.s1.il) return { h: '삽입 손실이 큽니다', b: '레이저가 공진 골에 가깝거나 링 손실이 큽니다. 디튜닝을 키우거나 Over-coupling 쪽으로 가세요.' + recText(b, t, d) };
         if (r.er < l.s1.er) return { h: 'ER이 부족합니다', b: `공진 이동 ${f2(r.shiftPmV * d.vpp, 0)} pm vs 선폭 ${f2(r.fwhm * 1e6, 0)} pm. 진폭을 키우거나 디튜닝을 사면의 가파른 곳으로 옮기세요.` + recText(b, t, d) };
@@ -604,9 +731,9 @@ KINDS.mrr = (() => {
         if (r.gth >= 1) return { h: '★★: 자기 가열로 열 폭주합니다', b: `레이저가 공진의 장파장 쪽(x > 0)에 있으면 흡수된 빛이 링을 데워 공진을 레이저 쪽으로 끌어오고, 그러면 더 많이 흡수합니다 (루프 이득 ${f2(r.gth, 2)}). 레이저를 단파장 쪽(x < 0)에 두면 음의 되먹임으로 안정합니다.` };
         if (r.PhW > l.s2.ph) { const b = lineBestOf(K, l, d, ['bm', 'R'], q2s, 30); return { h: '★★: 온도 범위 전체를 덮는 히터 전력이 큽니다', b: `필요 이동 = 드리프트 ${f2(r.dldTpm * (TRng(l)[1] - TRng(l)[0]) / 1e3, 2)} nm + 배치 여유 ${f2(d.bm, 2)} nm, 전력 = 이동/FSR × P<sub>2π</sub>(${f2(r.P2pi, 1)} mW). 반경을 줄이면 FSR이 넓어져 같은 이동이 적은 전력이 됩니다.` + recText(b, t, d) }; }
         const b = lineBestOf(K, l, d, ['det', 'vpp', 'g', 'dop', 'vb', 'R'], q2s, 10);
-        if (b) return { h: r.pen > l.s2.pen ? '★★: 눈이 덜 열렸습니다' : '★★: OMA가 부족합니다', b: (r.pen > l.s2.pen ? 'Lorentzian 사면의 비선형이 PAM4 레벨을 압축하고, 광자 수명·RC가 심볼 간 간섭을 만듭니다.' : '정적 OMA가 커도 고속에서는 광자 수명·RC 때문에 바깥 레벨까지 못 갑니다.') + recText(b, t, d) };
-        const b2 = localBest(K, l, d, ['g', 'det', 'vpp', 'vb', 'dop', 'R', 'bm'], q2s) || [['g', 'vpp'], ['g', 'det'], ['det', 'vpp']].map((ks) => pairBest(K, l, d, ks, q2s, 8)).filter(Boolean).sort((x, y) => x.q - y.q)[0];
-        if (b2) return { h: '★★: 손잡이 하나로는 더 나아지지 않습니다', b: 'Q를 낮추면 대역은 늘지만 기울기가 줄고, 디튜닝을 옮기면 OMA와 레벨 간격이 함께 바뀝니다. 두 손잡이를 함께 움직이세요.' + recText2(b2, t) };
+        if (b) return { h: r.pen > l.s2.pen ? '★★: 눈이 덜 열렸습니다' : '★★: OMA가 부족합니다', b: (r.pen > l.s2.pen ? 'Lorentzian 사면의 비선형이 PAM4 레벨을 압축하고, 광자 수명·RC가 심볼 간 간섭을 만듭니다.' : '정적 OMA가 커도 고속에서는 광자 수명·RC 때문에 바깥 레벨까지 못 갑니다.') + recText(b, t, d) + over(b) };
+        const b2 = localBest(K, l, d, ['g', 'det', 'vpp', 'vb', 'dop', 'R', 'bm'], q2s) || polish(K, l, d, ['g', 'det', 'vpp', 'vb', 'dop', 'bm'], q2s) || [['g', 'vpp'], ['g', 'det'], ['det', 'vpp']].map((ks) => pairBest(K, l, d, ks, q2s, 8)).filter(Boolean).sort((x, y) => x.q - y.q)[0];
+        if (b2) return { h: '★★: 손잡이 하나로는 더 나아지지 않습니다', b: 'Q를 낮추면 대역은 늘지만 기울기가 줄고, 디튜닝을 옮기면 OMA와 레벨 간격이 함께 바뀝니다. 두 손잡이를 함께 움직이세요.' + recText2(b2, t, d) + over(b2) };
       }
       if (c.ob2 && c.fab && c.fab.yield < l.fab.y) return { h: '공정 오차에 공진 위치가 흔들립니다', b: `다이마다 폭·두께 오차로 공진이 수 nm씩 움직입니다(∂λ/∂t ≈ ${f2(r.c.x.dndt * r.c.lam / r.c.x.ng, 2)} nm/nm). 히터가 빨강 쪽으로만 옮길 수 있으므로 배치 여유 Δλ<sub>b</sub>로 분포의 가운데를 맞추고, FSR을 넓혀(반경↓) 한 FSR 안의 히터 전력을 줄이세요.` };
       return null;

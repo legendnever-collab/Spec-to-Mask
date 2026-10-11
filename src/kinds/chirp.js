@@ -91,7 +91,7 @@ KINDS.chirp = (() => {
     coach(l, r, c) {
       const t = c.tier, d = r.d, q1 = (x) => r1(l, x), q2s = (x) => keepStar(r1(l, x), Math.max(r2(l, x), x.size / l.s2.size));
       const pick = (q, ks) => lineBestOf(K, l, d, ks, q, 24) || [['B', 'T'], ['las', 'B'], ['T', 'tau']].map((k2) => pairBest(K, l, d, k2, q, 12)).filter(Boolean).sort((a, b) => a.q - b.q)[0] || randomBest(K, l, d, ['las', 'B', 'T', 'tau', 'tc'], q, 400);
-      const txt = (b) => (!b ? '' : b.ps ? recText2(b, t) : recText(b, t, d));
+      const txt = (b) => (!b ? '' : b.ps ? recText2(b, t, d) : recText(b, t, d));
       if (!c.ob1) {
         if (d.B > r.L.bmax) { const b = pick(q1, ['B', 'las']); if (b) return { h: '레이저가 그만큼 튜닝되지 않습니다', b: `${r.L.name}의 모드 홉 없는 튜닝 범위는 약 ${r.L.bmax} GHz입니다. 선폭이 좁은 레이저일수록 빠르고 넓은 튜닝이 어렵습니다.` + txt(b) }; }
         if (r.dR > l.s1.dr || r.Radc < l.R) { const b = pick(q1, ['B', 'T']); if (b) return { h: r.dR > l.s1.dr ? '거리 분해능이 부족합니다' : `${l.R} m의 비트 주파수가 ADC를 넘습니다`, b: `분해능은 c/2B, 비트 주파수는 2R·B/(c·T)입니다. B를 키우면 분해능이 좋아지지만 같은 T에서 비트가 ADC 대역(${FADC / 1e6} MHz)을 넘으니 T도 함께 늘려야 합니다.` + txt(b) }; }

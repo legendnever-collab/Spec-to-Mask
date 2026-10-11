@@ -127,7 +127,7 @@ KINDS.mzm = (() => {
       }
       if (!c.ob2) {
         if (r.size > l.s2.size) { const b = lineBestOf(K, l, d, ['L', 'eta', 'RT', 'g'], q2s); if (b) return { h: `★★ 전극 길이 ${l.s2.size} µm 초과`, b: '짧은 전극으로 같은 OMA를 내려면 채움 비율과 종단 저항으로 접합 전압을 확보해야 합니다.' + recText(b, t, d) }; }
-        { const b = lineBestOf(K, l, d, ['RT', 'eta', 'g', 'L'], q2s); if (!b) { const b2 = [['L', 'eta'], ['L', 'RT'], ['eta', 'RT']].map((ks) => pairBest(K, l, d, ks, q2s, 10)).filter(Boolean).sort((x, y) => x.q - y.q)[0]; if (b2) return { h: '★★: 손잡이 하나로는 더 나아지지 않습니다', b: '길이를 줄이면 V<sub>π</sub>가 커지고, 부하를 늘리면 대역이 줄어듭니다. 두 손잡이를 함께 움직여야 다음 해로 넘어갈 수 있습니다.' + recText2(b2, t) }; } if (b) return { h: r.pen > l.s2.pen ? '★★: 눈이 덜 열렸습니다' : '★★: OMA 여유가 부족합니다', b: (r.pen > l.s2.pen ? '대역 부족(ISI)과 사인 전달함수의 압축이 바깥 눈을 닫습니다. 대역폭과 변조 깊이 사이의 균형점을 찾으세요.' : 'OMA는 변조 깊이와 손실의 곱입니다.') + recText(b, t, d) }; }
+        { const b = lineBestOf(K, l, d, ['RT', 'eta', 'g', 'L'], q2s); if (!b) { const b2 = [['L', 'eta'], ['L', 'RT'], ['eta', 'RT']].map((ks) => pairBest(K, l, d, ks, q2s, 10)).filter(Boolean).sort((x, y) => x.q - y.q)[0]; if (b2) return { h: '★★: 손잡이 하나로는 더 나아지지 않습니다', b: '길이를 줄이면 V<sub>π</sub>가 커지고, 부하를 늘리면 대역이 줄어듭니다. 두 손잡이를 함께 움직여야 다음 해로 넘어갈 수 있습니다.' + recText2(b2, t, d) }; } if (b) return { h: r.pen > l.s2.pen ? '★★: 눈이 덜 열렸습니다' : '★★: OMA 여유가 부족합니다', b: (r.pen > l.s2.pen ? '대역 부족(ISI)과 사인 전달함수의 압축이 바깥 눈을 닫습니다. 대역폭과 변조 깊이 사이의 균형점을 찾으세요.' : 'OMA는 변조 깊이와 손실의 곱입니다.') + recText(b, t, d) }; }
       }
       return null;
     },

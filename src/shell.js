@@ -82,7 +82,7 @@ window.GAME_CTX = () => {
     ev: (d, full) => (S ? S.evaluate(c.l, d) : K.evaluate(c.l, d, null, full ? { full: true } : undefined)), tiles: (r) => (S ? (S.tiles ? S.tiles(c.l, r) : []) : K.tiles(c.l, r)),
     step: S ? { id: S.id, title: S.title, idx: stepIdx(), n: stepsOf().length, goals: S.goals(c.l, c.res, stepMem(S)) } : null,
     // the explanation of the guided step on screen (also the final Full · Fab step): principle, route map, knobs, order of moves
-    stepDoc: (() => { if (stepMode(state.id) !== 'guided') return null; const ss = stepsOf(), i = stepIdx(), T = ss[i]; return T ? { idx: i, n: ss.length, title: T.title, intro: T.intro, map: T.map, knobs: T.knobs, how: T.how, done: T.doneText } : null; })(),
+    stepDoc: (() => { if (stepMode(state.id) !== 'guided') return null; const ss = stepsOf(), i = stepIdx(), T = ss[i]; return T ? { idx: i, n: ss.length, title: T.title, intro: T.intro, map: T.map, knobs: T.knobs, how: T.how, done: T.doneText, aim: typeof T.aim === 'function' ? T.aim(c.l) : T.aim } : null; })(),
     practice: c.pr ? { title: c.pr.title, note: c.pr.note, goals: c.pr.goals(c.l, c.res) } : null, ob,
     valid: (typeof VALID !== 'undefined' && VALID.by && (VALID.by[state.plat] || {})[state.id]) || null, canvas: $('#field') };
 };
@@ -454,8 +454,11 @@ function doState() {
   if (c.pr) return { k: '연습 모드', h: c.pr.title || '연습', b: c.pr.note || '' };
   if (c.S) {
     const ss = stepsOf(), i = stepIdx(), done = guideNS(state.id).done[c.S.id], nx = ss[i + 1];
-    if (done && nx) return { ok: true, k: `STEP ${i + 1}/${ss.length} 완료 ✓`, h: '이 단계 목표를 모두 달성했습니다', b: c.S.doneText || '', acts: [['step-next', `다음 단계 → ${nx.short}`, 'pri']] };
-    return { k: `STEP ${i + 1}/${ss.length} · 지금 할 일`, h: c.S.task || c.S.title, b: '<b>01 설계 파라미터</b>를 움직여 아래 목표를 모두 초록(✓)으로 만드세요. 막히면 코치가 다음 한 수를 알려 줍니다.', acts: [['guide', '이 단계 원리 자세히 보기']] };
+    // done: what was achieved, why that is enough for this step, and what is still missing (why the next step exists)
+    if (done && nx && !stepNowOK(c)) return { k: `STEP ${i + 1}/${ss.length} · 전에 완료 · 지금 설계는 목표 밖`, h: c.S.task || c.S.title, b: '이 단계는 전에 완료했지만, 지금 설계로는 아래 목표 일부가 빨강입니다. 다시 초록으로 맞추거나 다음 단계로 가도 됩니다 — 다음 단계는 지금 설계를 그대로 이어받습니다.', acts: [['step-next', `다음 단계 → ${nx.short}`, ''], ['guide', '이 단계 원리 자세히 보기']] };
+    if (done && nx) { const v = c.S.verdict ? c.S.verdict(c.l, c.res, stepMem(c.S)) : null;
+      return { ok: true, k: `STEP ${i + 1}/${ss.length} 완료 ✓`, h: '이 단계 목표를 모두 달성했습니다', b: v ? verdictHTML(v) : (c.S.doneText || ''), acts: [['step-next', `다음 단계 → ${nx.short}`, 'pri']] }; }
+    return { k: `STEP ${i + 1}/${ss.length} · 지금 할 일`, h: c.S.task || c.S.title, b: (c.S.aim ? `<div class="do-aim"><b>이 목표의 의미</b> — ${typeof c.S.aim === 'function' ? c.S.aim(c.l) : c.S.aim}</div>` : '') + '<b>01 설계 파라미터</b>를 움직여 아래 목표를 모두 초록(✓)으로 만드세요. 막히면 코치가 다음 한 수를 알려 줍니다.', acts: [['guide', '이 단계 원리 자세히 보기']] };
   }
   const l = lev(), ob = objectives(), got = starsOf(state.id), f = c.fabHere, nx = nextLevel(), lab = window.LABUI && (state.id === '3A+' || state.id === '3W') && got;
   const nxt = got && nx ? [['next', `다음 레벨 → ${nx.id} ${nx.name}`, '']] : [];
@@ -472,9 +475,11 @@ function doState() {
   if (f.yield < l.fab.y) return { k: `수율 ${Math.round(f.yield * 100)}% · 목표 ${yT}%${ai}`, h: '수율을 올려 ★★★에 도전하세요', b: '설계를 고친 뒤 다시 Tape-out 합니다. 무엇을 바꿀지는 <b>03 Fab Run</b> 결과 아래에 정리되어 있습니다.', acts: [['fab', 'Fab Run 결과 · 수율 올리기 ↓', 'pri']].concat(nxt, labA) };
   return { ok: true, k: got ? `${'★'.repeat(popcount(got))} 달성${ai}` : `목표 조건 모두 충족${ai}`, h: got === 7 ? '세 별 모두 달성!' : '이 설계로 목표를 모두 넘었습니다', b: nx ? `다음: <b>${nx.id} ${nx.name}</b>${nx.stage ? ` — 새 Stage(${nx.stage})` : ''}` : '마지막 레벨입니다 — 지도에서 다른 트랙이나 Design Lab으로 갈 수 있습니다.', acts: (nx ? [['next', `다음 레벨 → ${nx.id} ${nx.name}`, 'pri']] : []).concat(labA) };
 }
+const verdictHTML = (v) => `<ul class="vd">${[['이룬 것', v.got], ['왜 이 정도면 충분한가', v.enough], ['아직 남은 것 → 다음 단계', v.next]].filter(([, x]) => x).map(([k, x]) => `<li><b>${k}</b> ${x}</li>`).join('')}</ul>`;
 const actBtn = ([a, t, cls], id) => `<button class="btn ${cls || ''}" data-act="${a}"${id && a === 'step-next' ? ' id="step-next"' : ''}>${t}</button>`;
 function renderDo() {
   const box = $('#m-do'), s = doState(); box.hidden = !s; if (!s) return;
+  if (lastWipe && lastWipe.id === state.id && lastWipe.plat === state.plat) { s.k = '레벨 초기화됨 · ' + s.k; s.acts = (s.acts || []).concat([['unwipe', '되돌리기 (초기화 취소)', '']]); }
   box.className = 'mdo' + (s.ok ? ' ok' : '');
   box.innerHTML = `<div class="do-k">${s.k}</div><div class="do-h">${s.h}</div>${s.b ? `<div class="do-b">${s.b}</div>` : ''}${(s.acts || []).length ? `<div class="act-btns">${s.acts.map((a) => actBtn(a, true)).join('')}</div>` : ''}`;
   renderFabNext();
@@ -497,6 +502,7 @@ function doAct(a) {
   if (a === 'params') { const p = $('#params'); if (p.scrollIntoView) p.scrollIntoView({ block: 'start', behavior: smqMotion() }); const s = p.querySelector('input[type=range]'); if (s) setTimeout(() => s.focus({ preventScroll: true }), 350); return; }
   if (a === 'guide' && window.GAME_GUIDE) { window.GAME_GUIDE.open('S'); return; }
   if (a === 'lab' && window.LABUI) { window.LABUI.open(); renderMap(); }
+  if (a === 'unwipe') unwipe();
 }
 ['#m-do', '#fab-next', '#coach', '#m-stepnote'].forEach((sel) => $(sel).addEventListener('click', (e) => { const b = e.target.closest('[data-act]'); if (b) doAct(b.dataset.act); }));
 $('#m-next').addEventListener('click', (e) => {
@@ -603,15 +609,19 @@ function bestMove(obj, keepSize) {
 }
 function moveText(mv, t, cur, star) {
   const p = params().find((x) => x.k === mv.k), d = state.cur.d, up = mv.to > d[mv.k];
-  if (t < 2) return ` 추천 한 수: ${p.label}(${p.sym})를 조금 ${up ? '키우세요' : '줄이세요'}.`;
+  if (t < 2) return ` 추천 한 수: ${dirWord(p, mv.to, d[mv.k])}세요.`;
   return ` 추천 한 수: ${p.sym} ${pFmt(p, d[mv.k])} → ${pFmt(p, mv.to)} (${star} 기준 대비 ${Math.round(cur * 100)}% → ${Math.round(mv.v * 100)}%).`;
 }
+// does the design on screen meet the current guided step's goals right now (the recorded "done" is history)?
+function stepNowOK(c) { try { return !!c.S.done(c.l, c.res, stepMem(c.S)); } catch (e) { return true; } }
 function coachMsg() {
   const t = state.hintTier; if (!t || !state.cur) return null;
   const l = lev(), K = kind(), c = state.cur, r = c.res;
   if (c.S) {
-    if (guideNS(state.id).done[c.S.id]) return { h: '단계 완료 — 다음 단계로 가세요', b: (c.S.doneText || '이 단계의 목표를 물리 엔진 결과로 확인했습니다.') + ' <b>다음 단계 →</b> 버튼으로 넘어갑니다.' };
-    return c.S.coach(l, r, { tier: t, mem: stepMem(c.S) });
+    const wasDone = guideNS(state.id).done[c.S.id], nowOK = stepNowOK(c);
+    if (wasDone && nowOK) return { h: '단계 완료 — 다음 단계로 가세요', b: (c.S.doneText || '이 단계의 목표를 물리 엔진 결과로 확인했습니다.') + ' <b>다음 단계 →</b> 버튼으로 넘어갑니다.' };
+    const m = c.S.coach(l, r, { tier: t, mem: stepMem(c.S) });
+    return wasDone && m ? { h: '지금 설계는 이 단계 목표를 벗어났습니다 — ' + m.h, b: '이 단계는 전에 완료했지만, 바꾼 설계로는 목표 일부가 다시 빨강입니다. ' + m.b } : m;
   }
   if (c.pr) return K.coach(l, r, { tier: t, practice: c.pr, land: landData() }) || { h: c.pr.title || '연습 모드', b: c.pr.note };
   const ob = objectives(), got = starsOf(state.id);
@@ -834,12 +844,57 @@ $('#hint-seg').addEventListener('click', (e) => {
 let resetArm = null;
 $('#btn-reset').addEventListener('click', () => {
   const b = $('#btn-reset');
-  if (!resetArm) { b.textContent = '한 번 더: 설계·크레딧 초기화'; resetArm = setTimeout(() => { resetArm = null; b.textContent = '레벨 재시작'; }, 2500); return; }
-  clearTimeout(resetArm); resetArm = null; b.textContent = '레벨 재시작';
+  if (!resetArm) { b.textContent = '한 번 더: 설계값·크레딧만 처음으로'; resetArm = setTimeout(() => { resetArm = null; b.textContent = '설계값만 처음으로'; }, 2500); return; }
+  clearTimeout(resetArm); resetArm = null; b.textContent = '설계값만 처음으로';
   DESP()[state.id] = { ...lev().start }; state.credits[state.id] = credits0(); state.fab[state.id] = null; state.wafer[state.id] = null; state.fromAI[state.id] = false;
   persist(); setupLevel();
 });
 
+/* ---------- full level reset: the level as on a first visit (this level, this platform only); one undo per session ---------- */
+// per-level records under progress.by[platform]: stars (every difficulty), best, ai, cards, missions, guide (steps), pins, review,
+// seen, fab (run log) — plus the level design, credits and this session's Fab/wafer state; optionally the level's Design DB points
+const WIPE_KEYS = ['best', 'ai', 'cards', 'missions', 'guide', 'pins', 'review', 'seen', 'fab'];
+let lastWipe = null;
+function wipeSummary(id) {
+  const pp = PP(), st = Object.entries(pp.stars || {}).map(([m, o]) => [m, popcount((o || {})[id] | 0)]).filter(([, n]) => n), G = (pp.guide || {})[id];
+  const nDone = G ? Object.keys(G.done || {}).length : 0, nFab = ((pp.fab || {})[id] || []).length, card = (pp.cards || {})[id];
+  const users = card ? PLAY.filter((l) => l.id !== id && KINDS[l.kind].toggles && KINDS[l.kind].toggles(l).some((t) => t.needs === id)).map((l) => l.id) : [];
+  const nDB = DB.filter((r) => r.lv === id && (r.pf || 'si1310') === state.plat).length;
+  const it = (has, txt) => `<li${has ? '' : ' class="none"'}>${txt}</li>`;
+  return `<ul class="wl">${[
+    it(true, '<b>설계값 · 크레딧</b> — 출발점으로'),
+    it(nDone, `<b>Guided 학습 진행</b> — ${nDone ? `완료 단계 ${nDone}개 · 단계별 관찰 기록` : '기록 없음'}`),
+    it(st.length, `<b>별</b> — ${st.length ? st.map(([m, n]) => `${MODES[m] ? MODES[m].label : m} ${'★'.repeat(n)}`).join(' · ') : '없음'}`),
+    it(card, `<b>부품 카드</b> — ${card ? `있음${users.length ? ` (이 카드를 쓰는 ${users.join(', ')}는 기준 설계 값으로 계산됩니다)` : ''}` : '없음'}`),
+    it(nFab, `<b>Fab Run 기록</b> — ${nFab ? `${nFab}회` : '없음'}`),
+    it((pp.best || {})[id] || (pp.ai || {})[id], `<b>최고 점수 · AI 라이벌 기록</b> — ${(pp.best || {})[id] || (pp.ai || {})[id] ? '있음' : '없음'}`),
+    it((pp.pins || {})[id] || (pp.review || {})[id] || (pp.missions || {})[id], `<b>기준 설계 비교 핀 · 리뷰 답 · 미션 기록</b> — ${(pp.pins || {})[id] || (pp.review || {})[id] || (pp.missions || {})[id] ? '있음' : '없음'}`),
+    it(nDB, `<b>Design DB</b> — ${nDB}건 (아래에서 선택한 경우만)`)].join('')}</ul>`;
+}
+const WIPE = smqModal($('#wipe-dlg'));
+$('#btn-wipe').addEventListener('click', () => {
+  if (state.fabRunning || state.aiRunning != null) return;
+  const l = LMAP[state.id], pf = PLATFORMS[state.plat];
+  $('#wipe-h').textContent = `${l.id} ${l.name} — 처음 상태로`; $('#wipe-sub').textContent = `${pf.short} 플랫폼의 이 레벨만 초기화합니다. 다른 레벨과 다른 플랫폼은 그대로입니다.`;
+  $('#wipe-list').innerHTML = wipeSummary(state.id); $('#wipe-db').checked = false; WIPE.open('#wipe-go');
+});
+function wipeLevel(id, withDB) {
+  const pp = PP(), snap = { id, plat: state.plat, stars: {}, des: DESP()[id] ? JSON.parse(JSON.stringify(DESP()[id])) : null, db: null };
+  Object.keys(pp.stars || {}).forEach((m) => { snap.stars[m] = (pp.stars[m] || {})[id]; if (pp.stars[m]) delete pp.stars[m][id]; });
+  WIPE_KEYS.forEach((k) => { const o = pp[k]; snap[k] = o && o[id] !== undefined ? JSON.parse(JSON.stringify(o[id])) : undefined; if (o) delete o[id]; });
+  if (withDB) { snap.db = DB.filter((r) => r.lv === id && (r.pf || 'si1310') === state.plat); DB = DB.filter((r) => !(r.lv === id && (r.pf || 'si1310') === state.plat)); persistDB(); }
+  DESP()[id] = { ...lev().start }; state.credits[id] = credits0(); state.fab[id] = null; state.wafer[id] = null; state.fromAI[id] = false; delete state.seedFix[id];
+  lastWipe = snap; persist(); setupLevel(); renderMap();
+}
+function unwipe() {
+  const s = lastWipe; if (!s || s.plat !== state.plat) return; const pp = PP();
+  Object.entries(s.stars).forEach(([m, v]) => { if (v !== undefined) { pp.stars[m] = pp.stars[m] || {}; pp.stars[m][s.id] = v; } });
+  WIPE_KEYS.forEach((k) => { if (s[k] !== undefined) { pp[k] = pp[k] || {}; pp[k][s.id] = s[k]; } });
+  if (s.des) DESP()[s.id] = s.des;
+  if (s.db) { DB.push(...s.db); persistDB(); }
+  lastWipe = null; state.id = s.id; persist(); setupLevel(); renderMap();
+}
+$('#wipe-go').addEventListener('click', () => { const id = state.id, db = $('#wipe-db').checked; WIPE.close(); wipeLevel(id, db); });
 /* ---------- design-intent export (smq-design/1 → tools/smq2gds) ---------- */
 const plainTxt = (h) => String(h).replace(/<sub>(.*?)<\/sub>/g, '_$1').replace(/<sup>(.*?)<\/sup>/g, '^$1').replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
 function designJSON() {

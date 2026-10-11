@@ -298,7 +298,7 @@ KINDS.wdm = (() => {
       const t = c.tier, d = r.d, ks = keys(), q1 = (x) => r1(l, x), q2 = (x) => keepStar(r1(l, x), r2(l, x));
       const pairs = [['R', 'grid'], ['rad', 'asg'], ['R', 'P'], ['P', 'src'], ['pitch', 'R'], ['asg', 'P']];
       const pick = (q) => lineBestOf(K, l, d, ks, q, 18) || pairs.map((k2) => pairBest(K, l, d, k2, q, 8)).filter(Boolean).sort((a, b) => a.q - b.q)[0] || null;
-      const txt = (b) => (!b ? '' : b.ps ? recText2(b, t) : recText(b, t, d));
+      const txt = (b) => (!b ? '' : b.ps ? recText2(b, t, d) : recText(b, t, d));
       if (r.drc && r.drc.length) { const b = pick(q1); return { h: '링 셀이 겹칩니다', b: `${r.drc[0]}. 링 간격을 넓히거나 반경을 줄이세요.` + txt(b) }; }
       if (!c.ob1) {
         if (r.margin < l.s1.margin) { const b = pick(q1); if (b) return { h: r.aliased.length ? 'FSR 별칭: 링의 다음 공진이 다른 채널에 걸립니다' : '닫히지 않는 채널이 있습니다', b: why(l, r) + txt(b) }; }

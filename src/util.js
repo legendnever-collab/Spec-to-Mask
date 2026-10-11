@@ -108,8 +108,11 @@ function lineBest(K, l, d, k, q, n) {
 }
 const lineBestOf = (K, l, d, ks, q, n) => ks.map((k) => lineBest(K, l, d, k, q, n)).filter(Boolean).sort((a, b) => a.q - b.q)[0] || null;
 const recVal = (p, v) => `${(+v).toFixed(p.dec)}${p.unit ? ' ' + p.unit : ''}${p.labels ? ` (${p.labels[v | 0]})` : ''}`;
-const recText = (b, t, d) => (!b ? '' : t >= 2 ? ` 권장: ${b.p.sym} = ${recVal(b.p, b.v)} (기준 대비 ${Math.round(b.q0 * 100)}% → ${Math.round(b.q * 100)}%).` : ` 추천: ${b.p.label}(${b.p.sym})를 ${b.v > d[b.p.k] ? '키우세요' : '줄이세요'}.`);
-if (typeof module !== 'undefined') Object.assign(module.exports, { lineBest, lineBestOf, recText });
+// direction tier: which way and roughly how far, in words relative to the slider (조금 / 꽤 / 크게) — no target value
+const howFar = (p, v, cur) => { const dv = Math.abs(v - cur), f = dv / Math.max(1e-12, p.max - p.min); return p.step && dv <= 3.5 * p.step ? '한두 칸(−/+ 버튼으로)' : f < 0.02 ? '아주 조금' : f < 0.06 ? '조금' : f < 0.2 ? '꽤' : '크게'; };
+const dirWord = (p, v, cur) => `${p.label}(${p.sym})를 ${howFar(p, v, cur)} ${v > cur ? '키우' : '줄이'}`;
+const recText = (b, t, d) => (!b ? '' : t >= 2 ? ` 권장: ${b.p.sym} = ${recVal(b.p, b.v)} (기준 대비 ${Math.round(b.q0 * 100)}% → ${Math.round(b.q * 100)}%).` : ` 추천: ${dirWord(b.p, b.v, d[b.p.k])}세요.`);
+if (typeof module !== 'undefined') Object.assign(module.exports, { lineBest, lineBestOf, recText, howFar, dirWord });
 // two-parameter coarse grid (for coupled constraints a single-knob scan cannot escape)
 function pairBest(K, l, d, ks, q, n) {
   const ps = ks.map((k) => K.params(l, d).find((x) => x.k === k)), q0 = q(K.evaluate(l, d)); let best = { v: ks.map((k) => d[k]), q: q0 }; n = n || 10;
@@ -119,7 +122,11 @@ function pairBest(K, l, d, ks, q, n) {
   }
   return best.q < q0 * 0.99 ? { ...best, q0, ps } : null;
 }
-const recText2 = (b, t) => (!b ? '' : t >= 2 ? ` 권장: ${b.ps.map((p, i) => `${p.sym} = ${recVal(p, b.v[i])}`).join(' · ')} (기준 대비 ${Math.round(b.q0 * 100)}% → ${Math.round(b.q * 100)}%).` : ` 추천: 두 손잡이(${b.ps.map((p) => p.label).join(' · ')})를 함께 바꿔 보세요.`);
+// direction tier: which way each knob of the verified pair moves (the same move as the numeric tier, without the values)
+const recText2 = (b, t, d) => (!b ? '' : t >= 2 ? ` 권장: ${b.ps.map((p, i) => `${p.sym} = ${recVal(p, b.v[i])}`).join(' · ')} (기준 대비 ${Math.round(b.q0 * 100)}% → ${Math.round(b.q * 100)}%).`
+  : d ? (() => { const mv = b.ps.map((p, i) => [p, b.v[i]]).filter(([p, v]) => v !== d[p.k]);
+    return ` 추천: ${mv.map(([p, v]) => `${dirWord(p, v, d[p.k])}고`).join(', ').replace(/고$/, '세요')}${mv.length > 1 ? ' — 함께 움직여야 좋아집니다' : ''}.`; })()
+  : ` 추천: 두 손잡이(${b.ps.map((p) => p.label).join(' · ')})를 함께 바꿔 보세요.`);
 if (typeof module !== 'undefined') Object.assign(module.exports, { pairBest, recText2 });
 // ★★ coaching must never trade away ★: any move that breaks ★ ranks behind every move that keeps it
 const keepStar = (q1v, q2v) => (q1v > 1 + 1e-9 ? 100 + q1v : q2v);

@@ -241,7 +241,7 @@ KINDS.xcvr = (() => {
     coach(l, r, c) {
       const t = c.tier, d = r.d, q1 = (x) => r1(l, x), q2 = (x) => r2(l, x), w = r.worst, ks = keys(l);
       const pick = (q) => lineBestOf(K, l, d, ks, q, 20) || [['P', 'share'], ['P', 'tc'], ['P', fr4(l) ? 'dsp' : 'pkg'], fr4(l) ? ['P', 'mt'] : ['share', 'pkg']].map((k2) => pairBest(K, l, d, k2, q, 10)).filter(Boolean).sort((a, b) => a.q - b.q)[0] || null;
-      const txt = (b) => (!b ? '' : b.ps ? recText2(b, t) : recText(b, t, d));
+      const txt = (b) => (!b ? '' : b.ps ? recText2(b, t, d) : recText(b, t, d));
       const why = () => {
         const n0 = fr4(l) ? mux(l, r.p.mux, 0) : null, muxEx = fr4(l) && !d.mt ? 2 * (w.il - n0.il[w.c]) + xtPen(w.xt) - xtPen(n0.xt[w.c]) : 0;
         const terms = [[muxEx, `온도에 따라 Demux 통과대역이 밀려(${f2(r.drift * 1000, 0)} pm/K, ±${THI - TD} K → ±${f2(r.drift * (THI - TD), 1)} nm) ${cornerTxt(l, w)} 채널에 IL·크로스토크 손해 ${f2(muxEx, 1)} dB가 생깁니다.`],

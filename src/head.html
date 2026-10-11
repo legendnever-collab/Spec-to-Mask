@@ -112,6 +112,15 @@ button{font:inherit;color:inherit}
 .mdo .do-b ul{margin:4px 0 0;padding-left:20px}
 .mdo .row-btns{margin-top:2px}
 .act-btns{display:flex;gap:8px;flex-wrap:wrap}
+.wdlg{max-width:620px;height:auto}
+.wdlg .wl{margin:4px 0 12px;padding-left:20px;display:grid;gap:5px;font-size:15px;color:var(--fg-2)}
+.wdlg .wl b{color:var(--fg)} .wdlg .wl .none{color:var(--fg-3)}
+.btn.pri.danger,.btn.danger{background:var(--fail);border-color:var(--fail);color:#2a0606}
+.mdo .do-aim{margin-bottom:6px;padding:6px 10px;border-left:3px solid var(--amber);background:rgba(242,176,74,.06);border-radius:0 6px 6px 0}
+.mdo .vd{list-style:none;margin:2px 0 0;padding:0;display:grid;gap:6px}
+.mdo .vd li{padding-left:10px;border-left:3px solid rgba(93,209,147,.6)}
+.mdo .vd li:last-child{border-left-color:var(--amber)}
+.mdo .vd b{display:block;color:var(--fg);font-size:14.5px}
 .fab-next{margin-top:12px;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,107,107,.5);background:rgba(255,107,107,.07);display:grid;gap:6px;font-size:15.5px;color:var(--fg-2);line-height:1.6}
 .fab-next.ok{border-color:rgba(93,209,147,.6);background:rgba(93,209,147,.08)}
 .fab-next .fn-h{font-size:17px;font-weight:600;color:var(--fg)}
@@ -348,6 +357,15 @@ details.sect[open] > summary{margin-bottom:10px}
 .rmap .rm-g{flex-direction:row;align-items:center;justify-content:flex-start;gap:0;white-space:nowrap}
 .rm-g span{margin-left:3px}
 .rm-g i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:3px;background:var(--c)}
+/* 2-3R: ring-modulator principle picture + the level's six design questions */
+.ringmap{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.ring-pr{max-width:100%;height:auto;flex:0 1 330px}
+.rq{margin:0;padding-left:22px;display:grid;gap:3px;font-size:14.5px;color:var(--fg-3);flex:1 1 220px}
+.rq li small{margin-left:8px;font-family:var(--mono);font-size:12.5px;color:var(--fg-3)}
+.rq li.past{color:var(--fg-2)}
+.rq li.on{color:var(--fg);font-weight:600}
+.rq li.on::marker{color:var(--amber)}
+.rq li.on small{color:var(--amber)}
 .rm-cap{margin:6px 0 0;font-size:14.5px;color:var(--fg-2)}
 @media (max-width:520px){.rmap{column-gap:15px;font-size:12.5px}.rmap .rm-ch b,.rmap .rm-g span,.rmap .rm-h .lg{display:none}.rm-ch{padding:1px 6px 1px 5px}}
 .sn-d{margin-top:8px;border-top:1px dashed var(--line);padding-top:6px}
@@ -613,7 +631,8 @@ details.sect[open] > summary{margin-bottom:10px}
       <div class="hint-ctl"><span class="eyebrow">힌트</span><div class="seg" id="hint-seg" role="radiogroup" aria-label="힌트 단계"></div></div>
       <div id="prm-list"></div>
       <div class="row-btns">
-        <button class="btn" id="btn-reset">레벨 재시작</button>
+        <button class="btn" id="btn-reset" title="설계값과 크레딧만 처음으로 — 별·학습 진행·기록은 그대로">설계값만 처음으로</button>
+        <button class="btn" id="btn-wipe" aria-haspopup="dialog" aria-controls="wipe-dlg" title="이 레벨을 처음 상태로 — 확인 창이 지울 항목을 보여 줍니다">레벨 초기화…</button>
         <button class="btn" id="btn-export">설계 내보내기 (JSON)</button>
       </div>
       <p class="note" id="export-note" hidden></p>
@@ -742,6 +761,18 @@ details.sect[open] > summary{margin-bottom:10px}
       <div class="gdlg-h"><div><div class="eyebrow">처음 안내 · <span id="onb-n"></span></div><h2 id="onb-h"></h2></div><div class="gdlg-ctl"><button class="btn" data-close>건너뛰기</button></div></div>
       <div class="gdlg-body" id="onb-b"></div>
       <div class="onb-f"><button class="btn" id="onb-prev">← 이전</button><button class="btn pri" id="onb-next">다음 →</button></div>
+    </div>
+  </div>
+  <div class="gdlg-back" id="wipe-dlg" hidden>
+    <div class="gdlg ddlg wdlg" role="dialog" aria-modal="true" aria-labelledby="wipe-h" aria-describedby="wipe-sub">
+      <div class="gdlg-h"><div><div class="eyebrow">레벨 초기화</div><h2 id="wipe-h"></h2><p class="gsub" id="wipe-sub">이 레벨을 처음 들어왔을 때의 상태로 되돌립니다. 다른 레벨과 다른 플랫폼은 그대로입니다.</p></div>
+        <div class="gdlg-ctl"><button class="btn" data-close>취소</button></div></div>
+      <div class="gdlg-body" tabindex="-1">
+        <div id="wipe-list"></div>
+        <label class="chk"><input type="checkbox" id="wipe-db"> 이 레벨의 Design DB 기록(사람·AI 설계 점)도 지우기</label>
+        <p class="note">초기화 직후에는 미션 카드의 <b>되돌리기</b>로 한 번 복구할 수 있습니다(다른 레벨을 초기화하거나 페이지를 새로 열기 전까지). 오래 보관하려면 먼저 저장 칩 → 전체 백업을 받아 두세요.</p>
+        <div class="row-btns"><button class="btn" data-close>취소</button><button class="btn pri danger" id="wipe-go">이 레벨 초기화</button></div>
+      </div>
     </div>
   </div>
   <div class="gdlg-back" id="data-dlg" hidden>

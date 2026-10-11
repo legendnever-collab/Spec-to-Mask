@@ -392,7 +392,7 @@ KINDS.spiral = (() => {
     coach(l, r, c) {
       const t = c.tier, d = r.d, q1 = (x) => r1(l, x), q2s = (x) => keepStar(r1(l, x), Math.max(r2(l, x), x.size / l.s2.size)), P = r.parts;
       const pick = (q, ks) => lineBestOf(K, l, d, ks, q, 24) || [['w', 'gap'], ['rin', 'ws'], ['w', 'rin']].map((k2) => pairBest(K, l, d, k2, q, 10)).filter(Boolean).sort((a, b) => a.q - b.q)[0] || randomBest(K, l, d, ['w', 'gap', 'rin', 'ws', 'sb'], q, 300);
-      const txt = (b) => (!b ? '' : b.ps ? recText2(b, t) : recText(b, t, d));
+      const txt = (b) => (!b ? '' : b.ps ? recText2(b, t, d) : recText(b, t, d));
       if (!c.ob1) {
         if (r.xtMode > l.s1.xtm) { const b = pick(q1, ['sb', 'ws', 'rin']); if (b) return { h: '중앙 S-bend에서 고차모드가 생깁니다', b: `넓은 멀티모드 도파로를 원호로 꺾으면 곡률이 뒤집히는 이음매에서 기본모드가 TE1로 바뀝니다(지금 ${f2(r.xtMode, 1)} dB). 곡률을 서서히 바꾸고 이음매만 좁히는 테이퍼 Euler S-bend가 해법입니다 — Hong 2022는 R<sub>max</sub> 25 µm, W<sub>s</sub> 0.6 µm로 −30 dB 이하를 얻었습니다.` + txt(b) }; }
         if (r.xtGap > l.s1.xtg) { const b = pick(q1, ['gap']); if (b) return { h: '이웃 회전으로 빛이 건너갑니다', b: `결합 길이 L<sub>c</sub>가 나선 길이(${f2(r.Lcm, 1)} cm)보다 충분히 길어야 합니다. 간격을 넓히면 κ가 지수적으로 줄어듭니다.` + txt(b) }; }
@@ -559,7 +559,7 @@ KINDS.spiral = (() => {
   }
   /* ---------- coach for the boundary layout (moves are evaluated before they are suggested) ---------- */
   function coachRect(l, r, c) {
-    const t = c.tier, d = r.d, tx = (b) => (!b ? '' : b.ps ? recText2(b, t) : recText(b, t, d));
+    const t = c.tier, d = r.d, tx = (b) => (!b ? '' : b.ps ? recText2(b, t, d) : recText(b, t, d));
     if (r.drc.length) {
       const q = (x) => (x.drc && x.drc.length ? 10 + x.drc.length : x.IL / 100);
       const b = lineBestOf(K, l, d, ['env', 'gap', 'rc', 'w'], q, 32) || pairBest(K, l, d, ['env', 'rc'], q, 12);
