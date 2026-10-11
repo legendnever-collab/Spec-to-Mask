@@ -24,7 +24,8 @@
     "test:fab": "node test/e2e/fab.js si1310",
     "test:learn": "node test/e2e/learn.js",
     "release": "sh tools/release.sh",
-    "test:syntax": "node tools/check_syntax.js"
+    "test:syntax": "node tools/check_syntax.js",
+    "probe:dir": "node test/e2e/bot_dir.js"
   },
   "devDependencies": {
     "jsdom": "^24.1.3"

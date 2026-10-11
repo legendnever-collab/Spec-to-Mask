@@ -97,14 +97,14 @@ KINDS.fpsa = (() => {
     coach(l, r, c) {
       const t = c.tier, d = r.d, q1 = (x) => r1(l, x), q2s = (x) => keepStar(r1(l, x), Math.max(r2(l, x), x.size / l.s2.size));
       const pick = (q, ks) => lineBestOf(K, l, d, ks, q, 24) || [['k', 'f'], ['p', 'we'], ['f', 'we'], ['k', 'p']].map((k2) => pairBest(K, l, d, k2, q, 12)).filter(Boolean).sort((a, b) => a.q - b.q)[0] || randomBest(K, l, d, ['k', 'p', 'f', 'we', 'sw'], q, 400);
-      const txt = (b) => (!b ? '' : b.ps ? recText2(b, t) : recText(b, t, d));
+      const txt = (b) => (!b ? '' : b.ps ? recText2(b, t, d) : recText(b, t, d));
       if (!c.ob1) {
         if (deg(r.res) > l.s1.res || deg(r.fov) < l.s1.fov) {
           // design recipe: N from FOV/resolution, pitch from resolution at the current focal length, mode from the coverage target
           const P = K.params(l), kN = clamp(Math.ceil(Math.log2(l.s1.fov / (l.s1.res * 0.9))), P[0].min, P[0].max), cands = [];
           for (const ff of [d.f, 5, 8, 10, 12, 15, 20]) { const pp = l.s1.res * 0.85 * Math.PI / 180 * ff * 1000; cands.push([kN, pp, ff, pp * 1.1 / 1.177]); }
           const rcp = bestOfCands(K, l, d, ['k', 'p', 'f', 'we'], cands, q1);
-          if (rcp && t >= 2) return { h: deg(r.res) > l.s1.res ? '각 분해능이 부족합니다' : '시야각이 좁습니다', b: `설계 순서: ① N ≥ FOV/분해능 → k = ${kN} ② 각 간격 p/f ≈ 분해능 ③ 빈틈 없도록 w<sub>e</sub> ≈ p/1.18.` + recText2(rcp, t) };
+          if (rcp && t >= 2) return { h: deg(r.res) > l.s1.res ? '각 분해능이 부족합니다' : '시야각이 좁습니다', b: `설계 순서: ① N ≥ FOV/분해능 → k = ${kN} ② 각 간격 p/f ≈ 분해능 ③ 빈틈 없도록 w<sub>e</sub> ≈ p/1.18.` + recText2(rcp, t, d) };
         }
         if (deg(r.res) > l.s1.res) { const b = pick(q1, ['f', 'p', 'we']); if (b) return { h: '각 분해능이 부족합니다', b: `각 간격 p/f와 빔 퍼짐 w<sub>e</sub>/f 중 큰 쪽이 분해능입니다. 초점거리를 늘리면 둘 다 줄지만 FOV(≈N·p/f)도 줄어듭니다.` + txt(b) }; }
         if (deg(r.fov) < l.s1.fov) { const b = pick(q1, ['k', 'p', 'f']); if (b) return { h: '시야각이 좁습니다', b: `분해능을 유지한 채 FOV를 넓히려면 방출기 수 N = 2<sup>k</sup>를 늘려야 합니다 — 스위치 한 단마다 손실과 전력이 더해집니다.` + txt(b) }; }

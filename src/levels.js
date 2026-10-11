@@ -86,7 +86,7 @@ const LEVELS = [
   { id: '2-3R', stage: 2, kind: 'mrr', name: '링 변조기', dev: 'Microring Modulator — Resonance to 200G PAM4',
     band: (pf) => `${nm(pf.lam)} nm · 112 GBd PAM4 (224 Gb/s 라인) · Si 리브 링${pf.mat === 'si' ? '' : ' (Si 활성층 이종 집적 가정)'}`,
     preface: '<b>Stage 2 · 두 번째 변조기.</b> 2-3의 TW-MZM과 같은 112 GBd PAM4를 반경 수 µm의 링 공진기로 만듭니다. 처음이라면 Guided 학습 다섯 단계(공진 → 결합·Q → 전기광학 → 고속 PAM4 → 온도)를 거쳐 Full Design으로 갑니다. 이미 MZM에 익숙하다면 Full Design으로 바로 가도 됩니다.',
-    brief: 'Si 리브 링(all-pass, 버스 하나)에 2-2의 PN 접합을 감고, 레이저를 공진 사면에 두어 공진 이동을 세기 변조로 바꿉니다. 반경·결합 간격·접합 도핑·바이어스·구동 진폭·레이저 디튜닝·공진 배치 여유로 EO 대역, OMA, 눈, 그리고 0–70 °C 전체의 히터 전력을 함께 맞추세요. 게임의 반경은 공진 정렬된 레이아웃 반경으로 그대로 GDS에 나갑니다.',
+    brief: '레이저 빛을 작은 링 공진기의 골(dip) 비탈에 두고, 전압으로 골을 살짝 옮겨 빛 세기를 바꾸는 변조기를 만듭니다. 구조는 Si 리브 링(all-pass, 버스 하나)에 2-2의 PN 접합을 감은 것입니다. 설계 질문은 여섯 가지 — 공진이 몇 nm마다(반경 R) · 골의 깊이와 폭(간격 g) · 전압으로 얼마나 옮기나(도핑·바이어스·진폭·디튜닝 x) · 112 GBd를 따라가나(Q·RC) · 온도가 바뀌어도(히터·배치 여유) · 다이마다 달라도(Fab). 게임의 반경은 공진 정렬된 레이아웃 반경으로 그대로 GDS에 나갑니다.',
     concepts: [
       ['공진과 FSR', 'mλ = n<sub>eff</sub>·L (L = 2πR), FSR ≈ λ²/(n<sub>g</sub>L). 작은 링일수록 FSR이 넓어 한 FSR을 덮는 히터 이동이 같은 전력(P<sub>2π</sub>)으로 더 많은 nm가 됩니다.'],
       ['결합과 Q', 't = a에서 Critical coupling(골 깊이 최대). Q<sub>L</sub>는 선폭(λ/Q<sub>L</sub>)과 광자 수명 τ<sub>p</sub> = Q<sub>L</sub>/ω를 정합니다. 결합계수 κ는 필드, κ²가 파워입니다.'],

@@ -95,7 +95,7 @@ KINDS.lidar = (() => {
       const t = c.tier, d = r.d, q1 = (x) => r1(l, x), q2 = (x) => keepStar(r1(l, x), r2(l, x));
       const grid = (q) => { const c = []; for (let P = 10; P <= 30; P += 1) for (let n = 0; n < 4; n++) for (const lo of [2, 5, 10, 20, 35]) for (const nav of [1, 2, 4, 8, 16]) c.push([P, n, lo, nav]); return bestOfCands(K, l, d, ['P', 'nch', 'lo', 'nav'], c, q); };
       const pick = (q) => { const a = lineBestOf(K, l, d, ['P', 'nch', 'lo', 'nav'], q, 24), b = grid(q); return a && (!b || a.q <= b.q * 1.02 || a.q <= 1) ? a : b; };
-      const txt = (b) => (!b ? '' : b.ps ? recText2(b, t) : recText(b, t, d));
+      const txt = (b) => (!b ? '' : b.ps ? recText2(b, t, d) : recText(b, t, d));
       const a = r.ref200;
       if (!c.ob1) {
         if (r.Rmax < l.s1.r) {

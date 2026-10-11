@@ -603,7 +603,7 @@ function bestMove(obj, keepSize) {
 }
 function moveText(mv, t, cur, star) {
   const p = params().find((x) => x.k === mv.k), d = state.cur.d, up = mv.to > d[mv.k];
-  if (t < 2) return ` 추천 한 수: ${p.label}(${p.sym})를 조금 ${up ? '키우세요' : '줄이세요'}.`;
+  if (t < 2) return ` 추천 한 수: ${dirWord(p, mv.to, d[mv.k])}세요.`;
   return ` 추천 한 수: ${p.sym} ${pFmt(p, d[mv.k])} → ${pFmt(p, mv.to)} (${star} 기준 대비 ${Math.round(cur * 100)}% → ${Math.round(mv.v * 100)}%).`;
 }
 function coachMsg() {
