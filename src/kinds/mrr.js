@@ -356,6 +356,7 @@ KINDS.mrr = (() => {
     /* Step 1 — resonance and FSR */
     const s1 = {
       id: 'res', short: '공진 · FSR', title: 'Ring 공진 — 공진 조건과 FSR', aspect: 0.56,
+      task: `반경 R을 움직여 링의 FSR을 목표 ${fsrT} nm 근처로 맞추세요.`,
       intro: `둘레 L = 2πR의 고리를 한 바퀴 돈 빛이 제자리에서 같은 위상이 되면(mλ = n<sub>eff</sub>L) 빛이 쌓여 공진합니다. 버스 도파로의 투과 스펙트럼에는 공진마다 좁은 골(dip)이 생기고, 그 간격이 FSR ≈ λ²/(n<sub>g</sub>L)입니다. 반경 R만 바꾸면서 FSR과 공진 차수 m이 어떻게 바뀌는지 보고, FSR을 목표 ${fsrT} nm 근처로 맞추세요 (작은 링 = 넓은 FSR = 다음 단계들에서 열 튜닝이 쉬워짐).`,
       doneText: '공진 조건 mλ = n<sub>eff</sub>L과 FSR = λ²/(n<sub>g</sub>L)을 확인했습니다. 다음은 골의 깊이와 폭을 정하는 결합(κ)과 손실입니다.',
       params: () => [pk('R')],
@@ -386,6 +387,7 @@ KINDS.mrr = (() => {
     /* Step 2 — coupling and Q */
     const s2 = {
       id: 'q', short: '결합 · Q', title: '결합과 Q — Under / Critical / Over coupling', aspect: 0.56,
+      task: '간격 g를 움직여 Under · Critical · Over coupling을 모두 지나 보고, 공진 골이 15 dB 이상 깊은 지점을 찾으세요.',
       intro: '버스와 링 사이 간격 g가 결합계수 κ(필드, |κ|² = 한 번 지날 때 건너가는 파워 비율)를 정합니다. 링 한 바퀴의 필드 투과 a(손실)와 버스 자기결합 t = √(1−κ²)의 대소가 공진 골의 모양을 정합니다: t = a 이면 Critical coupling(골이 0까지 내려감), t > a 이면 Under-coupled, t < a 이면 Over-coupled. Q<sub>L</sub>는 선폭 = λ/Q<sub>L</sub>을, 1/Q<sub>L</sub> = 1/Q<sub>i</sub> + 1/Q<sub>c</sub>로 손실과 결합 모두가 정합니다. 세 영역을 모두 지나가 보고, 골이 15 dB 이상 깊은 지점을 찾으세요.',
       doneText: '결합과 손실의 균형이 골의 깊이(ER)와 폭(Q)을 정한다는 것을 확인했습니다. 실제 고속 변조기는 대역폭 때문에 보통 Over-coupled 쪽을 씁니다 — 4단계에서 그 이유를 봅니다.',
       params: () => [pk('g')],
@@ -420,6 +422,7 @@ KINDS.mrr = (() => {
     /* Step 3 — electro-optic modulation (static) */
     const s3 = {
       id: 'eo', short: '전기광학', title: 'PN 접합으로 공진 옮기기 — 정적 변조', aspect: 0.56,
+      task: '바이어스 · 구동 진폭 · 디튜닝으로 PAM4 네 레벨의 정적 OMA와 ER을 확보하세요 — 삽입 손실은 기준 이하로.',
       intro: '2-2의 PN 접합이 링 둘레의 η = 75%를 덮습니다. 역바이어스를 키우면 공핍이 넓어져 자유 캐리어가 빠지고 n<sub>eff</sub>가 올라가 공진이 장파장 쪽(빨강)으로 이동합니다(Δλ = λΔn<sub>eff</sub>/n<sub>g</sub>). 레이저를 공진 옆에(디튜닝 x = 2(λ<sub>L</sub> − λ<sub>r</sub>)/FWHM) 두면 이 이동이 투과 세기 변화가 됩니다. 바이어스, 구동 진폭, 디튜닝으로 PAM4 네 레벨의 정적 OMA와 ER을 확보하세요. 여기서 보는 것은 DC 특성뿐입니다 — 기울기가 가파르다고 고속에서 좋은 것은 아닙니다(다음 단계).',
       doneText: '공진 이동(pm/V)과 레이저 디튜닝으로 세기 변조를 만들었습니다. 다음 단계에서 같은 설계를 112 GBd로 구동하면 광자 수명과 RC가 끼어듭니다.',
       params: () => [pk('dop'), pk('vb'), pk('vpp'), pk('det')],
@@ -447,6 +450,7 @@ KINDS.mrr = (() => {
     /* Step 4 — high-speed PAM4 */
     const s4 = {
       id: 'pam4', short: '200G PAM4', title: '112 GBd PAM4 — 광자 수명, RC, 디튜닝', aspect: 0.5,
+      task: '112 GBd로 구동합니다. 결합 간격 · 디튜닝 · 진폭으로 대역폭을 확보하고 눈(eye)을 여세요(페널티·OMA 목표).',
       intro: '이제 112 GBd PAM4(224 Gb/s 라인 속도 — FEC·부호화 오버헤드 후 200G급 레인)로 구동합니다. 링 안의 빛은 광자 수명 τ<sub>p</sub> = Q<sub>L</sub>λ/(2πc)만큼 머물러 빠른 변화를 따라가지 못하고, 접합 C<sub>j</sub>와 저항(R<sub>j</sub> + 드라이버 50 Ω)이 전압을 늦춥니다. 레이저를 공진에서 떼어 두면(디튜닝) 응답에 피크가 생겨 대역이 넓어지기도 합니다. Q가 높을수록 정적 기울기는 가파르지만 눈은 닫힐 수 있습니다 — 결합 간격과 디튜닝, 진폭으로 눈을 여세요.',
       doneText: '고속에서는 Q·디튜닝·RC가 함께 대역을 정한다는 것을 확인했습니다. 마지막 학습 단계는 링의 가장 큰 약점인 온도입니다.',
       params: () => [pk('g'), pk('det'), pk('vpp'), pk('vb'), pk('dop')],
@@ -492,6 +496,7 @@ KINDS.mrr = (() => {
     const BIN = { cold: `저온 ${tr[0]}–${tr[0] + 5} °C`, mid: `중간 ${(tr[0] + tr[1]) / 2 - 5}–${(tr[0] + tr[1]) / 2 + 5} °C`, hot: `고온 ${tr[1] - 5}–${tr[1]} °C` };
     const s5 = {
       id: 'thermal', short: '온도 · 히터', title: '열 안정성 — 온도 드리프트, 히터, 레이저 파장', aspect: 0.56, local: ['sT', 'sP', 'sL'],
+      task: `온도를 저온 · 중간 · 고온으로 옮기며 히터 전력(필요하면 레이저 파장)으로 동작점을 되찾으세요 — 히터 예산 ${fmtT(l.s2.ph)} mW 이하.`,
       intro: `실리콘 링의 공진은 온도에 따라 ∂λ/∂T ≈ ${(lam * cross(l.pf).dndT / cross(l.pf).ng * 1e6).toFixed(0)} pm/K 움직입니다 — 선폭(수십~수백 pm)보다 훨씬 큽니다. 레이저(외부 광원, 파장 고정)는 그대로이므로 몇 도만 바뀌어도 변조가 멈춥니다. 히터는 공진을 장파장 쪽으로만 옮길 수 있고, 한 FSR이면 어떤 공진 차수든 맞출 수 있습니다(P<sub>2π</sub>). 온도를 저온·중간·고온으로 옮기며 히터 전력(필요하면 레이저 파장 미세 조정)으로 동작점을 되찾고, 각 온도에서 쓴 히터 전력이 예산 ${fmtT(l.s2.ph)} mW 이하인지 확인하세요.`,
       doneText: '링의 작은 크기와 낮은 구동 에너지 뒤에는 온도 제어 비용이 있다는 것을 확인했습니다. 이제 모든 변수를 열고 공정 오차까지 겹친 Fab Run으로 갑니다.',
       init: (l2, d) => ({ sT: Math.round((tr[0] + tr[1]) / 2), sP: 0, sL: 0 }),
