@@ -506,6 +506,7 @@
     const S = c.stepDoc; if (!S) return '';
     return `<p class="note">Guided 학습 ${S.idx + 1}/${S.n}단계 — 메인 화면에는 할 일만 짧게 두고, 이유와 방법은 여기에 모았습니다.</p>`
       + (S.intro ? `<h4>무엇을 왜 하나</h4><div class="g-intro">${String(S.intro).split(/<br\s*\/?>/).map((x) => `<p>${x}</p>`).join('')}</div>` : '')
+      + (S.aim ? `<h4>목표 기준의 의미</h4><p>${S.aim}</p>` : '')
       + (S.map ? `<h4>한눈에 보기</h4><div class="sn-map">${S.map}</div>` : '')
       + (S.knobs && S.knobs.length ? `<h4>손잡이 — 움직이면 무엇이 바뀌나</h4><ul class="knobs">${S.knobs.map((k) => `<li><span class="k-sym">${k.sym}</span><div><b>${k.name}</b> — ${k.does}${k.see ? `<div class="k-see">화면에서: ${k.see}</div>` : ''}</div></li>`).join('')}</ul>` : '')
       + (S.how && S.how.length ? `<h4>이렇게 진행하세요</h4><ol class="how">${S.how.map((h) => `<li>${h}</li>`).join('')}</ol>` : '')

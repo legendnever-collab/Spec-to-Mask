@@ -242,12 +242,17 @@ KINDS.mrr = (() => {
       for (let s = 8; s < nsym; s++) { lv[(sym[s] + 3) / 2].push(z(s)); raw[(sym[s] + 3) / 2].push(at(s * sps + ph)); }
       let worst = Infinity; for (let k = 0; k < 3; k++) worst = Math.min(worst, Math.min(...lv[k + 1]) - Math.max(...lv[k]));
       const ne = Math.sqrt(cc.reduce((a, v) => a + v * v, 0)), ratio = worst / (2 / 3) / ne;
-      if (ratio > best.ratio) best = { ratio, ph, c: cc, ne, raw };
+      if (ratio > best.ratio) best = { ratio, ph, c: cc, ne, raw, lv };
       dynFrac = Math.max(dynFrac, (mean(raw[3]) - mean(raw[0])) / 2);   // best unequalised sampling phase
     }
     const traces = []; for (let s = 8; s < Math.min(nsym - 2, 72); s++) { const tr = []; for (let k = -sps / 2; k <= sps * 1.5; k++) tr.push(at(s * sps + best.ph + k)); traces.push(tr); }
+    // display only (no metric uses these): the same waveform after the receiver's 5-tap FFE — the eye the penalty judges — and
+    // the three inner eyes at the decision instant ([top of the lower level, bottom of the upper level], ideal spacing 2/3)
+    const eqAt = (i) => { let v = 0; for (let k = 0; k < ntap; k++) v += best.c[k] * at(i + (hh - k) * sps); return v; };
+    const eq = []; for (let s = 8; s < Math.min(nsym - 2, 72); s++) { const tr = []; for (let k = -sps / 2; k <= sps * 1.5; k++) tr.push(eqAt(s * sps + best.ph + k)); eq.push(tr); }
+    const eyes = [0, 1, 2].map((k) => [Math.max(...best.lv[k]), Math.min(...best.lv[k + 1])]);
     let mx = -Infinity, mn = Infinity; for (let i = 0; i < n; i++) { if (y[i] > mx) mx = y[i]; if (y[i] < mn) mn = y[i]; }
-    return { ratio: best.ratio, ph: best.ph, taps: best.c, ne: best.ne, dynFrac, ext: (mx - mn) / 2, traces, sps, T0, T3 };
+    return { ratio: best.ratio, ph: best.ph, taps: best.c, ne: best.ne, dynFrac, ext: (mx - mn) / 2, traces, eq, eyes, sps, T0, T3 };
   }
 
   /* ---------- full analysis ---------- */
@@ -300,12 +305,28 @@ KINDS.mrr = (() => {
     ctx.beginPath(); ctx.moveTo(o.x0 != null ? o.x0 : cxp - rad * 2.2, busY); ctx.lineTo(o.x1 != null ? o.x1 : cxp + rad * 2.2, busY); ctx.stroke();
     return { busY };
   }
+  // the eye the penalty judges: after the receiver's 5-tap FFE (solid) over the raw modulator waveform (faint). At the decision
+  // instant the three inner eyes are marked — green = open (its % of the ideal 2/3 spacing), red = closed. The penalty
+  // −10·log10(worst eye / (2/3) / √Σc²) also counts the FFE's noise gain √Σc², which a picture cannot show.
   function eyeDraw(ctx, eye, x0, y0, w, h, label, good) {
-    const tr = eye.traces, n = tr[0].length, lo = Math.min(...tr.flat()), hi = Math.max(...tr.flat()), sp = Math.max(hi - lo, 1e-6);
-    const X = (i) => x0 + i / (n - 1) * w, Y = (v) => y0 + (1 - (v - lo + 0.08 * sp) / (sp * 1.16)) * h;
-    ctx.strokeStyle = 'rgba(100,201,223,0.16)'; ctx.lineWidth = 1.2 * DPR;
+    const n = eye.traces[0].length, X = (i) => x0 + i / (n - 1) * w, xs = X(eye.sps / 2);
+    const scale = (trs) => { const lo = Math.min(...trs.flat()), hi = Math.max(...trs.flat()), sp = Math.max(hi - lo, 1e-6); return (v) => y0 + (1 - (v - lo + 0.08 * sp) / (sp * 1.16)) * h; };
+    const Yr = scale(eye.traces); ctx.strokeStyle = 'rgba(158,171,189,0.07)'; ctx.lineWidth = 1 * DPR;
+    eye.traces.forEach((t) => { ctx.beginPath(); t.forEach((v, i) => (i ? ctx.lineTo(X(i), Yr(v)) : ctx.moveTo(X(i), Yr(v)))); ctx.stroke(); });
+    // the equalised eye on a fixed axis around the four PAM4 levels (±1, ±1/3): overshoot beyond ±1.5 is clipped so the
+    // decision region keeps its true proportion on screen
+    const tr = eye.eq || eye.traces, Y = eye.eq ? (v) => y0 + (1 - (clamp(v, -1.5, 1.5) + 1.5) / 3) * h : scale(tr); ctx.strokeStyle = 'rgba(100,201,223,0.16)'; ctx.lineWidth = 1.1 * DPR;
     tr.forEach((t) => { ctx.beginPath(); t.forEach((v, i) => (i ? ctx.lineTo(X(i), Y(v)) : ctx.moveTo(X(i), Y(v)))); ctx.stroke(); });
-    ctx.strokeStyle = 'rgba(242,176,74,0.7)'; ctx.setLineDash([3 * DPR, 3 * DPR]); ctx.beginPath(); ctx.moveTo(X(eye.sps / 2), y0); ctx.lineTo(X(eye.sps / 2), y0 + h); ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle = 'rgba(242,176,74,0.7)'; ctx.setLineDash([3 * DPR, 3 * DPR]); ctx.beginPath(); ctx.moveTo(xs, y0); ctx.lineTo(xs, y0 + h); ctx.stroke(); ctx.setLineDash([]);
+    if (eye.eq && eye.eyes) {
+      const op = eye.eyes.map(([a, b]) => (b - a) / (2 / 3)), wi = op.indexOf(Math.min(...op));
+      eye.eyes.forEach(([a, b], k) => {
+        const yA = Y(a), yB = Y(b), ok = b > a, col = ok ? (k === wi ? '#5dd193' : 'rgba(93,209,147,0.75)') : '#ff6b6b';
+        ctx.fillStyle = col; ctx.fillRect(xs - 3 * DPR, Math.min(yA, yB), 6 * DPR, Math.max(2 * DPR, Math.abs(yA - yB)));
+        txt(ctx, ok ? `${Math.round(op[k] * 100)}%` : '닫힘', xs + 8 * DPR, (yA + yB) / 2, { size: 9.5, color: col });
+      });
+      txt(ctx, `진한 선: 수신 FFE 후(판정) · 옅은 선: FFE 전 파형 · 막대: 눈 열림 · 페널티는 가장 좁은 눈 ÷ FFE 잡음 증폭 ×${f2(eye.ne, 2)}`, x0, y0 + h - 4 * DPR, { size: 9, color: 'rgba(158,171,189,0.9)', base: 'bottom' });
+    }
     cvPill(ctx, label, x0, y0 - 8 * DPR, 'left', good ? '#5dd193' : '#f2b04a');
   }
   function numbers(ctx, rows, x, y, w) {   // label left, value right; on a narrow canvas the font shrinks, then the value drops under its label
@@ -396,6 +417,10 @@ KINDS.mrr = (() => {
     const s1 = {
       id: 'res', short: '공진 · FSR', title: 'Ring 공진 — 공진 조건과 FSR', aspect: 0.56,
       task: `반경 R을 움직여 링의 FSR을 목표 ${fsrT} nm 근처로 맞추세요.`,
+      aim: `FSR이 ${fsrT} ± 0.5 nm면 됩니다. 실제로 쓰는 공진은 레이저 옆의 하나뿐이고, FSR은 그 공진을 히터로 옮길 수 있는 범위(5단계)와 다이마다 다른 공진 위치를 흡수할 여유(Fab)를 정하는 값이기 때문입니다.`,
+      verdict: (l2, r) => ({ got: `반경 ${f2(r.d.R, 2)} µm에서 FSR ${NMf(r.fsr)} nm — 공진 골이 ${NMf(r.fsr)} nm마다 반복됩니다.`,
+        enough: `이 단계의 일은 공진 간격을 정하는 것뿐입니다. 정확한 공진 위치는 게임이 레이아웃 반경을 미세 조정해 레이저 옆에 맞추고, 남는 오차는 5단계의 히터가 맡습니다.`,
+        next: '아직 골의 깊이와 폭(결합)을 정하지 않았습니다 — 골이 얕으면 레이저를 비탈에 둬도 세기 차이가 생기지 않습니다. → 2단계 결합 · Q' }),
       intro: `<b>링 변조기가 하는 일:</b> 레이저 빛(파장 고정)이 지나가는 버스 도파로 옆에 작은 고리(링)를 둡니다. 링이 공진하는 파장에서는 빛이 링으로 들어가 버스 출력에 좁은 <b>골(dip)</b>이 생깁니다. 레이저를 이 골의 비탈(사면)에 두고 전압으로 골을 옆으로 살짝 옮기면, 레이저가 보는 투과 세기가 바뀌어 신호(PAM4 네 레벨)가 됩니다 — 위 그림.<br><b>이 단계:</b> 골이 몇 nm마다 생기는지 정합니다. 둘레 L = 2πR을 한 바퀴 돈 빛이 제자리에서 같은 위상이 되면(mλ = n<sub>eff</sub>L) 공진하고, 골 사이 간격이 FSR ≈ λ²/(n<sub>g</sub>L)입니다. 반경 R로 FSR을 목표 ${fsrT} nm 근처로 맞추세요 — 작은 링일수록 FSR이 넓어 나중에 온도를 히터로 맞추기 쉬워집니다.`,
       map: ringMap(0, '이 단계: ① 공진 위치·간격 — 그림의 골이 몇 nm마다 반복되는지(FSR)를 정합니다.'),
       knobs: [{ sym: 'R', name: '링 반경', does: '고리 둘레(L = 2πR)를 정합니다. 줄이면 FSR(골 사이 간격)이 넓어져, 같은 히터 전력으로 더 많은 nm를 옮길 수 있습니다(5단계). 너무 작으면 굽힘 손실이 늘어납니다. 공진 하나를 레이저 근처에 두는 미세 조정(레이아웃 반경)은 게임이 자동으로 합니다.', see: 'FSR 타일, 스펙트럼의 골 간격, 굽힘 손실 줄' }],
@@ -430,6 +455,10 @@ KINDS.mrr = (() => {
     const s2 = {
       id: 'q', short: '결합 · Q', title: '결합과 Q — Under / Critical / Over coupling', aspect: 0.56,
       task: '간격 g를 움직여 Under · Critical · Over coupling을 모두 지나 보고, 공진 골이 15 dB 이상 깊은 지점을 찾으세요.',
+      aim: '골 깊이 ≥ 15 dB면 레이저를 비탈에 두었을 때 켜짐·꺼짐의 세기 차이를 충분히 만들 수 있습니다(ER의 상한이 골 깊이). Under·Critical·Over를 모두 보는 이유는, 4단계에서 고속을 위해 일부러 Over 쪽(넓은 골)을 고르게 되기 때문입니다.',
+      verdict: (l2, r) => ({ got: `간격 ${Math.round(r.d.g * 1000)} nm에서 ${regimeTxt[r.regime]} · 골 깊이 ${f2(r.erRes, 1)} dB · Q<sub>L</sub> ${Math.round(r.QL)} (선폭 ${f2(r.fwhm * 1e6, 0)} pm).`,
+        enough: '골이 이만큼 깊으면 세기 변조의 “재료”는 충분합니다. 결합이 손실보다 강할수록(Over) 골이 넓어지고 빛이 빨리 빠져나간다는 것도 확인했습니다.',
+        next: '아직 아무것도 변조하지 않았습니다 — 전압으로 골을 옮겨 레이저가 보는 세기를 바꿔야 신호가 됩니다. → 3단계 전기광학' }),
       intro: '<b>이 단계:</b> 골의 <b>깊이</b>와 <b>폭</b>을 정합니다. 버스와 링 사이 간격 g가 좁을수록 빛이 링으로 많이 넘어갑니다(결합 κ²). 링을 한 바퀴 돌며 잃는 빛(손실)과 넘어오는 빛(결합)이 맞먹을 때(<b>Critical coupling</b>, t = a) 골이 가장 깊습니다. 결합이 손실보다 약하면 Under-coupled(골이 얕음), 강하면 Over-coupled(골이 넓어지고 다시 얕아짐)입니다.<br>골의 폭(선폭 = λ/Q<sub>L</sub>)은 빛이 링에 머무는 시간과 같은 이야기입니다 — 좁을수록(Q<sub>L</sub>↑) 오래 머물러 느려집니다. 4단계에서 이것을 속도와 맞바꿉니다. 1/Q<sub>L</sub> = 1/Q<sub>i</sub>(손실) + 1/Q<sub>c</sub>(결합).',
       map: ringMap(1, '이 단계: ② 골의 깊이와 폭 — 그림 속 골의 모양을 정합니다.'),
       knobs: [{ sym: 'g', name: '버스–링 간격', does: '좁히면 결합이 지수적으로 커져 Under → Critical → Over 순으로 바뀝니다. Over 쪽으로 갈수록 골이 넓어지고(Q<sub>L</sub>↓) 빛이 빨리 빠져나가 고속에 유리하지만, 골은 다시 얕아집니다(ER↓).', see: '그림 가운데의 영역 이름, 스펙트럼의 골 깊이, κ²·t와 a 타일(t > a면 Under, t < a면 Over)' }],
@@ -471,6 +500,10 @@ KINDS.mrr = (() => {
     const s3 = {
       id: 'eo', short: '전기광학', title: 'PN 접합으로 공진 옮기기 — 정적 변조', aspect: 0.56,
       task: '바이어스 · 구동 진폭 · 디튜닝으로 PAM4 네 레벨의 정적 OMA와 ER을 확보하세요 — 삽입 손실은 기준 이하로.',
+      aim: (l2) => `정적 OMA ≥ ${dbm(l2.s1.omaS)} dBm · ER ≥ ${fmtT(l2.s1.er)} dB · IL ≤ ${fmtT(l2.s1.il)} dB — 전압으로 만든 세기 차이(신호의 크기)가 충분하고, 레이저를 둔 자리의 손실이 크지 않은지를 봅니다. 기준은 같은 엔진의 기준 설계에 여유를 둔 값입니다. 여기서는 느린(DC) 신호만 봅니다.`,
+      verdict: (l2, r) => ({ got: `공진 이동 ${f2(r.shiftPmV, 1)} pm/V × ${f2(r.d.vpp, 2)} V로 정적 OMA ${f2(r.omaDbm, 1)} dBm · ER ${f2(r.er, 1)} dB · IL ${f2(r.IL, 1)} dB, 네 레벨이 순서대로 벌어졌습니다.`,
+        enough: '신호의 크기는 충분합니다 — DC에서는 레벨 사이가 기준 이상 벌어집니다.',
+        next: `빠르게 바꿨을 때도 따라오는지는 아직 모릅니다. 비탈이 가파르다는 것은 골이 좁다(Q<sub>L</sub> ${Math.round(r.QL)})는 뜻이고, 그만큼 빛이 링에 오래 머물러 112 GBd에서는 눈이 닫힐 수 있습니다. → 4단계 112 GBd PAM4` }),
       intro: '<b>이 단계:</b> 전압으로 골을 옆으로 옮겨 빛 세기를 바꿉니다. 링에 감긴 PN 접합(2-2)에 역바이어스를 걸면 캐리어가 빠져 굴절률이 오르고, 공진이 장파장(빨강) 쪽으로 이동합니다(Δλ = λΔn<sub>eff</sub>/n<sub>g</sub>). 레이저가 골의 비탈에 있어야 이 이동이 세기 변화(OMA)가 됩니다 — 레이저 위치는 디튜닝 x(선폭 단위, 음수 = 파랑 쪽)로 정합니다.<br>여기서는 느린(DC) 특성만 봅니다. 비탈이 가파를수록 정적 세기 변화는 크지만, 고속에서도 좋은지는 다음 단계에서 봅니다.',
       map: ringMap(2, '이 단계: ③ 전압으로 골을 옮겨, 레이저 위 네 점(PAM4 레벨) 사이를 벌립니다.'),
       knobs: [{ sym: 'x', name: '레이저 디튜닝', does: '레이저가 골의 어디에 있는지(선폭 단위). 골 바닥(x ≈ 0)은 손실이 크고, 너무 멀면 세기 변화가 작습니다. 정적 기울기는 |x| ≈ 0.58에서 가장 가파릅니다. 파랑 쪽(x < 0)에 두세요 — 자기 가열에 대해 안정한 쪽입니다(★★에서 중요).', see: '아래 스펙트럼: 레이저 세로선 위의 네 점 = PAM4 네 레벨' },
@@ -505,6 +538,10 @@ KINDS.mrr = (() => {
     const s4 = {
       id: 'pam4', short: '200G PAM4', title: '112 GBd PAM4 — 광자 수명, RC, 디튜닝', aspect: 0.5,
       task: '112 GBd로 구동합니다. 결합 간격 · 디튜닝 · 진폭으로 대역폭을 확보하고 눈(eye)을 여세요(페널티·OMA 목표).',
+      aim: (l2) => `눈 페널티 ≤ ${fmtT(l2.s2.pen)} dB가 기준입니다. 페널티는 수신기의 5-tap FFE로 보정한 뒤, 가장 좁은 눈이 이상적인 눈(레벨 간격 2/3)의 몇 %인지에서 나옵니다(FFE 잡음 증폭 포함, 페널티 = −10·log₁₀ 비). 즉 ${fmtT(l2.s2.pen)} dB는 “이상적인 눈보다 수신 광파워가 ${fmtT(l2.s2.pen)} dB 더 필요하다”는 뜻이고, Stage 3(3A+)의 링크 마진 = 수신 OMA − 페널티 − 감도에서 그대로 빠집니다. 화면의 진한 선이 이 판정에 쓰는 FFE 후 눈입니다(옅은 선 = FFE 전 파형). FFE가 심볼 간 간섭을 많이 되돌릴수록 잡음도 그만큼 키우므로(×√Σc²), 막대가 비슷하게 열려 있어도 잡음 증폭이 큰 설계(대개 Q가 높은 링)는 페널티가 커집니다.`,
+      verdict: (l2, r) => ({ got: `EO 대역 ${f2(r.bw, 1)} GHz · FFE 후 가장 좁은 눈 ${Math.round(Math.max(r.eye ? r.eye.ratio : 0, 0) * 100)}% → 페널티 ${f2(r.pen, 2)} dB · OMA ${f2(r.omaDbm, 1)} dBm.`,
+        enough: `페널티 ${f2(r.pen, 2)} dB가 기준 ${fmtT(l2.s2.pen)} dB 안입니다. 이 기준은 같은 엔진에서 가장 잘 만든 기준 설계의 페널티에 여유(×1.25 또는 +0.4 dB 중 큰 쪽)를 둔 값입니다. 눈이 완전히 열려 보이지 않아도 됩니다 — 실제 200G/lane 송신기도 기준 등화기 후 수 dB의 페널티를 허용합니다(참고: IEEE 802.3dj 제안의 TDECQ 상한 ≈ 3.4 dB, 15-tap FFE, 계산법이 달라 직접 비교는 안 됨).`,
+        next: '이 결과는 한 온도에서, 공진이 레이저 옆에 정확히 있을 때의 이야기입니다. 칩 온도가 1 °C만 바뀌어도 공진이 수십 pm 움직여 레이저가 비탈에서 벗어납니다. → 5단계 온도 · 히터' }),
       intro: '<b>이 단계:</b> 같은 설계를 112 GBd(초당 1120억 심볼) PAM4로 구동합니다. 두 가지가 속도를 막습니다. ① <b>광자 수명</b> — 골이 좁을수록(Q<sub>L</sub>↑) 빛이 링에 오래 머물러 빠른 변화를 따라가지 못합니다. ② <b>RC</b> — 접합 용량 C<sub>j</sub>와 저항(접합 + 드라이버 50 Ω)이 전압 변화를 늦춥니다. 레이저를 골에서 조금 더 떼면(|x| ≈ 0.8–1) 응답에 피크가 생겨 대역이 넓어지기도 합니다.<br>그래서 2단계의 깊고 좁은 골이 고속에서는 오히려 불리할 수 있습니다 — 간격·디튜닝·진폭으로 눈(eye)을 여세요. 결과는 112 GBd PAM4(224 Gb/s 라인 — FEC·부호화 오버헤드 뒤 200G급 레인)의 눈과 OMA로 봅니다.',
       map: ringMap(3, '이 단계: ④ 같은 일을 112 GBd 속도로 — 골이 너무 좁으면 빛이 따라오지 못합니다.'),
       knobs: [{ sym: 'g', name: '버스–링 간격', does: '좁히면 Over-coupled 쪽으로 가서 Q<sub>L</sub>이 낮아집니다 → 광자 수명 한계 f<sub>Q</sub>↑(빨라짐), 대신 정적 기울기·ER↓. 반대로 넓혀 Q가 높으면 빛이 오래 머물러 눈 페널티가 크게 나빠집니다 — 이 단계에서 가장 크게 듣는 손잡이입니다.', see: 'f<sub>Q</sub> · f<sub>RC</sub> 타일 — 둘 중 작은 쪽이 병목' },
@@ -520,6 +557,7 @@ KINDS.mrr = (() => {
         { k: `EO 대역폭 ≥ ${fmtT(l2.s1.bw)} GHz`, v: `${f2(r.bw, 1)} GHz`, ok: r.bw >= l2.s1.bw },
         { k: `PAM4 눈 페널티 ≤ ${fmtT(l2.s2.pen)} dB (5-tap FFE)`, v: `${f2(r.pen, 2)} dB`, ok: r.pen <= l2.s2.pen },
         { k: `OMA<sub>outer</sub> (정착 레벨, TDECQ 방식) ≥ ${dbm(l2.s2.oma)} dBm`, v: `${f2(r.omaDbm, 2)} dBm`, ok: r.oma >= l2.s2.oma },
+        { k: '참고: FFE 후 가장 좁은 눈 열림 ÷ FFE 잡음 증폭 (이상적 = 100 %)', v: r.eye ? `${Math.round(Math.max(r.eye.ratio * r.eye.ne, 0) * 100)} % ÷ ${f2(r.eye.ne, 2)} = ${Math.round(Math.max(r.eye.ratio, 0) * 100)} %` : '—', ok: true, na: true },
         { k: '참고: 동적 OMA (파형 극값, 오버슈트 포함)', v: `${f2(r.omaDynDbm, 2)} dBm`, ok: true, na: true }],
       done: (l2, r) => r.bw >= l2.s1.bw && r.pen <= l2.s2.pen && r.oma >= l2.s2.oma,
       coach(l2, r, c) {
@@ -563,6 +601,10 @@ KINDS.mrr = (() => {
     const s5 = {
       id: 'thermal', short: '온도 · 히터', title: '열 안정성 — 온도 드리프트, 히터, 레이저 파장', aspect: 0.56, local: ['sT', 'sP', 'sL'],
       task: `온도를 저온 · 중간 · 고온으로 옮기며 히터 전력(필요하면 레이저 파장)으로 동작점을 되찾으세요 — 히터 예산 ${fmtT(l.s2.ph)} mW 이하.`,
+      aim: (l2) => `저온 · 중간 · 고온 각각에서, 히터 ${fmtT(l2.s2.ph)} mW 이하로 이 설계의 공칭 동작(정렬 + 4단계의 눈)을 되찾을 수 있는지 봅니다. 히터 예산은 기준 설계가 0–70 °C 전체를 덮는 데 드는 전력에 30 % 여유를 둔 값입니다.`,
+      verdict: (l2, r, mem) => { const rec = (mem && mem.rec) || {}; return { got: `저온 ${rec.cold != null ? rec.cold + ' mW' : '—'} · 중간 ${rec.mid != null ? rec.mid + ' mW' : '—'} · 고온 ${rec.hot != null ? rec.hot + ' mW' : '—'}로 동작점을 되찾았습니다(1 °C당 공진 이동 ${f2(r.dldTpm, 0)} pm).`,
+        enough: `세 온도 모두 예산 ${fmtT(l2.s2.ph)} mW 안이므로, 이 칩은 0–70 °C 어디서든 히터로 공진을 레이저 옆에 붙잡아 둘 수 있습니다.`,
+        next: '여기까지는 “모든 칩이 똑같이 만들어졌다”는 가정입니다. 실제로는 폭·두께·도핑 오차로 다이마다 공진이 수 nm씩 다른 곳에 생기고, 흡수된 빛이 링을 데우는 자기 가열도 있습니다. 모든 손잡이를 함께 맞추고 공정 오차를 겹친 수율을 봅니다. → Full · Fab' }; },
       intro: `<b>이 단계:</b> 링의 가장 큰 약점, 온도입니다. 실리콘 링의 공진은 1 °C에 약 ${(lam * cross(l.pf).dndT / cross(l.pf).ng * 1e6).toFixed(0)} pm 움직이는데, 골의 폭은 수십~수백 pm뿐입니다. 레이저(외부 광원) 파장은 그대로이므로 몇 도만 바뀌어도 레이저가 골에서 벗어나 변조가 멈춥니다.<br>그래서 링 위의 히터로 공진을 레이저 옆으로 다시 끌어옵니다. 히터는 공진을 <b>장파장(빨강) 쪽으로만</b> 옮길 수 있으므로, 가장 뜨거울 때(히터가 필요 없을 때)에도 공진이 레이저보다 Δλ<sub>b</sub>만큼 파랑 쪽에 있게 두고, 온도가 내려가면 히터를 올립니다. 모자라면 한 FSR 옆의 다음 공진을 씁니다(P<sub>2π</sub>면 어떤 차수든). 저온·중간·고온에서 동작점을 되찾고, 쓴 히터 전력이 예산 ${fmtT(l.s2.ph)} mW 이하인지 확인하세요.`,
       map: ringMap(4, '이 단계: ⑤ 온도가 바뀌면 골 전체가 움직입니다 — 히터로 레이저 옆에 되돌려 놓습니다.'),
       knobs: [{ sym: 'T', name: '칩 온도', does: '내리면 공진이 파랑 쪽으로 이동합니다(∂λ/∂T > 0).', see: '그림의 파장 눈금: ‘공진’ 막대와 ‘레이저’ 막대 사이' },
@@ -633,7 +675,7 @@ KINDS.mrr = (() => {
   function drawFull(cv, l, r, withEye) {
     const ctx = bg(cv), W = cv.width, H = cv.height, pad = 12 * DPR, narrow = W / DPR < 520;
     const ex = pad, ey = pad + 22 * DPR, ew = (narrow ? W : W * 0.58) - 2 * pad, eh = H - ey - pad;
-    if (withEye && r.eye) eyeDraw(ctx, r.eye, ex, ey, ew, eh, `112 GBd PAM4 · 눈 ${Math.round(Math.max(r.eye.ratio, 0) * 100)}% · 페널티 ${r.pen.toFixed(1)} dB${narrow ? ` · EO ${Math.round(r.bw)} GHz` : ''}`, r.pen <= l.s2.pen);
+    if (withEye && r.eye) eyeDraw(ctx, r.eye, ex, ey, ew, eh, `112 GBd · FFE 후 눈 ${Math.round(Math.max(r.eye.ratio * r.eye.ne, 0) * 100)}% ÷ ×${f2(r.eye.ne, 2)} = ${Math.round(Math.max(r.eye.ratio, 0) * 100)}% → 페널티 ${r.pen.toFixed(1)} dB (기준 ${fmtT(l.s2.pen)})`, r.pen <= l.s2.pen);
     else {   // static transfer: T vs drive voltage at the laser
       const vs = [], c = r.c; for (let i = 0; i <= 60; i++) { const v = c.d.vb - 0.2 * c.d.vpp + 1.4 * c.d.vpp * i / 60, q = rates(c, 0, Math.max(0, v)), z = cx.div([0, q.mu], [-(q.gi + q.ge), q.Delta]), so = [1 + q.mu * z[1], -q.mu * z[0]]; vs.push([v, so[0] * so[0] + so[1] * so[1]]); }
       const X = (v) => ex + (v - vs[0][0]) / (vs[vs.length - 1][0] - vs[0][0]) * ew, Y = (t) => ey + (1 - t) * eh;
