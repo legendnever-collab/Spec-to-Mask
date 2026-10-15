@@ -78,7 +78,9 @@ window.GAME_SHELL = { plat: () => state.plat, pf: () => (state.plat ? PLATFORMS[
   setScope: (scope) => { clearTimeout(commitT); clearTimeout(idleT); studioScope = scope; ['fab','wafer','seedFix','credits','fromAI'].forEach(k => { state[k] = scope ? (scope[k] || (scope[k] = {})) : {}; }); state.land = {}; state.cur = null; state.lastLogged = ''; },
   applyDesign: (d, full) => { if (state.fabRunning) return; if (full && kind().steps) { guideNS(state.id).mode = 'full'; } DESP()[state.id] = JSON.parse(JSON.stringify(d)); setupLevel(); persist(); },
   setValue: (k,v) => setParam(k,v,true),
-  currentGate: () => { if (!state.cur) return false; const c = state.cur; return c.S ? !!c.S.done(c.l,c.res,stepMem(c.S)) : !c.pr && objectives()[0].pass; },
+  // A queued animation-frame evaluation must never lend its old pass to a newly edited design.
+  testNow: () => { if (!state.plat || state.fabRunning || state.aiRunning != null) return false; evaluate(); return true; },
+  currentGate: () => { if (!state.cur || state.cur.key !== keyOf(dv())) return false; const c = state.cur; return c.S ? !!c.S.done(c.l,c.res,stepMem(c.S)) : !c.pr && objectives()[0].pass; },
   testIdentity: () => JSON.stringify([state.plat,state.mode,state.id,dv(),curStep() && curStep().id,dv().useCard ? PP().cards : null,MODEL_VERSION]),
   redraw: () => { if(!state.cur || window.LABUI?.isOpen()) return; sizeCanvas(); computeChart(); drawWafer(state.wafer[state.id], (state.wafer[state.id] || []).length); },
   onLevel: (f) => levelHooks.push(f), progress: () => progressCount() };

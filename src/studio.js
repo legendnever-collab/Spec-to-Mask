@@ -93,7 +93,7 @@ function identity(){if(LU.isOpen()){const a=LU.state();return JSON.stringify([SH
 function liveGate(){const p=phase();if(p?.summary)return [0,1,2,3,4].every(i=>ws.completed[i]);if(LU.isOpen()){const st=LU.state(),i=p?.lab?.[step()]??(st.s.cur|0);return !!st.s.live?.[LU.MISS[i].id] && (track()?.mod==null || st.C.d.mod===track().mod);}const c=window.GAME_CTX();return SH.currentGate() && !(c?.id==='3A+' && track()?.mod!=null && +c.d.mod!==(track().mod===1?1:0));}
 function fresh(){const a=ws?.tests?.[historyKey()];return !!a && a.identity===identity() && liveGate();}
 function runTest(){if(LU.isOpen()){const b=document.querySelector('[data-la="run"]');if(b)b.click();else {LU.mission(4);document.querySelector('[data-la="run"]')?.click();LU.mission(phase()?.lab?.[step()]??4);}}
- else SH.redraw();
+ else if(!SH.testNow())return;
  if(ws){ws.tests=ws.tests||{};ws.tests[historyKey()]={identity:identity(),ok:liveGate(),at:Date.now()};save();}
  refresh();if(!liveGate())openSheet('inspect');}
 $('#studioTest').addEventListener('click',runTest);
