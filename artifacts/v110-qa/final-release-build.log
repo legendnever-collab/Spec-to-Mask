@@ -1,0 +1,15 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.1.0 release
+> sh tools/release.sh
+
+tables.js 901 KB; ssc platforms ['si1310', 'si1550', 'sin1310', 'sin1550']
+BUILD OK 2135735 bytes -> release/spec-to-mask-v1.1.0.html
+Handoff files: 93
+8666cdc96b1a3ecea7325dc64dfd1b4f592b6498c1819e075722dbe842922c42  spec-to-mask-v1.1.0-HANDOFF.zip
+cba26ee6ba29fcddfeaafb262311ca209aa1bd3ab7a8e9bbad70b04093405450  spec-to-mask-v1.1.0-source.zip
+fa91d6fe9bd5e38a6cf18e881134bbc9f7a412e10c8cad9be472fcf7cc33282e  spec-to-mask-v1.1.0.html
+95e072e31ee9ab0cfd49436a3bc6a152e709187cf6c85ebcf7130e507f63a7c7  MODEL_LIMITATIONS-v1.1.md
+44b75f0ddeb2ac9ff501acf635d56282f26538dfa3f6336aded31c9cb674771f  RELEASE_NOTES-v1.1.md
+3091ebcc23f71c9376f9f9b9786d1f5514cec4e2fa6d969739a82df6e89ff645  USER_GUIDE-v1.1.md
+fdde1e669f011dbd736eb5f10c1dbde5aa6098e024813754a2f1b3ef87eb1416  VERIFICATION_REPORT-v1.1.md

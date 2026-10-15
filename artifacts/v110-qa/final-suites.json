@@ -1,0 +1,348 @@
+{
+  "started": 1792080871.8528113,
+  "html_sha256": "fa91d6fe9bd5e38a6cf18e881134bbc9f7a412e10c8cad9be472fcf7cc33282e",
+  "results": [
+    {
+      "suite": "upgrade",
+      "command": [
+        "npm",
+        "run",
+        "test:upgrade"
+      ],
+      "exit": 0,
+      "seconds": 3.75
+    },
+    {
+      "suite": "dr8",
+      "command": [
+        "npm",
+        "run",
+        "test:dr8"
+      ],
+      "exit": 0,
+      "seconds": 6.47
+    },
+    {
+      "suite": "baseline",
+      "command": [
+        "npm",
+        "run",
+        "test:baseline"
+      ],
+      "exit": 0,
+      "seconds": 20.14
+    },
+    {
+      "suite": "wdm",
+      "command": [
+        "npm",
+        "run",
+        "test:wdm"
+      ],
+      "exit": 0,
+      "seconds": 13.81
+    },
+    {
+      "suite": "mrr",
+      "command": [
+        "npm",
+        "run",
+        "test:mrr"
+      ],
+      "exit": 0,
+      "seconds": 24.2
+    },
+    {
+      "suite": "guide",
+      "command": [
+        "npm",
+        "run",
+        "test:guide"
+      ],
+      "exit": 0,
+      "seconds": 90.8
+    },
+    {
+      "suite": "lab",
+      "command": [
+        "npm",
+        "run",
+        "test:lab"
+      ],
+      "exit": 0,
+      "seconds": 101.64
+    },
+    {
+      "suite": "migrate",
+      "command": [
+        "npm",
+        "run",
+        "test:migrate"
+      ],
+      "exit": 0,
+      "seconds": 2.48
+    },
+    {
+      "suite": "backup",
+      "command": [
+        "npm",
+        "run",
+        "test:backup"
+      ],
+      "exit": 0,
+      "seconds": 11.43
+    },
+    {
+      "suite": "learn",
+      "command": [
+        "npm",
+        "run",
+        "test:learn"
+      ],
+      "exit": 0,
+      "seconds": 11.24
+    },
+    {
+      "suite": "flow",
+      "command": [
+        "npm",
+        "run",
+        "test:flow"
+      ],
+      "exit": 0,
+      "seconds": 115.37
+    },
+    {
+      "suite": "syntax",
+      "command": [
+        "npm",
+        "run",
+        "test:syntax"
+      ],
+      "exit": 0,
+      "seconds": 5.9
+    },
+    {
+      "suite": "smoke",
+      "command": [
+        "npm",
+        "run",
+        "test:smoke"
+      ],
+      "exit": 0,
+      "seconds": 15.49
+    },
+    {
+      "suite": "wipe",
+      "command": [
+        "npm",
+        "run",
+        "test:wipe"
+      ],
+      "exit": 0,
+      "seconds": 26.45
+    },
+    {
+      "suite": "studio",
+      "command": [
+        "npm",
+        "run",
+        "test:studio"
+      ],
+      "exit": 0,
+      "seconds": 7.5
+    },
+    {
+      "suite": "py",
+      "command": [
+        "npm",
+        "run",
+        "test:py"
+      ],
+      "exit": 0,
+      "seconds": 60.82
+    },
+    {
+      "suite": "smoke-si1550",
+      "command": [
+        "node",
+        "test/e2e/smoke.js",
+        "si1550"
+      ],
+      "exit": 0,
+      "seconds": 14.97
+    },
+    {
+      "suite": "fab",
+      "command": [
+        "npm",
+        "run",
+        "test:fab"
+      ],
+      "exit": 0,
+      "seconds": 65.81
+    },
+    {
+      "suite": "guide-si1550",
+      "command": [
+        "node",
+        "test/e2e/guide.js",
+        "si1550"
+      ],
+      "exit": 0,
+      "seconds": 42.93
+    },
+    {
+      "suite": "lab-si1550",
+      "command": [
+        "node",
+        "test/e2e/lab.js",
+        "si1550"
+      ],
+      "exit": 0,
+      "seconds": 24.27
+    },
+    {
+      "suite": "lab_state-si1550",
+      "command": [
+        "node",
+        "test/e2e/lab_state.js",
+        "si1550"
+      ],
+      "exit": 0,
+      "seconds": 15.28
+    },
+    {
+      "suite": "fab-si1550",
+      "command": [
+        "node",
+        "test/e2e/fab.js",
+        "si1550"
+      ],
+      "exit": 0,
+      "seconds": 69.66
+    },
+    {
+      "suite": "smoke-sin1310",
+      "command": [
+        "node",
+        "test/e2e/smoke.js",
+        "sin1310"
+      ],
+      "exit": 0,
+      "seconds": 15.4
+    },
+    {
+      "suite": "bot-si1310",
+      "command": [
+        "node",
+        "test/e2e/bot.js",
+        "std",
+        "2",
+        "1-1,1-2,1-3,1-4,1-5,1-6,1-7,2-1,2-2,2-3,2-3R,2-4,2-5,3A,3A+,3W,D-1,D-2,B-1,B-2,B-3",
+        "si1310"
+      ],
+      "exit": 0,
+      "seconds": 175.26
+    },
+    {
+      "suite": "bot-si1550",
+      "command": [
+        "node",
+        "test/e2e/bot.js",
+        "std",
+        "2",
+        "1-7,2-3,2-3R,2-5,3A,3A+,3W,D-1,B-3",
+        "si1550"
+      ],
+      "exit": 0,
+      "seconds": 98.8
+    },
+    {
+      "suite": "lab_state-sin1310",
+      "command": [
+        "node",
+        "test/e2e/lab_state.js",
+        "sin1310"
+      ],
+      "exit": 0,
+      "seconds": 15.26
+    },
+    {
+      "suite": "guide-sin1310",
+      "command": [
+        "node",
+        "test/e2e/guide.js",
+        "sin1310"
+      ],
+      "exit": 0,
+      "seconds": 43.96
+    },
+    {
+      "suite": "lab-sin1310",
+      "command": [
+        "node",
+        "test/e2e/lab.js",
+        "sin1310"
+      ],
+      "exit": 0,
+      "seconds": 28.81
+    },
+    {
+      "suite": "smoke-sin1550",
+      "command": [
+        "node",
+        "test/e2e/smoke.js",
+        "sin1550"
+      ],
+      "exit": 0,
+      "seconds": 28.6
+    },
+    {
+      "suite": "fab-sin1310",
+      "command": [
+        "node",
+        "test/e2e/fab.js",
+        "sin1310"
+      ],
+      "exit": 0,
+      "seconds": 77.19
+    },
+    {
+      "suite": "bot-sin1310",
+      "command": [
+        "node",
+        "test/e2e/bot.js",
+        "std",
+        "2",
+        "1-7,2-3,2-3R,2-5,3A,3A+,3W,D-1,B-3",
+        "sin1310"
+      ],
+      "exit": 0,
+      "seconds": 102.89
+    },
+    {
+      "suite": "fab-sin1550",
+      "command": [
+        "node",
+        "test/e2e/fab.js",
+        "sin1550"
+      ],
+      "exit": 0,
+      "seconds": 82.71
+    },
+    {
+      "suite": "bot-sin1550",
+      "command": [
+        "node",
+        "test/e2e/bot.js",
+        "std",
+        "2",
+        "1-7,2-3,2-3R,2-5,3A,3A+,3W,D-1,B-3",
+        "sin1550"
+      ],
+      "exit": 0,
+      "seconds": 106.85
+    }
+  ]
+}

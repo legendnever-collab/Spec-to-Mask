@@ -1,0 +1,23 @@
+COMMAND node test/e2e/lab_state.js sin1310
+HTML_SHA256 fa91d6fe9bd5e38a6cf18e881134bbc9f7a412e10c8cad9be472fcf7cc33282e
+lab state integrity · sin1310
+    fails: none
+  ok all six missions PASS on the current design (live and historical)
+  ok export and verification run carry the design hash
+  ok Foundry Readiness is shown as NOT VERIFIED, never ✓
+  ok matching GDS re-check → Geometry Rechecked ✓
+  ok die 1.5 mm: Floorplan FAIL, Verification / Export invalid now, history kept
+  ok stepper and mission note show "이전 완료 · 현재 무효"
+  ok Design Valid off, imported GDS re-check stale
+  ok map label separates current and historical (미션 1/6 · 이전 6)
+  ok restoring the design (same hash) → all missions, export and re-check valid again
+  ok bend radius 10 µm → Routing FAIL (최소 굽힘 반경 R ≥ 15 µm (w0, 90° 방사 < 0.005 dB)), verification / export invalid
+  ok a different valid design: Routing PASS, but Verification needs a new run and Export is stale
+  ok re-run → Verification PASS; Export still stale (other design hash)
+  ok re-export → all six missions PASS again
+  ok stars, cards and level designs unchanged
+  ok no page errors ()
+  ok v1 lab state migrates: ran → null, exported → { hash: null }
+  ok migrated state: Verification / Export not valid now, historical completion kept
+  ok no page errors after migration
+lab state checks passed

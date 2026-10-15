@@ -1,0 +1,21 @@
+COMMAND node test/e2e/bot.js std 2 1-7,2-3,2-3R,2-5,3A,3A+,3W,D-1,B-3 sin1310
+HTML_SHA256 fa91d6fe9bd5e38a6cf18e881134bbc9f7a412e10c8cad9be472fcf7cc33282e
+std/t2 1-7 final ord=3 undefined=3 dL1=20.2 undefined=20.2 t1=0.02 undefined=0.02 dL2=10.1 undefined=10.1 t2a=0.87 undefined=0.87 t2b=-0.71 undefined=-0.71 wa=0.78 undefined=0.78 | 726/1000 | ✓✓✓ | yield 38% | coach: 코치 · 수치세 별 모두 달성카드가 인벤토리에 저장되었습니다. AI 라이벌보다 높은 설계 점수에 도전하거나 다음 레벨로 가세요.다음 레벨 → 2-1 열로 위상 돌리기
+  1-7 earned ★★★ (bits 7) · final design meets ★/★★
+std/t2 2-3 final L=2.35 undefined=2.35 g=48.5 undefined=48.5 eta=1 undefined=1 RT=50 undefined=50 | 869/1000 | ✓✓✓ | yield 100% | coach: 코치 · 수치세 별 모두 달성카드가 인벤토리에 저장되었습니다. AI 라이벌보다 높은 설계 점수에 도전하거나 다음 레벨로 가세요.다음 레벨 → 2-3R 링 변조기
+  2-3 earned ★★★ (bits 7) · final design meets ★/★★
+std/t2 2-3R final R=5.45 undefined=5.45 g=0.2 undefined=0.2 dop=0.65 undefined=0.65 vb=3 undefined=3 vpp=2.45 undefined=2.45 det=-0.4 undefined=-0.4 bm=1 undefined=1 | 803/1000 | ✓✓✓ | yield 77% | coach: 코치 · 수치세 별 모두 달성카드가 인벤토리에 저장되었습니다. AI 라이벌보다 높은 설계 점수에 도전하거나 다음 레벨로 가세요.다음 레벨 → 2-4 빛을 전류로
+  2-3R earned ★★★ (bits 7) · final design meets ★/★★
+std/t2 2-5 final P=19.5 undefined=19.5 ns=2 undefined=2 iso=0 undefined=0 th=12.0 undefined=12 | 848/1000 | ✓✓✓ | yield 100% | coach: 코치 · 수치세 별 모두 달성카드가 인벤토리에 저장되었습니다. AI 라이벌보다 높은 설계 점수에 도전하거나 다음 레벨로 가세요.다음 레벨 → 3A 1.6T 2×FR4
+  2-5 earned ★★★ (bits 7) · final design meets ★/★★
+std/t2 3A final P=14.0 undefined=14 share=0 undefined=0 tc=0 undefined=0 mt=1 undefined=1 dsp=0 undefined=0 | 794/1000 | ✓✓✓ | yield 70% | coach: 코치 · 수치세 별 모두 달성카드가 인벤토리에 저장되었습니다. AI 라이벌보다 높은 설계 점수에 도전하거나 다음 레벨로 가세요.다음 레벨 → 3A+ 1.6T DR8 / CPO
+  3A earned ★★★ (bits 7) · final design meets ★/★★
+std/t2 3A+ final mod=0 undefined=0 P=16.0 undefined=16 share=1 undefined=1 tc=0 undefined=0 pkg=2 undefined=2 | 918/1000 | ✓✓✓ | yield 100% | coach: 코치 · 수치세 별 모두 달성카드가 인벤토리에 저장되었습니다. AI 라이벌보다 높은 설계 점수에 도전하거나 다음 레벨로 가세요.다음 레벨 → 3W 1.6T WDM8 링 송신
+  3A+ earned ★★★ (bits 7) · final design meets ★/★★
+std/t2 3W final P=14.0 undefined=14 grid=2 undefined=2 R=5.50 undefined=5.5 rad=1 undefined=1 asg=1 undefined=1 src=0 undefined=0 pitch=40 undefined=40 | 803/1000 | ✓✓✓ | yield 94% | coach: 코치 · 수치세 별 모두 달성카드가 인벤토리에 저장되었습니다. AI 라이벌보다 높은 설계 점수에 도전하거나 다음 레벨로 가세요.다음 레벨 → D-1 빛을 2 ns 붙잡기
+  3W earned ★★★ (bits 7) · final design meets ★/★★
+std/t2 D-1 final lay=0 undefined=0 w=2.20 undefined=2.2 gap=4.2 undefined=4.2 rin=105 undefined=105 ws=0.90 undefined=0.9 sb=1 undefined=1 | 902/1000 | ✓✓✓ | yield 88% | coach: 코치 · 수치세 별 모두 달성카드가 인벤토리에 저장되었습니다. AI 라이벌보다 높은 설계 점수에 도전하거나 다음 레벨로 가세요.다음 레벨 → D-2 디지털 가변 지연선
+  D-1 earned ★★★ (bits 7) · final design meets ★/★★
+std/t2 B-3 final P=28.0 undefined=28 nch=1 undefined=1 lo=5 undefined=5 nav=1 undefined=1 | 1000/1000 | ✓✓✓ | yield 100% | coach: 코치 · 수치세 별 모두 달성카드가 인벤토리에 저장되었습니다. AI 라이벌보다 높은 설계 점수에 도전하거나 다음 레벨로 가세요.
+  B-3 earned ★★★ (bits 7) · final design meets ★/★★
+errors []

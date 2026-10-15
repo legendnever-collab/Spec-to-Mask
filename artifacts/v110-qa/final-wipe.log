@@ -1,0 +1,35 @@
+COMMAND npm run test:wipe
+HTML_SHA256 fa91d6fe9bd5e38a6cf18e881134bbc9f7a412e10c8cad9be472fcf7cc33282e
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.1.0 test:wipe
+> node test/e2e/wipe.js si1310 && node test/e2e/wipe.js sin1550
+
+  ok 2-2 has stars and a Fab log before the reset
+  ok 1-7 step 1 is marked complete
+  ok "설계값만 처음으로" keeps the guided progress
+  ok the confirmation lists what will be erased (1 completed step)
+  ok 1-7 guided progress erased
+  ok the screen shows a fresh level (no "완료", step 1 task)
+  ok other level (2-2) untouched
+  ok undo is offered
+  ok undo restores the step progress
+  ok 2-2 stars, card, Fab log and best score erased
+  ok 2-2 Design DB points erased when ticked (1 → 0)
+  ok the screen shows the fresh level (★ goal, no yield)
+  ok no page errors ()
+wipe checks passed
+  ok 2-2 has stars and a Fab log before the reset
+  ok 1-7 step 1 is marked complete
+  ok "설계값만 처음으로" keeps the guided progress
+  ok the confirmation lists what will be erased (1 completed step)
+  ok 1-7 guided progress erased
+  ok the screen shows a fresh level (no "완료", step 1 task)
+  ok other level (2-2) untouched
+  ok undo is offered
+  ok undo restores the step progress
+  ok 2-2 stars, card, Fab log and best score erased
+  ok 2-2 Design DB points erased when ticked (2 → 0)
+  ok the screen shows the fresh level (★ goal, no yield)
+  ok no page errors ()
+wipe checks passed

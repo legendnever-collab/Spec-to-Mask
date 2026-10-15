@@ -1,0 +1,33 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.1.0 test:export
+> node test/e2e/export.js all
+
+smq_si1310_1-3.json geometry mmi | primary 0.00319136 | stars 0 | ok 1111
+smq_si1310_1-4.json geometry mmi | primary 0.0373786 | stars 0 | ok 1111
+smq_si1310_1-5.json geometry mmi | primary 0.301073 | stars 0 | ok 111111
+smq_si1310_D-1.json geometry spiral | primary 4.23189 | stars 0 | ok 11111
+smq_si1310_2-3R.json geometry ring_allpass | primary 4.11921 | stars 0 | ok 1111111
+smq_si1310_D-1_rect.json geometry spiral_rect | primary 4.33763 | stars 0 | ok 111110
+smq_si1310_D-1_rectarc.json geometry spiral_rect | primary 7.40544 | stars 0 | ok 110100
+smq_si1550_1-3.json geometry mmi | primary 0 | stars 0 | ok 1111
+smq_si1550_1-4.json geometry mmi | primary 0.0398742 | stars 0 | ok 1111
+smq_si1550_1-5.json geometry mmi | primary 0.357746 | stars 0 | ok 111111
+smq_si1550_D-1.json geometry spiral | primary 4.13154 | stars 0 | ok 11111
+smq_si1550_2-3R.json geometry ring_allpass | primary 3.74833 | stars 0 | ok 1111111
+smq_si1550_D-1_rect.json geometry spiral_rect | primary 4.20002 | stars 0 | ok 111110
+smq_si1550_D-1_rectarc.json geometry spiral_rect | primary 5.81184 | stars 0 | ok 110100
+smq_sin1310_1-3.json geometry mmi | primary 0 | stars 0 | ok 1111
+smq_sin1310_1-4.json geometry mmi | primary 0.0199772 | stars 0 | ok 1111
+smq_sin1310_1-5.json geometry mmi | primary 0.163422 | stars 0 | ok 111111
+smq_sin1310_D-1.json geometry spiral | primary 1.10953 | stars 0 | ok 11111
+smq_sin1310_2-3R.json geometry ring_allpass | primary 3.45495 | stars 0 | ok 1111111
+smq_sin1310_D-1_rect.json geometry spiral_rect | primary 1.09615 | stars 0 | ok 111110
+smq_sin1310_D-1_rectarc.json geometry spiral_rect | primary 1.62673 | stars 0 | ok 110100
+smq_sin1550_1-3.json geometry mmi | primary 0 | stars 0 | ok 1111
+smq_sin1550_1-4.json geometry mmi | primary 0 | stars 0 | ok 1111
+smq_sin1550_1-5.json geometry mmi | primary 0.164937 | stars 0 | ok 111111
+smq_sin1550_D-1.json geometry spiral | primary 2.30099 | stars 0 | ok 11111
+smq_sin1550_2-3R.json geometry ring_allpass | primary 3.97855 | stars 0 | ok 1111111
+smq_sin1550_D-1_rect.json geometry spiral_rect | primary 2.28859 | stars 0 | ok 111110
+smq_sin1550_D-1_rectarc.json geometry spiral_rect | primary 2.58162 | stars 0 | ok 110110

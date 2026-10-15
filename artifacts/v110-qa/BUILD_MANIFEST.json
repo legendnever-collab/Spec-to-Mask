@@ -1,0 +1,11 @@
+{
+  "version": "1.1.0",
+  "source_commit": "488f4454e43487d2cac66adff3594a969da1657f",
+  "source_tree": "92a727ac31ef5b422cd3c953afd362f4fa247514",
+  "html_sha256": "fa91d6fe9bd5e38a6cf18e881134bbc9f7a412e10c8cad9be472fcf7cc33282e",
+  "physics_baseline": "6bb116e1c5c5bd3fbff345a0e3752a078aa8084a",
+  "unchanged_files": 120,
+  "baseline_physics_sha256": "88b4998c56730cf961067f82d7d38d0eeb47d06a27c4e8567d98df6833e88287",
+  "current_physics_sha256": "88b4998c56730cf961067f82d7d38d0eeb47d06a27c4e8567d98df6833e88287",
+  "model_version": "smq-model-1.0"
+}

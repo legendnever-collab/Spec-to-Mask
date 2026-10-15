@@ -1,0 +1,6 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.1.0 test:syntax
+> node tools/check_syntax.js
+
+syntax OK: 71 files + dist script, no external scripts

@@ -1,0 +1,7 @@
+
+> spec-to-mask-quest@1.0.0 test:wdm
+> node test/t_wdm.js
+
+  BASELINE ad7188f:src/data/pspec.json blob 6f1468dd3793f17ca3c932e1eb1464aa1050cbcd
+  IDENTITY test:wdm spec identity: 4/4 checks run against ad7188f
+81/81 checks passed

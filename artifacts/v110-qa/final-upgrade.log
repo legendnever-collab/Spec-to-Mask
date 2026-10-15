@@ -1,0 +1,10 @@
+COMMAND npm run test:upgrade
+HTML_SHA256 fa91d6fe9bd5e38a6cf18e881134bbc9f7a412e10c8cad9be472fcf7cc33282e
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.1.0 test:upgrade
+> node test/t_upgrade.js
+
+  BASELINE 5637cd9:src/kinds/spiral.js blob 9dff1599fd5a42703a0ba527d8585fd8c5714d4f
+  IDENTITY test:upgrade circular spiral: 12/12 checks run against 5637cd9
+357/357 checks passed

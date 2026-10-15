@@ -1,0 +1,19 @@
+COMMAND npm run test:baseline
+HTML_SHA256 fa91d6fe9bd5e38a6cf18e881134bbc9f7a412e10c8cad9be472fcf7cc33282e
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.1.0 test:baseline
+> node test/t_baseline.js
+
+  ok baseline 5637cd9:src/kinds/spiral.js readable
+  ok baseline f08011b:src/data/pspec.json readable
+  ok baseline fa9f16a:src/kinds/xcvr.js readable
+  ok baseline fa9f16a:src/data/pspec.json readable
+  ok baseline ad7188f:src/data/pspec.json readable
+  ok t_upgrade.js without history: exit 1, "BASELINE MISSING" (not a silent skip)
+  ok t_upgrade.js with SMQ_ALLOW_NO_BASELINE=1: passes only with "IDENTITY NOT RUN" printed
+  ok t_upgrade.js with history: 12/12 identity checks run against 5637cd9
+  ok t_dr8.js without history: exit 1, "BASELINE MISSING" (not a silent skip)
+  ok t_dr8.js with SMQ_ALLOW_NO_BASELINE=1: passes only with "IDENTITY NOT RUN" printed
+  ok t_dr8.js with history: 12/12 identity checks run against fa9f16a
+11/11 checks passed

@@ -1,0 +1,31 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.0.0 test:fab
+> node test/e2e/fab.js si1310
+
+fab reproducibility · si1310
+  ok run logged: seed 1354967467 · 69/69 · hash d1d3a7cc · smq-model-1.0
+  ok the panel states seed, sample count, Monte Carlo estimate, the 95 % interval and spatial correlation
+  ok seed fixed for the next tape-out
+  ok same design + seed 1354967467 → same result (69/69 both runs)
+  ok makeWafer(seed) is deterministic
+  ok baseline pinned: comparison table appears
+  ok current vs baseline with deltas, changed parameter and trade-off (no single score)
+  ok same wafer (seed 1067): baseline 69/69 · current 69/69 · paired counts consistent
+  ok independent recount on the same seed: 69 / 69
+  ok comparison changed no star, card or credit
+  ok result keyed on platform · difficulty · process scale · spec · seed · model · both design hashes (smq-model-1.0)
+  ok paired wording: discordant dies, exact sign test, Wilson interval kept, no "설계 차이입니다"
+  ok exact two-sided sign test: (5,0) p = 0.0625 (not significant), (0,6) p = 0.031
+  ok few discordant dies → no conclusion; a one-sided split → evidence on this wafer, not proof
+  ok difficulty change → STALE (바뀐 것: 난이도 표준 → 도전 · 공정 변동 크기 ×1 → ×1.25. 이전 값(시드 1067: 기준 69/69 · )
+  ok back to the same difficulty → the stored result is current again
+  ok new Fab Run seed 1638993674 → STALE (시드 1067 → 1638993674)
+  ok recomputed on seed 1638993674
+  ok design change → STALE (현재 설계)
+  ok design back to the compared one → current again
+  ok reload with the same conditions → the stored result is current
+  ok stored result from another model version → STALE
+  ok a v1.0 record without the condition fields → STALE (기록 없음), never shown as current
+  ok no page errors ()
+fab checks passed

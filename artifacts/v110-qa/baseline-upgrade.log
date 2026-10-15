@@ -1,0 +1,7 @@
+
+> spec-to-mask-quest@1.0.0 test:upgrade
+> node test/t_upgrade.js
+
+  BASELINE 5637cd9:src/kinds/spiral.js blob 9dff1599fd5a42703a0ba527d8585fd8c5714d4f
+  IDENTITY test:upgrade circular spiral: 12/12 checks run against 5637cd9
+357/357 checks passed

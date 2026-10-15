@@ -1,0 +1,4 @@
+{'suite': 'upgrade', 'command': ['npm', 'run', 'test:upgrade'], 'exit': 0, 'seconds': 2.94}
+{'suite': 'dr8', 'command': ['npm', 'run', 'test:dr8'], 'exit': 0, 'seconds': 6.85}
+{'suite': 'wdm', 'command': ['npm', 'run', 'test:wdm'], 'exit': 0, 'seconds': 12.94}
+{'suite': 'baseline', 'command': ['npm', 'run', 'test:baseline'], 'exit': 0, 'seconds': 24.64}

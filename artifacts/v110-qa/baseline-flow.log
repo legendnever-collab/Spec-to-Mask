@@ -1,0 +1,205 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.0.0 test:flow
+> node test/e2e/flow.js si1310 && node test/e2e/flow.js si1550 && node test/e2e/flow.js sin1310 && node test/e2e/flow.js sin1550
+
+flow e2e · si1310
+  ok 1-7 shows the learning path
+  ok new player starts in Guided mode
+  ok step 1 is the current step
+  ok step 1 exposes only ΔL and φ (mL,mP)
+  ok spectrum axis ticks 1240/1260/1280/1300/1320 lie in O-band
+  ok step 1 goals met (FSR 40 nm, λ_A → Bar, λ_B → Cross)
+  ok step 1 marked complete
+  ok stepper shows one completed step
+  ok no stars or design card awarded during a learning step
+  ok "다음 단계" moves to step 2
+  ok step 2 exposes ΔL₁ and φ₁ (dL1,t1)
+  ok Full Design shows all parameters (7)
+  ok ΔL₁ = 9.91 µm chosen in step 2 is the Full Design value
+  ok and it is stored in the 1-7 design
+  ok a step number jumps directly to that step
+  ok step 4 exposes order and trims (ord,t1,t2a,t2b)
+  ok a player with 1-7 stars starts in Full Design
+  ok and sees every parameter
+  ok rectangular layout exposes boundary / target / corner parameters (lay,bp,ec,port,dm,tau,env,w,gap,rc,sb,ws,tl)
+  ok preset 5×5 rewrites the boundary (5×5 mm)
+  ok preset 10×30 (10×30 mm)
+  ok the default target fits in 10×30
+  ok τ = 20 ns in 5×5 at f = 10% is reported as Infeasible in the objectives
+  ok the coach states the reason and the alternatives
+  ok with 4 alternatives
+  ok export carries pcell spiral_rect with the 10×30 mm boundary
+  ok exported delay 2 ns = target, predicted block present
+  ok 2-3R starts in Guided mode
+  ok step 1 exposes only the radius (R)
+  ok no comparison panel during a learning step
+  ok R = 6.2 µm from FSR = λ²/(n_g·2πR) gives FSR 11.02 nm ≈ 11 nm → step 1 complete
+  ok no stars or card during the learning step
+  ok step 2 exposes the coupling gap (g)
+  ok the step-1 radius is stored in the 2-3R design
+  ok Full Design shows every parameter with R = 6.2 (R,g,dop,vb,vpp,det,bm)
+  ok a player with 2-3R stars starts in Full Design
+  ok the MZM-vs-MRR comparison panel is offered
+  ok comparison table lists items where each modulator wins
+  ok export draws the layout radius 12.013 µm (slider 12 µm), order m 161
+  ok gap 0.3 µm on the Si layer
+  ok a saved 3A+ design without a modulator key opens as MZM ×8
+  ok the DR8 comparison panel shows both modulators
+  ok MRR ×8: ring heater 12.4 mW/lane and the ring stability objective
+  ok both modulators receive the same light (laser, split, coupling unchanged)
+  ok the modulator choice is stored with the 3A+ design
+  ok Fab yields of both modulators on request
+  ok 3A (2×FR4) has no modulator choice and no DR8 panel
+  ok no page errors ()
+flow checks passed
+flow e2e · si1550
+  ok 1-7 shows the learning path
+  ok new player starts in Guided mode
+  ok step 1 is the current step
+  ok step 1 exposes only ΔL and φ (mL,mP)
+  ok spectrum axis ticks 1500/1520/1540/1560/1580 lie in C-band
+  ok step 1 goals met (FSR 40 nm, λ_A → Bar, λ_B → Cross)
+  ok step 1 marked complete
+  ok stepper shows one completed step
+  ok no stars or design card awarded during a learning step
+  ok "다음 단계" moves to step 2
+  ok step 2 exposes ΔL₁ and φ₁ (dL1,t1)
+  ok Full Design shows all parameters (7)
+  ok ΔL₁ = 14.96 µm chosen in step 2 is the Full Design value
+  ok and it is stored in the 1-7 design
+  ok a step number jumps directly to that step
+  ok step 4 exposes order and trims (ord,t1,t2a,t2b)
+  ok a player with 1-7 stars starts in Full Design
+  ok and sees every parameter
+  ok rectangular layout exposes boundary / target / corner parameters (lay,bp,ec,port,dm,tau,env,w,gap,rc,sb,ws,tl)
+  ok preset 5×5 rewrites the boundary (5×5 mm)
+  ok preset 10×30 (10×30 mm)
+  ok the default target fits in 10×30
+  ok τ = 20 ns in 5×5 at f = 10% is reported as Infeasible in the objectives
+  ok the coach states the reason and the alternatives
+  ok with 4 alternatives
+  ok export carries pcell spiral_rect with the 10×30 mm boundary
+  ok exported delay 2 ns = target, predicted block present
+  ok 2-3R starts in Guided mode
+  ok step 1 exposes only the radius (R)
+  ok no comparison panel during a learning step
+  ok R = 6.55 µm from FSR = λ²/(n_g·2πR) gives FSR 15.04 nm ≈ 15 nm → step 1 complete
+  ok no stars or card during the learning step
+  ok step 2 exposes the coupling gap (g)
+  ok the step-1 radius is stored in the 2-3R design
+  ok Full Design shows every parameter with R = 6.55 (R,g,dop,vb,vpp,det,bm)
+  ok a player with 2-3R stars starts in Full Design
+  ok the MZM-vs-MRR comparison panel is offered
+  ok comparison table lists items where each modulator wins
+  ok export draws the layout radius 11.975 µm (slider 12 µm), order m 127
+  ok gap 0.3 µm on the Si layer
+  ok a saved 3A+ design without a modulator key opens as MZM ×8
+  ok the DR8 comparison panel shows both modulators
+  ok MRR ×8: ring heater 13.4 mW/lane and the ring stability objective
+  ok both modulators receive the same light (laser, split, coupling unchanged)
+  ok the modulator choice is stored with the 3A+ design
+  ok Fab yields of both modulators on request
+  ok 3A (2×FR4) has no modulator choice and no DR8 panel
+  ok no page errors ()
+flow checks passed
+flow e2e · sin1310
+  ok 1-7 shows the learning path
+  ok new player starts in Guided mode
+  ok step 1 is the current step
+  ok step 1 exposes only ΔL and φ (mL,mP)
+  ok spectrum axis ticks 1240/1260/1280/1300/1320 lie in O-band
+  ok step 1 goals met (FSR 40 nm, λ_A → Bar, λ_B → Cross)
+  ok step 1 marked complete
+  ok stepper shows one completed step
+  ok no stars or design card awarded during a learning step
+  ok "다음 단계" moves to step 2
+  ok step 2 exposes ΔL₁ and φ₁ (dL1,t1)
+  ok Full Design shows all parameters (7)
+  ok ΔL₁ = 20.2 µm chosen in step 2 is the Full Design value
+  ok and it is stored in the 1-7 design
+  ok a step number jumps directly to that step
+  ok step 4 exposes order and trims (ord,t1,t2a,t2b)
+  ok a player with 1-7 stars starts in Full Design
+  ok and sees every parameter
+  ok rectangular layout exposes boundary / target / corner parameters (lay,bp,ec,port,dm,tau,env,w,gap,rc,sb,ws,tl)
+  ok preset 5×5 rewrites the boundary (5×5 mm)
+  ok preset 10×30 (10×30 mm)
+  ok the default target fits in 10×30
+  ok τ = 20 ns in 5×5 at f = 10% is reported as Infeasible in the objectives
+  ok the coach states the reason and the alternatives
+  ok with 4 alternatives
+  ok export carries pcell spiral_rect with the 10×30 mm boundary
+  ok exported delay 2 ns = target, predicted block present
+  ok 2-3R starts in Guided mode
+  ok step 1 exposes only the radius (R)
+  ok no comparison panel during a learning step
+  ok R = 5.45 µm from FSR = λ²/(n_g·2πR) gives FSR 12.54 nm ≈ 12.5 nm → step 1 complete
+  ok no stars or card during the learning step
+  ok step 2 exposes the coupling gap (g)
+  ok the step-1 radius is stored in the 2-3R design
+  ok Full Design shows every parameter with R = 5.45 (R,g,dop,vb,vpp,det,bm)
+  ok a player with 2-3R stars starts in Full Design
+  ok the MZM-vs-MRR comparison panel is offered
+  ok comparison table lists items where each modulator wins
+  ok export draws the layout radius 12.014 µm (slider 12 µm), order m 161
+  ok gap 0.3 µm on the Si layer (heterogeneous Si on SiN)
+  ok a saved 3A+ design without a modulator key opens as MZM ×8
+  ok the DR8 comparison panel shows both modulators
+  ok MRR ×8: ring heater 10.4 mW/lane and the ring stability objective
+  ok both modulators receive the same light (laser, split, coupling unchanged)
+  ok the modulator choice is stored with the 3A+ design
+  ok Fab yields of both modulators on request
+  ok 3A (2×FR4) has no modulator choice and no DR8 panel
+  ok no page errors ()
+flow checks passed
+flow e2e · sin1550
+  ok 1-7 shows the learning path
+  ok new player starts in Guided mode
+  ok step 1 is the current step
+  ok step 1 exposes only ΔL and φ (mL,mP)
+  ok spectrum axis ticks 1500/1520/1540/1560/1580 lie in C-band
+  ok step 1 goals met (FSR 40 nm, λ_A → Bar, λ_B → Cross)
+  ok step 1 marked complete
+  ok stepper shows one completed step
+  ok no stars or design card awarded during a learning step
+  ok "다음 단계" moves to step 2
+  ok step 2 exposes ΔL₁ and φ₁ (dL1,t1)
+  ok Full Design shows all parameters (7)
+  ok ΔL₁ = 29.72 µm chosen in step 2 is the Full Design value
+  ok and it is stored in the 1-7 design
+  ok a step number jumps directly to that step
+  ok step 4 exposes order and trims (ord,t1,t2a,t2b)
+  ok a player with 1-7 stars starts in Full Design
+  ok and sees every parameter
+  ok rectangular layout exposes boundary / target / corner parameters (lay,bp,ec,port,dm,tau,env,w,gap,rc,sb,ws,tl)
+  ok preset 5×5 rewrites the boundary (5×5 mm)
+  ok preset 10×30 (10×30 mm)
+  ok the default target fits in 10×30
+  ok τ = 20 ns in 5×5 at f = 10% is reported as Infeasible in the objectives
+  ok the coach states the reason and the alternatives
+  ok with 4 alternatives
+  ok export carries pcell spiral_rect with the 10×30 mm boundary
+  ok exported delay 2 ns = target, predicted block present
+  ok 2-3R starts in Guided mode
+  ok step 1 exposes only the radius (R)
+  ok no comparison panel during a learning step
+  ok R = 7.05 µm from FSR = λ²/(n_g·2πR) gives FSR 13.98 nm ≈ 14 nm → step 1 complete
+  ok no stars or card during the learning step
+  ok step 2 exposes the coupling gap (g)
+  ok the step-1 radius is stored in the 2-3R design
+  ok Full Design shows every parameter with R = 7.05 (R,g,dop,vb,vpp,det,bm)
+  ok a player with 2-3R stars starts in Full Design
+  ok the MZM-vs-MRR comparison panel is offered
+  ok comparison table lists items where each modulator wins
+  ok export draws the layout radius 11.977 µm (slider 12 µm), order m 127
+  ok gap 0.3 µm on the Si layer (heterogeneous Si on SiN)
+  ok a saved 3A+ design without a modulator key opens as MZM ×8
+  ok the DR8 comparison panel shows both modulators
+  ok MRR ×8: ring heater 15.8 mW/lane and the ring stability objective
+  ok both modulators receive the same light (laser, split, coupling unchanged)
+  ok the modulator choice is stored with the 3A+ design
+  ok Fab yields of both modulators on request
+  ok 3A (2×FR4) has no modulator choice and no DR8 panel
+  ok no page errors ()
+flow checks passed

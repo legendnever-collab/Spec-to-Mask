@@ -35,3 +35,8 @@ Measured new Canvas: 390×844 650px, 360×640 446px, 320×568 374px; landscape 8
 
 ## Stabilization findings
 Actual Chromium caught two hidden-stage redraw errors (null device context during Lab resume; zero-width hidden canvas causing negative draw radius). Presentation redraw now skips hidden/uninitialized Device stages without changing solver calculations. The new state suite verifies non-destructive v1.0 restore, per-Track resume, protected Original, full-backup checksum/schema and raw Quarantine. Python GDS regression completed with original modules and negative geometry tests.
+
+## Final frozen local acceptance
+Canonical `dist/spec-to-mask-v1.1.0.html` is built from source Commit `488f4454e43487d2cac66adff3594a969da1657f`, SHA256 `fa91d6fe9bd5e38a6cf18e881134bbc9f7a412e10c8cad9be472fcf7cc33282e`. All final local E2E suites read those exact bytes. 33 regression suites passed, plus final export; Engine 707, Lab engine 440, new state 21 and Browser 136 assertions passed. Four-platform coverage and Python GDS checks passed. Canonical parity against current dev build is enforced by `tools/check_rc.js`; only the immutable provenance line may differ. CI copies the parity-verified delivered HTML before its own acceptance tests.
+
+Exact measured viewport rectangles, raw final logs, screenshots, unchanged 120-file physics manifest, model boundaries and environment limits are in TEST_REPORT_V110.md / artifacts/v110-qa. Git-data publications use immutable snapshots and verify exact Source Tree SHA, with an expected branch-head lease. Final current-Head remote CI links/conclusions are recorded in PR #19 after they finish; local results are not substituted for CI. Main remains unmerged pending user play approval.

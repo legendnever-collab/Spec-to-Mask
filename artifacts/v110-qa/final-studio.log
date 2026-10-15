@@ -1,0 +1,29 @@
+COMMAND npm run test:studio
+HTML_SHA256 fa91d6fe9bd5e38a6cf18e881134bbc9f7a412e10c8cad9be472fcf7cc33282e
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.1.0 test:studio
+> node test/e2e/studio_state.js
+
+PASS v1.0 legacy design automatically restored
+PASS new track starts at local Level 1
+PASS legacy design is not silently copied
+PASS explicit Legacy Copy imports design and protects a snapshot
+PASS another track starts in its own Level 1
+PASS track switching resumes exact design
+PASS preview never applies reference
+PASS Reference Apply protects Original
+PASS repeated Apply does not overwrite protected Original
+PASS historic stars do not satisfy a fresh hard gate
+PASS all legacy platform stars preserved
+PASS legacy Lab untouched by Track isolation
+PASS legacy DB record preserved
+PASS text backup includes Track workspaces
+PASS new full backup schema / checksum valid
+PASS tampered Track checksum rejected
+PASS invalid Track structure rejected even with valid checksum
+PASS v1.0 backup without Track key still validates
+PASS automatic Track resume after fresh application boot
+PASS state regression has no page errors
+PASS corrupt Track JSON raw preserved in Quarantine
+21 studio state checks passed

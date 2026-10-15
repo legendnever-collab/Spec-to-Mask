@@ -1,0 +1,166 @@
+{
+  "started": 1792080389.8158982,
+  "html_sha256": "7e68a29b877f42fc31c428035024a9ae134f3ad3a04129bd2b510785042216fd",
+  "results": [
+    {
+      "suite": "upgrade",
+      "command": [
+        "npm",
+        "run",
+        "test:upgrade"
+      ],
+      "exit": 0,
+      "seconds": 2.94
+    },
+    {
+      "suite": "dr8",
+      "command": [
+        "npm",
+        "run",
+        "test:dr8"
+      ],
+      "exit": 0,
+      "seconds": 6.85
+    },
+    {
+      "suite": "wdm",
+      "command": [
+        "npm",
+        "run",
+        "test:wdm"
+      ],
+      "exit": 0,
+      "seconds": 12.94
+    },
+    {
+      "suite": "baseline",
+      "command": [
+        "npm",
+        "run",
+        "test:baseline"
+      ],
+      "exit": 0,
+      "seconds": 24.64
+    },
+    {
+      "suite": "mrr",
+      "command": [
+        "npm",
+        "run",
+        "test:mrr"
+      ],
+      "exit": 0,
+      "seconds": 24.84
+    },
+    {
+      "suite": "guide",
+      "command": [
+        "npm",
+        "run",
+        "test:guide"
+      ],
+      "exit": 0,
+      "seconds": 91.86
+    },
+    {
+      "suite": "lab",
+      "command": [
+        "npm",
+        "run",
+        "test:lab"
+      ],
+      "exit": 0,
+      "seconds": 104.41
+    },
+    {
+      "suite": "backup",
+      "command": [
+        "npm",
+        "run",
+        "test:backup"
+      ],
+      "exit": 0,
+      "seconds": 11.99
+    },
+    {
+      "suite": "migrate",
+      "command": [
+        "npm",
+        "run",
+        "test:migrate"
+      ],
+      "exit": 0,
+      "seconds": 2.53
+    },
+    {
+      "suite": "syntax",
+      "command": [
+        "npm",
+        "run",
+        "test:syntax"
+      ],
+      "exit": 0,
+      "seconds": 10.0
+    },
+    {
+      "suite": "learn",
+      "command": [
+        "npm",
+        "run",
+        "test:learn"
+      ],
+      "exit": 0,
+      "seconds": 11.52
+    },
+    {
+      "suite": "flow",
+      "command": [
+        "npm",
+        "run",
+        "test:flow"
+      ],
+      "exit": 0,
+      "seconds": 118.91
+    },
+    {
+      "suite": "smoke",
+      "command": [
+        "npm",
+        "run",
+        "test:smoke"
+      ],
+      "exit": 0,
+      "seconds": 16.74
+    },
+    {
+      "suite": "studio",
+      "command": [
+        "npm",
+        "run",
+        "test:studio"
+      ],
+      "exit": 1,
+      "seconds": 6.88
+    },
+    {
+      "suite": "wipe",
+      "command": [
+        "npm",
+        "run",
+        "test:wipe"
+      ],
+      "exit": 0,
+      "seconds": 29.39
+    },
+    {
+      "suite": "export",
+      "command": [
+        "npm",
+        "run",
+        "test:export"
+      ],
+      "exit": 0,
+      "seconds": 35.2
+    }
+  ]
+}
