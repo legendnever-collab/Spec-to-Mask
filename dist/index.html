@@ -832,9 +832,13 @@ body.studio-ready{height:var(--app-height,100dvh);overflow:hidden}.studio-ready 
 @media(max-width:360px){.studio-ready .brand h1{font-size:13px}.studio-ready #plat-chip{max-width:88px;font-size:11px}#studioGoalLine{font-size:12px}.studio-ready .savechip .sv-dot{display:none}.studio-ready #save-txt{display:none}.studio-ready #save-chip:after{content:'Save';font-size:11px}.studio-ready .top{gap:4px}.studio-ready .hdr-r{gap:3px}#themeToggle{font-size:11px;padding:3px}#studioStatus{max-width:66px}}
 @media(max-width:900px){.studio-ready .brand{min-width:0;flex:1}.studio-ready .brand h1{overflow:hidden;text-overflow:ellipsis;font-size:14px}.studio-ready .brand h1 span{display:none}.studio-ready #plat-chip{max-width:90px}.studio-ready #save-txt,.studio-ready .savechip .sv-dot{display:none}.studio-ready #save-chip:after{content:'Save';font-size:11px}.studio-ready #save-chip{width:44px;padding:4px;justify-content:center}.studio-ready .hdr-r{flex-shrink:0}#themeToggle{min-width:44px}}
 #studioMetrics{position:absolute;bottom:8px;left:8px;right:64px;display:flex;gap:6px;pointer-events:none;flex-wrap:wrap}#studioMetrics>span{font-size:12px;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:4px 7px;box-shadow:0 1px 6px var(--shadow)}#studioMetrics b{color:var(--amber);font-variant-numeric:tabular-nums}.studio-welcome{position:fixed;inset:0;background:#10203388;z-index:70;display:grid;place-items:center;padding:12px}.studio-welcome>section{width:min(600px,100%);max-height:94dvh;overflow:auto;overscroll-behavior:contain;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 12px 40px var(--shadow)}.studio-welcome h2{margin-top:0}.studio-welcome p{font-size:14px;color:var(--fg-2)}.studio-track-choices{display:grid;gap:8px}.studio-track-choices button{text-align:left;width:100%;min-height:44px}.studio-ready #tiles{display:grid}.studio-sheet .chart svg{min-width:260px}
+.studio-ready footer{display:none}.studio-ready #view .hud{height:36px;min-height:36px;flex-wrap:nowrap;align-items:center}.studio-ready #hud-meta{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:72%;min-width:0}.studio-ready .score .brk{display:none}.studio-ready .score{flex-shrink:0}.studio-ready #view .hud br{display:none}
+@media(max-width:900px){.studio-ready .top{position:relative;height:48px;padding:2px 8px;justify-content:flex-end}.studio-ready .top .brand,.studio-ready #plat-chip{display:none}.studio-ready #studioNav{position:absolute;z-index:2;top:2px;left:8px;right:108px;height:44px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);padding:0;border:0;background:transparent;gap:4px}.studio-ready #studioNav select{font-size:12px;min-height:44px;width:100%}.studio-ready #studioGoal{height:58px}.studio-ready #view .hud{height:30px;min-height:30px;padding:2px 8px}.studio-ready #studioGoalLine{font-size:13px}.studio-ready #studioActions{height:56px}.studio-ready #studioStatus{max-width:66px}}
+@media(max-width:900px) and (max-height:480px){.studio-ready .top{height:44px}.studio-ready #studioNav{height:44px;top:0}.studio-ready #studioGoal{height:50px}.studio-ready #studioActions{height:50px;min-height:50px}.studio-ready #view .hud{height:26px;min-height:26px}}
+.b-an,.conf-an{color:var(--pass)}.b-semi,.conf-semi{color:var(--cyan)}.b-pre{color:var(--series-d)}.b-emp,.conf-asm{color:var(--warn)}.b-exp,.conf-exp{color:var(--fg)}.b-asm,.conf-nv{color:var(--fg-2)}.b-fw{color:var(--rose)}.btn.danger,.btn.pri.danger{color:var(--panel)}.stp[aria-current=step] .num{color:var(--panel)}
 </style>
 <script>
-const SMQ_BUILD = { version: '1.0.0', channel: 'dev', commit: null, date: null, offline: 0 === 1 };
+const SMQ_BUILD = { version: '1.1.0', channel: 'dev', commit: null, date: null, offline: 0 === 1 };
 const KINDS = {};
 // ===== shared math / process utilities =====
 const band = (a, b, n) => Array.from({ length: n }, (_, i) => +(a + (b - a) * i / (n - 1)).toFixed(4));
@@ -7315,11 +7319,11 @@ window.GAME_SHELL = { plat: () => state.plat, pf: () => (state.plat ? PLATFORMS[
   studioScope: () => studioScope,
   legacyDesigns: () => JSON.parse(JSON.stringify(DES[state.plat] || {})),
   setScope: (scope) => { clearTimeout(commitT); clearTimeout(idleT); studioScope = scope; ['fab','wafer','seedFix','credits','fromAI'].forEach(k => { state[k] = scope ? (scope[k] || (scope[k] = {})) : {}; }); state.land = {}; state.cur = null; state.lastLogged = ''; },
-  applyDesign: (d, full) => { if (state.fabRunning) return; if (full && kind().steps) { guideNS(state.id).mode = 'full'; } Object.assign(des(), d); setupLevel(); persist(); },
+  applyDesign: (d, full) => { if (state.fabRunning) return; if (full && kind().steps) { guideNS(state.id).mode = 'full'; } DESP()[state.id] = JSON.parse(JSON.stringify(d)); setupLevel(); persist(); },
   setValue: (k,v) => setParam(k,v,true),
   currentGate: () => { if (!state.cur) return false; const c = state.cur; return c.S ? !!c.S.done(c.l,c.res,stepMem(c.S)) : !c.pr && objectives()[0].pass; },
-  testIdentity: () => JSON.stringify([state.plat,state.mode,state.id,dv(),curStep() && curStep().id,MODEL_VERSION]),
-  redraw: () => { sizeCanvas(); computeChart(); drawWafer(state.wafer[state.id], (state.wafer[state.id] || []).length); },
+  testIdentity: () => JSON.stringify([state.plat,state.mode,state.id,dv(),curStep() && curStep().id,dv().useCard ? PP().cards : null,MODEL_VERSION]),
+  redraw: () => { if(!state.cur || window.LABUI?.isOpen()) return; sizeCanvas(); computeChart(); drawWafer(state.wafer[state.id], (state.wafer[state.id] || []).length); },
   onLevel: (f) => levelHooks.push(f), progress: () => progressCount() };
 const levelHooks = [];
 window.GAME_CTX = () => {
@@ -7807,6 +7811,7 @@ function renderCards() {
 /* ---------- HUD, view, chart ---------- */
 function sizeCanvas() {
   const cv = $('#field'), w = $('#cwrap').clientWidth, K = kind(), S = curStep();
+  if (!w) return; // Hidden device stage while Lab is active: keep the last readable backing size.
   const h = document.body.classList.contains('studio-ready') && $('#cwrap').clientHeight > 0 ? Math.max(100, $('#cwrap').clientHeight) : Math.max(180, Math.min(400, Math.round(w * ((S && S.aspect) || K.aspect || 0.44))));
   cv.width = Math.round(w * DPR); cv.height = Math.round(h * DPR); cv.style.height = h + 'px';
   if (state.cur) drawView();
@@ -9211,7 +9216,7 @@ window.LABUI = (() => {
   function renderParams() {
     const s = S(), m = MISS[cur()], P = pfP(), d = des(), wdm = (d.mod | 0) === 2, skipW = ['share', 'P', 'stag', 'fp', 'rf', 'rfSide', 'pp'];
     const keys = m.keys.concat((s.mode || 'beginner') === 'advanced' ? m.adv : []).concat(wdm && m.id === 'floorplan' ? ['rp'] : []).filter((k) => !(wdm && skipW.includes(k)));
-    let h = keys.map((k) => { const p = P[k]; return `<div class="prm"><div class="prm-h"><label for="lp-${k}">${p.label}<i>${p.sym}</i></label><output id="lo-${k}">${fmtV(p, d[k])}</output></div><div class="prm-r"><input type="range" id="lp-${k}" data-lk="${k}" min="${p.min}" max="${p.max}" step="${p.step}" value="${d[k]}"></div></div>`; }).join('');
+    let h = keys.map((k) => { const p = P[k]; return `<div class="prm"><div class="prm-h"><label for="lp-${k}">${p.label}<i>${p.sym}</i></label><output id="lo-${k}">${fmtV(p, d[k])}</output></div><div class="prm-r"><button class="nudge" data-lnudge="${k}" data-d="-1" aria-label="${p.label} 감소">−</button><input type="range" id="lp-${k}" data-lk="${k}" min="${p.min}" max="${p.max}" step="${p.step}" value="${d[k]}"><button class="nudge" data-lnudge="${k}" data-d="1" aria-label="${p.label} 증가">+</button></div><input class="fine-value" type="number" data-lfine="${k}" aria-label="${p.label} 정확한 값" min="${p.min}" max="${p.max}" step="${p.step}" value="${d[k]}"></div>`; }).join('');
     if (wdm && m.id === 'schematic') h += `<p class="note">WDM8: 다파장 광원 입력 1개 → 버스 하나에 링 8개(3W 설계: <b>${C.wdm.s}</b> · ${C.wdm.r.grid} GHz · R ${C.wdm.d.R} µm · ${(C.wdm.d.rad | 0) ? '계단 반경' : '같은 반경'} · ${(C.wdm.d.asg | 0) ? '순환 배정' : '고정 배정'}) → 출력 1개. 링 설계는 3W 레벨에서 바꿉니다.</p>`;
     if (wdm && m.id === 'electrical') h += '<p class="note">WDM8은 플립칩 마이크로범프만: 링마다 S 범프(북쪽 2열)·G 범프(남쪽 2열), 히터 16선은 남쪽 범프 열로 평면 팬아웃(M2).</p>';
     if (m.id === 'schematic' && !wdm) { const a = arch3(); h += `<p class="note">아키텍처 출처: <b>${a.src}</b> (${a.mod ? 'MRR' : 'MZM'} ×8, ${SHL[a.share]}). 바꾸면 시스템 예측도 Lab 구성으로 다시 계산합니다.</p><div class="row-btns"><button class="btn" data-la="arch">3A+ 구성으로 되돌리기</button></div>`; }
@@ -9565,6 +9570,7 @@ window.LABUI = (() => {
   const sched = (refit) => { clearTimeout(timer); timer = setTimeout(() => renderAll(refit), 90); };
   document.addEventListener('input', (e) => { if (!e.target.closest('#lab,#lab-insp,#lab-lib,#lab-out')) return; const t = e.target.closest('[data-lk]'); if (!t) return; const p = pfP()[t.dataset.lk], v = +t.value; $('#lo-' + p.k).textContent = fmtV(p, v); setV(p.k, v); sched(p.k === 'W' || p.k === 'H' || p.k === 'mod' || p.k === 'share'); });
   document.addEventListener('change', (e) => { if (!e.target.closest('#lab,#lab-insp,#lab-lib,#lab-out')) return;
+    const fi = e.target.closest('[data-lfine]'); if (fi) { const p=pfP()[fi.dataset.lfine]; if(Number.isFinite(+fi.value)) {setV(p.k, Math.max(p.min,Math.min(p.max,+(p.min+Math.round((+fi.value-p.min)/p.step)*p.step).toFixed(6))));sched(p.k==='W'||p.k==='H'||p.k==='mod'||p.k==='share');} return; }
     const ly = e.target.closest && e.target.closest('[data-ly]'); if (ly) { const L2 = { opt: 1, ele: 1, drc: 1, ...(S().layers || {}) }; L2[ly.dataset.ly] = ly.checked ? 1 : 0; S().layers = L2; save(); draw(); return; }
     if (e.target.id !== 'lab-gds' || !e.target.files || !e.target.files[0]) return;
     const f = e.target.files[0], rd = new FileReader();
@@ -9572,6 +9578,7 @@ window.LABUI = (() => {
     rd.readAsText(f);
   });
   document.addEventListener('click', (e) => { if (!e.target.closest('#lab,#lab-insp,#lab-lib,#lab-out')) return;
+    const nu=e.target.closest('[data-lnudge]'); if(nu){const p=pfP()[nu.dataset.lnudge];setV(p.k,Math.max(p.min,Math.min(p.max,+(des()[p.k]+ +nu.dataset.d*p.step).toFixed(6))));renderAll(p.k==='W'||p.k==='H');return;}
     const lm = e.target.closest('[data-lm]'), ms = e.target.closest('[data-ms]'), nx = e.target.closest('#lab-next'), la = e.target.closest('[data-la]'), lv = e.target.closest('[data-lv]'), lt = e.target.closest('[data-lt]'), z = e.target.closest('[data-z]');
     if (lm) { S().mode = lm.dataset.lm; save(); renderAll(); return; }
     if (ms) { S().cur = +ms.dataset.ms; save(); renderAll(); return; }
@@ -9858,7 +9865,7 @@ move($('#pcol'),tune);move($('#lab-insp'),tune);
 ['.mapwrap','#pathbar','#ai','#db','#cards','#scope'].forEach(s=>move($(s),more));
 const metrics=document.createElement('div');metrics.id='studioMetrics';$('#cwrap').append(metrics);
 const reference=document.createElement('section');reference.id='studioReference';reference.className='card';more.prepend(reference);
-const controls=document.createElement('section');controls.className='card';controls.innerHTML='<h2>Workspace</h2><div class="row-btns"><button class="btn" id="studioNew">Start New…</button><button class="btn" id="studioSnapshot">Snapshot</button><button class="btn" id="studioRestoreSnapshot">Restore Snapshot</button><button class="btn" id="studioCopy">Copy Legacy Design…</button><button class="btn" id="studioBackup">Text Backup / Restore</button><button class="btn" id="studioGuide">Guided / Replay</button><button class="btn" id="studioFree">Free Exploration</button></div><p class="note">Start New는 현재 Track을 Revision에 보관합니다. 기존 Level·Platform 기록은 유지됩니다.</p><div id="studioSummary"></div>';more.prepend(controls);
+const controls=document.createElement('section');controls.className='card';controls.innerHTML='<h2>Workspace</h2><div class="row-btns"><button class="btn" id="studioNew">Start New…</button><button class="btn" id="studioSnapshot">Snapshot</button><button class="btn" id="studioRestoreSnapshot">Restore Snapshot</button><button class="btn" id="studioCopy">Copy Legacy Design…</button><button class="btn" id="studioPlatform">Platform 선택</button><button class="btn" id="studioBackup">Text Backup / Restore</button><button class="btn" id="studioGuide">Guided / Replay</button><button class="btn" id="studioFree">Free Exploration</button></div><p class="note">Start New는 현재 Track을 Revision에 보관합니다. 기존 Level·Platform 기록은 유지됩니다.</p><div id="studioSummary"></div>';more.prepend(controls);
 move($('#lab-lib'),more);
 const scrim=document.createElement('div');scrim.id='studioScrim';scrim.addEventListener('click',closeSheets);$('#gamewrap').append(scrim);
 const banner=document.createElement('div');banner.id='studioBanner';banner.hidden=true;goal.after(banner);
@@ -9869,7 +9876,7 @@ function openSheet(id){closeSheets();inspector=id;const e=document.querySelector
 bar.addEventListener('click',e=>{const b=e.target.closest('[data-sheet]');if(b){const was=document.querySelector(`.studio-sheet[data-sheet="${b.dataset.sheet}"]`).classList.contains('open');if(was&&mobile())closeSheets();else openSheet(b.dataset.sheet);}});
 document.addEventListener('click',e=>{if(e.target.closest('[data-close-sheet]'))closeSheets();});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheets();});
 function identity(){if(LU.isOpen()){const a=LU.state();return JSON.stringify([SH.plat(),a.C?.hash,a.C?.mod,a.C&&a.C.d,a.CHK?.sig]);}return SH.testIdentity();}
-function liveGate(){const p=phase();if(p?.summary)return [0,1,2,3,4].every(i=>ws.completed[i]);if(LU.isOpen()){const st=LU.state(),i=st.s.cur|0;return !!st.s.live?.[LU.MISS[i].id] && (track()?.mod==null || st.C.d.mod===track().mod);}const c=window.GAME_CTX();return SH.currentGate() && !(c?.id==='3A+' && track()?.mod!=null && +c.d.mod!==(track().mod===1?1:0));}
+function liveGate(){const p=phase();if(p?.summary)return [0,1,2,3,4].every(i=>ws.completed[i]);if(LU.isOpen()){const st=LU.state(),i=p?.lab?.[step()]??(st.s.cur|0);return !!st.s.live?.[LU.MISS[i].id] && (track()?.mod==null || st.C.d.mod===track().mod);}const c=window.GAME_CTX();return SH.currentGate() && !(c?.id==='3A+' && track()?.mod!=null && +c.d.mod!==(track().mod===1?1:0));}
 function fresh(){const a=ws?.tests?.[historyKey()];return !!a && a.identity===identity() && liveGate();}
 function runTest(){if(LU.isOpen()){const b=document.querySelector('[data-la="run"]');if(b)b.click();else {LU.mission(4);document.querySelector('[data-la="run"]')?.click();LU.mission(phase()?.lab?.[step()]??4);}}
  else SH.redraw();
@@ -9881,12 +9888,12 @@ function advance(){if(!ws||!fresh())return;const p=phase(),c=window.GAME_CTX();
  const n=(p.ids||p.lab||[0]).length;
  ws.completed=ws.completed||{};ws.records=ws.records||{};ws.records[historyKey()]={identity:identity(),at:Date.now(),id:SH.curId(),lab:LU.isOpen(),metrics:LU.isOpen()?{hash:LU.state().C.hash,verification:Object.fromEntries(['PASS','WARNING','FAIL','NOT VERIFIED'].map(x=>[x,LU.state().CHK.checks.filter(c=>c.status===x).length]))}:clone(c?.K.tiles(c.l,c.res)||[])};
  if(step()+1<n){ws.sub=step()+1;navigate();return;}
- ws.completed[ws.level]=Date.now();if(ws.level<5){ws.level++;ws.sub=0;navigate();}else{ws.finished=Date.now();save();summary();openSheet('more');refresh();}}
+ ws.completed[ws.level]=Date.now();if(ws.level<5){ws.level++;ws.sub=0;navigate();}else{if(Object.keys(ws.completed).length===6)ws.finished=Date.now();save();summary();openSheet('more');refresh();}}
 $('#studioNext').addEventListener('click',advance);
 $('#studioTrack').addEventListener('change',e=>{if(e.target.value==='legacy'){leave();LU.close();SH.go(SH.curId());refresh();}else enter(e.target.value);});
 $('#studioLevel').addEventListener('change',e=>{if(ws){ws.level=+e.target.value;ws.sub=0;navigate();}else SH.go(e.target.value);});
 function highlight(){const c=window.GAME_CTX();if(LU.isOpen()){const p=$('#lab-params input');if(p){p.classList.add('studio-target');p.scrollIntoView?.({block:'center'});}return;}
- const p=c?.params?.[0];if(!p)return;const el=$('#p-'+p.k);el?.closest('.prm')?.classList.add('studio-target');el?.scrollIntoView?.({block:'center'});}
+ const hint=$('#coach').textContent;const p=c?.params?.find(p=>hint.includes(text(p.label)))||c?.params?.[0];if(!p)return;const el=$('#p-'+p.k);el?.closest('.prm')?.classList.add('studio-target');el?.scrollIntoView?.({block:'center'});}
 bar.querySelector('[data-sheet=tune]').addEventListener('click',()=>setTimeout(highlight,0));
 function snapshot(label){if(!ws)return;ws.snapshots=ws.snapshots||[];ws.snapshots.push({at:Date.now(),label,designs:clone(ws.designs),lab:clone(ws.lab),level:ws.level,sub:ws.sub});ws.snapshots=ws.snapshots.slice(-12);save();}
 function restart(){if(!ws){tell('먼저 Track을 선택하세요.');return;}if(!confirm('현재 Track을 Revision에 보관하고 Level 1에서 새로 시작할까요?'))return;snapshot('Before Start New');const old=ws.snapshots;root.by[SH.plat()][active]=newWS();root.by[SH.plat()][active].snapshots=old;syncScope();navigate();}
@@ -9894,22 +9901,24 @@ $('#studioStart').onclick=restart;$('#studioNew').onclick=restart;
 $('#studioSnapshot').onclick=()=>{snapshot('Manual');tell('Snapshot 저장 완료');};
 $('#studioRestoreSnapshot').onclick=()=>{const sn=ws?.snapshots?.at(-1);if(!sn)return tell('저장한 Snapshot이 없습니다.');const s=clone(sn);snapshot('Before Restore');Object.assign(ws,{designs:s.designs,lab:s.lab,level:s.level,sub:s.sub});SH.setScope(ws);LU.setScope(ws);navigate();};
 $('#studioCopy').onclick=()=>{if(!ws)return tell('먼저 Track을 선택하세요.');if(!confirm('Legacy 설계를 현재 Track에 복사할까요? 현재 설계는 Snapshot으로 보관합니다.'))return;snapshot('Before Legacy Copy');Object.assign(ws.designs,SH.legacyDesigns());navigate();};
+$('#studioPlatform').onclick=()=>$('#plat-chip').click();
 $('#studioBackup').onclick=()=>window.GAME_DATA.open('#bk-copy');
 function guide(replay){openSheet('inspect');if(LU.isOpen()){LU.mission(phase()?.lab?.[step()]??0);}else {if(replay)document.querySelector('[data-gm="guided"]')?.click();$('#m-guided').hidden?window.GAME_GUIDE?.open():$('#m-guided').scrollIntoView?.({block:'start'});}highlight();}
 $('#studioGuide').onclick=()=>guide(true);$('#studioReplay').onclick=()=>guide(false);
 $('#studioFree').onclick=()=>{if(ws){ws.mode='free';save();}if(!LU.isOpen())document.querySelector('[data-gm="full"]')?.click();openSheet('tune');tell('Free Exploration · 현재 Design은 유지됩니다. 완료에는 실제 Test가 필요합니다.');};
 function renderReference(){const c=window.GAME_CTX();if(LU.isOpen()){reference.innerHTML='<h2>Reference · Lab</h2><p class="note">기존 Lab Library의 Reference / 내 카드 출처를 확인하세요. 실제 배치 수정은 Inspector에서 수행합니다.</p>';return;}if(!c)return;
  let rows=[];try{const r=c.K.evaluate(c.l,clone(c.l.ref),null,{full:true});rows=c.K.tiles(c.l,r)||[];}catch(e){/* unavailable reference shown explicitly */}
- reference.innerHTML=`<h2>Reference / Same-condition Compare</h2><p class="note">${esc(c.id)} · ${esc(c.plat)} · ${esc(c.mode)} · ${c.step?'Full Reference와 Guided 결과는 다른 목표입니다.':'동일 Platform / 난이도 / Physics 모델'}</p><div class="row-btns"><button class="btn" id="studioPreview">Reference Preview</button><button class="btn" id="studioApply">Explicit Apply</button><button class="btn" id="studioOriginal">Restore Original</button></div><div id="studioRefTable" hidden><table><thead><tr><th>Metric</th><th>My Design</th><th>Reference</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td>${esc(text(r[0]??r.l??r.k??'Metric'))}</td><td>${esc(text((c.K.tiles(c.l,c.res)?.[i]||[])[1]??'—'))}</td><td>${esc(text(r[1]??r.v??'—'))}</td></tr>`).join('')}</tbody></table><p class="note">Analytical / Surrogate · 실제 모델 수치. Fab 비교는 Inspect의 Same-wafer Comparison에서 같은 Seed로 실행하세요.</p></div>`;
+ reference.innerHTML=`<h2>Reference / Same-condition Compare</h2><p class="note">${esc(c.id)} · ${esc(c.plat)} · ${esc(c.mode)} · ${c.step?'Full Reference와 Guided 결과는 다른 목표입니다.':'동일 Platform / 난이도 / Physics 모델'}</p><div class="row-btns"><button class="btn" id="studioPreview">Reference Preview</button><button class="btn" id="studioApply">Explicit Apply</button><button class="btn" id="studioSuggest">Suggested Change</button><button class="btn" id="studioOriginal">Restore Original</button></div><div id="studioRefTable" hidden><table><thead><tr><th>Metric</th><th>My Design</th><th>Reference</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td>${esc(text(r[0]??r.l??r.k??'Metric'))}</td><td>${esc(text((c.K.tiles(c.l,c.res)?.[i]||[])[1]??'—'))}</td><td>${esc(text(r[1]??r.v??'—'))}</td></tr>`).join('')}</tbody></table><p class="note">Analytical / Surrogate · 실제 모델 수치. Fab 비교는 Inspect의 Same-wafer Comparison에서 같은 Seed로 실행하세요.</p></div>`;
+ $('#studioSuggest').onclick=()=>{openSheet('inspect');$('#coach').scrollIntoView?.({block:'center'});};
  $('#studioPreview').onclick=()=>$('#studioRefTable').hidden=!$('#studioRefTable').hidden;
- $('#studioApply').onclick=()=>{if(!ws)return tell('보호된 Original을 위해 Track을 먼저 선택하세요.');ws.original=ws.original||{};if(!ws.original[c.id])ws.original[c.id]=clone(c.d);snapshot('Before Reference Apply');const d=clone(c.l.ref);if(c.id==='3A+'&&track().mod===1)d.mod=1;SH.applyDesign(d,true);save();refresh();tell('Reference 적용 완료 · 실제 Test 후에 진행할 수 있습니다.');};
- $('#studioOriginal').onclick=()=>{if(!ws?.original?.[c.id])return tell('보호된 Original이 없습니다.');SH.applyDesign(clone(ws.original[c.id]),true);save();refresh();};
+ $('#studioApply').onclick=()=>{if(!ws)return tell('보호된 Original을 위해 Track을 먼저 선택하세요.');ws.original=ws.original||{};if(!ws.original[c.id])ws.original[c.id]={d:clone(SH.design(c.id)),guide:clone(ws.progress.guide?.[c.id]||null)};snapshot('Before Reference Apply');const d=clone(c.l.ref);if(c.id==='3A+'&&track().mod===1)d.mod=1;SH.applyDesign(d,true);save();refresh();tell('Reference 적용 완료 · 실제 Test 후에 진행할 수 있습니다.');};
+ $('#studioOriginal').onclick=()=>{if(!ws?.original?.[c.id])return tell('보호된 Original이 없습니다.');const o=ws.original[c.id];if(o.d){if(o.guide){ws.progress.guide=ws.progress.guide||{};ws.progress.guide[c.id]=clone(o.guide);}SH.applyDesign(clone(o.d),!o.guide);}else SH.applyDesign(clone(o),true);save();refresh();};
 }
 function summary(){if(!ws){$('#studioSummary').innerHTML='<p class="note">Legacy의 21개 Level과 6개 Lab Mission을 그대로 사용할 수 있습니다. Track을 선택하면 독립 Workspace에서 시작합니다.</p>';return;}
  const st=LU.isOpen()?LU.state():null;const g=ws.lab?.gds;const gmatch=g&&g.design_hash===(st?.C?.hash||ws.lab?.exported?.hash);
  $('#studioSummary').innerHTML=`<h2>Final Engineering Summary</h2><p><b>${esc(track().name)}</b> · 완료 기록 ${Object.keys(ws.completed||{}).length}/6 · 현재 Level ${ws.level+1}</p><p>Current Design: ${liveGate()?'VALID':'검토 필요'} · Test: ${fresh()?'CURRENT':'STALE / NOT RUN'}</p><p>Design Valid: ${st?.CHK?st.CHK.checks.some(c=>c.status==='FAIL')?'FAIL':st.s.live.verification?'VALID':'Test 필요':'현재 Lab 검사 미실시'}<br>Geometry Rechecked: ${gmatch&&!g.summary?.FAIL?'PASS':'NOT VERIFIED'}<br>Foundry Readiness: <b>NOT VERIFIED</b></p><p class="note">${track().mod==null?'Device / System 학습과 Component JSON을 지원합니다. 전체 LiDAR PIC GDS 생성은 미지원입니다.':'Circuit JSON은 브라우저에서 Export합니다. 실제 GDS 생성·Geometry Recheck는 동봉된 Python 도구로 실행하며, 결과를 같은 Design Hash에 붙여넣습니다.'}</p><p class="note">Snapshot / Revision ${ws.snapshots?.length||0} · Stars / Cards는 Platform 공유 학습 자산이며 현재 판정과 구분됩니다.</p>`;
 }
-function refresh(){if(entering)return;const c=window.GAME_CTX(),lab=LU.isOpen();document.body.classList.toggle('studio-lab',lab);$('#pcol').hidden=lab;$('#lab-insp').hidden=!lab;$('#lab-out').hidden=!lab;$('#mission').hidden=lab;$('#lab-lib').hidden=!lab;
+function refresh(){if(entering)return;const c=window.GAME_CTX(),lab=LU.isOpen();document.body.classList.toggle('studio-lab',lab);$('#pcol').hidden=lab;$('#btn-wipe').hidden=!!ws;$('#lab-insp').hidden=!lab;$('#lab-out').hidden=!lab;$('#mission').hidden=lab;$('#lab-lib').hidden=!lab;
  ['#coach','#delta','#spec','#xpanel','#cmpcard','#fab'].forEach(s=>{const el=$(s);if(lab)el.dataset.studioHidden=el.hidden?'1':'0';if(lab)el.style.display='none';else el.style.removeProperty('display');});
  bar.querySelector('[data-sheet=tune]').textContent=lab?'Build':'Tune';$('#studioTest').textContent=lab?'Verify':'Test';
  if(ws){$('#studioTrack').value=active;const opts=track().levels.map((p,i)=>`<option value="${i}">Level ${i+1} · ${p.name}</option>`).join('');if($('#studioLevel').innerHTML!==opts)$('#studioLevel').innerHTML=opts;$('#studioLevel').value=ws.level;const p=phase();$('#studioTitle').textContent=`Level ${ws.level+1} · ${p.name}${(p.ids||p.lab||[]).length>1?' · '+(step()+1)+'/'+(p.ids||p.lab).length:''}`;$('#studioGoalLine').textContent=p.goal;$('#studioStatus').textContent=fresh()?'PASS · CURRENT':liveGate()?'Test 필요':'FAIL · 조절 필요';$('#studioNext').disabled=!fresh();}

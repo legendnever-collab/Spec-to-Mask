@@ -25,3 +25,13 @@ Reference visual measurements: v0.8.1 Canvas portrait 390×844=648px, 360×640=4
 Unified semantic Light/Dark, HTML5/UTF-8/offline and viewport shell implemented. Track adapter lives in new `src/studio.js` / `studio.css`; no physics modules changed. Existing parameter, Lab and result DOM nodes retain handlers; Lab event delegation now follows their panel locations. Original engine regressions and pre-shell baseline suites recorded. Fresh smoke/flow/lab-state run on the new build. Browser launched through a packaged Chromium binary after the default CDN download failed; no further CDN retries. Locally present Korean font subsets are used for QA, with no app font dependency.
 
 Git CLI push has no credentials. Connected GitHub Git-data API publishes commits with a branch-head lease; local sources are preserved. The initial remote design contract is `ff33b59edcc327e82a70a1671241a67b2a7ae49f`.
+
+## Track / Lab checkpoint
+Five additive six-Level Tracks implemented with original Level IDs and original six Lab missions. Track design, guided state, comparison pins, runtime Fab seed/results and Lab project are isolated per platform; historic stars/cards remain shared. Reference Apply protects Original and a revision; Legacy import requires Copy. Compact onboarding replaces the first-run four-page sequence; the original onboarding/path guides remain in Advanced.
+
+Browser development run completed MZM DR8, MRR DR8 and MRR WDM8 through all six local Levels with real UI Reference Apply / numeric edits / hard gates / verification / circuit exports / reload. This is development evidence; final acceptance reruns the frozen executable. A pre-existing Heater Reference has metal absorption 0.02137 dB vs 0.020 dB limit on Si1310. The UI does not waive it: h=0.45 µm is tested to meet the actual model. No reference/spec/physics recalibration is made.
+
+Measured new Canvas: 390×844 650px, 360×640 446px, 320×568 374px; landscape 844×390 218px, 667×375 203px. No horizontal/body overflow. Lab controls retain real delegate handlers after reparenting; ± and numeric input added through the same parameter path. Physics / calibration / GDS source files are unchanged.
+
+## Stabilization findings
+Actual Chromium caught two hidden-stage redraw errors (null device context during Lab resume; zero-width hidden canvas causing negative draw radius). Presentation redraw now skips hidden/uninitialized Device stages without changing solver calculations. The new state suite verifies non-destructive v1.0 restore, per-Track resume, protected Original, full-backup checksum/schema and raw Quarantine. Python GDS regression completed with original modules and negative geometry tests.

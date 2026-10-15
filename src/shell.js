@@ -76,11 +76,11 @@ window.GAME_SHELL = { plat: () => state.plat, pf: () => (state.plat ? PLATFORMS[
   studioScope: () => studioScope,
   legacyDesigns: () => JSON.parse(JSON.stringify(DES[state.plat] || {})),
   setScope: (scope) => { clearTimeout(commitT); clearTimeout(idleT); studioScope = scope; ['fab','wafer','seedFix','credits','fromAI'].forEach(k => { state[k] = scope ? (scope[k] || (scope[k] = {})) : {}; }); state.land = {}; state.cur = null; state.lastLogged = ''; },
-  applyDesign: (d, full) => { if (state.fabRunning) return; if (full && kind().steps) { guideNS(state.id).mode = 'full'; } Object.assign(des(), d); setupLevel(); persist(); },
+  applyDesign: (d, full) => { if (state.fabRunning) return; if (full && kind().steps) { guideNS(state.id).mode = 'full'; } DESP()[state.id] = JSON.parse(JSON.stringify(d)); setupLevel(); persist(); },
   setValue: (k,v) => setParam(k,v,true),
   currentGate: () => { if (!state.cur) return false; const c = state.cur; return c.S ? !!c.S.done(c.l,c.res,stepMem(c.S)) : !c.pr && objectives()[0].pass; },
-  testIdentity: () => JSON.stringify([state.plat,state.mode,state.id,dv(),curStep() && curStep().id,MODEL_VERSION]),
-  redraw: () => { sizeCanvas(); computeChart(); drawWafer(state.wafer[state.id], (state.wafer[state.id] || []).length); },
+  testIdentity: () => JSON.stringify([state.plat,state.mode,state.id,dv(),curStep() && curStep().id,dv().useCard ? PP().cards : null,MODEL_VERSION]),
+  redraw: () => { if(!state.cur || window.LABUI?.isOpen()) return; sizeCanvas(); computeChart(); drawWafer(state.wafer[state.id], (state.wafer[state.id] || []).length); },
   onLevel: (f) => levelHooks.push(f), progress: () => progressCount() };
 const levelHooks = [];
 window.GAME_CTX = () => {
@@ -568,6 +568,7 @@ function renderCards() {
 /* ---------- HUD, view, chart ---------- */
 function sizeCanvas() {
   const cv = $('#field'), w = $('#cwrap').clientWidth, K = kind(), S = curStep();
+  if (!w) return; // Hidden device stage while Lab is active: keep the last readable backing size.
   const h = document.body.classList.contains('studio-ready') && $('#cwrap').clientHeight > 0 ? Math.max(100, $('#cwrap').clientHeight) : Math.max(180, Math.min(400, Math.round(w * ((S && S.aspect) || K.aspect || 0.44))));
   cv.width = Math.round(w * DPR); cv.height = Math.round(h * DPR); cv.style.height = h + 'px';
   if (state.cur) drawView();
