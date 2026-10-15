@@ -1,0 +1,6 @@
+BASELINE 5637cd9:src/kinds/spiral.js blob 9dff1599fd5a42703a0ba527d8585fd8c5714d4f — test:upgrade — circular spiral (lay 0) = main before the rectangular spiral
+BASELINE f08011b:src/data/pspec.json blob 3f99d52bc8389ac6308dce977906ab9c82dc8bf6 — test:mrr — level specs before the microring (Phase A)
+BASELINE fa9f16a:src/kinds/xcvr.js blob ada9e90fe3b1853288195a6faddb9eb2a511f6c8 — test:dr8 — MZM path bit-identical to Phase A main
+BASELINE fa9f16a:src/data/pspec.json blob 67ca38d6c431233de9553d7a3b2682b46e2bc6cb — test:dr8 — 3A / 3A+ specs before the modulator choice
+BASELINE ad7188f:src/data/pspec.json blob 6f1468dd3793f17ca3c932e1eb1464aa1050cbcd — test:wdm — level specs before 3W (Phase D main)
+shallow repository: false · 5/5 baselines readable
