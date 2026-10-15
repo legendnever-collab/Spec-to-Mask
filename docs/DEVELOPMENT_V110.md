@@ -20,3 +20,8 @@ Incremental presentation/navigation/state adapter. Engine, calibration, IDs, geo
 Existing mission/map/path UI precedes canvas and pushes it below mobile fold. Parameters use a sticky wrapper while results span the grid. Device canvas is parameter-driven; Lab canvas supports selection/pan/pinch and generated layout. Retain those distinctions.
 
 Reference visual measurements: v0.8.1 Canvas portrait 390×844=648px, 360×640=444px, 320×568=372px; landscape 844×390=222px, 667×375=207px. These are comparison targets, not an automatic pass threshold for this device simulator.
+
+## Shell checkpoint
+Unified semantic Light/Dark, HTML5/UTF-8/offline and viewport shell implemented. Track adapter lives in new `src/studio.js` / `studio.css`; no physics modules changed. Existing parameter, Lab and result DOM nodes retain handlers; Lab event delegation now follows their panel locations. Original engine regressions and pre-shell baseline suites recorded. Fresh smoke/flow/lab-state run on the new build. Browser launched through a packaged Chromium binary after the default CDN download failed; no further CDN retries. Locally present Korean font subsets are used for QA, with no app font dependency.
+
+Git CLI push has no credentials. Connected GitHub Git-data API publishes commits with a branch-head lease; local sources are preserved. The initial remote design contract is `ff33b59edcc327e82a70a1671241a67b2a7ae49f`.

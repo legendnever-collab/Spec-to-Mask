@@ -9,7 +9,7 @@ const SMQ_STORE = (() => {
   const W = typeof window !== 'undefined' ? window : null;
   const LS = () => (W ? W.localStorage : null);
   // keys the game owns; 'ui' keys are view preferences (optional in a backup)
-  const KEYS = ['smq3-progress', 'smq3-designs', 'smq3-db', 'smq3-lab', 'smq3-id', 'smq-mode-v1', 'smq-hint-v1'];
+  const KEYS = ['smq3-studio', 'smq3-progress', 'smq3-designs', 'smq3-db', 'smq3-lab', 'smq3-id', 'smq-mode-v1', 'smq-hint-v1'];
   const UI_KEYS = ['smq3-ui', 'smq-guide-depth'];
   const META = 'smq3-meta', UNDO = 'smq3-undo';
   // raw copies of stored values that could not be read as JSON — kept before the game overwrites them with defaults
@@ -28,6 +28,7 @@ const SMQ_STORE = (() => {
   // per-key structure (the same rules a restore applies); a list of problems, empty when the value is usable
   function checkKey(k, v, ctx) {
     const errors = [], warnings = [], plats = (ctx && ctx.platforms) || null, levels = (ctx && ctx.levels) || null;
+    if (k === 'smq3-studio' && (!isObj(v) || v.schema !== 'smq-studio/1' || !isObj(v.by) || Object.values(v.by).some(p => !isObj(p) || Object.values(p).some(w => !isObj(w) || !isObj(w.designs) || !isObj(w.lab) || !Number.isInteger(w.level) || w.level < 0 || w.level > 8)))) errors.push('smq3-studio 구조가 올바르지 않습니다.');
     if (k === 'smq3-progress') {
       if (!isObj(v) || !isObj(v.by)) errors.push('smq3-progress 구조가 올바르지 않습니다 (by 없음).');
       else Object.entries(v.by).forEach(([pid, ns]) => {

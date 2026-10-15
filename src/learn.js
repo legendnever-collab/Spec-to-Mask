@@ -146,7 +146,7 @@
     }
   });
   window.GAME_LEARN = { openOnb, renderPath, paths: PATHS, reviews: RV };
-  SH().onLevel((id) => { renderPath(); renderReview(id); if (SH().plat() && !ui().onboarded && !SH().progress() && !ONB.isOpen() && $('#setup').hidden) openOnb(0); });   // first run only: existing players are not interrupted (replay: 처음 안내)
+  SH().onLevel((id) => { renderPath(); renderReview(id); if (!window.SMQ_STUDIO && SH().plat() && !ui().onboarded && !SH().progress() && !ONB.isOpen() && $('#setup').hidden) openOnb(0); });   // first run only: existing players are not interrupted (replay: 처음 안내)
   if (window.LABUI && window.LABUI.onRender) window.LABUI.onRender(() => { renderPath(); renderLabReview(); });
   renderPath();
 })();

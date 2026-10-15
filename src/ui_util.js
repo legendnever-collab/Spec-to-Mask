@@ -47,13 +47,13 @@ function svgChart(o) {
   if (o.xlab) s += T(W - mr, H - 3, o.xlab, 'end', 12.5);
   (o.series || []).forEach((sr) => {
     const d = sr.pts.map((p, i) => `${i ? 'L' : 'M'}${X(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`).join('');
-    s += `<path d="${d}" fill="none" stroke="${sr.color}" stroke-width="${sr.width || 2}" ${sr.dash ? `stroke-dasharray="${sr.dash}"` : ''}/>`;
+    s += `<path d="${d}" fill="none" stroke="${smqColor(sr.color)}" stroke-width="${sr.width || 2}" ${sr.dash ? `stroke-dasharray="${sr.dash}"` : ''}/>`;
   });
   (o.marks || []).forEach(({ x, y, color }) => { s += `<circle cx="${X(x)}" cy="${Y(y)}" r="4" fill="${color || 'var(--fg)'}"/>`; });
   if (o.extra) s += o.extra(X, Y, T);   // free-form annotations in data coordinates (brackets, labels)
   return s + '</svg>';
 }
-const legendHTML = (items) => items.map(([c, t]) => `<span><i style="background:${c}"></i>${t}</span>`).join('');
+const legendHTML = (items) => items.map(([c, t]) => `<span><i style="background:${smqColor(c)}"></i>${t}</span>`).join('');
 // accessible modal: focus moves in, Tab stays inside, Esc / backdrop closes, the page behind is inert, focus returns on close
 function smqModal(back, opt) {
   opt = opt || {};
