@@ -489,8 +489,8 @@ window.LABUI = (() => {
     renderHooks.forEach((f) => { try { f(); } catch (e) { /* learning layer */ } });
   }
   const sched = (refit) => { clearTimeout(timer); timer = setTimeout(() => renderAll(refit), 90); };
-  document.addEventListener('input', (e) => { if (!e.target.closest('#lab,#lab-insp,#lab-lib,#lab-out')) return; const t = e.target.closest('[data-lk]'); if (!t) return; const p = pfP()[t.dataset.lk], v = +t.value; $('#lo-' + p.k).textContent = fmtV(p, v); setV(p.k, v); sched(p.k === 'W' || p.k === 'H' || p.k === 'mod' || p.k === 'share'); });
-  document.addEventListener('change', (e) => { if (!e.target.closest('#lab,#lab-insp,#lab-lib,#lab-out')) return;
+  document.addEventListener('input', (e) => { if (!e.target.closest('#lab,#lab-insp,#lab-lib,#lab-out,.lab-head')) return; const t = e.target.closest('[data-lk]'); if (!t) return; const p = pfP()[t.dataset.lk], v = +t.value; $('#lo-' + p.k).textContent = fmtV(p, v); setV(p.k, v); sched(p.k === 'W' || p.k === 'H' || p.k === 'mod' || p.k === 'share'); });
+  document.addEventListener('change', (e) => { if (!e.target.closest('#lab,#lab-insp,#lab-lib,#lab-out,.lab-head')) return;
     const fi = e.target.closest('[data-lfine]'); if (fi) { const p=pfP()[fi.dataset.lfine]; if(Number.isFinite(+fi.value)) {setV(p.k, Math.max(p.min,Math.min(p.max,+(p.min+Math.round((+fi.value-p.min)/p.step)*p.step).toFixed(6))));sched(p.k==='W'||p.k==='H'||p.k==='mod'||p.k==='share');} return; }
     const ly = e.target.closest && e.target.closest('[data-ly]'); if (ly) { const L2 = { opt: 1, ele: 1, drc: 1, ...(S().layers || {}) }; L2[ly.dataset.ly] = ly.checked ? 1 : 0; S().layers = L2; save(); draw(); return; }
     if (e.target.id !== 'lab-gds' || !e.target.files || !e.target.files[0]) return;
@@ -498,7 +498,7 @@ window.LABUI = (() => {
     rd.onload = () => { importGds(String(rd.result)); save(); renderAll(); };
     rd.readAsText(f);
   });
-  document.addEventListener('click', (e) => { if (!e.target.closest('#lab,#lab-insp,#lab-lib,#lab-out')) return;
+  document.addEventListener('click', (e) => { if (!e.target.closest('#lab,#lab-insp,#lab-lib,#lab-out,.lab-head')) return;
     const nu=e.target.closest('[data-lnudge]'); if(nu){const p=pfP()[nu.dataset.lnudge];setV(p.k,Math.max(p.min,Math.min(p.max,+(des()[p.k]+ +nu.dataset.d*p.step).toFixed(6))));renderAll(p.k==='W'||p.k==='H');return;}
     const lm = e.target.closest('[data-lm]'), ms = e.target.closest('[data-ms]'), nx = e.target.closest('#lab-next'), la = e.target.closest('[data-la]'), lv = e.target.closest('[data-lv]'), lt = e.target.closest('[data-lt]'), z = e.target.closest('[data-z]');
     if (lm) { S().mode = lm.dataset.lm; save(); renderAll(); return; }

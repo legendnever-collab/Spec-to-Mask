@@ -28,7 +28,7 @@ const SMQ_STORE = (() => {
   // per-key structure (the same rules a restore applies); a list of problems, empty when the value is usable
   function checkKey(k, v, ctx) {
     const errors = [], warnings = [], plats = (ctx && ctx.platforms) || null, levels = (ctx && ctx.levels) || null;
-    if (k === 'smq3-studio' && (!isObj(v) || v.schema !== 'smq-studio/1' || !isObj(v.by) || Object.values(v.by).some(p => !isObj(p) || Object.values(p).some(w => !isObj(w) || !isObj(w.designs) || !isObj(w.lab) || !Number.isInteger(w.level) || w.level < 0 || w.level > 8)))) errors.push('smq3-studio 구조가 올바르지 않습니다.');
+    if (k === 'smq3-studio' && (!isObj(v) || v.schema !== 'smq-studio/1' || !isObj(v.by) || Object.values(v.by).some(p => !isObj(p) || Object.values(p).some(w => !isObj(w) || !isObj(w.designs) || !isObj(w.lab) || !Number.isInteger(w.level) || w.level < 0 || w.level > 5 || (w.sub != null && (!Number.isInteger(w.sub) || w.sub < 0 || w.sub > 3)))))) errors.push('smq3-studio 구조가 올바르지 않습니다.');
     if (k === 'smq3-progress') {
       if (!isObj(v) || !isObj(v.by)) errors.push('smq3-progress 구조가 올바르지 않습니다 (by 없음).');
       else Object.entries(v.by).forEach(([pid, ns]) => {

@@ -74,7 +74,7 @@ function setTheme(v){document.documentElement.dataset.theme=v;theme.textContent=
 function sheet(id,title){const a=document.createElement('aside');a.id='studio'+id[0].toUpperCase()+id.slice(1);a.className='studio-sheet';a.dataset.sheet=id;a.setAttribute('aria-label',title);a.innerHTML=`<div class="sheet-heading"><b>${title}</b><button class="btn" data-close-sheet aria-label="패널 닫기">×</button></div>`;$('#gamewrap').append(a);return a;}
 const tune=sheet('tune','Parameters · Inspector'),inspect=sheet('inspect','Inspect · Results'),more=sheet('more','Tracks · Reference · Advanced');
 const move=(el,to)=>{if(el)to.append(el);};
-move($('#pcol'),tune);move($('#lab-insp'),tune);
+move($('#pcol'),tune);move($('.lab-head'),tune);move($('#lab-insp'),tune);
 ['#mission','#coach','#delta','#tiles','#spec','#xpanel','#cmpcard','#fab','#lab-out'].forEach(s=>move($(s),inspect));
 ['.mapwrap','#pathbar','#ai','#db','#cards','#scope'].forEach(s=>move($(s),more));
 const metrics=document.createElement('div');metrics.id='studioMetrics';$('#cwrap').append(metrics);
@@ -129,10 +129,10 @@ function renderReference(){const c=window.GAME_CTX();if(LU.isOpen()){reference.i
  $('#studioOriginal').onclick=()=>{if(!ws?.original?.[c.id])return tell('보호된 Original이 없습니다.');const o=ws.original[c.id];if(o.d){if(o.guide){ws.progress.guide=ws.progress.guide||{};ws.progress.guide[c.id]=clone(o.guide);}SH.applyDesign(clone(o.d),!o.guide);}else SH.applyDesign(clone(o),true);save();refresh();};
 }
 function summary(){if(!ws){$('#studioSummary').innerHTML='<p class="note">Legacy의 21개 Level과 6개 Lab Mission을 그대로 사용할 수 있습니다. Track을 선택하면 독립 Workspace에서 시작합니다.</p>';return;}
- const st=LU.isOpen()?LU.state():null;const g=ws.lab?.gds;const gmatch=g&&g.design_hash===(st?.C?.hash||ws.lab?.exported?.hash);
+ const st=LU.isOpen()?LU.state():null;const g=ws.lab?.gds;const gmatch=g&&st?.C&&g.design_hash===st.C.hash;
  $('#studioSummary').innerHTML=`<h2>Final Engineering Summary</h2><p><b>${esc(track().name)}</b> · 완료 기록 ${Object.keys(ws.completed||{}).length}/6 · 현재 Level ${ws.level+1}</p><p>Current Design: ${liveGate()?'VALID':'검토 필요'} · Test: ${fresh()?'CURRENT':'STALE / NOT RUN'}</p><p>Design Valid: ${st?.CHK?st.CHK.checks.some(c=>c.status==='FAIL')?'FAIL':st.s.live.verification?'VALID':'Test 필요':'현재 Lab 검사 미실시'}<br>Geometry Rechecked: ${gmatch&&!g.summary?.FAIL?'PASS':'NOT VERIFIED'}<br>Foundry Readiness: <b>NOT VERIFIED</b></p><p class="note">${track().mod==null?'Device / System 학습과 Component JSON을 지원합니다. 전체 LiDAR PIC GDS 생성은 미지원입니다.':'Circuit JSON은 브라우저에서 Export합니다. 실제 GDS 생성·Geometry Recheck는 동봉된 Python 도구로 실행하며, 결과를 같은 Design Hash에 붙여넣습니다.'}</p><p class="note">Snapshot / Revision ${ws.snapshots?.length||0} · Stars / Cards는 Platform 공유 학습 자산이며 현재 판정과 구분됩니다.</p>`;
 }
-function refresh(){if(entering)return;const c=window.GAME_CTX(),lab=LU.isOpen();document.body.classList.toggle('studio-lab',lab);$('#pcol').hidden=lab;$('#btn-wipe').hidden=!!ws;$('#lab-insp').hidden=!lab;$('#lab-out').hidden=!lab;$('#mission').hidden=lab;$('#lab-lib').hidden=!lab;
+function refresh(){if(entering)return;const c=window.GAME_CTX(),lab=LU.isOpen();document.body.classList.toggle('studio-lab',lab);$('#pcol').hidden=lab;$('#btn-wipe').hidden=!!ws;$('#lab-insp').hidden=!lab;$('.lab-head').hidden=!lab;$('#lab-out').hidden=!lab;$('#mission').hidden=lab;$('#lab-lib').hidden=!lab;
  ['#coach','#delta','#spec','#xpanel','#cmpcard','#fab'].forEach(s=>{const el=$(s);if(lab)el.dataset.studioHidden=el.hidden?'1':'0';if(lab)el.style.display='none';else el.style.removeProperty('display');});
  bar.querySelector('[data-sheet=tune]').textContent=lab?'Build':'Tune';$('#studioTest').textContent=lab?'Verify':'Test';
  if(ws){$('#studioTrack').value=active;const opts=track().levels.map((p,i)=>`<option value="${i}">Level ${i+1} · ${p.name}</option>`).join('');if($('#studioLevel').innerHTML!==opts)$('#studioLevel').innerHTML=opts;$('#studioLevel').value=ws.level;const p=phase();$('#studioTitle').textContent=`Level ${ws.level+1} · ${p.name}${(p.ids||p.lab||[]).length>1?' · '+(step()+1)+'/'+(p.ids||p.lab).length:''}`;$('#studioGoalLine').textContent=p.goal;$('#studioStatus').textContent=fresh()?'PASS · CURRENT':liveGate()?'Test 필요':'FAIL · 조절 필요';$('#studioNext').disabled=!fresh();}

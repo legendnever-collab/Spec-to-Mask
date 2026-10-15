@@ -1,3 +1,17 @@
+# SPEC-to-MASK Quest v1.1.0 — Unified Photonics Studio RC
+
+Canvas-first PIC learning with five six-Level Tracks: PIC Fundamentals, MZM DR8, MRR DR8, MRR WDM8, FMCW LiDAR / TTD. One offline HTML with saved Light/Dark theme, independent Track workspaces, current Test gates and protected Reference / Original.
+
+- Existing 21 Level IDs, four Platforms, six Lab missions, Physics / Fab / GDS models and v1.0 backup formats are retained.
+- [v1.1 user guide](docs/release/USER_GUIDE-v1.1.md) · [Tracks](docs/TRACKS_V110.md) · [Migration](docs/MIGRATION_V110.md) · [QA](docs/TEST_REPORT_V110.md) · [Handoff](docs/HANDOFF_v1.1.0.md)
+- `npm ci && npm run build` → `dist/index.html`; `npm run release` → exact-version offline executable / Source ZIP / Python handoff.
+- `npm run test:studio` validates Track isolation / protected Original / old backups / checksum / quarantine. `npm run test:browser` exercises the actual current HTML in Chromium, measures Canvas rectangles and completes all supported Track flows.
+- Circuit JSON / GDS geometry recheck are separate from manufacturing approval. **Foundry Readiness: NOT VERIFIED.** Full LiDAR PIC GDS is unsupported.
+
+Release Candidate: user play review and approval are required before main merge. Historical documentation below describes the original engine and remains applicable within its stated model boundaries.
+
+---
+
 # SPEC-to-MASK Quest
 
 Photonic IC 설계를 게임으로 배우는 단계별 학습 프로그램입니다. 브라우저 하나로 동작하는 단일 HTML(`dist/index.html`)로 빌드됩니다.

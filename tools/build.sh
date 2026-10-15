@@ -13,8 +13,12 @@ else
   BUILD_JS="const SMQ_BUILD = { version: '$VER', channel: 'dev', commit: null, date: null, offline: ${SMQ_OFFLINE:-0} === 1 };"
 fi
 {
-  if [ "${SMQ_OFFLINE:-0}" = 1 ]; then grep -v 'fonts.googleapis.com\|fonts.gstatic.com' src/head.html; else cat src/head.html; fi
-  echo '<style>'; cat src/studio.css; echo '</style>'
+  python3 - <<'PYHEAD'
+from pathlib import Path
+head = Path('src/head.html').read_text(encoding='utf-8')
+style = '<style>\n' + Path('src/studio.css').read_text(encoding='utf-8') + '\n</style>\n'
+print(head.replace('</head>', style + '</head>', 1))
+PYHEAD
   echo '<script>'
   echo "$BUILD_JS"
   echo 'const KINDS = {};'
