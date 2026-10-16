@@ -61,6 +61,8 @@ jobs:
           { echo '### Identity checks run'; echo; echo '```'; grep -E 'BASELINE|IDENTITY|checks passed' identity.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
           test "$(grep -c '^  IDENTITY test:' identity.log)" -eq 4
           grep -E '^  (BASELINE|IDENTITY) ' identity.log | sed 's/^  /::notice title=identity evidence::/'
+      - name: MZM bench analytical limits and legacy EO parity
+        run: npm run test:mzm-bench
       - name: Missing-baseline regression (no history → fail, never a silent skip)
         run: npm run test:baseline
       - name: Design Lab (engine, e2e, state integrity)
@@ -162,7 +164,9 @@ jobs:
       - name: Browser acceptance against the parity-verified canonical RC
         run: |
           RC="dist/spec-to-mask-v$(node -p "require('./package.json').version").html"
-          if [ -f "$RC" ]; then node tools/check_rc.js; SMQ_HTML="$RC" npm run test:browser; else SMQ_HTML=dist/index-offline.html npm run test:browser; fi
+          if [ -f "$RC" ]; then node tools/check_rc.js; export SMQ_HTML="$RC"; else export SMQ_HTML=dist/index-offline.html; fi
+          npm run test:browser
+          SMQ_QA_OUT=artifacts/studio-ci-browser/mzm npm run test:browser:mzm
         env:
           SMQ_QA_OUT: artifacts/studio-ci-browser
       - uses: actions/upload-artifact@v4

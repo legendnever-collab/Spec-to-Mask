@@ -604,6 +604,19 @@ body.studio-ready{height:var(--app-height,100dvh);overflow:hidden}.studio-ready 
 .b-an,.conf-an{color:var(--pass)}.b-semi,.conf-semi{color:var(--cyan)}.b-pre{color:var(--series-d)}.b-emp,.conf-asm{color:var(--warn)}.b-exp,.conf-exp{color:var(--fg)}.b-asm,.conf-nv{color:var(--fg-2)}.b-fw{color:var(--rose)}.btn.danger,.btn.pri.danger{color:var(--panel)}.stp[aria-current=step] .num{color:var(--panel)}
 .studio-sheet .lab-head{display:block}.studio-sheet .lab-head .mode-row{display:block}.studio-sheet .lab-head .mode-r{justify-content:flex-start;margin-top:8px}.studio-sheet .lab-head .lab-title{font-size:17px}.studio-sheet .lab-head .eyebrow{font-size:11px}.studio-sheet .lab-head .stepper{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.studio-sheet .lab-head .stp{min-width:0;padding:5px;font-size:12px}.studio-sheet .lab-head .lab-prog{gap:4px}.studio-sheet .lab-head .lab-prog span{font-size:12px}.studio-sheet .lab-head .sn-b{font-size:14px}
 
+/* Single-lane bench; scrolls inside existing Tune/Inspect, never replaces the Canvas. */
+.mzm-bench-input{display:grid;grid-template-columns:1fr auto;align-items:center;gap:6px;margin:12px 0}
+.mzm-bench-input input{grid-column:1/-1;width:100%;min-height:44px;box-sizing:border-box}
+.mzm-bench-heading{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.mzm-bench-heading h2{margin-right:auto}.mzm-bench-heading b{font-size:11px;color:var(--cyan)}
+.mzm-bench-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.mzm-bench-grid article{min-width:0}.mzm-bench-grid h3{font-size:12px;line-height:1.5}
+.mzm-bench-grid svg{width:100%;max-height:240px}.mzm-bench-summary{font-size:12px;line-height:1.8}
+#mzmBench summary{cursor:pointer;min-height:44px;display:flex;align-items:center}
+#mzmBenchControls[hidden],#mzmBench[hidden]{display:none!important}
+@media(max-width:700px){.mzm-bench-grid{grid-template-columns:1fr}}
+#mzmBench{grid-column:1/-1;min-width:0}
+
 </style>
 </head>
 <body>
@@ -866,7 +879,7 @@ body.studio-ready{height:var(--app-height,100dvh);overflow:hidden}.studio-ready 
 </div>
 
 <script>
-const SMQ_BUILD = { version: '1.1.1', channel: 'dev', commit: null, date: null, offline: 0 === 1 };
+const SMQ_BUILD = { version: '1.2.0-beta.1', channel: 'dev', commit: null, date: null, offline: 0 === 1 };
 const KINDS = {};
 // ===== shared math / process utilities =====
 const band = (a, b, n) => Array.from({ length: n }, (_, i) => +(a + (b - a) * i / (n - 1)).toFixed(4));
@@ -3368,6 +3381,73 @@ KINDS.mzm = (() => {
     _x: { analyse, build, Zu, PIN }
   };
   return K;
+})();
+
+// Single-lane observation model. Reuses the legacy loaded CPW without changing its scores.
+// Phasors: exp(+jwt); forward propagation exp(-gamma*z). Lengths below are SI.
+const MZM_BENCH = (() => {
+  const version = 'mzm-bench/1', c0 = 2.998e8, one = [1, 0];
+  const fields = [
+    {k:'source', label:'Source resistance', unit:'Ω', min:10, max:100, step:1, value:50},
+    {k:'vpp', label:'Open-circuit drive', unit:'Vpp', min:.1, max:5, step:.1, value:2.5},
+    {k:'ng', label:'Optical group index', unit:'', min:1.5, max:5, step:.01, value:3.9},
+    {k:'bias', label:'Differential phase bias', unit:'π rad', min:0, max:2, step:.01, value:.5},
+    {k:'probe', label:'Probe frequency', unit:'GHz', min:1, max:120, step:1, value:56}
+  ];
+  const defaults = () => Object.fromEntries(fields.map(f=>[f.k,f.value]));
+  function valid(v) { return !!v && Number.isInteger(v.probe) && fields.every(f=>typeof v[f.k]==='number' && Number.isFinite(v[f.k]) && v[f.k]>=f.min && v[f.k]<=f.max); }
+  const db = v => 20*Math.log10(Math.max(cx.abs(v),1e-12));
+  const reflection = (z, ref) => cx.div(cx.sub(z,[ref,0]),cx.add(z,[ref,0]));
+  // Mean of exp(a*z) along the electrode; analytic zero-length / velocity-match limit.
+  function meanExp(a, L) {
+    const z=cx.sc(a,L);
+    return cx.abs(z)<1e-5 ? cx.add(one,cx.add(cx.sc(z,.5),cx.sc(cx.mul(z,z),1/6))) : cx.div(cx.sub(cx.exp(z),one),z);
+  }
+  function twoPort(gamma, zc, L, ref=50) {
+    const p=cx.exp(cx.sc(gamma,L)),m=cx.exp(cx.sc(gamma,-L));
+    const A=cx.sc(cx.add(p,m),.5),s=cx.sc(cx.sub(p,m),.5),B=cx.mul(zc,s),C=cx.div(s,zc);
+    const den=cx.add(cx.sc(A,2),cx.add(cx.sc(B,1/ref),cx.sc(C,ref)));
+    return {s11:cx.div(cx.sub(cx.sc(B,1/ref),cx.sc(C,ref)),den),s21:cx.div([2,0],den)};
+  }
+  function sample(b, f, cfg) {
+    const {w,gam,ZL}=b.line(f),L=b.Lm;
+    const ge=cx.mul(cx.div(cx.sub([b.RT,0],ZL),cx.add([b.RT,0],ZL)),cx.exp(cx.sc(gam,-2*L)));
+    const zin=cx.mul(ZL,cx.div(cx.add(one,ge),cx.sub(one,ge)));
+    const input=cx.sc(cx.div(zin,cx.add(zin,[cfg.source,0])),cfg.vpp);
+    const vp=cx.div(input,cx.add(one,ge)),ko=w*cfg.ng/c0;
+    const forward=meanExp(cx.add(cx.sc(gam,-1),[0,ko]),L);
+    const backward=meanExp(cx.add(gam,[0,ko]),L);
+    const eo=cx.div(cx.mul(vp,cx.add(forward,cx.mul(ge,backward))),[1,w*b.Rp*b.Cp]);
+    // Series pair normalized to active length: Ctotal=eta*C'*L/2; Rtotal=2*R'/(eta*L).
+    const rc=[2*b.Rp/(b.eta*L),-2/(w*b.eta*b.Cp*L)];
+    const network=twoPort(gam,ZL,L);
+    return {f,eo,zin,input,zc:ZL,alphaDbPerCm:gam[0]*20/Math.LN10/100,nRF:gam[1]*c0/w,
+      s11:network.s11,s21:network.s21,loadedReflection:reflection(zin,50),rcReflection:reflection(rc,50)};
+  }
+  function analyse(l,d,cfg=defaults()) {
+    if(!valid(cfg))throw Error('Invalid MZM bench settings');
+    const b=KINDS.mzm._x.build(l,d),dc=sample(b,.001,cfg),samples=[];
+    for(let f=1;f<=120;f++) { const s=sample(b,f,cfg);s.eoNormalized=cx.div(s.eo,dc.eo);s.eoDb=db(s.eoNormalized);s.s21Db=db(s.s21);samples.push(s); }
+    const probe=samples[cfg.probe-1],vpi=b.VpiL/(b.eta*d.L*.1);
+    const il=b.loss*b.eta*d.L+.2*(1-b.eta)*d.L+1,through=Math.pow(10,-il/10);
+    const transfer=[];
+    for(let i=0;i<=100;i++) { const v=(i/100-.5)*cfg.vpp,phase=Math.PI*(cfg.bias+v/vpi);const main=through*(1+Math.cos(phase))/2;transfer.push({v,main,complement:through-main}); }
+    let bandwidth=null;
+    // First downward -3 dB crossing in the declared 0.001–120 GHz observation range.
+    let prev={f:.001,eoDb:0};
+    for(const s of samples){if(s.eoDb<=-3){bandwidth=prev.f+(s.f-prev.f)*(-3-prev.eoDb)/(s.eoDb-prev.eoDb);break;}prev=s;}
+    return {version,settings:{...cfg},pn:{...b.pn},design:{...d},samples,probe,transfer,vpi,il,through,bandwidth,
+      dcElectrodeVpp:cx.abs(dc.input),dcEffectiveVpp:cx.abs(dc.eo),
+      confidence:'Educational model',referenceChecked:false,
+      conventions:{phasor:'exp(+jwt)',referenceOhm:50,referencePlanes:'electrode input / output ends',
+        electricalS:'two-port, both reference impedances 50 ohm; independent of actual RT',
+        loadedReflection:'input reflection at 50 ohm reference with actual RT',
+        rc:'lumped series junction pair for total active length; not electrode S11',
+        eo:'mean junction voltage in optical frame / its 0.001 GHz value; not electrical S21',
+        transfer:'static equal-arm linear phase model; electrode differential voltage, fixed optical loss',
+        source:'open-circuit Vpp; source resistance separate from 50 ohm S-parameter reference'}};
+  }
+  return {version,fields,defaults,valid,analyse,twoPort,meanExp,sample,db};
 })();
 
 // ===== Kind: all-pass microring modulator (Si rib ring, lateral PN depletion junction, integrated TiN heater) =====
@@ -9847,6 +9927,54 @@ if (window.LABUI && window.GAME_SHELL && window.GAME_SHELL.plat()) window.GAME_S
   renderPath();
 })();
 
+// Live bench uses the Studio's current evaluated design. Bench experiments have their own identity.
+(() => {
+  const $=s=>document.querySelector(s), SH=window.GAME_SHELL, B=MZM_BENCH;
+  const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  let controls, panel, owner=null, saved=null, result=null, identity=null;
+  const workspace=()=>window.SMQ_STUDIO?.workspace();
+  function settings(){return Object.fromEntries(B.fields.map(f=>[f.k,+$('[data-bench="'+f.k+'"]').value]));}
+  function inputsValid(){return controls && [...controls.querySelectorAll('input')].every(e=>e.value!==''&&e.validity.valid)&&B.valid(settings());}
+  function key(){return JSON.stringify([SH.testIdentity(),B.version,settings()]);}
+  function invalidate(){result=null;identity=null;if(!panel)return;$('#mzmBenchStatus').textContent='STALE · 현재 입력 확인 / 계산 중';$('#mzmBenchExport').disabled=true;$('#mzmBenchPlots').hidden=true;panel.setAttribute('aria-busy','true');}
+  function init(){
+    controls=document.createElement('section');controls.id='mzmBenchControls';controls.className='card';controls.hidden=true;
+    controls.innerHTML='<h2>Single-lane Bench · 실험 조건</h2><p class="note">위의 L / Gap / η / RT는 현재 설계입니다. 아래 조건은 별도 분석용이며 기존 Mission·Eye·Next 판정에는 적용되지 않습니다.</p>'+B.fields.map(f=>`<label class="mzm-bench-input">${f.label} <small>${f.unit}</small><input type="number" data-bench="${f.k}" aria-label="Bench ${f.label}" min="${f.min}" max="${f.max}" step="${f.step}" value="${f.value}"></label>`).join('')+'<button class="btn" id="mzmBenchReset">기본 실험 조건</button>';
+    $('#studioTune').append(controls);
+    panel=document.createElement('section');panel.id='mzmBench';panel.className='card';panel.hidden=true;
+    panel.innerHTML=`<div class="mzm-bench-heading"><h2>TW-MZM · Single-lane Bench</h2><b id="mzmBenchStatus" role="status"></b><button class="btn" id="mzmBenchExport" disabled>Export analysis JSON</button></div>
+      <p class="note">Educational model · Reference checked: <b>NOT VERIFIED</b>. 현재 PN 카드 / 기준 PN과 기존 loaded CPW 모델을 사용합니다. 순수 SiN PN 변조를 뜻하지 않으며 SiN 플랫폼에서는 hybrid active component 가정입니다.</p>
+      <div id="mzmBenchPlots"></div>
+      <details><summary>읽는 순서 · 모델과 참조 범위</summary><ol><li>L·Gap·η·RT를 조절하며 RF 손실, 속도 정합, 반사를 비교하세요.</li><li>Source resistance / drive와 Optical group index를 바꾸어 전극 전압과 EO 응답의 차이를 보세요.</li><li>Phase bias를 바꾸어 main / complementary 출력과 quadrature를 확인하세요.</li></ol><p class="note">S-parameter 기준은 양 끝 50 Ω, 기준면은 전극 양 끝입니다. Loaded Γ는 실제 RT를 사용하고, RC Γ는 전체 active length의 lumped series PN pair입니다. EO는 0.001 GHz 유효 접합 전압으로 정규화합니다. RF 손실·속도 지수는 같은 loaded CPW 모델의 값입니다. Static transfer는 일정 손실·선형 위상 근사이며 파장 sweep / PN bias dependence / 새 eye 계산은 포함하지 않습니다.</p><p class="note">Ansys Si PN의 charge → RC → optical → RF → circuit 흐름을 분석 화면에 연결한 첫 단계입니다. 원본 curve와의 수치 비교는 아직 없습니다. PhotonForge TFLN Pockels / LNOI400 모델은 별도 예정이며 Si PN으로 대체하지 않습니다.</p><p><a href="https://optics.ansys.com/hc/en-us/articles/360042328774-Traveling-Wave-Mach-Zehnder-Modulator" target="_blank" rel="noopener">Ansys · Si PN reference</a> · <a href="https://docs.flexcompute.com/projects/photonforge/en/v1.1.6/examples/EO-MZM.html" target="_blank" rel="noopener">PhotonForge 1.1.6 · TFLN reference</a></p></details>`;
+    $('#studioResults').prepend(panel);
+    controls.addEventListener('input',e=>{if(!e.target.matches('[data-bench]'))return;invalidate();if(inputsValid()&&workspace()){workspace().mzmBench=settings();window.SMQ_STUDIO.save();}refresh(window.GAME_CTX(),window.LABUI.isOpen());});
+    $('#mzmBenchReset').onclick=()=>{B.fields.forEach(f=>$('[data-bench="'+f.k+'"]').value=f.value);if(workspace()){workspace().mzmBench=B.defaults();window.SMQ_STUDIO.save();}refresh(window.GAME_CTX(),window.LABUI.isOpen());};
+    $('#mzmBenchExport').onclick=()=>{const data=report();if(!data){invalidate();return;}const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='mzm-single-lane-analysis.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+  }
+  function chart(title,series,y0,y1,ylab,yticks){return `<article><h3>${title}</h3>`+svgChart({x0:0,x1:120,y0,y1,aria:title,xlab:'GHz',ylab,xticks:[0,30,56,90,120],yticks,series:series.map(([pts,color])=>({pts,color,width:2}))})+'</article>';}
+  function smith(r){const pts=k=>r.samples.map(s=>`${(150+120*s[k][0]).toFixed(2)},${(150-120*s[k][1]).toFixed(2)}`).join(' ');
+    let grid='<circle cx="150" cy="150" r="120"/><path d="M30 150H270"/>';
+    for(const resistance of [.2,.5,1,2,5])grid+=`<circle cx="${150+120*resistance/(1+resistance)}" cy="150" r="${120/(1+resistance)}"/>`;
+    for(const reactance of [-2,-1,-.5,.5,1,2])grid+=`<circle cx="270" cy="${150-120/reactance}" r="${120/Math.abs(reactance)}"/>`;
+    return `<article><h3>Smith · Γ @ 50 Ω · 1–120 GHz</h3><svg viewBox="0 0 300 300" role="img" aria-label="Smith chart: terminated electrode and lumped PN pair"><defs><clipPath id="mzmSmithClip"><circle cx="150" cy="150" r="120"/></clipPath></defs><g clip-path="url(#mzmSmithClip)" fill="none"><g stroke="currentColor" opacity=".2">${grid}</g><polyline points="${pts('loadedReflection')}" stroke="var(--cyan)" stroke-width="2.5"/><polyline points="${pts('rcReflection')}" stroke="var(--amber)" stroke-width="2"/></g><text x="150" y="292" text-anchor="middle" fill="currentColor" font-size="11">+j upper · −j lower · center = matched</text></svg><p class="note">Cyan: loaded electrode Γ (actual RT) · Amber: lumped PN pair Γ</p></article>`;}
+  function render(r){const s=r.probe,fmt=(v,n=2)=>v.toFixed(n),complex=z=>`${fmt(z[0])} ${z[1]<0?'−':'+'} j${fmt(Math.abs(z[1]))}`;
+    $('#mzmBenchPlots').innerHTML=`<p class="mzm-bench-summary">@ ${s.f} GHz · Zc ${complex(s.zc)} Ω · nRF ${fmt(s.nRF)} / ng ${fmt(r.settings.ng)} · αRF ${fmt(s.alphaDbPerCm)} dB/cm<br>EO −3 dB: ${r.bandwidth===null?'&gt;120 GHz (no crossing)':fmt(r.bandwidth,1)+' GHz'} · Vπ ${fmt(r.vpi)} V · DC electrode ${fmt(r.dcElectrodeVpp)} Vpp / source ${fmt(r.settings.vpp)} Vpp<br>Electrical S11 ${fmt(B.db(s.s11))} dB · loaded Γ ${fmt(B.db(s.loadedReflection))} dB · RC Γ ${fmt(B.db(s.rcReflection))} dB<br>${esc(r.pn.src)} · C′ ${fmt(r.pn.Cp,3)} pF/mm · R′ ${fmt(r.pn.Rp)} Ω·mm · VπL ${fmt(r.pn.VpiL,3)} V·cm</p><div class="mzm-bench-grid">`+
+      chart('EO normalized (cyan) / electrical S21 (amber)',[[r.samples.map(s=>[s.f,s.eoDb]),'var(--cyan)'],[r.samples.map(s=>[s.f,s.s21Db]),'var(--amber)']],Math.min(-20,Math.floor(Math.min(...r.samples.flatMap(s=>[s.eoDb,s.s21Db]))/10)*10),6,'dB',[-20,-10,-3,0,6])+smith(r)+
+      chart('RF characteristic impedance · Re cyan / Im amber',[[r.samples.map(s=>[s.f,s.zc[0]]),'var(--cyan)'],[r.samples.map(s=>[s.f,s.zc[1]]),'var(--amber)']],Math.min(-20,...r.samples.map(s=>s.zc[1])),Math.max(100,...r.samples.map(s=>s.zc[0])),'Ω',[-20,0,25,50,75,100])+
+      `<article><h3>Static optical transfer · main / complementary</h3>${svgChart({x0:-r.settings.vpp/2,x1:r.settings.vpp/2,y0:0,y1:1,aria:'Main and complementary optical power / input power',xlab:'Electrode differential V',ylab:'Pout / Pin',xticks:[-r.settings.vpp/2,0,r.settings.vpp/2],yticks:[0,.25,.5,.75,1],series:[{pts:r.transfer.map(p=>[p.v,p.main]),color:'var(--cyan)',width:2},{pts:r.transfer.map(p=>[p.v,p.complement]),color:'var(--amber)',width:2}]})}<p class="note">Main + complementary = ${fmt(r.through,3)} · IL ${fmt(r.il)} dB. Static voltage sweep, not a dynamic eye.</p></article></div>`;
+  }
+  function refresh(c,lab){
+    if(!controls)init();const ws=workspace(),show=!!ws&&!lab&&c?.kindId==='mzm';controls.hidden=panel.hidden=!show;
+    if(!show){owner=null;invalidate();return;}
+    if(owner!==ws||saved!==ws.mzmBench){owner=ws;saved=ws.mzmBench;const cfg=B.valid(ws.mzmBench)?ws.mzmBench:B.defaults();B.fields.forEach(f=>$('[data-bench="'+f.k+'"]').value=cfg[f.k]);identity=null;}
+    if(!SH.evaluationCurrent()||!inputsValid()){invalidate();return;}
+    const id=key();if(identity===id)return;
+    result=B.analyse(c.l,c.d,settings());identity=id;render(result);$('#mzmBenchPlots').hidden=false;panel.setAttribute('aria-busy','false');$('#mzmBenchStatus').textContent='CURRENT · Educational model';$('#mzmBenchExport').disabled=false;
+  }
+  function report(){if(!result||panel.hidden||!SH.evaluationCurrent()||!inputsValid()||identity!==key())return null;return {schema:'smq-mzm-bench/1',application:SMQ_BUILD,platform:SH.plat(),track:window.SMQ_STUDIO.active(),designIdentity:SH.testIdentity(),analysisIdentity:identity,...JSON.parse(JSON.stringify(result))};}
+  window.MZM_BENCH_UI={refresh,invalidate,report};
+})();
+
 // Unified Photonics Studio: additive navigation/presentation adapter; no solver replacements.
 (() => {
 'use strict';
@@ -9950,7 +10078,7 @@ function liveGate(){const p=phase();if(p?.summary)return [0,1,2,3,4].every(i=>ws
 // Device evaluations are automatic. Lab verification/export keep their explicit, hash-bound actions.
 function fresh(){return !!ws && (LU.isOpen()?LU.evaluationCurrent():phase()?.summary||SH.evaluationCurrent()) && !SH.busy() && liveGate();}
 function recordEvaluation(){if(!ws||!(LU.isOpen()?LU.evaluationCurrent():SH.evaluationCurrent()))return;const id=identity(),ok=liveGate(),key=historyKey();ws.tests=ws.tests||{};const old=ws.tests[key];if(old?.identity===id&&old.ok===ok)return;ws.tests[key]={identity:id,ok,at:Date.now(),automatic:true};save();}
-function invalidate(){$('#studioNext').disabled=true;$('#studioStatus').textContent=(LU.isOpen()?LU.inputValid():SH.inputValid())?'계산 중…':'입력값 확인';$('#studioStatus').dataset.state='pending';inspect.setAttribute('aria-busy','true');metrics.dataset.stale='true';}
+function invalidate(){window.MZM_BENCH_UI?.invalidate();$('#studioNext').disabled=true;$('#studioStatus').textContent=(LU.isOpen()?LU.inputValid():SH.inputValid())?'계산 중…':'입력값 확인';$('#studioStatus').dataset.state='pending';inspect.setAttribute('aria-busy','true');metrics.dataset.stale='true';}
 function advance(){if(!ws||SH.busy())return;
  // Always evaluate in this event, even if a pending frame still shows a previous PASS.
  if(!(LU.isOpen()?LU.evaluateNow():SH.testNow())){invalidate();return;}
@@ -9966,11 +10094,11 @@ $('#studioLevel').addEventListener('change',e=>{if(ws){ws.level=+e.target.value;
 function highlight(){const c=window.GAME_CTX();if(LU.isOpen()){const p=$('#lab-params input');if(p){p.classList.add('studio-target');p.scrollIntoView?.({block:'center'});}return;}
  const hint=$('#coach').textContent;const p=c?.params?.find(p=>hint.includes(text(p.label)))||c?.params?.[0];if(!p)return;const el=$('#p-'+p.k);el?.closest('.prm')?.classList.add('studio-target');el?.scrollIntoView?.({block:'center'});}
 
-function snapshot(label){if(!ws)return;ws.snapshots=ws.snapshots||[];ws.snapshots.push({at:Date.now(),label,designs:clone(ws.designs),lab:clone(ws.lab),level:ws.level,sub:ws.sub});ws.snapshots=ws.snapshots.slice(-12);save();}
+function snapshot(label){if(!ws)return;ws.snapshots=ws.snapshots||[];ws.snapshots.push({at:Date.now(),label,designs:clone(ws.designs),lab:clone(ws.lab),mzmBench:clone(ws.mzmBench||null),level:ws.level,sub:ws.sub});ws.snapshots=ws.snapshots.slice(-12);save();}
 function restart(){if(!ws){tell('먼저 Track을 선택하세요.');return;}if(!confirm('현재 Track을 Revision에 보관하고 Level 1에서 새로 시작할까요?'))return;snapshot('Before Start New');const old=ws.snapshots;root.by[SH.plat()][active]=newWS();root.by[SH.plat()][active].snapshots=old;syncScope();navigate();}
 $('#studioStart').onclick=restart;$('#studioNew').onclick=restart;
 $('#studioSnapshot').onclick=()=>{snapshot('Manual');tell('Snapshot 저장 완료');};
-$('#studioRestoreSnapshot').onclick=()=>{const sn=ws?.snapshots?.at(-1);if(!sn)return tell('저장한 Snapshot이 없습니다.');const s=clone(sn);snapshot('Before Restore');Object.assign(ws,{designs:s.designs,lab:s.lab,level:s.level,sub:s.sub});SH.setScope(ws);LU.setScope(ws);navigate();};
+$('#studioRestoreSnapshot').onclick=()=>{const sn=ws?.snapshots?.at(-1);if(!sn)return tell('저장한 Snapshot이 없습니다.');const s=clone(sn);snapshot('Before Restore');Object.assign(ws,{designs:s.designs,lab:s.lab,mzmBench:s.mzmBench||null,level:s.level,sub:s.sub});SH.setScope(ws);LU.setScope(ws);navigate();};
 $('#studioCopy').onclick=()=>{if(!ws)return tell('먼저 Track을 선택하세요.');if(!confirm('Legacy 설계를 현재 Track에 복사할까요? 현재 설계는 Snapshot으로 보관합니다.'))return;snapshot('Before Legacy Copy');Object.assign(ws.designs,SH.legacyDesigns());navigate();};
 $('#studioPlatform').onclick=()=>$('#plat-chip').click();
 $('#studioBackup').onclick=()=>window.GAME_DATA.open('#bk-copy');
@@ -9998,7 +10126,7 @@ function refresh(){if(entering)return;const c=window.GAME_CTX(),lab=LU.isOpen();
  else {$('#studioTrack').value='legacy';const opts=SH.levels().map(l=>`<option value="${l.id}">${l.id} · ${l.name}</option>`).join('');if($('#studioLevel').innerHTML!==opts)$('#studioLevel').innerHTML=opts;$('#studioLevel').value=SH.curId();$('#studioTitle').textContent=lab?$('#lab-h').textContent:(c?.lvl.name||'플랫폼 선택');$('#studioGoalLine').textContent=lab?$('#lab-note').textContent.replace(/\s+/g,' ').slice(0,100):$('#m-do .do-h')?.textContent||'폭·길이·Gap을 바꾸고 실제 결과를 확인하세요.';$('#studioStatus').textContent=c?`${c.stars?'★ 획득':'미획득'} · ${SH.currentGate()?'VALID':'검토 필요'}`:'';$('#studioNext').disabled=true;}
  if(!lab&&c){for(const p of c.params){const row=$('#p-'+p.k)?.closest('.prm');if(row&&!row.querySelector('.fine-value')){const n=document.createElement('input');n.type='number';n.className='fine-value';n.dataset.fine=p.k;n.setAttribute('aria-label',p.label+' 정확한 값');n.min=p.min;n.max=p.max;n.step=p.step;n.value=c.d[p.k];row.append(n);}else if(row&&document.activeElement!==row.querySelector('.fine-value')&&row.querySelector('.fine-value').getAttribute('aria-invalid')!=='true')row.querySelector('.fine-value').value=c.d[p.k];}}
  if(!lab&&c)metrics.innerHTML=(c.tiles(c.res)||[]).slice(0,2).map(r=>`<span>${esc(text(r[0]))} <b>${esc(text(r[1]))}</b></span>`).join('');
- summary();renderReference();
+ summary();renderReference();window.MZM_BENCH_UI?.refresh(c,lab);
 }
 function refreshSoon(){if(raf)return;raf=requestAnimationFrame(()=>{raf=0;refresh();});}
 function resize(){if(window.visualViewport)document.documentElement.style.setProperty('--app-height',window.visualViewport.height+'px');if(SH.plat())SH.redraw();LU.redraw();}

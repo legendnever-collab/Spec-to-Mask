@@ -101,7 +101,7 @@ function liveGate(){const p=phase();if(p?.summary)return [0,1,2,3,4].every(i=>ws
 // Device evaluations are automatic. Lab verification/export keep their explicit, hash-bound actions.
 function fresh(){return !!ws && (LU.isOpen()?LU.evaluationCurrent():phase()?.summary||SH.evaluationCurrent()) && !SH.busy() && liveGate();}
 function recordEvaluation(){if(!ws||!(LU.isOpen()?LU.evaluationCurrent():SH.evaluationCurrent()))return;const id=identity(),ok=liveGate(),key=historyKey();ws.tests=ws.tests||{};const old=ws.tests[key];if(old?.identity===id&&old.ok===ok)return;ws.tests[key]={identity:id,ok,at:Date.now(),automatic:true};save();}
-function invalidate(){$('#studioNext').disabled=true;$('#studioStatus').textContent=(LU.isOpen()?LU.inputValid():SH.inputValid())?'계산 중…':'입력값 확인';$('#studioStatus').dataset.state='pending';inspect.setAttribute('aria-busy','true');metrics.dataset.stale='true';}
+function invalidate(){window.MZM_BENCH_UI?.invalidate();$('#studioNext').disabled=true;$('#studioStatus').textContent=(LU.isOpen()?LU.inputValid():SH.inputValid())?'계산 중…':'입력값 확인';$('#studioStatus').dataset.state='pending';inspect.setAttribute('aria-busy','true');metrics.dataset.stale='true';}
 function advance(){if(!ws||SH.busy())return;
  // Always evaluate in this event, even if a pending frame still shows a previous PASS.
  if(!(LU.isOpen()?LU.evaluateNow():SH.testNow())){invalidate();return;}
@@ -117,11 +117,11 @@ $('#studioLevel').addEventListener('change',e=>{if(ws){ws.level=+e.target.value;
 function highlight(){const c=window.GAME_CTX();if(LU.isOpen()){const p=$('#lab-params input');if(p){p.classList.add('studio-target');p.scrollIntoView?.({block:'center'});}return;}
  const hint=$('#coach').textContent;const p=c?.params?.find(p=>hint.includes(text(p.label)))||c?.params?.[0];if(!p)return;const el=$('#p-'+p.k);el?.closest('.prm')?.classList.add('studio-target');el?.scrollIntoView?.({block:'center'});}
 
-function snapshot(label){if(!ws)return;ws.snapshots=ws.snapshots||[];ws.snapshots.push({at:Date.now(),label,designs:clone(ws.designs),lab:clone(ws.lab),level:ws.level,sub:ws.sub});ws.snapshots=ws.snapshots.slice(-12);save();}
+function snapshot(label){if(!ws)return;ws.snapshots=ws.snapshots||[];ws.snapshots.push({at:Date.now(),label,designs:clone(ws.designs),lab:clone(ws.lab),mzmBench:clone(ws.mzmBench||null),level:ws.level,sub:ws.sub});ws.snapshots=ws.snapshots.slice(-12);save();}
 function restart(){if(!ws){tell('먼저 Track을 선택하세요.');return;}if(!confirm('현재 Track을 Revision에 보관하고 Level 1에서 새로 시작할까요?'))return;snapshot('Before Start New');const old=ws.snapshots;root.by[SH.plat()][active]=newWS();root.by[SH.plat()][active].snapshots=old;syncScope();navigate();}
 $('#studioStart').onclick=restart;$('#studioNew').onclick=restart;
 $('#studioSnapshot').onclick=()=>{snapshot('Manual');tell('Snapshot 저장 완료');};
-$('#studioRestoreSnapshot').onclick=()=>{const sn=ws?.snapshots?.at(-1);if(!sn)return tell('저장한 Snapshot이 없습니다.');const s=clone(sn);snapshot('Before Restore');Object.assign(ws,{designs:s.designs,lab:s.lab,level:s.level,sub:s.sub});SH.setScope(ws);LU.setScope(ws);navigate();};
+$('#studioRestoreSnapshot').onclick=()=>{const sn=ws?.snapshots?.at(-1);if(!sn)return tell('저장한 Snapshot이 없습니다.');const s=clone(sn);snapshot('Before Restore');Object.assign(ws,{designs:s.designs,lab:s.lab,mzmBench:s.mzmBench||null,level:s.level,sub:s.sub});SH.setScope(ws);LU.setScope(ws);navigate();};
 $('#studioCopy').onclick=()=>{if(!ws)return tell('먼저 Track을 선택하세요.');if(!confirm('Legacy 설계를 현재 Track에 복사할까요? 현재 설계는 Snapshot으로 보관합니다.'))return;snapshot('Before Legacy Copy');Object.assign(ws.designs,SH.legacyDesigns());navigate();};
 $('#studioPlatform').onclick=()=>$('#plat-chip').click();
 $('#studioBackup').onclick=()=>window.GAME_DATA.open('#bk-copy');
@@ -149,7 +149,7 @@ function refresh(){if(entering)return;const c=window.GAME_CTX(),lab=LU.isOpen();
  else {$('#studioTrack').value='legacy';const opts=SH.levels().map(l=>`<option value="${l.id}">${l.id} · ${l.name}</option>`).join('');if($('#studioLevel').innerHTML!==opts)$('#studioLevel').innerHTML=opts;$('#studioLevel').value=SH.curId();$('#studioTitle').textContent=lab?$('#lab-h').textContent:(c?.lvl.name||'플랫폼 선택');$('#studioGoalLine').textContent=lab?$('#lab-note').textContent.replace(/\s+/g,' ').slice(0,100):$('#m-do .do-h')?.textContent||'폭·길이·Gap을 바꾸고 실제 결과를 확인하세요.';$('#studioStatus').textContent=c?`${c.stars?'★ 획득':'미획득'} · ${SH.currentGate()?'VALID':'검토 필요'}`:'';$('#studioNext').disabled=true;}
  if(!lab&&c){for(const p of c.params){const row=$('#p-'+p.k)?.closest('.prm');if(row&&!row.querySelector('.fine-value')){const n=document.createElement('input');n.type='number';n.className='fine-value';n.dataset.fine=p.k;n.setAttribute('aria-label',p.label+' 정확한 값');n.min=p.min;n.max=p.max;n.step=p.step;n.value=c.d[p.k];row.append(n);}else if(row&&document.activeElement!==row.querySelector('.fine-value')&&row.querySelector('.fine-value').getAttribute('aria-invalid')!=='true')row.querySelector('.fine-value').value=c.d[p.k];}}
  if(!lab&&c)metrics.innerHTML=(c.tiles(c.res)||[]).slice(0,2).map(r=>`<span>${esc(text(r[0]))} <b>${esc(text(r[1]))}</b></span>`).join('');
- summary();renderReference();
+ summary();renderReference();window.MZM_BENCH_UI?.refresh(c,lab);
 }
 function refreshSoon(){if(raf)return;raf=requestAnimationFrame(()=>{raf=0;refresh();});}
 function resize(){if(window.visualViewport)document.documentElement.style.setProperty('--app-height',window.visualViewport.height+'px');if(SH.plat())SH.redraw();LU.redraw();}

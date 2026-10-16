@@ -1,0 +1,65 @@
+const fs=require('fs'),path=require('path'),assert=require('assert'),crypto=require('crypto');
+const {chromium}=require('playwright');
+const html=path.resolve(process.env.SMQ_HTML||'dist/index.html'),out=path.resolve(process.env.SMQ_QA_OUT||'artifacts/v120-bench/browser');fs.mkdirSync(out,{recursive:true});
+const checks=[],errors=[],requests=[];
+const ok=(v,m)=>{checks.push({ok:!!v,message:m});console.log(v?'PASS':'FAIL',m);assert(v,m);};
+(async()=>{
+ const browser=await chromium.launch({executablePath:process.env.SMQ_BROWSER||undefined,args:process.env.SMQ_BROWSER?['--no-sandbox','--disable-gpu','--disable-software-rasterizer','--no-zygote','--single-process','--disable-dev-shm-usage']:['--no-sandbox']});
+ try {
+ const page=await browser.newPage({viewport:{width:1440,height:900}});page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(/^https?:/.test(r.url()))requests.push(r.url());});page.on('dialog',d=>d.accept());
+ await page.goto('file://'+html);await page.click('[data-lam="1.31"]');await page.click('[data-mat="si"]');await page.click('#btn-start');await page.click('[data-welcome-track="mzm-dr8"]');
+ await page.click('#studioMoreToggle');await page.click('#studioApply');await page.click('#studioMoreToggle');await page.click('#studioNext');
+ await page.waitForFunction(()=>GAME_CTX()?.kindId==='mzm'&&MZM_BENCH_UI.report());
+ ok(await page.locator('#mzmBenchControls').isVisible()&&await page.locator('#mzmBench').isVisible(),'MZM level exposes simultaneous Tune controls and Inspect bench');
+ ok(await page.evaluate(()=>MZM_BENCH_UI.report().samples.length===120&&!MZM_BENCH_UI.report().referenceChecked),'live analysis includes complete sweep and honest reference status');
+ const identity=await page.evaluate(()=>MZM_BENCH_UI.report().analysisIdentity),design=await page.evaluate(()=>JSON.stringify(GAME_CTX().d));
+ await page.locator('[data-bench="source"]').fill('75');
+ ok(await page.evaluate(id=>MZM_BENCH_UI.report().analysisIdentity!==id,identity),'bench setting changes its own current identity synchronously');
+ ok(await page.evaluate(d=>JSON.stringify(GAME_CTX().d)===d,design),'source experiment preserves original Mission design');
+ await page.locator('[data-bench="source"]').fill('');await page.locator('[data-bench="source"]').press('Tab');
+ ok(await page.evaluate(()=>MZM_BENCH_UI.report()===null)&&await page.locator('#mzmBenchExport').isDisabled(),'blank bench field invalidates export and result immediately');
+ await page.evaluate(()=>SMQ_STUDIO.refreshSoon());await page.waitForTimeout(100);
+ ok(await page.locator('[data-bench="source"]').inputValue()===''&&await page.locator('#mzmBenchPlots').isHidden(),'refresh preserves invalid draft after blur and hides stale plots');
+ await page.locator('[data-bench="source"]').fill('101');ok(await page.evaluate(()=>MZM_BENCH_UI.report()===null),'out-of-range bench condition cannot export stale analysis');
+ await page.locator('[data-bench="source"]').fill('75');
+ const changed=await page.evaluate(()=>MZM_BENCH_UI.report().analysisIdentity);
+ const stale=await page.evaluate(()=>{const e=document.querySelector('[data-fine="L"]');e.value=3;e.dispatchEvent(new Event('input',{bubbles:true}));return MZM_BENCH_UI.report()===null&&document.querySelector('#mzmBenchExport').disabled;});
+ ok(stale,'device edit invalidates analysis before animation-frame evaluation');
+ await page.waitForFunction(id=>MZM_BENCH_UI.report()?.analysisIdentity!==id&&MZM_BENCH_UI.report()?.design.L===3,changed);
+ ok(await page.evaluate(()=>MZM_BENCH_UI.report().designIdentity===GAME_SHELL.testIdentity()),'refreshed analysis belongs to current device identity');
+ await page.click('#studioMoreToggle');await page.click('#studioApply');await page.click('#studioMoreToggle');await page.waitForFunction(()=>MZM_BENCH_UI.report());
+ ok(await page.evaluate(()=>MZM_BENCH_UI.report().design.L===GAME_CTX().d.L&&MZM_BENCH_UI.report().settings.source===75),'Reference Apply refreshes device analysis and preserves independent experiment settings');
+ await page.click('#studioMoreToggle');await page.click('#studioOriginal');await page.click('#studioMoreToggle');await page.waitForFunction(()=>MZM_BENCH_UI.report());
+ ok(await page.evaluate(()=>MZM_BENCH_UI.report().design.L===3),'Original Restore recomputes protected device');
+ const good=await page.evaluate(()=>MZM_BENCH_UI.report().analysisIdentity);
+ await page.selectOption('#studioTrack','mrr-dr8');ok(await page.locator('#mzmBench').isHidden()&&await page.evaluate(()=>MZM_BENCH_UI.report()===null),'non-MZM Track hides and clears previous analysis');
+ await page.selectOption('#studioTrack','mzm-dr8');await page.waitForFunction(()=>MZM_BENCH_UI.report());
+ ok(await page.evaluate(id=>MZM_BENCH_UI.report().analysisIdentity===id,good),'Track resume restores device and experiment identity');
+ await page.reload();await page.waitForFunction(()=>MZM_BENCH_UI.report());
+ ok(await page.evaluate(id=>MZM_BENCH_UI.report().analysisIdentity===id,good),'reload resumes current MZM bench settings');
+ const backup=await page.evaluate(()=>SMQ_STORE.makeBackup(true));
+ await page.locator('[data-bench="source"]').fill('40');
+ ok(await page.evaluate(b=>SMQ_STORE.restore(b,{}).ok,backup),'full backup restores Track including bench settings');
+ await page.reload();await page.waitForFunction(()=>MZM_BENCH_UI.report());
+ ok(await page.evaluate(id=>MZM_BENCH_UI.report().analysisIdentity===id,good),'backup / reload recomputes exact saved analysis');
+ await page.click('#studioMoreToggle');await page.click('#studioSnapshot');await page.click('#studioMoreToggle');
+ await page.locator('[data-bench="source"]').fill('40');
+ await page.click('#studioMoreToggle');await page.click('#studioRestoreSnapshot');await page.waitForFunction(()=>MZM_BENCH_UI.report());
+ ok(await page.evaluate(id=>MZM_BENCH_UI.report().analysisIdentity===id,good),'Snapshot Restore recomputes saved bench conditions in same workspace');
+ const download=page.waitForEvent('download');await page.click('#mzmBenchExport');const dl=await download;await dl.saveAs(path.join(out,'analysis.json'));
+ const exported=JSON.parse(fs.readFileSync(path.join(out,'analysis.json'),'utf8'));
+ ok(exported.analysisIdentity===good&&exported.schema==='smq-mzm-bench/1'&&exported.conventions.referenceOhm===50,'download binds design, model, conditions and port conventions');
+ for(const [width,height] of [[1440,900],[390,844]]){
+ await page.setViewportSize({width,height});
+ if(width<500&&await page.locator('#studioInspectExpand').getAttribute('aria-expanded')==='false')await page.click('#studioInspectExpand');
+ await page.locator('#mzmBench').scrollIntoViewIfNeeded();
+ ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth&&document.querySelector('#studioTune').getBoundingClientRect().height>=100),'bench fits viewport '+width+'x'+height);
+ await page.screenshot({path:path.join(out,`bench-light-${width}.png`)});
+ }
+ await page.setViewportSize({width:1440,height:900});await page.click('#themeToggle');await page.screenshot({path:path.join(out,'bench-dark-1440.png')});
+ ok(await page.evaluate(()=>document.documentElement.dataset.theme==='dark'),'bench supports shared dark theme');
+ ok(errors.length===0,'no browser page errors');ok(requests.length===0,'offline executable makes no external HTTP requests');
+ fs.writeFileSync(path.join(out,'acceptance.json'),JSON.stringify({htmlSha256:crypto.createHash('sha256').update(fs.readFileSync(html)).digest('hex'),checks,errors,requests},null,2));
+ console.log(checks.length+' MZM bench browser checks passed');
+ } finally {await browser.close();}
+})().catch(e=>{console.error(e);process.exit(1);});

@@ -1,0 +1,30 @@
+const assert=require('assert'),fs=require('fs'),vm=require('vm'),G=require('./load')();
+vm.runInContext(fs.readFileSync('src/bench/mzm.js','utf8').replace('const MZM_BENCH =','var MZM_BENCH ='),G);
+const B=G.MZM_BENCH,X=G.KINDS.mzm._x;let count=0;
+const ok=(v,m)=>{assert(v,m);count++;console.log('PASS',m);};
+const near=(a,b,tol=1e-9)=>Math.abs(a-b)<tol;
+const dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+let n=B.twoPort([0,100],[50,0],.005);ok(near(Math.hypot(...n.s11),0)&&near(Math.hypot(...n.s21),1),'lossless matched line: no reflection and unit transmitted power');
+n=B.twoPort([20,100],[50,0],.005);ok(near(Math.hypot(...n.s21),Math.exp(-.1)),'matched lossy line gives exp(-alpha L) field attenuation');
+n=B.twoPort([20,100],[30,-5],0);ok(near(Math.hypot(...n.s11),0)&&near(Math.hypot(...n.s21),1),'zero-length network is identity even with complex Zc');
+ok(dist(B.meanExp([0,0],.005),[1,0])===0&&dist(B.meanExp([0,1e-8],.005),[1,2.5e-11])<1e-15,'velocity match integral has stable analytic limit');
+ok(near(Math.hypot(...B.meanExp([0,2*Math.PI/.005],.005)),0),'one-cycle velocity mismatch cancels EO integral');
+assert.throws(()=>B.analyse({}, {}, {...B.defaults(),probe:1.5}));count++;console.log('PASS invalid fractional probe rejected');
+for(const pid of Object.keys(G.PLATFORMS)){
+ const l={...G.LEVELS.find(l=>l.id==='2-3'),...G.PSPEC[pid]['2-3'],pf:G.PLATFORMS[pid]},d={...l.ref},cfg=B.defaults();
+ const before=JSON.stringify(d),r=B.analyse(l,d,cfg),b=X.build(l,d);
+ ok(JSON.stringify(d)===before,pid+': analysis never changes input design');
+ ok(r.samples.length===120&&r.samples.every(s=>Number.isFinite(s.eoDb)&&s.zc.every(Number.isFinite)),pid+': complete finite sweep');
+ ok(r.samples.every(s=>dist(s.eo,b.resp(s.f).V)<1e-9),pid+': default EO equals existing engine at every frequency');
+ ok(near(r.dcElectrodeVpp,cfg.vpp*d.RT/(cfg.source+d.RT),.01),pid+': DC electrode voltage respects source/load divider');
+ ok(r.samples.every(s=>Math.hypot(...s.s11)**2+Math.hypot(...s.s21)**2<=1+1e-8),pid+': passive two-port power bound');
+ ok(r.transfer.every(s=>near(s.main+s.complement,r.through)&&s.main>=0&&s.complement>=0),pid+': optical output power conservation including loss');
+ ok(near(r.transfer[50].main,r.transfer[50].complement),pid+': quadrature has equal output powers at zero RF voltage');
+ const phase=B.analyse(l,d,{...cfg,bias:0});ok(near(phase.transfer[50].main,phase.through)&&near(phase.transfer[50].complement,0),pid+': zero phase directs all surviving light to main');
+ const source=B.analyse(l,d,{...cfg,source:100,vpp:5});ok(dist(source.probe.s21,r.probe.s21)===0&&!near(source.dcElectrodeVpp,r.dcElectrodeVpp),pid+': source voltage differs from electrode voltage and does not redefine S parameters');
+ const mismatch=B.analyse(l,d,{...cfg,ng:2});ok(dist(mismatch.probe.s21,r.probe.s21)===0&&dist(mismatch.probe.eo,r.probe.eo)>.001,pid+': optical velocity mismatch affects EO, not electrical S21');
+ const load=B.analyse(l,{...d,RT:d.RT+10},cfg);ok(dist(load.probe.s11,r.probe.s11)===0&&dist(load.probe.loadedReflection,r.probe.loadedReflection)>.001,pid+': terminated reflection distinguished from two-port S11');
+ ok(Math.abs(r.probe.eoDb-r.probe.s21Db)>.01,pid+': EO and electrical S21 are distinct');
+ ok(!r.referenceChecked&&r.confidence==='Educational model',pid+': uncalibrated reference never marked verified');
+}
+console.log(count+' MZM bench model checks passed');
