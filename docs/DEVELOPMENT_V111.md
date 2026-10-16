@@ -23,7 +23,11 @@ No physics, hard requirement, score threshold, GDS generator, track ID or backup
 - Current-source offline Chromium browser: 167 PASS, zero page errors and zero external HTTP requests.
 - Lab state integrity (si1310): PASS.
 - JavaScript syntax: PASS, 71 files and assembled script.
-- Final canonical HTML/browser evidence and SHA256 will be recorded in `artifacts/v111-live/manifest.json` after acceptance.
+- Canonical offline HTML: Studio 55 PASS and Chromium 167 PASS; zero page errors / external HTTP requests.
+- Source parity and intentional mismatch rejection: PASS.
+- Executable: `dist/spec-to-mask-v1.1.1.html`; SHA256 `082e9dc478d6fb0905f50d13a431c1014faaef06e863d6f46daeb8c88fb9c625`.
+- Source/build checkpoint: `4c6be84af526f2a6ce7129a7ed04330e1dffafe7`. Complete evidence: `artifacts/v111-live/manifest.json` and `browser/results.json`.
+- Stacked PR #20: final exact-head CI is reported in the PR after this artifact checkpoint. Source checkpoint CI is not substituted for it.
 
 Local dependencies reuse the existing unchanged dependency lock; no package upgrades. Local Chromium 153 was extracted from an already cached package. The local OS has no Korean system font; geometry screenshots therefore do not certify Korean glyph rendering. No external fonts or runtime requests are added.
 

@@ -1,0 +1,44 @@
+{
+  "schema": "smq-live-ui-qa/1",
+  "version": "1.1.1",
+  "date": "2026-10-16",
+  "source_commit": "4c6be84af526f2a6ce7129a7ed04330e1dffafe7",
+  "branch": "feature/v1.1.1-live-inspector",
+  "pr": 20,
+  "base_pr": 19,
+  "html": "dist/spec-to-mask-v1.1.1.html",
+  "sha256": "082e9dc478d6fb0905f50d13a431c1014faaef06e863d6f46daeb8c88fb9c625",
+  "checks": {
+    "build": "PASS",
+    "source_parity": "PASS",
+    "parity_mismatch_rejection": "PASS",
+    "studio_source": {
+      "status": "PASS",
+      "checks": 55
+    },
+    "studio_canonical": {
+      "status": "PASS",
+      "checks": 55
+    },
+    "browser_canonical": {
+      "status": "PASS",
+      "checks": 167,
+      "page_errors": 0,
+      "external_http_requests": 0
+    },
+    "lab_state_si1310": "PASS",
+    "syntax": "PASS",
+    "migration": "PASS",
+    "backup": "PASS"
+  },
+  "limits": [
+    "Local Chromium 153 on Linux; physical touch devices and other browsers not certified.",
+    "Local OS has no Korean system font; screenshots certify geometry, not Korean glyph rendering. HTML is UTF-8 and uses host system fonts.",
+    "Physics and Python GDS sources are unchanged. Latest CI will separately run the existing full matrix; historical CI is not claimed for this revision.",
+    "MZM Tx/Rx curriculum, MRM expansion and independent LiDAR chapter are later milestones."
+  ],
+  "ci": {
+    "status": "PENDING_FINAL_COMMIT",
+    "note": "Final exact-head CI result will be linked in PR #20; source checkpoint CI is separate."
+  }
+}
