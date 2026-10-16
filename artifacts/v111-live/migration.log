@@ -1,0 +1,10 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.1.1 test:migrate
+> node test/e2e/migrate.js
+
+mat card: SiliconSi · SOI 220 nm · n ≈ 3.5 · 코어–클래딩 Δn ≈ 2.0굴절률 차가 커서 소자가 작음 (벤드 반경 수 µm)PN 변조기·Ge 수광기 등 능동 소자를 같은 칩에 집적데이터센터 트랜시버·CPO의 표준 플랫폼폭·두께 몇 nm에도 특성이 크게 변함 (공정 민감)측벽 산란 손실 1–3 dB/cm고출력에서 이광자 흡수(TPA)이 파장에서 단일모드 폭 < 394 nm · 진행 기록: ★ 5개 · 카드 1장Silicon NitrideSiN · 400 nm · n ≈ 2.0 · 코어–클래딩 Δn ≈ 0.55손실이 매우 낮음 (< 0.5 dB/cm)공정 허용오차가 큼, 열에 둔감 (dn/dT ≈ Si의 1/7)고출력·넓은 투명 대역 (LiDAR, 비선형, 바이오)굴절률 차가 작아 소자가 큼 
+sum: Si · 1310 nm · 코어 Si · SOI 220 nm, SiO₂ 클래딩 · 표준 단일모드 폭 360 nmTrack A(1.6T 트랜시버)의 표준 조합입니다.진행 기록: ★ 5개 · 카드 1장 — 이어서 진행합니다.
+map: Stage 1 · Passive 1-1도파로와 모드☆☆☆ 1-2두 도파로의 대화☆☆☆ 1-3첫 번째 분기★★★ 1-4광대역 컴팩트☆☆☆ 1-53-dB 커플러★★☆ 1-6칩과 광섬유 잇기☆☆☆ 1-7네 가지 색☆☆☆Stage 2 · Active 2-1열로 위상 돌리기☆☆☆ 2-2캐리어로 위상 돌리기☆☆☆ 2-3224G TW-MZM☆☆☆ 2-3R링 변조기☆☆☆
+cards: 1-1미획득도파로와 모드모든 회로의 배선1-2미획득두 도파로의 대화탭·분배 (공정 민감형)1-3미획득첫 번째 분기스플리터 · 모니터 탭1-4미획득광대역 컴팩트광대역 파워 분배1-5★★★ · 891점 · 표준 3-dB 커플러EL→ MZI·lattice 커플러1-6미획득칩과 광섬유 잇기광섬유 I/O (Tx·Rx)1-7미획득네 가지 색2×FR4 Rx Demux · Tx Mux2-1미획득열로 위상 돌리기CWDM 트리밍 · MZM 바이어스2-2미획득캐리어로 위상 돌리기변조기 코어2-3미획득224G TW-MZM200G/lane PAM4 Tx2
+errors []

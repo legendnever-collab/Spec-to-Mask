@@ -1,5 +1,8 @@
 # v1.1.0 frozen verification index
 
+> v1.1.1 Live UI update: Tune / Build and bottom Inspect are visible together. More is in the top navigation. Device evaluation is automatic; Next validates the current design. Lab verification and Export remain explicit. The earlier v1.1.0 Test-button instructions and QA totals below describe the historical UI. Current evidence: `docs/DEVELOPMENT_V111.md` and `artifacts/v111-live/manifest.json`.
+
+
 Canonical HTML SHA256: `fa91d6fe9bd5e38a6cf18e881134bbc9f7a412e10c8cad9be472fcf7cc33282e`.
 Source Commit: `488f4454e43487d2cac66adff3594a969da1657f`.
 

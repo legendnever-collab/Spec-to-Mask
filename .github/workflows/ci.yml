@@ -47,7 +47,8 @@ jobs:
         run: git diff --exit-code -- dist/index.html
       - name: Verify canonical RC parity and test the delivered executable
         run: |
-          if [ -f dist/spec-to-mask-v1.1.0.html ]; then node tools/check_rc.js; cp dist/spec-to-mask-v1.1.0.html dist/index.html; fi
+          RC="dist/spec-to-mask-v$(node -p "require('./package.json').version").html"
+          if [ -f "$RC" ]; then node tools/check_rc.js; cp "$RC" dist/index.html; fi
       - name: JavaScript syntax (sources, tests, tools, assembled script; no external scripts)
         run: node tools/check_syntax.js
       - name: Identity baselines readable (evidence in the job summary)
@@ -98,7 +99,8 @@ jobs:
       - run: npm ci && npm run build
       - name: Use the parity-verified delivered RC when present
         run: |
-          if [ -f dist/spec-to-mask-v1.1.0.html ]; then node tools/check_rc.js; cp dist/spec-to-mask-v1.1.0.html dist/index.html; fi
+          RC="dist/spec-to-mask-v$(node -p "require('./package.json').version").html"
+          if [ -f "$RC" ]; then node tools/check_rc.js; cp "$RC" dist/index.html; fi
       - name: smoke / flow / guide / lab / fab (${{ matrix.platform }})
         run: |
           node test/e2e/smoke.js ${{ matrix.platform }}
@@ -142,7 +144,7 @@ jobs:
           path: release/
 
   studio-browser:
-    name: v1.1 Offline Studio browser acceptance
+    name: Offline Studio browser acceptance
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -159,11 +161,12 @@ jobs:
       - run: npm run test:studio
       - name: Browser acceptance against the parity-verified canonical RC
         run: |
-          if [ -f dist/spec-to-mask-v1.1.0.html ]; then node tools/check_rc.js; SMQ_HTML=dist/spec-to-mask-v1.1.0.html npm run test:browser; else SMQ_HTML=dist/index-offline.html npm run test:browser; fi
+          RC="dist/spec-to-mask-v$(node -p "require('./package.json').version").html"
+          if [ -f "$RC" ]; then node tools/check_rc.js; SMQ_HTML="$RC" npm run test:browser; else SMQ_HTML=dist/index-offline.html npm run test:browser; fi
         env:
-          SMQ_QA_OUT: artifacts/v110-ci-browser
+          SMQ_QA_OUT: artifacts/studio-ci-browser
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: v110-browser-evidence
-          path: artifacts/v110-ci-browser/
+          name: studio-browser-evidence
+          path: artifacts/studio-ci-browser/

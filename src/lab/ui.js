@@ -8,7 +8,7 @@ window.LABUI = (() => {
   const KEY = 'smq3-lab';
   const load = () => { try { const v = localStorage.getItem(KEY); return v ? JSON.parse(v) : {}; } catch (e) { return {}; } };
   const save = () => scope ? (window.SMQ_STUDIO && window.SMQ_STUDIO.save()) : SMQ_STORE.set(KEY, LS);   // a refused write shows in the header save chip (src/persist.js)
-  let LS = load(), isOpen = false, C = null, CHK = null, MS = null, sel = null, cam = null, drag = null, timer = null, diag = null;
+  let LS = load(), isOpen = false, C = null, CHK = null, MS = null, sel = null, cam = null, drag = null, timer = null, diag = null, evaluatedDesign = null;
   const SH = () => window.GAME_SHELL;
   let scope = null;
   const S = () => { if (scope) return scope.lab || (scope.lab = {}); const p = SH().plat(); LS[p] = LS[p] || {}; return LS[p]; };
@@ -83,6 +83,7 @@ window.LABUI = (() => {
   const valid = () => { const s = S(); return { ran: !!(s.ran && C && s.ran.hash === C.hash && s.ran.sig === CHK.sig), exp: !!(s.exported && C && s.exported.hash === C.hash) }; };
   function recompute() {
     const d = des(), cx = ctx();
+    evaluatedDesign = JSON.stringify(d);
     C = LAB.build(cx, d); CHK = LAB.checks(C, cx); MS = LAB.missions(C, CHK);
     C.hash = LAB.designHash(C); CHK.sig = vsig(CHK);
     const s = S(); migrate(s); s.done = s.done || {}; s.live = {};
@@ -480,18 +481,34 @@ window.LABUI = (() => {
   };
 
   /* ---------------- events ---------------- */
+  const inputValid = () => ![...document.querySelectorAll('[data-lfine]')].some(e => e.value === '' || !e.validity.valid);
+  const evaluationCurrent = () => !!C && inputValid() && evaluatedDesign === JSON.stringify(des());
+  function evaluateNow() { if (!isOpen || !inputValid()) return false; clearTimeout(timer); renderAll(); return true; }
   function renderAll(refit) {
     if (!isOpen) return;
+    const active = document.activeElement, edit = active?.dataset.lfine ? {key:active.dataset.lfine,value:active.value,invalid:active.getAttribute('aria-invalid')} : null;
     recompute(); renderHead(); renderParams(); renderLib(); legend(); renderSel(); renderOut(); renderCoach();
+    if (edit) { const input = document.querySelector(`[data-lfine="${edit.key}"]`); if (input) { input.value=edit.value; if(edit.invalid)input.setAttribute('aria-invalid',edit.invalid); input.focus({preventScroll:true}); } }
     if (refit || !cam) fit(); else size();
     draw();
     if (SH() && SH().refreshMap) SH().refreshMap();
     renderHooks.forEach((f) => { try { f(); } catch (e) { /* learning layer */ } });
   }
-  const sched = (refit) => { clearTimeout(timer); timer = setTimeout(() => renderAll(refit), 90); };
-  document.addEventListener('input', (e) => { if (!e.target.closest('#lab,#lab-insp,#lab-lib,#lab-out,.lab-head')) return; const t = e.target.closest('[data-lk]'); if (!t) return; const p = pfP()[t.dataset.lk], v = +t.value; $('#lo-' + p.k).textContent = fmtV(p, v); setV(p.k, v); sched(p.k === 'W' || p.k === 'H' || p.k === 'mod' || p.k === 'share'); });
+  const sched = (refit) => { window.SMQ_STUDIO?.invalidate(); clearTimeout(timer); timer = setTimeout(() => renderAll(refit), 90); };
+  function fineInput(fi) {
+    const p=pfP()[fi.dataset.lfine],valid=fi.value!==''&&fi.validity.valid;
+    fi.setAttribute('aria-invalid',String(!valid));
+    if (!valid) { window.SMQ_STUDIO?.invalidate(); return; }
+    setV(p.k,+fi.value);sched(p.k==='W'||p.k==='H'||p.k==='mod'||p.k==='share');
+  }
+  document.addEventListener('input', (e) => { if (!e.target.closest('#lab,#lab-insp,#lab-lib,#lab-out,.lab-head')) return;
+    const fi=e.target.closest('[data-lfine]');if(fi){fineInput(fi);return;}
+    const t = e.target.closest('[data-lk]'); if (!t) return; const p = pfP()[t.dataset.lk], v = +t.value; $('#lo-' + p.k).textContent = fmtV(p, v);
+    const fine=document.querySelector(`[data-lfine="${p.k}"]`);if(fine){fine.value=v;fine.removeAttribute('aria-invalid');}
+    setV(p.k, v); sched(p.k === 'W' || p.k === 'H' || p.k === 'mod' || p.k === 'share');
+  });
   document.addEventListener('change', (e) => { if (!e.target.closest('#lab,#lab-insp,#lab-lib,#lab-out,.lab-head')) return;
-    const fi = e.target.closest('[data-lfine]'); if (fi) { const p=pfP()[fi.dataset.lfine]; if(Number.isFinite(+fi.value)) {setV(p.k, Math.max(p.min,Math.min(p.max,+(p.min+Math.round((+fi.value-p.min)/p.step)*p.step).toFixed(6))));sched(p.k==='W'||p.k==='H'||p.k==='mod'||p.k==='share');} return; }
+    const fi = e.target.closest('[data-lfine]'); if (fi) { fineInput(fi); return; }
     const ly = e.target.closest && e.target.closest('[data-ly]'); if (ly) { const L2 = { opt: 1, ele: 1, drc: 1, ...(S().layers || {}) }; L2[ly.dataset.ly] = ly.checked ? 1 : 0; S().layers = L2; save(); draw(); return; }
     if (e.target.id !== 'lab-gds' || !e.target.files || !e.target.files[0]) return;
     const f = e.target.files[0], rd = new FileReader();
@@ -519,16 +536,18 @@ window.LABUI = (() => {
       if (a === 'arch') { const a3 = arch3(); d.mod = a3.mod; d.share = a3.share; d.stag = LAB.stagAuto(d); save(); renderAll(true); }
       if (a === 'pin') { S().pin = { hash: C.hash, at: new Date().toISOString(), snap: labSnap() }; save(); renderOut(); }
       if (a === 'unpin') { delete S().pin; save(); renderOut(); }
-      if (a === 'run') { S().ran = { hash: C.hash, sig: CHK.sig, at: new Date().toISOString() }; save(); renderAll(); const o = $('#lab-out'); if (o && o.scrollIntoView) o.scrollIntoView({ block: 'start', behavior: smqMotion() }); }   // the result table is below the workspace
+      if (a === 'run') { if(!evaluateNow())return; S().ran = { hash: C.hash, sig: CHK.sig, at: new Date().toISOString() }; save(); renderAll(); const o = $('#lab-out'); if (o && o.scrollIntoView) o.scrollIntoView({ block: 'start', behavior: smqMotion() }); }   // the result table is below the workspace
       if (a.startsWith('exp')) exportFiles(a);
     }
   });
   function exportFiles(a) {
+    if(!evaluateNow())return;
     const ex = LAB.exportCircuit(C, CHK), files = { 'exp-s': [['engine_schematic.json', ex.schematic]], 'exp-l': [['engine_layout.json', ex.layout]], 'exp-v': [['engine_verification.json', ex.verification]] }[a] || [['engine_schematic.json', ex.schematic], ['engine_layout.json', ex.layout], ['engine_verification.json', ex.verification]];
     files.forEach(([name, obj]) => { const txt = JSON.stringify(obj, null, 1); try { const el = document.createElement('a'); el.href = URL.createObjectURL(new Blob([txt], { type: 'application/json' })); el.download = `${SH().plat()}_${name}`; document.body.appendChild(el); el.click(); setTimeout(() => { URL.revokeObjectURL(el.href); el.remove(); }, 1000); } catch (er) { /* download unavailable */ } });
     const ta = $('#lab-json'); if (ta) { ta.hidden = false; ta.value = JSON.stringify({ schematic: ex.schematic, layout: ex.layout, verification: ex.verification }); }
     if (a === 'exp-all') { S().exported = { at: new Date().toISOString(), hash: ex.layout.design_hash }; save(); recompute(); }
     renderHead(); renderOut(); if (SH()) SH().refreshMap();
+    renderHooks.forEach((f) => f()); // Export changes current validity without a full renderAll.
   }
   // canvas: drag to pan, Ctrl/⌘ + wheel to zoom, click to select
   const c0 = $('#lab-cv');
@@ -548,6 +567,6 @@ window.LABUI = (() => {
   const focus = (x, y, w) => { if (!C || !CV) return; cam = { s: CV.width / w, x, y }; draw(); };
   const renderHooks = [];
   const mission = (k) => { S().cur = Math.max(0, Math.min(MISS.length - 1, k | 0)); save(); renderAll(); };
-  return { open, close, setScope: (v) => { clearTimeout(timer); scope = v; C = null; CHK = null; MS = null; cam = null; sel = null; diag = null; }, redraw: () => { if (isOpen && C) { size(); draw(); } }, gdsPaste: (txt) => { importGds(txt); save(); renderAll(); }, isOpen: () => isOpen, progress, focus, mission, onRender: (f) => renderHooks.push(f), state: () => ({ C, CHK, MS, d: isOpen ? des() : null, s: SH() && SH().plat() ? S() : null }), MISS };
+  return { open, close, inputValid, evaluationCurrent, evaluateNow, setScope: (v) => { clearTimeout(timer); scope = v; C = null; CHK = null; MS = null; cam = null; sel = null; diag = null; }, redraw: () => { if (isOpen && C) { size(); draw(); } }, gdsPaste: (txt) => { importGds(txt); save(); renderAll(); }, isOpen: () => isOpen, progress, focus, mission, onRender: (f) => renderHooks.push(f), state: () => ({ C, CHK, MS, d: isOpen ? des() : null, s: SH() && SH().plat() ? S() : null }), MISS };
 })();
 if (window.LABUI && window.GAME_SHELL && window.GAME_SHELL.plat()) window.GAME_SHELL.refreshMap();

@@ -79,11 +79,16 @@ window.GAME_SHELL = { plat: () => state.plat, pf: () => (state.plat ? PLATFORMS[
   applyDesign: (d, full) => { if (state.fabRunning) return; if (full && kind().steps) { guideNS(state.id).mode = 'full'; } DESP()[state.id] = JSON.parse(JSON.stringify(d)); setupLevel(); persist(); },
   setValue: (k,v) => setParam(k,v,true),
   // A queued animation-frame evaluation must never lend its old pass to a newly edited design.
-  testNow: () => { if (!state.plat || state.fabRunning || state.aiRunning != null) return false; evaluate(); return true; },
-  currentGate: () => { if (!state.cur || state.cur.key !== keyOf(dv())) return false; const c = state.cur; return c.S ? !!c.S.done(c.l,c.res,stepMem(c.S)) : !c.pr && objectives()[0].pass; },
-  testIdentity: () => JSON.stringify([state.plat,state.mode,state.id,dv(),curStep() && curStep().id,dv().useCard ? PP().cards : null,MODEL_VERSION]),
+  testNow: () => { if (!state.plat || !inputValid() || state.fabRunning || state.aiRunning != null) return false; evaluate(); return true; },
+  inputValid,
+  evaluationCurrent: () => !!state.cur && inputValid() && state.cur.identity === testIdentity(),
+  currentGate: () => { if (!state.cur || !inputValid() || state.cur.identity !== testIdentity()) return false; const c = state.cur; return c.S ? !!c.S.done(c.l,c.res,stepMem(c.S)) : !c.pr && objectives()[0].pass; },
+  testIdentity,
   redraw: () => { if(!state.cur || window.LABUI?.isOpen()) return; sizeCanvas(); computeChart(); drawWafer(state.wafer[state.id], (state.wafer[state.id] || []).length); },
   onLevel: (f) => levelHooks.push(f), progress: () => progressCount() };
+// The identity belongs to the evaluated result, never to a pending input frame.
+function testIdentity() { return JSON.stringify([state.plat,state.mode,state.id,dv(),stepMode(state.id),curStep() && curStep().id,dv().useCard ? PP().cards : null,MODEL_VERSION]); }
+function inputValid() { return ![...document.querySelectorAll('#prm-list [data-fine]')].some(e => e.value === '' || !e.validity.valid); }
 const levelHooks = [];
 window.GAME_CTX = () => {
   if (!state.plat || !state.cur) return null;
@@ -199,12 +204,21 @@ function setParam(k, v, fromBtn) {
     const back = hk ? document.querySelector(hd ? `.nudge[data-k="${hk}"][data-d="${hd}"]` : `#p-${hk}`) : null; if (back) back.focus();
   }
   else { if (fromBtn) $('#p-' + k).value = nv; $('#o-' + k).textContent = pFmt(p, nv); }
+  const fine = document.querySelector(`[data-fine="${k}"]`);
+  if (fine && document.activeElement !== fine) { fine.value = nv; fine.removeAttribute('aria-invalid'); }
   requestEval(); store.pending(); scheduleCommit();
 }
 {
   const list = $('#prm-list');
-  list.addEventListener('input', (e) => { const el = e.target; if (el.type === 'range') setParam(el.dataset.k, +el.value, false); });
-  list.addEventListener('change', (e) => { const el = e.target; if (el.dataset.fine) { if (Number.isFinite(+el.value)) setParam(el.dataset.fine,+el.value,true); return; } if (el.type === 'checkbox') { des()[el.dataset.k] = el.checked ? 1 : 0; state.fromAI[state.id] = false; requestEval(); scheduleCommit(); } });
+  list.addEventListener('input', (e) => { const el = e.target;
+    if (el.dataset.fine) {
+      const valid = el.value !== '' && el.validity.valid;
+      el.setAttribute('aria-invalid', String(!valid));
+      if (valid) setParam(el.dataset.fine, +el.value, true);
+      else window.SMQ_STUDIO?.invalidate();
+    } else if (el.type === 'range') setParam(el.dataset.k, +el.value, false);
+  });
+  list.addEventListener('change', (e) => { const el = e.target; if (el.dataset.fine) { if (el.value !== '' && el.validity.valid) { el.removeAttribute('aria-invalid'); setParam(el.dataset.fine,+el.value,true); } return; } if (el.type === 'checkbox') { des()[el.dataset.k] = el.checked ? 1 : 0; state.fromAI[state.id] = false; requestEval(); scheduleCommit(); } });
   let holdT = null, holdI = null; const stop = () => { clearTimeout(holdT); clearInterval(holdI); holdT = holdI = null; };
   list.addEventListener('pointerdown', (e) => {
     const b = e.target.closest('.nudge'); if (!b) return; e.preventDefault();
@@ -223,7 +237,7 @@ function setParam(k, v, fromBtn) {
 
 /* ---------- evaluation ---------- */
 let evalQueued = false;
-function requestEval() { if (evalQueued) return; evalQueued = true; requestAnimationFrame(() => { evalQueued = false; evaluate(); }); }
+function requestEval() { window.SMQ_STUDIO?.invalidate(); if (evalQueued) return; evalQueued = true; requestAnimationFrame(() => { evalQueued = false; evaluate(); }); }
 const missionsOf = (id) => (PP().missions[id] = PP().missions[id] || {});
 function scoreOf(l, res, K) {
   K = K || kind();
@@ -232,12 +246,12 @@ function scoreOf(l, res, K) {
   return { perf, comp, total: perf + comp };
 }
 function evaluate() {
-  const l = lev(), K = kind(), S = curStep(), d = { ...dv() };
+  const l = lev(), K = kind(), S = curStep(), d = { ...dv() }, identity = testIdentity();
   if (S) {   // guided step: the step's own physics view; completion is decided by the same engine results
     const res = S.evaluate(l, d), mem = stepMem(S), G = guideNS(state.id);
     let ch = S.observe ? S.observe(l, res, mem) : false;
     if (!G.done[S.id] && S.done(l, res, mem)) { G.done[S.id] = Date.now(); ch = true; }
-    state.cur = { l, d, res, sc: { perf: 0, comp: 0, total: 0 }, key: keyOf(d), robust: 0, fabHere: null, S, pr: null };
+    state.cur = { l, d, res, identity, sc: { perf: 0, comp: 0, total: 0 }, key: keyOf(d), robust: 0, fabHere: null, S, pr: null };
     if (ch) { persist(); renderGuided(); }
     drawView(); renderHUD(); renderObjectives(); renderDelta(); renderFabPanel(); renderHint(); scheduleIdle();
     return;
@@ -247,7 +261,7 @@ function evaluate() {
   const sc = scoreOf(l, res), key = keyOf(d), fab = state.fab[state.id], fabHere = fab && fab.key === key ? fab : null;
   const robust = fabHere && !(res.drc && res.drc.length) ? 200 * fabHere.yield : 0;
   const pr = practiceOf();
-  state.cur = { l, d, res, sc: pr ? { perf: 0, comp: 0, total: 0 } : sc, key, robust: pr ? 0 : robust, fabHere: pr ? null : fabHere, S: null, pr };
+  state.cur = { l, d, res, identity, sc: pr ? { perf: 0, comp: 0, total: 0 } : sc, key, robust: pr ? 0 : robust, fabHere: pr ? null : fabHere, S: null, pr };
   {   // a full-design guided step (e.g. CWDM step 5) completes from the level's real objectives / Fab run
     const st = stepMode(state.id) === 'guided' ? stepsOf()[stepIdx()] : null, G = guideNS(state.id);
     if (st && st.full && st.fullDone && !pr && !G.done[st.id] && st.fullDone(l, res, { fab: fabHere, ob: objectives() })) { G.done[st.id] = Date.now(); persist(); renderGuided(); }

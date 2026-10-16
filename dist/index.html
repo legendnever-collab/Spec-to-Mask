@@ -560,22 +560,47 @@ details.sect[open] > summary{margin-bottom:10px}
 /* Unified Photonics Studio — semantic roles match Photonics Architect v0.8.1. */
 :root{color-scheme:light;--bg:#f2f6fb;--panel:#fff;--panel-2:#e8eff7;--canvas:#f7f9fc;--line:#b5c6d8;--line-2:#9db2c6;--fg:#1a3048;--fg-2:#48617c;--fg-3:#526b83;--amber:#006b64;--amber-ink:#fff;--rose:#b32163;--cyan:#006d91;--pass:#006b64;--fail:#b32143;--warn:#824d00;--shadow:#28425b22;--series-a:#006d91;--series-b:#006b64;--series-c:#824d00;--series-d:#6f3ca2;--display:system-ui,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;--body:system-ui,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;--mono:ui-monospace,"Cascadia Mono",Consolas,monospace}
 :root[data-theme=dark]{color-scheme:dark;--bg:#101d2d;--panel:#101a2a;--panel-2:#182638;--canvas:#091321;--line:#436077;--line-2:#536e88;--fg:#dce9f7;--fg-2:#a5bad0;--fg-3:#a5bad0;--amber:#62e4ce;--amber-ink:#101a2a;--rose:#ff8d9c;--cyan:#64c9df;--pass:#62e4ce;--fail:#ff7183;--warn:#ffc169;--shadow:#0006;--series-a:#64c9df;--series-b:#62e4ce;--series-c:#ffc169;--series-d:#b48cff}
-body{margin:0;background-image:none}button,input,select,textarea{font:inherit;color:var(--fg);accent-color:var(--amber)}select,input[type=number]{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;min-height:44px;padding:7px;min-width:0}button,.btn,.nudge,.seg button{min-height:44px}.nudge{min-width:44px}.card{border-radius:12px}.canvas-wrap{background:var(--canvas)}.gdlg,.minibar{background:var(--panel);color:var(--fg)}.gdlg-back{background:#10203388}textarea{background:var(--panel-2);color:var(--fg);max-width:100%}.note{color:var(--fg-2)}.st-WARNING{color:var(--warn)}
-body.studio-ready{height:var(--app-height,100dvh);overflow:hidden}.studio-ready .wrap{height:100%;max-width:none;margin:0;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);display:flex;flex-direction:column;gap:0}.studio-ready .top{height:56px;flex:none;margin:0;padding:6px 16px;align-items:center;flex-wrap:nowrap;border-bottom:1px solid var(--line);background:var(--panel)}.studio-ready .brand h1{font-size:20px;white-space:nowrap}.studio-ready .brand p,.studio-ready #cardcount{display:none}.studio-ready .hdr-r{flex-wrap:nowrap;gap:6px}.studio-ready .savechip{font-size:12px}.studio-ready .platchip{min-height:44px;font-size:12px}.studio-ready .platchip span{display:none}
-#studioNav{display:grid;grid-template-columns:minmax(150px,240px) minmax(160px,1fr) auto auto;gap:8px;flex:none;padding:6px 16px;background:var(--panel);border-bottom:1px solid var(--line);align-items:center}#studioNav select{width:100%;font-size:14px}#studioNav .btn{font-size:14px;white-space:nowrap}
-#studioGoal{height:62px;flex:none;display:flex;align-items:center;gap:8px;padding:5px 16px;border-bottom:1px solid var(--line);background:var(--bg)}#studioGoal>div{flex:1;min-width:0}#studioTitle{font-size:15px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#studioGoalLine{font-size:14px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--fg-2)}#studioStatus{font:12px var(--mono);white-space:nowrap;color:var(--amber)}#studioNext{min-width:64px}
-.studio-ready #gamewrap{min-height:0;flex:1;display:grid;grid-template-columns:minmax(0,1fr) 336px;grid-template-rows:minmax(0,1fr);position:relative}.studio-ready main.game{display:block;min-height:0;height:100%;grid-column:1;grid-row:1;overflow:hidden;padding:10px}.studio-ready #view{height:100%;display:flex;flex-direction:column;padding:0}.studio-ready #view .hud{flex:none;padding:6px 12px;min-height:42px;align-items:center}.studio-ready .score .big{font-size:24px}.studio-ready .score .brk,.studio-ready #hud-meta{font-size:12px}.studio-ready #cwrap{flex:1;min-height:0;overflow:hidden;display:flex;align-items:stretch}.studio-ready #field{height:100%!important;min-height:0;touch-action:none;transform-origin:center center}.studio-ready #tiles{flex:none;grid-template-columns:repeat(4,minmax(0,1fr));max-height:104px;overflow:auto}.studio-ready .tile{padding:6px 10px}.studio-ready .tile .v{font-size:16px}.studio-ready .tile .l{font-size:12px}.studio-ready #minibar{display:none!important}
-#studioActions{display:flex;gap:8px;padding:7px 16px;min-height:58px;flex:none;background:var(--panel);border-top:1px solid var(--line);z-index:30}#studioActions button{flex:1;font-size:15px}#studioActions [aria-pressed=true]{border-color:var(--amber);color:var(--amber)}
-.studio-sheet{background:var(--panel);border-left:1px solid var(--line);min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding:12px;grid-column:2;grid-row:1;z-index:36}.studio-sheet:not(.open){display:none}.studio-sheet .card{margin-bottom:12px}.studio-sheet #params{position:static;max-height:none;overflow:visible}.sheet-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;position:sticky;top:-12px;z-index:4;background:var(--panel);padding:4px 0;border-bottom:1px solid var(--line);margin-bottom:8px}.sheet-heading b{font-size:16px}.sheet-heading button{min-width:44px}.studio-sheet h2{font-size:16px}.studio-sheet .objs{grid-template-columns:1fr}.studio-sheet #map{max-height:210px;overflow:auto}.studio-sheet .mapwrap{max-width:100%}.studio-sheet .pathbar{display:block}.studio-sheet .node{flex-shrink:0}.studio-sheet .prm{padding:12px 0}.studio-sheet .stp{min-width:44px}.studio-sheet .prm-r{gap:6px}.fine-value{width:100%;margin-top:6px}.studio-target{outline:3px solid var(--amber)!important;outline-offset:2px}.studio-sheet .row-btns{gap:6px}.studio-sheet .chart{max-width:100%}.studio-sheet table{font-size:13px}#studioScrim{display:none}#studioBanner{font-size:13px;padding:6px 12px;background:var(--panel-2);color:var(--warn)}
-.studio-ready #lab{grid-column:1;grid-row:1;min-height:0;padding:10px;display:flex;flex-direction:column;height:100%}.studio-ready .lab-head{display:none}.studio-ready .lab-grid{display:block;min-height:0;flex:1;height:100%}.studio-ready #lab-ws{height:100%;display:flex;flex-direction:column;padding:0;overflow:hidden}.studio-ready .lab-ws-h{flex:none;gap:4px;padding:4px 8px}.studio-ready .lab-ws-h h2{display:none}.studio-ready .lab-ws-h .seg button,.studio-ready .lab-zoom .btn{padding:5px 8px;font-size:13px}.studio-ready .lab-layers{padding:2px 8px;flex:none;font-size:12px}.studio-ready .lab-cv{flex:1;min-height:0;overflow:hidden;touch-action:none}.studio-ready #lab-cv{width:100%;height:100%!important;display:block;touch-action:none}.studio-ready #lab-legend{font-size:12px;padding:4px 8px;margin:0;flex:none}.studio-ready #lab-coach{display:none}.studio-sheet #lab-lib,.studio-sheet #lab-insp,.studio-sheet #lab-out{display:block}.studio-ready .setup{position:fixed;inset:56px 0 0;z-index:48;overflow:auto;background:var(--bg);padding:20px}.studio-ready #scope{margin:12px 0}.studio-ready #studioReference table{width:100%;border-collapse:collapse}.studio-ready #studioReference td,.studio-ready #studioReference th{padding:6px;border-bottom:1px solid var(--line);text-align:left}#studioSummary{font-size:14px;line-height:1.7}#studioReference .row-btns button{flex:1}#studioMore .mapwrap{overflow:auto}#studioInspect .tile{border:1px solid var(--line)}
-@media(max-width:900px){.studio-ready .top{height:48px;padding:2px 8px}.studio-ready .brand h1{font-size:15px}.studio-ready .savechip{padding:4px 6px;min-width:44px}.studio-ready #save-txt{font-size:11px}.studio-ready #plat-chip{max-width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:4px}#themeToggle{font-size:12px;padding:4px 8px}#studioNav{grid-template-columns:minmax(100px,1fr) minmax(115px,1fr);padding:4px 8px;gap:6px;height:52px}#studioNav select{font-size:13px;padding:4px}#studioNav #studioStart,#studioNav #studioReplay{display:none}#studioGoal{height:62px;padding:4px 8px;gap:6px}#studioGoalLine{font-size:13px}#studioTitle{font-size:14px}#studioStatus{font-size:11px;max-width:83px;white-space:normal}#studioNext{font-size:13px;padding:6px;min-width:48px}.studio-ready #gamewrap{display:block}.studio-ready main.game,.studio-ready #lab{padding:0;height:100%}.studio-ready #view,.studio-ready #lab-ws{border:0;border-radius:0}.studio-ready #view .hud{padding:3px 8px;min-height:32px}.studio-ready #hud-meta{max-width:60%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px}.studio-ready .score .big{font-size:20px}.studio-ready .score .brk{display:none}.studio-ready #tiles{display:none}#studioActions{padding:5px 8px;min-height:56px;gap:6px}#studioActions button{padding:6px;font-size:14px}.studio-sheet{position:absolute;inset:auto 0 0;max-height:82%;padding:12px;border:1px solid var(--line);border-radius:16px 16px 0 0;box-shadow:0 -8px 32px var(--shadow);z-index:36}.studio-sheet.open{display:block}#studioScrim.open{display:block;position:absolute;inset:0;background:#10203366;z-index:35}.studio-ready .lab-layers{display:none}.studio-ready .lab-ws-h{flex-wrap:nowrap;padding:2px 4px}.studio-ready .lab-ws-h .seg{flex-shrink:0}.studio-ready .lab-zoom{gap:2px;display:flex}.studio-ready .lab-zoom .btn{min-width:40px;padding:4px}.studio-ready #lab-legend{display:none}.studio-ready .setup{inset:48px 0 0}.studio-ready .lab-ws-h .seg button{font-size:12px}.studio-sheet .card{padding:10px}.gdlg{max-width:calc(100vw - 12px)} }
-@media(max-height:480px) and (max-width:900px){.studio-ready .top{height:44px}.studio-ready .brand h1{font-size:15px}#studioNav{position:absolute;top:0;left:230px;right:148px;height:44px;border:0;padding:0;background:transparent}#studioNav select{font-size:12px}#studioGoal{height:50px}#studioActions{min-height:50px;padding:3px 8px}.studio-ready #view .hud{min-height:26px}.studio-sheet{max-height:92%}#studioGoalLine{max-width:65vw}.studio-ready #lab-legend{display:none}.studio-ready .lab-ws-h{height:48px}}
-@media(max-width:360px){.studio-ready .brand h1{font-size:13px}.studio-ready #plat-chip{max-width:88px;font-size:11px}#studioGoalLine{font-size:12px}.studio-ready .savechip .sv-dot{display:none}.studio-ready #save-txt{display:none}.studio-ready #save-chip:after{content:'Save';font-size:11px}.studio-ready .top{gap:4px}.studio-ready .hdr-r{gap:3px}#themeToggle{font-size:11px;padding:3px}#studioStatus{max-width:66px}}
-@media(max-width:900px){.studio-ready .brand{min-width:0;flex:1}.studio-ready .brand h1{overflow:hidden;text-overflow:ellipsis;font-size:14px}.studio-ready .brand h1 span{display:none}.studio-ready #plat-chip{max-width:90px}.studio-ready #save-txt,.studio-ready .savechip .sv-dot{display:none}.studio-ready #save-chip:after{content:'Save';font-size:11px}.studio-ready #save-chip{width:44px;padding:4px;justify-content:center}.studio-ready .hdr-r{flex-shrink:0}#themeToggle{min-width:44px}}
-#studioMetrics{position:absolute;bottom:8px;left:8px;right:64px;display:flex;gap:6px;pointer-events:none;flex-wrap:wrap}#studioMetrics>span{font-size:12px;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:4px 7px;box-shadow:0 1px 6px var(--shadow)}#studioMetrics b{color:var(--amber);font-variant-numeric:tabular-nums}.studio-welcome{position:fixed;inset:0;background:#10203388;z-index:70;display:grid;place-items:center;padding:12px}.studio-welcome>section{width:min(600px,100%);max-height:94dvh;overflow:auto;overscroll-behavior:contain;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 12px 40px var(--shadow)}.studio-welcome h2{margin-top:0}.studio-welcome p{font-size:14px;color:var(--fg-2)}.studio-track-choices{display:grid;gap:8px}.studio-track-choices button{text-align:left;width:100%;min-height:44px}.studio-ready #tiles{display:grid}.studio-sheet .chart svg{min-width:260px}
-.studio-ready footer{display:none}.studio-ready #view .hud{height:36px;min-height:36px;flex-wrap:nowrap;align-items:center}.studio-ready #hud-meta{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:72%;min-width:0}.studio-ready .score .brk{display:none}.studio-ready .score{flex-shrink:0}.studio-ready #view .hud br{display:none}
-@media(max-width:900px){.studio-ready .top{position:relative;height:48px;padding:2px 8px;justify-content:flex-end}.studio-ready .top .brand,.studio-ready #plat-chip{display:none}.studio-ready #studioNav{position:absolute;z-index:2;top:2px;left:8px;right:108px;height:44px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);padding:0;border:0;background:transparent;gap:4px}.studio-ready #studioNav select{font-size:12px;min-height:44px;width:100%}.studio-ready #studioGoal{height:58px}.studio-ready #view .hud{height:30px;min-height:30px;padding:2px 8px}.studio-ready #studioGoalLine{font-size:13px}.studio-ready #studioActions{height:56px}.studio-ready #studioStatus{max-width:66px}}
-@media(max-width:900px) and (max-height:480px){.studio-ready .top{height:44px}.studio-ready #studioNav{height:44px;top:0}.studio-ready #studioGoal{height:50px}.studio-ready #studioActions{height:50px;min-height:50px}.studio-ready #view .hud{height:26px;min-height:26px}}
+
+/* Live layout: Canvas and results share the left column; parameters stay on the right. */
+body{margin:0;background-image:none}button,input,select,textarea{font:inherit;color:var(--fg);accent-color:var(--amber)}
+select,input[type=number]{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;min-height:44px;padding:7px;min-width:0}
+button,.btn,.nudge,.seg button{min-height:44px}.nudge{min-width:44px}.card{border-radius:12px}.canvas-wrap{background:var(--canvas)}
+.gdlg,.minibar{background:var(--panel);color:var(--fg)}.gdlg-back{background:#10203388}textarea{background:var(--panel-2);color:var(--fg);max-width:100%}.note{color:var(--fg-2)}.st-WARNING{color:var(--warn)}
+body.studio-ready{height:var(--app-height,100dvh);overflow:hidden}.studio-ready .wrap{height:100%;max-width:none;margin:0;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);display:flex;flex-direction:column;gap:0}
+.studio-ready .top{height:56px;flex:none;margin:0;padding:6px 16px;align-items:center;flex-wrap:nowrap;border-bottom:1px solid var(--line);background:var(--panel)}
+.studio-ready .brand h1{font-size:20px;white-space:nowrap}.studio-ready .brand p,.studio-ready #cardcount{display:none}.studio-ready .hdr-r{flex-wrap:nowrap;gap:6px}.studio-ready .savechip{font-size:12px}.studio-ready .platchip{min-height:44px;font-size:12px}.studio-ready .platchip span{display:none}
+#studioNav{display:grid;grid-template-columns:minmax(150px,240px) minmax(160px,1fr) auto auto auto;gap:8px;flex:none;padding:6px 16px;background:var(--panel);border-bottom:1px solid var(--line);align-items:center}#studioNav select{width:100%;font-size:14px}#studioNav .btn{font-size:14px;white-space:nowrap}
+#studioGoal{height:62px;flex:none;display:flex;align-items:center;gap:8px;padding:5px 16px;border-bottom:1px solid var(--line);background:var(--bg)}#studioGoal>div{flex:1;min-width:0}#studioTitle{font-size:15px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#studioGoalLine{font-size:14px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--fg-2)}#studioStatus{font:12px var(--mono);white-space:nowrap;color:var(--amber)}#studioStatus[data-state=fail]{color:var(--fail)}#studioStatus[data-state=pending]{color:var(--warn)}#studioNext{min-width:64px}
+.studio-ready #gamewrap{min-height:0;flex:1;display:grid;grid-template-columns:minmax(0,1fr) 336px;grid-template-rows:minmax(180px,1.2fr) minmax(180px,1fr);position:relative}
+.studio-ready main.game{display:block;min-height:0;height:100%;grid-column:1;grid-row:1;overflow:hidden;padding:10px}.studio-ready #view{height:100%;display:flex;flex-direction:column;padding:0}.studio-ready #view .hud{flex:none;padding:4px 12px;height:36px;min-height:36px;align-items:center;flex-wrap:nowrap}.studio-ready .score .big{font-size:24px}.studio-ready .score{flex-shrink:0}.studio-ready .score .brk,.studio-ready #view .hud br{display:none}.studio-ready #hud-meta{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:72%;min-width:0}
+.studio-ready #cwrap{flex:1;min-height:0;overflow:hidden;display:flex;align-items:stretch}.studio-ready #field{height:100%!important;min-height:0;touch-action:none;transform-origin:center center}.studio-ready #minibar,.studio-ready footer{display:none!important}
+.studio-sheet{background:var(--panel);min-height:0;min-width:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding:10px 12px}.studio-sheet .card{margin-bottom:10px}.studio-sheet #params{position:static;max-height:none;overflow:visible}
+#studioTune{grid-column:2;grid-row:1 / 3;border-left:1px solid var(--line)}#studioInspect{grid-column:1;grid-row:2;border-top:1px solid var(--line)}
+.sheet-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;position:sticky;top:-10px;z-index:4;background:var(--panel);padding:6px 0;border-bottom:1px solid var(--line);margin-bottom:8px;min-height:32px}.sheet-heading b{font-size:14px}.sheet-heading button{min-width:44px}.studio-sheet h2{font-size:15px}.studio-sheet .objs{grid-template-columns:1fr}.studio-sheet #map{max-height:210px;overflow:auto}.studio-sheet .mapwrap{max-width:100%}.studio-sheet .pathbar{display:block}.studio-sheet .node{flex-shrink:0}.studio-sheet .prm{padding:12px 0}.studio-sheet .stp{min-width:44px}.studio-sheet .prm-r{gap:6px}.fine-value{width:100%;margin-top:6px}.fine-value[aria-invalid=true]{border-color:var(--fail)}.studio-target{outline:3px solid var(--amber)!important;outline-offset:2px}.studio-sheet .row-btns{gap:6px}.studio-sheet .chart{max-width:100%}.studio-sheet table{font-size:13px}
+#studioInspectExpand{display:none}#studioResults{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:10px;align-items:start}#studioResults>*{grid-area:auto}#studioResults>.card{margin:0}#studioResults #lab-out{grid-column:1 / -1}
+.studio-ready #tiles,#studioLabMetrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:10px}.studio-ready .tile{padding:6px 10px;border:1px solid var(--line)}.studio-ready .tile .v{font-size:16px}.studio-ready .tile .l{font-size:12px}
+#studioMore{display:none;position:absolute;inset:0 0 0 auto;width:min(540px,100%);z-index:36;border-left:1px solid var(--line);box-shadow:-8px 0 32px var(--shadow)}#studioMore.open{display:block}#studioScrim{display:none}#studioScrim.open{display:block;position:absolute;inset:0;background:#10203366;z-index:35}#studioMoreToggle[aria-expanded=true]{border-color:var(--amber);color:var(--amber)}
+#studioBanner{position:fixed;left:16px;bottom:16px;max-width:calc(100% - 32px);font-size:13px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2);color:var(--warn);z-index:42;pointer-events:none}
+.studio-ready #lab{grid-column:1;grid-row:1;min-height:0;padding:10px;display:flex;flex-direction:column;height:100%}.studio-ready .lab-head{display:none}.studio-ready .lab-grid{display:block;min-height:0;flex:1;height:100%}.studio-ready #lab-ws{height:100%;display:flex;flex-direction:column;padding:0;overflow:hidden}.studio-ready .lab-ws-h{flex:none;gap:4px;padding:4px 8px}.studio-ready .lab-ws-h h2{display:none}.studio-ready .lab-ws-h .seg button,.studio-ready .lab-zoom .btn{padding:5px 8px;font-size:13px}.studio-ready .lab-layers{padding:2px 8px;flex:none;font-size:12px}.studio-ready .lab-cv{flex:1;min-height:0;overflow:hidden;touch-action:none}.studio-ready #lab-cv{width:100%;height:100%!important;display:block;touch-action:none}.studio-ready #lab-legend{font-size:12px;padding:4px 8px;margin:0;flex:none}.studio-ready #lab-coach{display:none}.studio-sheet #lab-lib,.studio-sheet #lab-insp,.studio-sheet #lab-out{display:block}
+.studio-ready .setup{position:fixed;inset:56px 0 0;z-index:48;overflow:auto;background:var(--bg);padding:20px}.studio-ready #scope{margin:12px 0}.studio-ready #studioReference table{width:100%;border-collapse:collapse}.studio-ready #studioReference td,.studio-ready #studioReference th{padding:6px;border-bottom:1px solid var(--line);text-align:left}#studioSummary{font-size:14px;line-height:1.7}#studioReference .row-btns button{flex:1}#studioMore .mapwrap{overflow:auto}
+#studioMetrics{position:absolute;bottom:8px;left:8px;right:64px;display:flex;gap:6px;pointer-events:none;flex-wrap:wrap}#studioMetrics>span{font-size:12px;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:4px 7px;box-shadow:0 1px 6px var(--shadow)}#studioMetrics b{color:var(--amber);font-variant-numeric:tabular-nums}#studioMetrics[data-stale=true]{opacity:.5}
+.studio-welcome{position:fixed;inset:0;background:#10203388;z-index:70;display:grid;place-items:center;padding:12px}.studio-welcome>section{width:min(600px,100%);max-height:94dvh;overflow:auto;overscroll-behavior:contain;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 12px 40px var(--shadow)}.studio-welcome h2{margin-top:0}.studio-welcome p{font-size:14px;color:var(--fg-2)}.studio-track-choices{display:grid;gap:8px}.studio-track-choices button{text-align:left;width:100%;min-height:44px}
+/* Narrow screens retain Canvas + KPI strip + Tune. Details expand within Inspect. */
+@media(max-width:900px){
+ .studio-ready .top{height:48px;padding:2px 8px;justify-content:flex-end}.studio-ready .top .brand,.studio-ready #plat-chip{display:none}.studio-ready .hdr-r{flex-shrink:0}.studio-ready #save-txt,.studio-ready .savechip .sv-dot{display:none}.studio-ready #save-chip:after{content:'Save';font-size:11px}.studio-ready #save-chip{width:44px;padding:4px;justify-content:center}#themeToggle{font-size:12px;min-width:44px;padding:4px}
+ #studioNav{height:48px;display:flex;padding:2px 8px;gap:6px;justify-content:flex-end}.studio-ready #studioTrack,.studio-ready #studioLevel{position:absolute;top:2px;width:calc((100% - 128px)/2);height:44px;min-width:0;font-size:12px;padding:4px;z-index:2}#studioTrack{left:8px}#studioLevel{left:calc(12px + (100% - 128px)/2)}#studioNav .btn{font-size:12px;flex:1}
+ #studioGoal{height:58px;padding:4px 8px;gap:6px}#studioTitle{font-size:13px}#studioGoalLine{font-size:12px}#studioStatus{font-size:11px;max-width:70px;white-space:normal}#studioNext{font-size:13px;padding:6px;min-width:48px}
+ .studio-ready #gamewrap{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(150px,1fr) 86px minmax(130px,.8fr)}
+ .studio-ready main.game,.studio-ready #lab{padding:0;grid-column:1;grid-row:1}.studio-ready #view,.studio-ready #lab-ws{border:0;border-radius:0}.studio-ready #view .hud{height:30px;min-height:30px;padding:2px 8px}.studio-ready .score .big{font-size:20px}.studio-ready #hud-meta{font-size:11px}
+ #studioTune{grid-column:1;grid-row:3;border-left:0;border-top:1px solid var(--line)}#studioInspect{grid-column:1;grid-row:2;padding:0 8px;display:grid;grid-template-columns:76px minmax(0,1fr);align-content:start;gap:6px}#studioInspect>.sheet-heading{position:static;display:block;padding:4px 0;border:0;margin:0;line-height:16px}#studioInspect .sheet-heading b{font-size:11px}#studioInspectExpand{display:block;font-size:11px;min-height:44px;padding:4px;width:100%}#studioInspect #tiles,#studioInspect #studioLabMetrics{display:flex;overflow:auto;margin:0;padding:8px 0;min-width:0;min-height:76px;align-items:stretch}#studioInspect .tile{min-width:105px;padding:4px 6px}#studioInspect #studioResults{display:none}#studioInspect.expanded #studioResults{display:grid;grid-column:1 / -1;grid-template-columns:minmax(0,1fr)}
+ .studio-ready #gamewrap:has(#studioInspect.expanded){grid-template-rows:minmax(120px,1fr) minmax(150px,1fr) minmax(130px,.8fr)}
+ .studio-ready .lab-layers,.studio-ready #lab-legend{display:none}.studio-ready .lab-ws-h{flex-wrap:nowrap;padding:2px 4px}.studio-ready .lab-ws-h .seg{flex-shrink:0}.studio-ready .lab-ws-h .seg button{font-size:12px}.studio-ready .lab-zoom{gap:2px;display:flex}.studio-ready .lab-zoom .btn{min-width:40px;padding:4px}.studio-ready .setup{inset:48px 0 0}.studio-sheet .card{padding:10px}.gdlg{max-width:calc(100vw - 12px)}
+}
+@media(max-width:900px) and (max-height:500px){
+ .studio-ready .top{height:44px}#studioNav{height:44px;padding:0 8px}#studioGoal{height:50px}
+ .studio-ready #gamewrap,.studio-ready #gamewrap:has(#studioInspect.expanded){grid-template-columns:minmax(0,1fr) 280px;grid-template-rows:minmax(120px,1fr) 86px}#studioTune{grid-column:2;grid-row:1 / 3;border-left:1px solid var(--line)}
+ #studioInspect.expanded{position:absolute;inset:0 280px 0 0;z-index:8;display:block;overflow:auto;background:var(--panel)}#studioInspect.expanded>.sheet-heading{display:flex}#studioInspect.expanded #studioInspectExpand{width:auto}
+}
 .b-an,.conf-an{color:var(--pass)}.b-semi,.conf-semi{color:var(--cyan)}.b-pre{color:var(--series-d)}.b-emp,.conf-asm{color:var(--warn)}.b-exp,.conf-exp{color:var(--fg)}.b-asm,.conf-nv{color:var(--fg-2)}.b-fw{color:var(--rose)}.btn.danger,.btn.pri.danger{color:var(--panel)}.stp[aria-current=step] .num{color:var(--panel)}
 .studio-sheet .lab-head{display:block}.studio-sheet .lab-head .mode-row{display:block}.studio-sheet .lab-head .mode-r{justify-content:flex-start;margin-top:8px}.studio-sheet .lab-head .lab-title{font-size:17px}.studio-sheet .lab-head .eyebrow{font-size:11px}.studio-sheet .lab-head .stepper{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.studio-sheet .lab-head .stp{min-width:0;padding:5px;font-size:12px}.studio-sheet .lab-head .lab-prog{gap:4px}.studio-sheet .lab-head .lab-prog span{font-size:12px}.studio-sheet .lab-head .sn-b{font-size:14px}
 
@@ -841,7 +866,7 @@ body.studio-ready{height:var(--app-height,100dvh);overflow:hidden}.studio-ready 
 </div>
 
 <script>
-const SMQ_BUILD = { version: '1.1.0', channel: 'dev', commit: null, date: null, offline: 0 === 1 };
+const SMQ_BUILD = { version: '1.1.1', channel: 'dev', commit: null, date: null, offline: 0 === 1 };
 const KINDS = {};
 // ===== shared math / process utilities =====
 const band = (a, b, n) => Array.from({ length: n }, (_, i) => +(a + (b - a) * i / (n - 1)).toFixed(4));
@@ -7325,11 +7350,16 @@ window.GAME_SHELL = { plat: () => state.plat, pf: () => (state.plat ? PLATFORMS[
   applyDesign: (d, full) => { if (state.fabRunning) return; if (full && kind().steps) { guideNS(state.id).mode = 'full'; } DESP()[state.id] = JSON.parse(JSON.stringify(d)); setupLevel(); persist(); },
   setValue: (k,v) => setParam(k,v,true),
   // A queued animation-frame evaluation must never lend its old pass to a newly edited design.
-  testNow: () => { if (!state.plat || state.fabRunning || state.aiRunning != null) return false; evaluate(); return true; },
-  currentGate: () => { if (!state.cur || state.cur.key !== keyOf(dv())) return false; const c = state.cur; return c.S ? !!c.S.done(c.l,c.res,stepMem(c.S)) : !c.pr && objectives()[0].pass; },
-  testIdentity: () => JSON.stringify([state.plat,state.mode,state.id,dv(),curStep() && curStep().id,dv().useCard ? PP().cards : null,MODEL_VERSION]),
+  testNow: () => { if (!state.plat || !inputValid() || state.fabRunning || state.aiRunning != null) return false; evaluate(); return true; },
+  inputValid,
+  evaluationCurrent: () => !!state.cur && inputValid() && state.cur.identity === testIdentity(),
+  currentGate: () => { if (!state.cur || !inputValid() || state.cur.identity !== testIdentity()) return false; const c = state.cur; return c.S ? !!c.S.done(c.l,c.res,stepMem(c.S)) : !c.pr && objectives()[0].pass; },
+  testIdentity,
   redraw: () => { if(!state.cur || window.LABUI?.isOpen()) return; sizeCanvas(); computeChart(); drawWafer(state.wafer[state.id], (state.wafer[state.id] || []).length); },
   onLevel: (f) => levelHooks.push(f), progress: () => progressCount() };
+// The identity belongs to the evaluated result, never to a pending input frame.
+function testIdentity() { return JSON.stringify([state.plat,state.mode,state.id,dv(),stepMode(state.id),curStep() && curStep().id,dv().useCard ? PP().cards : null,MODEL_VERSION]); }
+function inputValid() { return ![...document.querySelectorAll('#prm-list [data-fine]')].some(e => e.value === '' || !e.validity.valid); }
 const levelHooks = [];
 window.GAME_CTX = () => {
   if (!state.plat || !state.cur) return null;
@@ -7445,12 +7475,21 @@ function setParam(k, v, fromBtn) {
     const back = hk ? document.querySelector(hd ? `.nudge[data-k="${hk}"][data-d="${hd}"]` : `#p-${hk}`) : null; if (back) back.focus();
   }
   else { if (fromBtn) $('#p-' + k).value = nv; $('#o-' + k).textContent = pFmt(p, nv); }
+  const fine = document.querySelector(`[data-fine="${k}"]`);
+  if (fine && document.activeElement !== fine) { fine.value = nv; fine.removeAttribute('aria-invalid'); }
   requestEval(); store.pending(); scheduleCommit();
 }
 {
   const list = $('#prm-list');
-  list.addEventListener('input', (e) => { const el = e.target; if (el.type === 'range') setParam(el.dataset.k, +el.value, false); });
-  list.addEventListener('change', (e) => { const el = e.target; if (el.dataset.fine) { if (Number.isFinite(+el.value)) setParam(el.dataset.fine,+el.value,true); return; } if (el.type === 'checkbox') { des()[el.dataset.k] = el.checked ? 1 : 0; state.fromAI[state.id] = false; requestEval(); scheduleCommit(); } });
+  list.addEventListener('input', (e) => { const el = e.target;
+    if (el.dataset.fine) {
+      const valid = el.value !== '' && el.validity.valid;
+      el.setAttribute('aria-invalid', String(!valid));
+      if (valid) setParam(el.dataset.fine, +el.value, true);
+      else window.SMQ_STUDIO?.invalidate();
+    } else if (el.type === 'range') setParam(el.dataset.k, +el.value, false);
+  });
+  list.addEventListener('change', (e) => { const el = e.target; if (el.dataset.fine) { if (el.value !== '' && el.validity.valid) { el.removeAttribute('aria-invalid'); setParam(el.dataset.fine,+el.value,true); } return; } if (el.type === 'checkbox') { des()[el.dataset.k] = el.checked ? 1 : 0; state.fromAI[state.id] = false; requestEval(); scheduleCommit(); } });
   let holdT = null, holdI = null; const stop = () => { clearTimeout(holdT); clearInterval(holdI); holdT = holdI = null; };
   list.addEventListener('pointerdown', (e) => {
     const b = e.target.closest('.nudge'); if (!b) return; e.preventDefault();
@@ -7469,7 +7508,7 @@ function setParam(k, v, fromBtn) {
 
 /* ---------- evaluation ---------- */
 let evalQueued = false;
-function requestEval() { if (evalQueued) return; evalQueued = true; requestAnimationFrame(() => { evalQueued = false; evaluate(); }); }
+function requestEval() { window.SMQ_STUDIO?.invalidate(); if (evalQueued) return; evalQueued = true; requestAnimationFrame(() => { evalQueued = false; evaluate(); }); }
 const missionsOf = (id) => (PP().missions[id] = PP().missions[id] || {});
 function scoreOf(l, res, K) {
   K = K || kind();
@@ -7478,12 +7517,12 @@ function scoreOf(l, res, K) {
   return { perf, comp, total: perf + comp };
 }
 function evaluate() {
-  const l = lev(), K = kind(), S = curStep(), d = { ...dv() };
+  const l = lev(), K = kind(), S = curStep(), d = { ...dv() }, identity = testIdentity();
   if (S) {   // guided step: the step's own physics view; completion is decided by the same engine results
     const res = S.evaluate(l, d), mem = stepMem(S), G = guideNS(state.id);
     let ch = S.observe ? S.observe(l, res, mem) : false;
     if (!G.done[S.id] && S.done(l, res, mem)) { G.done[S.id] = Date.now(); ch = true; }
-    state.cur = { l, d, res, sc: { perf: 0, comp: 0, total: 0 }, key: keyOf(d), robust: 0, fabHere: null, S, pr: null };
+    state.cur = { l, d, res, identity, sc: { perf: 0, comp: 0, total: 0 }, key: keyOf(d), robust: 0, fabHere: null, S, pr: null };
     if (ch) { persist(); renderGuided(); }
     drawView(); renderHUD(); renderObjectives(); renderDelta(); renderFabPanel(); renderHint(); scheduleIdle();
     return;
@@ -7493,7 +7532,7 @@ function evaluate() {
   const sc = scoreOf(l, res), key = keyOf(d), fab = state.fab[state.id], fabHere = fab && fab.key === key ? fab : null;
   const robust = fabHere && !(res.drc && res.drc.length) ? 200 * fabHere.yield : 0;
   const pr = practiceOf();
-  state.cur = { l, d, res, sc: pr ? { perf: 0, comp: 0, total: 0 } : sc, key, robust: pr ? 0 : robust, fabHere: pr ? null : fabHere, S: null, pr };
+  state.cur = { l, d, res, identity, sc: pr ? { perf: 0, comp: 0, total: 0 } : sc, key, robust: pr ? 0 : robust, fabHere: pr ? null : fabHere, S: null, pr };
   {   // a full-design guided step (e.g. CWDM step 5) completes from the level's real objectives / Fab run
     const st = stepMode(state.id) === 'guided' ? stepsOf()[stepIdx()] : null, G = guideNS(state.id);
     if (st && st.full && st.fullDone && !pr && !G.done[st.id] && st.fullDone(l, res, { fab: fabHere, ob: objectives() })) { G.done[st.id] = Date.now(); persist(); renderGuided(); }
@@ -9092,7 +9131,7 @@ window.LABUI = (() => {
   const KEY = 'smq3-lab';
   const load = () => { try { const v = localStorage.getItem(KEY); return v ? JSON.parse(v) : {}; } catch (e) { return {}; } };
   const save = () => scope ? (window.SMQ_STUDIO && window.SMQ_STUDIO.save()) : SMQ_STORE.set(KEY, LS);   // a refused write shows in the header save chip (src/persist.js)
-  let LS = load(), isOpen = false, C = null, CHK = null, MS = null, sel = null, cam = null, drag = null, timer = null, diag = null;
+  let LS = load(), isOpen = false, C = null, CHK = null, MS = null, sel = null, cam = null, drag = null, timer = null, diag = null, evaluatedDesign = null;
   const SH = () => window.GAME_SHELL;
   let scope = null;
   const S = () => { if (scope) return scope.lab || (scope.lab = {}); const p = SH().plat(); LS[p] = LS[p] || {}; return LS[p]; };
@@ -9167,6 +9206,7 @@ window.LABUI = (() => {
   const valid = () => { const s = S(); return { ran: !!(s.ran && C && s.ran.hash === C.hash && s.ran.sig === CHK.sig), exp: !!(s.exported && C && s.exported.hash === C.hash) }; };
   function recompute() {
     const d = des(), cx = ctx();
+    evaluatedDesign = JSON.stringify(d);
     C = LAB.build(cx, d); CHK = LAB.checks(C, cx); MS = LAB.missions(C, CHK);
     C.hash = LAB.designHash(C); CHK.sig = vsig(CHK);
     const s = S(); migrate(s); s.done = s.done || {}; s.live = {};
@@ -9564,18 +9604,34 @@ window.LABUI = (() => {
   };
 
   /* ---------------- events ---------------- */
+  const inputValid = () => ![...document.querySelectorAll('[data-lfine]')].some(e => e.value === '' || !e.validity.valid);
+  const evaluationCurrent = () => !!C && inputValid() && evaluatedDesign === JSON.stringify(des());
+  function evaluateNow() { if (!isOpen || !inputValid()) return false; clearTimeout(timer); renderAll(); return true; }
   function renderAll(refit) {
     if (!isOpen) return;
+    const active = document.activeElement, edit = active?.dataset.lfine ? {key:active.dataset.lfine,value:active.value,invalid:active.getAttribute('aria-invalid')} : null;
     recompute(); renderHead(); renderParams(); renderLib(); legend(); renderSel(); renderOut(); renderCoach();
+    if (edit) { const input = document.querySelector(`[data-lfine="${edit.key}"]`); if (input) { input.value=edit.value; if(edit.invalid)input.setAttribute('aria-invalid',edit.invalid); input.focus({preventScroll:true}); } }
     if (refit || !cam) fit(); else size();
     draw();
     if (SH() && SH().refreshMap) SH().refreshMap();
     renderHooks.forEach((f) => { try { f(); } catch (e) { /* learning layer */ } });
   }
-  const sched = (refit) => { clearTimeout(timer); timer = setTimeout(() => renderAll(refit), 90); };
-  document.addEventListener('input', (e) => { if (!e.target.closest('#lab,#lab-insp,#lab-lib,#lab-out,.lab-head')) return; const t = e.target.closest('[data-lk]'); if (!t) return; const p = pfP()[t.dataset.lk], v = +t.value; $('#lo-' + p.k).textContent = fmtV(p, v); setV(p.k, v); sched(p.k === 'W' || p.k === 'H' || p.k === 'mod' || p.k === 'share'); });
+  const sched = (refit) => { window.SMQ_STUDIO?.invalidate(); clearTimeout(timer); timer = setTimeout(() => renderAll(refit), 90); };
+  function fineInput(fi) {
+    const p=pfP()[fi.dataset.lfine],valid=fi.value!==''&&fi.validity.valid;
+    fi.setAttribute('aria-invalid',String(!valid));
+    if (!valid) { window.SMQ_STUDIO?.invalidate(); return; }
+    setV(p.k,+fi.value);sched(p.k==='W'||p.k==='H'||p.k==='mod'||p.k==='share');
+  }
+  document.addEventListener('input', (e) => { if (!e.target.closest('#lab,#lab-insp,#lab-lib,#lab-out,.lab-head')) return;
+    const fi=e.target.closest('[data-lfine]');if(fi){fineInput(fi);return;}
+    const t = e.target.closest('[data-lk]'); if (!t) return; const p = pfP()[t.dataset.lk], v = +t.value; $('#lo-' + p.k).textContent = fmtV(p, v);
+    const fine=document.querySelector(`[data-lfine="${p.k}"]`);if(fine){fine.value=v;fine.removeAttribute('aria-invalid');}
+    setV(p.k, v); sched(p.k === 'W' || p.k === 'H' || p.k === 'mod' || p.k === 'share');
+  });
   document.addEventListener('change', (e) => { if (!e.target.closest('#lab,#lab-insp,#lab-lib,#lab-out,.lab-head')) return;
-    const fi = e.target.closest('[data-lfine]'); if (fi) { const p=pfP()[fi.dataset.lfine]; if(Number.isFinite(+fi.value)) {setV(p.k, Math.max(p.min,Math.min(p.max,+(p.min+Math.round((+fi.value-p.min)/p.step)*p.step).toFixed(6))));sched(p.k==='W'||p.k==='H'||p.k==='mod'||p.k==='share');} return; }
+    const fi = e.target.closest('[data-lfine]'); if (fi) { fineInput(fi); return; }
     const ly = e.target.closest && e.target.closest('[data-ly]'); if (ly) { const L2 = { opt: 1, ele: 1, drc: 1, ...(S().layers || {}) }; L2[ly.dataset.ly] = ly.checked ? 1 : 0; S().layers = L2; save(); draw(); return; }
     if (e.target.id !== 'lab-gds' || !e.target.files || !e.target.files[0]) return;
     const f = e.target.files[0], rd = new FileReader();
@@ -9603,16 +9659,18 @@ window.LABUI = (() => {
       if (a === 'arch') { const a3 = arch3(); d.mod = a3.mod; d.share = a3.share; d.stag = LAB.stagAuto(d); save(); renderAll(true); }
       if (a === 'pin') { S().pin = { hash: C.hash, at: new Date().toISOString(), snap: labSnap() }; save(); renderOut(); }
       if (a === 'unpin') { delete S().pin; save(); renderOut(); }
-      if (a === 'run') { S().ran = { hash: C.hash, sig: CHK.sig, at: new Date().toISOString() }; save(); renderAll(); const o = $('#lab-out'); if (o && o.scrollIntoView) o.scrollIntoView({ block: 'start', behavior: smqMotion() }); }   // the result table is below the workspace
+      if (a === 'run') { if(!evaluateNow())return; S().ran = { hash: C.hash, sig: CHK.sig, at: new Date().toISOString() }; save(); renderAll(); const o = $('#lab-out'); if (o && o.scrollIntoView) o.scrollIntoView({ block: 'start', behavior: smqMotion() }); }   // the result table is below the workspace
       if (a.startsWith('exp')) exportFiles(a);
     }
   });
   function exportFiles(a) {
+    if(!evaluateNow())return;
     const ex = LAB.exportCircuit(C, CHK), files = { 'exp-s': [['engine_schematic.json', ex.schematic]], 'exp-l': [['engine_layout.json', ex.layout]], 'exp-v': [['engine_verification.json', ex.verification]] }[a] || [['engine_schematic.json', ex.schematic], ['engine_layout.json', ex.layout], ['engine_verification.json', ex.verification]];
     files.forEach(([name, obj]) => { const txt = JSON.stringify(obj, null, 1); try { const el = document.createElement('a'); el.href = URL.createObjectURL(new Blob([txt], { type: 'application/json' })); el.download = `${SH().plat()}_${name}`; document.body.appendChild(el); el.click(); setTimeout(() => { URL.revokeObjectURL(el.href); el.remove(); }, 1000); } catch (er) { /* download unavailable */ } });
     const ta = $('#lab-json'); if (ta) { ta.hidden = false; ta.value = JSON.stringify({ schematic: ex.schematic, layout: ex.layout, verification: ex.verification }); }
     if (a === 'exp-all') { S().exported = { at: new Date().toISOString(), hash: ex.layout.design_hash }; save(); recompute(); }
     renderHead(); renderOut(); if (SH()) SH().refreshMap();
+    renderHooks.forEach((f) => f()); // Export changes current validity without a full renderAll.
   }
   // canvas: drag to pan, Ctrl/⌘ + wheel to zoom, click to select
   const c0 = $('#lab-cv');
@@ -9632,7 +9690,7 @@ window.LABUI = (() => {
   const focus = (x, y, w) => { if (!C || !CV) return; cam = { s: CV.width / w, x, y }; draw(); };
   const renderHooks = [];
   const mission = (k) => { S().cur = Math.max(0, Math.min(MISS.length - 1, k | 0)); save(); renderAll(); };
-  return { open, close, setScope: (v) => { clearTimeout(timer); scope = v; C = null; CHK = null; MS = null; cam = null; sel = null; diag = null; }, redraw: () => { if (isOpen && C) { size(); draw(); } }, gdsPaste: (txt) => { importGds(txt); save(); renderAll(); }, isOpen: () => isOpen, progress, focus, mission, onRender: (f) => renderHooks.push(f), state: () => ({ C, CHK, MS, d: isOpen ? des() : null, s: SH() && SH().plat() ? S() : null }), MISS };
+  return { open, close, inputValid, evaluationCurrent, evaluateNow, setScope: (v) => { clearTimeout(timer); scope = v; C = null; CHK = null; MS = null; cam = null; sel = null; diag = null; }, redraw: () => { if (isOpen && C) { size(); draw(); } }, gdsPaste: (txt) => { importGds(txt); save(); renderAll(); }, isOpen: () => isOpen, progress, focus, mission, onRender: (f) => renderHooks.push(f), state: () => ({ C, CHK, MS, d: isOpen ? des() : null, s: SH() && SH().plat() ? S() : null }), MISS };
 })();
 if (window.LABUI && window.GAME_SHELL && window.GAME_SHELL.plat()) window.GAME_SHELL.refreshMap();
 
@@ -9802,7 +9860,7 @@ const TRACKS = [
   {name:'Directional Coupler',ids:['1-2'],goal:'Coupling Gap과 길이로 분배비를 맞추세요.'},
   {name:'Splitter / MMI',ids:['1-3','1-4','1-5'],goal:'분배비·균일도·크기를 실제 모델로 검토하세요.'},
   {name:'Spot Size Converter',ids:['1-6'],goal:'Taper 길이와 Tip 폭의 손실 Trade-off를 확인하세요.'},
-  {name:'CWDM',ids:['1-7'],goal:'Guided Steps로 파장 분리를 만들고 Full Design을 Test하세요.'},
+  {name:'CWDM',ids:['1-7'],goal:'Guided Steps로 파장 분리를 만들고 Full Design의 결과를 확인하세요.'},
   {name:'Component Review',ids:['2-4','2-5'],goal:'PD와 Laser의 성능·전력 예산을 검토하세요. Component JSON까지 지원합니다.'}]},
  {id:'mzm-dr8',name:'MZM DR8',mod:0,levels:[
   {name:'Tx Specification / TW-MZM',ids:['2-2','2-3'],goal:'PN Phase와 TW-MZM의 대역폭·손실·구동 전압을 맞추세요.'},
@@ -9836,7 +9894,7 @@ const TRACKS = [
 const KEY='smq3-studio';
 let root=SMQ_STORE.get(KEY,null);
 if (!root || root.schema!=='smq-studio/1' || !root.by || SMQ_STORE.status().corrupt.some(x=>x.key===KEY)) root={schema:'smq-studio/1',by:{},active:null};
-let active=null, ws=null, entering=false, raf=0, dirty=false, inspector='tune';
+let active=null, ws=null, entering=false, raf=0, dirty=false;
 const track=()=>TRACKS.find(t=>t.id===active), phase=()=>ws && track().levels[ws.level], step=()=>ws && (ws.sub|0);
 const scopeKey=()=>SH.plat()+'|'+active;
 const historyKey=()=>ws.level+':'+step();
@@ -9853,20 +9911,24 @@ function navigate(){if(!ws||entering)return;entering=true;closeSheets();const p=
  LU.open();LU.mission(p.lab[Math.min(step(),p.lab.length-1)]);}
  entering=false;save();refresh();resize();}
 // Compact shell and original semantic DOM nodes: existing event handlers and model views are retained.
-const nav=document.createElement('nav');nav.id='studioNav';nav.setAttribute('aria-label','Track / Level');nav.innerHTML=`<select id="studioTrack" aria-label="Architecture Track"><option value="legacy">Legacy · 자유 탐색</option>${TRACKS.map(t=>`<option value="${t.id}">${t.name}</option>`).join('')}</select><select id="studioLevel" aria-label="Track-local Level"></select><button class="btn" id="studioStart">Start New…</button><button class="btn" id="studioReplay">Guide</button>`;
+const nav=document.createElement('nav');nav.id='studioNav';nav.setAttribute('aria-label','Track / Level');nav.innerHTML=`<select id="studioTrack" aria-label="Architecture Track"><option value="legacy">Legacy · 자유 탐색</option>${TRACKS.map(t=>`<option value="${t.id}">${t.name}</option>`).join('')}</select><select id="studioLevel" aria-label="Track-local Level"></select><button class="btn" id="studioStart">Start New…</button><button class="btn" id="studioMoreToggle" aria-expanded="false" aria-controls="studioMore">More</button><button class="btn" id="studioReplay">Guide</button>`;
 $('.top').after(nav);
 const goal=document.createElement('section');goal.id='studioGoal';goal.innerHTML='<div><b id="studioTitle"></b><span id="studioGoalLine"></span></div><span id="studioStatus" role="status"></span><button class="btn pri" id="studioNext">Next</button>';
 nav.after(goal);
-const bar=document.createElement('nav');bar.id='studioActions';bar.setAttribute('aria-label','Context actions');bar.innerHTML='<button class="btn" data-sheet="tune">Tune</button><button class="btn" data-sheet="inspect">Inspect</button><button class="btn pri" id="studioTest">Test</button><button class="btn" data-sheet="more">More</button>';
-$('#gamewrap').after(bar);
 const theme=document.createElement('button');theme.id='themeToggle';theme.className='btn';$('.hdr-r').append(theme);
 const shellUI=SH.ui();
 function setTheme(v){document.documentElement.dataset.theme=v;theme.textContent=v==='dark'?'Light':'Dark';theme.setAttribute('aria-label',`Theme · ${v} · 전환`);shellUI.theme=v;SH.saveUI();window.SMQ_PALETTE?.refresh();if(SH.plat())SH.redraw();LU.redraw();}
-function sheet(id,title){const a=document.createElement('aside');a.id='studio'+id[0].toUpperCase()+id.slice(1);a.className='studio-sheet';a.dataset.sheet=id;a.setAttribute('aria-label',title);a.innerHTML=`<div class="sheet-heading"><b>${title}</b><button class="btn" data-close-sheet aria-label="패널 닫기">×</button></div>`;$('#gamewrap').append(a);return a;}
-const tune=sheet('tune','Parameters · Inspector'),inspect=sheet('inspect','Inspect · Results'),more=sheet('more','Tracks · Reference · Advanced');
+function sheet(id,title){const a=document.createElement('aside');a.id='studio'+id[0].toUpperCase()+id.slice(1);a.className='studio-sheet'+(id==='more'?'':' open');a.dataset.sheet=id;a.setAttribute('aria-label',title);a.innerHTML=`<div class="sheet-heading"><b>${title}</b>${id==='more'?'<button class="btn" data-close-sheet aria-label="More 닫기">×</button>':''}</div>`;$('#gamewrap').append(a);return a;}
+const tune=sheet('tune','Tune · Parameters'),inspect=sheet('inspect','Inspect · Results'),more=sheet('more','Tracks · Reference · Advanced');
 const move=(el,to)=>{if(el)to.append(el);};
 move($('#pcol'),tune);move($('.lab-head'),tune);move($('#lab-insp'),tune);
-['#mission','#coach','#delta','#tiles','#spec','#xpanel','#cmpcard','#fab','#lab-out'].forEach(s=>move($(s),inspect));
+move($('#tiles'),inspect);
+const labMetrics=document.createElement('div');labMetrics.id='studioLabMetrics';labMetrics.hidden=true;inspect.append(labMetrics);
+const details=document.createElement('div');details.id='studioResults';inspect.append(details);
+['#spec','#xpanel','#delta','#mission','#coach','#cmpcard','#fab','#lab-out'].forEach(s=>move($(s),details));
+const expand=document.createElement('button');expand.className='btn';expand.id='studioInspectExpand';expand.textContent='Details';expand.setAttribute('aria-expanded','false');expand.setAttribute('aria-controls','studioResults');inspect.querySelector('.sheet-heading').append(expand);
+expand.onclick=()=>{const on=inspect.classList.toggle('expanded');expand.setAttribute('aria-expanded',String(on));expand.textContent=on?'Compact':'Details';resize();};
+
 ['.mapwrap','#pathbar','#ai','#db','#cards','#scope'].forEach(s=>move($(s),more));
 const metrics=document.createElement('div');metrics.id='studioMetrics';$('#cwrap').append(metrics);
 const reference=document.createElement('section');reference.id='studioReference';reference.className='card';more.prepend(reference);
@@ -9876,19 +9938,23 @@ const scrim=document.createElement('div');scrim.id='studioScrim';scrim.addEventL
 const banner=document.createElement('div');banner.id='studioBanner';banner.hidden=true;goal.after(banner);
 function tell(msg){banner.textContent=msg;banner.hidden=false;setTimeout(()=>banner.hidden=true,6000);}
 const mobile=()=>window.innerWidth<=900;
-function closeSheets(){document.querySelectorAll('.studio-sheet').forEach(e=>e.classList.remove('open'));scrim.classList.remove('open');bar.querySelectorAll('[data-sheet]').forEach(b=>b.setAttribute('aria-pressed','false'));}
-function openSheet(id){closeSheets();inspector=id;const e=document.querySelector(`.studio-sheet[data-sheet="${id}"]`);e.classList.add('open');scrim.classList.toggle('open',mobile());bar.querySelector(`[data-sheet="${id}"]`)?.setAttribute('aria-pressed','true');if(mobile()){e.tabIndex=-1;e.focus({preventScroll:true});}resize();}
-bar.addEventListener('click',e=>{const b=e.target.closest('[data-sheet]');if(b){const was=document.querySelector(`.studio-sheet[data-sheet="${b.dataset.sheet}"]`).classList.contains('open');if(was&&mobile())closeSheets();else openSheet(b.dataset.sheet);}});
+function closeSheets(){const was=more.classList.contains('open');more.classList.remove('open');scrim.classList.remove('open');$('#studioMoreToggle').setAttribute('aria-expanded','false');if(was)$('#studioMoreToggle').focus({preventScroll:true});}
+function openSheet(id){
+ if(id==='more'){more.classList.add('open');scrim.classList.add('open');$('#studioMoreToggle').setAttribute('aria-expanded','true');more.tabIndex=-1;more.focus({preventScroll:true});return;}
+ closeSheets();if(id==='inspect'&&mobile()&&!inspect.classList.contains('expanded'))expand.click();
+}
+$('#studioMoreToggle').onclick=()=>more.classList.contains('open')?closeSheets():openSheet('more');
 document.addEventListener('click',e=>{if(e.target.closest('[data-close-sheet]'))closeSheets();});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheets();});
 function identity(){if(LU.isOpen()){const a=LU.state();return JSON.stringify([SH.plat(),a.C?.hash,a.C?.mod,a.C&&a.C.d,a.CHK?.sig]);}return SH.testIdentity();}
-function liveGate(){const p=phase();if(p?.summary)return [0,1,2,3,4].every(i=>ws.completed[i]);if(LU.isOpen()){const st=LU.state(),i=p?.lab?.[step()]??(st.s.cur|0);return !!st.s.live?.[LU.MISS[i].id] && (track()?.mod==null || st.C.d.mod===track().mod);}const c=window.GAME_CTX();return SH.currentGate() && !(c?.id==='3A+' && track()?.mod!=null && +c.d.mod!==(track().mod===1?1:0));}
-function fresh(){const a=ws?.tests?.[historyKey()];return !!a && a.identity===identity() && liveGate();}
-function runTest(){if(LU.isOpen()){const b=document.querySelector('[data-la="run"]');if(b)b.click();else {LU.mission(4);document.querySelector('[data-la="run"]')?.click();LU.mission(phase()?.lab?.[step()]??4);}}
- else if(!SH.testNow())return;
- if(ws){ws.tests=ws.tests||{};ws.tests[historyKey()]={identity:identity(),ok:liveGate(),at:Date.now()};save();}
- refresh();if(!liveGate())openSheet('inspect');}
-$('#studioTest').addEventListener('click',runTest);
-function advance(){if(!ws||!fresh())return;const p=phase(),c=window.GAME_CTX();
+function liveGate(){const p=phase();if(p?.summary)return [0,1,2,3,4].every(i=>ws.completed[i]);if(LU.isOpen()){if(!LU.evaluationCurrent())return false;const st=LU.state(),i=p?.lab?.[step()]??(st.s.cur|0);return !!st.s.live?.[LU.MISS[i].id] && (track()?.mod==null || st.C.d.mod===track().mod);}const c=window.GAME_CTX();return SH.currentGate() && !(c?.id==='3A+' && track()?.mod!=null && +c.d.mod!==(track().mod===1?1:0));}
+// Device evaluations are automatic. Lab verification/export keep their explicit, hash-bound actions.
+function fresh(){return !!ws && (LU.isOpen()?LU.evaluationCurrent():phase()?.summary||SH.evaluationCurrent()) && !SH.busy() && liveGate();}
+function recordEvaluation(){if(!ws||!(LU.isOpen()?LU.evaluationCurrent():SH.evaluationCurrent()))return;const id=identity(),ok=liveGate(),key=historyKey();ws.tests=ws.tests||{};const old=ws.tests[key];if(old?.identity===id&&old.ok===ok)return;ws.tests[key]={identity:id,ok,at:Date.now(),automatic:true};save();}
+function invalidate(){$('#studioNext').disabled=true;$('#studioStatus').textContent=(LU.isOpen()?LU.inputValid():SH.inputValid())?'계산 중…':'입력값 확인';$('#studioStatus').dataset.state='pending';inspect.setAttribute('aria-busy','true');metrics.dataset.stale='true';}
+function advance(){if(!ws||SH.busy())return;
+ // Always evaluate in this event, even if a pending frame still shows a previous PASS.
+ if(!(LU.isOpen()?LU.evaluateNow():SH.testNow())){invalidate();return;}
+ recordEvaluation();refresh();if(!fresh())return;const p=phase(),c=window.GAME_CTX();
  if(!LU.isOpen()&&c?.step){$('#step-next')?.click();refresh();return;}
  const n=(p.ids||p.lab||[0]).length;
  ws.completed=ws.completed||{};ws.records=ws.records||{};ws.records[historyKey()]={identity:identity(),at:Date.now(),id:SH.curId(),lab:LU.isOpen(),metrics:LU.isOpen()?{hash:LU.state().C.hash,verification:Object.fromEntries(['PASS','WARNING','FAIL','NOT VERIFIED'].map(x=>[x,LU.state().CHK.checks.filter(c=>c.status===x).length]))}:clone(c?.K.tiles(c.l,c.res)||[])};
@@ -9899,7 +9965,7 @@ $('#studioTrack').addEventListener('change',e=>{if(e.target.value==='legacy'){le
 $('#studioLevel').addEventListener('change',e=>{if(ws){ws.level=+e.target.value;ws.sub=0;navigate();}else SH.go(e.target.value);});
 function highlight(){const c=window.GAME_CTX();if(LU.isOpen()){const p=$('#lab-params input');if(p){p.classList.add('studio-target');p.scrollIntoView?.({block:'center'});}return;}
  const hint=$('#coach').textContent;const p=c?.params?.find(p=>hint.includes(text(p.label)))||c?.params?.[0];if(!p)return;const el=$('#p-'+p.k);el?.closest('.prm')?.classList.add('studio-target');el?.scrollIntoView?.({block:'center'});}
-bar.querySelector('[data-sheet=tune]').addEventListener('click',()=>setTimeout(highlight,0));
+
 function snapshot(label){if(!ws)return;ws.snapshots=ws.snapshots||[];ws.snapshots.push({at:Date.now(),label,designs:clone(ws.designs),lab:clone(ws.lab),level:ws.level,sub:ws.sub});ws.snapshots=ws.snapshots.slice(-12);save();}
 function restart(){if(!ws){tell('먼저 Track을 선택하세요.');return;}if(!confirm('현재 Track을 Revision에 보관하고 Level 1에서 새로 시작할까요?'))return;snapshot('Before Start New');const old=ws.snapshots;root.by[SH.plat()][active]=newWS();root.by[SH.plat()][active].snapshots=old;syncScope();navigate();}
 $('#studioStart').onclick=restart;$('#studioNew').onclick=restart;
@@ -9910,35 +9976,37 @@ $('#studioPlatform').onclick=()=>$('#plat-chip').click();
 $('#studioBackup').onclick=()=>window.GAME_DATA.open('#bk-copy');
 function guide(replay){openSheet('inspect');if(LU.isOpen()){LU.mission(phase()?.lab?.[step()]??0);}else {if(replay)document.querySelector('[data-gm="guided"]')?.click();$('#m-guided').hidden?window.GAME_GUIDE?.open():$('#m-guided').scrollIntoView?.({block:'start'});}highlight();}
 $('#studioGuide').onclick=()=>guide(true);$('#studioReplay').onclick=()=>guide(false);
-$('#studioFree').onclick=()=>{if(ws){ws.mode='free';save();}if(!LU.isOpen())document.querySelector('[data-gm="full"]')?.click();openSheet('tune');tell('Free Exploration · 현재 Design은 유지됩니다. 완료에는 실제 Test가 필요합니다.');};
+$('#studioFree').onclick=()=>{if(ws){ws.mode='free';save();}if(!LU.isOpen())document.querySelector('[data-gm="full"]')?.click();openSheet('tune');tell('Free Exploration · 현재 Design은 유지됩니다. 현재 설계의 계산 결과로 완료 여부를 판정합니다.');};
 function renderReference(){const c=window.GAME_CTX();if(LU.isOpen()){reference.innerHTML='<h2>Reference · Lab</h2><p class="note">기존 Lab Library의 Reference / 내 카드 출처를 확인하세요. 실제 배치 수정은 Inspector에서 수행합니다.</p>';return;}if(!c)return;
  let rows=[];try{const r=c.K.evaluate(c.l,clone(c.l.ref),null,{full:true});rows=c.K.tiles(c.l,r)||[];}catch(e){/* unavailable reference shown explicitly */}
  reference.innerHTML=`<h2>Reference / Same-condition Compare</h2><p class="note">${esc(c.id)} · ${esc(c.plat)} · ${esc(c.mode)} · ${c.step?'Full Reference와 Guided 결과는 다른 목표입니다.':'동일 Platform / 난이도 / Physics 모델'}</p><div class="row-btns"><button class="btn" id="studioPreview">Reference Preview</button><button class="btn" id="studioApply">Explicit Apply</button><button class="btn" id="studioSuggest">Suggested Change</button><button class="btn" id="studioOriginal">Restore Original</button></div><div id="studioRefTable" hidden><table><thead><tr><th>Metric</th><th>My Design</th><th>Reference</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td>${esc(text(r[0]??r.l??r.k??'Metric'))}</td><td>${esc(text((c.K.tiles(c.l,c.res)?.[i]||[])[1]??'—'))}</td><td>${esc(text(r[1]??r.v??'—'))}</td></tr>`).join('')}</tbody></table><p class="note">Analytical / Surrogate · 실제 모델 수치. Fab 비교는 Inspect의 Same-wafer Comparison에서 같은 Seed로 실행하세요.</p></div>`;
  $('#studioSuggest').onclick=()=>{openSheet('inspect');$('#coach').scrollIntoView?.({block:'center'});};
  $('#studioPreview').onclick=()=>$('#studioRefTable').hidden=!$('#studioRefTable').hidden;
- $('#studioApply').onclick=()=>{if(!ws)return tell('보호된 Original을 위해 Track을 먼저 선택하세요.');ws.original=ws.original||{};if(!ws.original[c.id])ws.original[c.id]={d:clone(SH.design(c.id)),guide:clone(ws.progress.guide?.[c.id]||null)};snapshot('Before Reference Apply');const d=clone(c.l.ref);if(c.id==='3A+'&&track().mod===1)d.mod=1;SH.applyDesign(d,true);save();refresh();tell('Reference 적용 완료 · 실제 Test 후에 진행할 수 있습니다.');};
+ $('#studioApply').onclick=()=>{if(!ws)return tell('보호된 Original을 위해 Track을 먼저 선택하세요.');ws.original=ws.original||{};if(!ws.original[c.id])ws.original[c.id]={d:clone(SH.design(c.id)),guide:clone(ws.progress.guide?.[c.id]||null)};snapshot('Before Reference Apply');const d=clone(c.l.ref);if(c.id==='3A+'&&track().mod===1)d.mod=1;SH.applyDesign(d,true);save();refresh();tell('Reference 적용 완료 · 현재 설계의 결과를 확인하세요.');};
  $('#studioOriginal').onclick=()=>{if(!ws?.original?.[c.id])return tell('보호된 Original이 없습니다.');const o=ws.original[c.id];if(o.d){if(o.guide){ws.progress.guide=ws.progress.guide||{};ws.progress.guide[c.id]=clone(o.guide);}SH.applyDesign(clone(o.d),!o.guide);}else SH.applyDesign(clone(o),true);save();refresh();};
 }
 function summary(){if(!ws){$('#studioSummary').innerHTML='<p class="note">Legacy의 21개 Level과 6개 Lab Mission을 그대로 사용할 수 있습니다. Track을 선택하면 독립 Workspace에서 시작합니다.</p>';return;}
  const st=LU.isOpen()?LU.state():null;const g=ws.lab?.gds;const gmatch=g&&st?.C&&g.design_hash===st.C.hash;
- $('#studioSummary').innerHTML=`<h2>Final Engineering Summary</h2><p><b>${esc(track().name)}</b> · 완료 기록 ${Object.keys(ws.completed||{}).length}/6 · 현재 Level ${ws.level+1}</p><p>Current Design: ${liveGate()?'VALID':'검토 필요'} · Test: ${fresh()?'CURRENT':'STALE / NOT RUN'}</p><p>Design Valid: ${st?.CHK?st.CHK.checks.some(c=>c.status==='FAIL')?'FAIL':st.s.live.verification?'VALID':'Test 필요':'현재 Lab 검사 미실시'}<br>Geometry Rechecked: ${gmatch&&!g.summary?.FAIL?'PASS':'NOT VERIFIED'}<br>Foundry Readiness: <b>NOT VERIFIED</b></p><p class="note">${track().mod==null?'Device / System 학습과 Component JSON을 지원합니다. 전체 LiDAR PIC GDS 생성은 미지원입니다.':'Circuit JSON은 브라우저에서 Export합니다. 실제 GDS 생성·Geometry Recheck는 동봉된 Python 도구로 실행하며, 결과를 같은 Design Hash에 붙여넣습니다.'}</p><p class="note">Snapshot / Revision ${ws.snapshots?.length||0} · Stars / Cards는 Platform 공유 학습 자산이며 현재 판정과 구분됩니다.</p>`;
+ $('#studioSummary').innerHTML=`<h2>Final Engineering Summary</h2><p><b>${esc(track().name)}</b> · 완료 기록 ${Object.keys(ws.completed||{}).length}/6 · 현재 Level ${ws.level+1}</p><p>Current Design: ${liveGate()?'VALID':'검토 필요'} · Evaluation: ${fresh()?'CURRENT / PASS':'미충족 / 확인 필요'}</p><p>Design Valid: ${st?.CHK?st.CHK.checks.some(c=>c.status==='FAIL')?'FAIL':st.s.live.verification?'VALID':'검증 실행 필요':'현재 Lab 검사 미실시'}<br>Geometry Rechecked: ${gmatch&&!g.summary?.FAIL?'PASS':'NOT VERIFIED'}<br>Foundry Readiness: <b>NOT VERIFIED</b></p><p class="note">${track().mod==null?'Device / System 학습과 Component JSON을 지원합니다. 전체 LiDAR PIC GDS 생성은 미지원입니다.':'Circuit JSON은 브라우저에서 Export합니다. 실제 GDS 생성·Geometry Recheck는 동봉된 Python 도구로 실행하며, 결과를 같은 Design Hash에 붙여넣습니다.'}</p><p class="note">Snapshot / Revision ${ws.snapshots?.length||0} · Stars / Cards는 Platform 공유 학습 자산이며 현재 판정과 구분됩니다.</p>`;
 }
-function refresh(){if(entering)return;const c=window.GAME_CTX(),lab=LU.isOpen();document.body.classList.toggle('studio-lab',lab);$('#pcol').hidden=lab;$('#btn-wipe').hidden=!!ws;$('#lab-insp').hidden=!lab;$('.lab-head').hidden=!lab;$('#lab-out').hidden=!lab;$('#mission').hidden=lab;$('#lab-lib').hidden=!lab;
+function refresh(){if(entering)return;const c=window.GAME_CTX(),lab=LU.isOpen();document.body.classList.toggle('studio-lab',lab);$('#pcol').hidden=lab;$('#btn-wipe').hidden=!!ws;$('#lab-insp').hidden=!lab;$('.lab-head').hidden=!lab;$('#lab-out').hidden=!lab;$('#mission').hidden=lab;$('#lab-lib').hidden=!lab;$('#tiles').hidden=lab;labMetrics.hidden=!lab;
+ if(lab){const st=LU.state(),sys=st.CHK.sys;labMetrics.innerHTML=[['Layout margin',sys.marginLayout.toFixed(2)+' dB'],['Routing loss',sys.extra.toFixed(2)+' dB'],['FAIL',st.CHK.checks.filter(x=>x.status==='FAIL').length],['Verification',st.s.live.verification?'CURRENT':'NOT RUN / STALE']].map(([k,v])=>`<div class="tile"><div class="l">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join('');}
  ['#coach','#delta','#spec','#xpanel','#cmpcard','#fab'].forEach(s=>{const el=$(s);if(lab)el.dataset.studioHidden=el.hidden?'1':'0';if(lab)el.style.display='none';else el.style.removeProperty('display');});
- bar.querySelector('[data-sheet=tune]').textContent=lab?'Build':'Tune';$('#studioTest').textContent=lab?'Verify':'Test';
- if(ws){$('#studioTrack').value=active;const opts=track().levels.map((p,i)=>`<option value="${i}">Level ${i+1} · ${p.name}</option>`).join('');if($('#studioLevel').innerHTML!==opts)$('#studioLevel').innerHTML=opts;$('#studioLevel').value=ws.level;const p=phase();$('#studioTitle').textContent=`Level ${ws.level+1} · ${p.name}${(p.ids||p.lab||[]).length>1?' · '+(step()+1)+'/'+(p.ids||p.lab).length:''}`;$('#studioGoalLine').textContent=p.goal;$('#studioStatus').textContent=fresh()?'PASS · CURRENT':liveGate()?'Test 필요':'FAIL · 조절 필요';$('#studioNext').disabled=!fresh();}
+ tune.querySelector('.sheet-heading b').textContent=lab?'Build · Parameters':'Tune · Parameters';recordEvaluation();
+ inspect.setAttribute('aria-busy',String(!(lab?LU.evaluationCurrent():SH.evaluationCurrent())));metrics.dataset.stale=String(!lab&&!SH.evaluationCurrent());
+ if(ws){$('#studioTrack').value=active;const opts=track().levels.map((p,i)=>`<option value="${i}">Level ${i+1} · ${p.name}</option>`).join('');if($('#studioLevel').innerHTML!==opts)$('#studioLevel').innerHTML=opts;$('#studioLevel').value=ws.level;const p=phase();$('#studioTitle').textContent=`Level ${ws.level+1} · ${p.name}${(p.ids||p.lab||[]).length>1?' · '+(step()+1)+'/'+(p.ids||p.lab).length:''}`;$('#studioGoalLine').textContent=p.goal;$('#studioStatus').textContent=fresh()?'PASS · 현재 설계':!(lab?LU.inputValid():SH.inputValid())?'입력값 확인':!(lab?LU.evaluationCurrent():SH.evaluationCurrent())?'계산 중…':lab&&LU.state().s.cur===4?'검증 실행 필요':lab&&LU.state().s.cur===5?'Export 필요':'FAIL · 조절 필요';$('#studioStatus').dataset.state=fresh()?'pass':'fail';$('#studioNext').disabled=!fresh();}
  else {$('#studioTrack').value='legacy';const opts=SH.levels().map(l=>`<option value="${l.id}">${l.id} · ${l.name}</option>`).join('');if($('#studioLevel').innerHTML!==opts)$('#studioLevel').innerHTML=opts;$('#studioLevel').value=SH.curId();$('#studioTitle').textContent=lab?$('#lab-h').textContent:(c?.lvl.name||'플랫폼 선택');$('#studioGoalLine').textContent=lab?$('#lab-note').textContent.replace(/\s+/g,' ').slice(0,100):$('#m-do .do-h')?.textContent||'폭·길이·Gap을 바꾸고 실제 결과를 확인하세요.';$('#studioStatus').textContent=c?`${c.stars?'★ 획득':'미획득'} · ${SH.currentGate()?'VALID':'검토 필요'}`:'';$('#studioNext').disabled=true;}
- if(!lab&&c){for(const p of c.params){const row=$('#p-'+p.k)?.closest('.prm');if(row&&!row.querySelector('.fine-value')){const n=document.createElement('input');n.type='number';n.className='fine-value';n.dataset.fine=p.k;n.setAttribute('aria-label',p.label+' 정확한 값');n.min=p.min;n.max=p.max;n.step=p.step;n.value=c.d[p.k];row.append(n);}else if(row&&document.activeElement!==row.querySelector('.fine-value'))row.querySelector('.fine-value').value=c.d[p.k];}}
- if(!lab&&c)metrics.innerHTML=(c.K.tiles(c.l,c.res)||[]).slice(0,2).map(r=>`<span>${esc(text(r[0]))} <b>${esc(text(r[1]))}</b></span>`).join('');
+ if(!lab&&c){for(const p of c.params){const row=$('#p-'+p.k)?.closest('.prm');if(row&&!row.querySelector('.fine-value')){const n=document.createElement('input');n.type='number';n.className='fine-value';n.dataset.fine=p.k;n.setAttribute('aria-label',p.label+' 정확한 값');n.min=p.min;n.max=p.max;n.step=p.step;n.value=c.d[p.k];row.append(n);}else if(row&&document.activeElement!==row.querySelector('.fine-value')&&row.querySelector('.fine-value').getAttribute('aria-invalid')!=='true')row.querySelector('.fine-value').value=c.d[p.k];}}
+ if(!lab&&c)metrics.innerHTML=(c.tiles(c.res)||[]).slice(0,2).map(r=>`<span>${esc(text(r[0]))} <b>${esc(text(r[1]))}</b></span>`).join('');
  summary();renderReference();
 }
 function refreshSoon(){if(raf)return;raf=requestAnimationFrame(()=>{raf=0;refresh();});}
-function resize(){if(window.visualViewport)document.documentElement.style.setProperty('--app-height',window.visualViewport.height+'px');if(!mobile()&&!document.querySelector('.studio-sheet.open'))openSheet('tune');if(SH.plat())SH.redraw();LU.redraw();}
-const wel=document.createElement('div');wel.id='studioWelcome';wel.className='studio-welcome';wel.hidden=true;wel.innerHTML=`<section role="dialog" aria-modal="true" aria-labelledby="studioWelcomeTitle"><h2 id="studioWelcomeTitle">Unified Photonics Studio</h2><p>Track 선택 → Tune / Build → 실제 Test / Verify → Next. 용어와 모델 근거는 Inspect에서 확인하세요.</p><div class="studio-track-choices">${TRACKS.map(t=>`<button class="btn" data-welcome-track="${t.id}">${t.name} · Level 1</button>`).join('')}</div><p>Design Valid · Geometry Rechecked · Foundry Readiness: NOT VERIFIED를 구분합니다. Save에서 Text Backup / Paste Restore가 가능합니다.</p><button class="btn" id="studioWelcomeSkip">Skip · 자유 탐색</button></section>`;document.body.append(wel);
+function resize(){if(window.visualViewport)document.documentElement.style.setProperty('--app-height',window.visualViewport.height+'px');if(SH.plat())SH.redraw();LU.redraw();}
+const wel=document.createElement('div');wel.id='studioWelcome';wel.className='studio-welcome';wel.hidden=true;wel.innerHTML=`<section role="dialog" aria-modal="true" aria-labelledby="studioWelcomeTitle"><h2 id="studioWelcomeTitle">Unified Photonics Studio</h2><p>Tune / Build를 조절하면 아래 Inspect에서 결과를 바로 볼 수 있습니다. 현재 목표를 만족하면 Next로 진행하세요. Lab 검증과 Export는 해당 단계에서 실행합니다.</p><div class="studio-track-choices">${TRACKS.map(t=>`<button class="btn" data-welcome-track="${t.id}">${t.name} · Level 1</button>`).join('')}</div><p>Design Valid · Geometry Rechecked · Foundry Readiness: NOT VERIFIED를 구분합니다. Save에서 Text Backup / Paste Restore가 가능합니다.</p><button class="btn" id="studioWelcomeSkip">Skip · 자유 탐색</button></section>`;document.body.append(wel);
 function dismissWelcome(){wel.hidden=true;$('.wrap').inert=false;shellUI.studioWelcomed=1;SH.saveUI();$('#studioTrack').focus();}
 function welcome(){wel.hidden=false;$('.wrap').inert=true;wel.querySelector('button').focus();}
 wel.addEventListener('click',e=>{const b=e.target.closest('[data-welcome-track]');if(b){dismissWelcome();enter(b.dataset.welcomeTrack);}if(e.target.closest('#studioWelcomeSkip'))dismissWelcome();});wel.addEventListener('keydown',e=>{if(e.key==='Escape')dismissWelcome();if(e.key==='Tab'){const bs=[...wel.querySelectorAll('button')],a=document.activeElement; if(e.shiftKey&&a===bs[0]){e.preventDefault();bs.at(-1).focus();}else if(!e.shiftKey&&a===bs.at(-1)){e.preventDefault();bs[0].focus();}}});
-window.SMQ_STUDIO={save,refreshSoon,tracks:TRACKS,enter,active:()=>active,workspace:()=>ws,identity,fresh,liveGate};
+window.SMQ_STUDIO={save,refreshSoon,invalidate,tracks:TRACKS,enter,active:()=>active,workspace:()=>ws,identity,fresh,liveGate};
 theme.onclick=()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');
 SH.onLevel(()=>{if(!entering&&active&&SH.plat()&&SH.studioScope()!==ws)syncScope();refreshSoon();});LU.onRender(refreshSoon);
 // Legacy navigation is explicit and does not overwrite a Track workspace.
@@ -9959,7 +10027,7 @@ window.addEventListener('resize',resize);window.visualViewport?.addEventListener
 document.body.classList.add('studio-ready');setTheme(shellUI.theme==='dark'?'dark':'light');
 // Resume only a previously selected Track; v1.0 users retain their exact legacy workspace until choosing Copy/Track.
 if(root.active&&TRACKS.some(t=>t.id===root.active)&&SH.plat())enter(root.active);else refresh();
-if(!mobile())openSheet('tune');resize();
+resize();
 })();
 
 </script>
