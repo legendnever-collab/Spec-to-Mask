@@ -1,8 +1,3 @@
-npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
-
-> spec-to-mask-quest@1.1.1 test:studio
-> node test/e2e/studio_state.js
-
 PASS v1.0 legacy design automatically restored
 PASS new track starts at local Level 1
 PASS legacy design is not silently copied
@@ -55,7 +50,8 @@ PASS immediate Lab Next evaluates failing geometry and blocks progression
 PASS Lab numeric recovery automatically enables Next
 PASS Lab automatic rendering preserves numeric keyboard focus
 PASS blank Lab numeric field blocks Next
+PASS pending Lab render preserves invalid draft after blur
 PASS automatic Track resume after fresh application boot
 PASS state regression has no page errors
 PASS corrupt Track JSON raw preserved in Quarantine
-55 studio state checks passed
+56 studio state checks passed

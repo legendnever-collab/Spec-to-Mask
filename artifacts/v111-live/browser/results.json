@@ -1,6 +1,6 @@
 {
   "html": "/workspace/scratch/4ca33336546e/Spec-to-Mask-live/dist/spec-to-mask-v1.1.1.html",
-  "sha256": "082e9dc478d6fb0905f50d13a431c1014faaef06e863d6f46daeb8c88fb9c625",
+  "sha256": "d3718f1393f7237aa84b872e82a2ff5cb3e2e222ad573ae4cdee4fceb3157cdf",
   "checks": [
     {
       "ok": true,
@@ -281,6 +281,10 @@
     {
       "ok": true,
       "message": "Lab immediate edit / Next evaluates failing geometry before delayed renderer"
+    },
+    {
+      "ok": true,
+      "message": "Lab delayed render retains blank input after blur and keeps Next blocked"
     },
     {
       "ok": true,

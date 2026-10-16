@@ -79,6 +79,7 @@ STEP mzm-dr8 {"level":2,"sub":0,"id":"3A+","lab":true,"mission":0}
 PASS mzm-dr8: L3.1 actual engine gate and fresh test
 STEP mzm-dr8 {"level":2,"sub":1,"id":"3A+","lab":true,"mission":1}
 PASS Lab immediate edit / Next evaluates failing geometry before delayed renderer
+PASS Lab delayed render retains blank input after blur and keeps Next blocked
 PASS Lab Inspect shows its own metrics, not previous device values
 PASS mzm-dr8: L3.2 actual engine gate and fresh test
 STEP mzm-dr8 {"level":3,"sub":0,"id":"3A+","lab":true,"mission":2}
@@ -198,4 +199,4 @@ PASS Theme preserves design / Fab / seed
 PASS Theme survives file reload
 PASS no browser page errors: 
 PASS no external HTTP runtime requests
-Browser checks: 167 PASS
+Browser checks: 168 PASS

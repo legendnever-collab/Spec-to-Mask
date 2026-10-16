@@ -19,14 +19,14 @@ No physics, hard requirement, score threshold, GDS generator, track ID or backup
 
 ## Verification checkpoint
 
-- Current-source Studio/state: 55 PASS, including device and Lab immediate edit → Next, invalid numeric input, recovery, Reference/Original, track switch, modes, reload and backup.
-- Current-source offline Chromium browser: 167 PASS, zero page errors and zero external HTTP requests.
+- Current-source Studio/state: 56 PASS, including device and Lab immediate edit → Next, invalid numeric input, recovery, Reference/Original, track switch, modes, reload and backup.
+- Pre-follow-up source checkpoint 4c6be84 Chromium browser: 167 PASS, zero page errors and zero external HTTP requests.
 - Lab state integrity (si1310): PASS.
 - JavaScript syntax: PASS, 71 files and assembled script.
-- Canonical offline HTML: Studio 55 PASS and Chromium 167 PASS; zero page errors / external HTTP requests.
+- Canonical offline HTML: Studio 56 PASS and Chromium 168 PASS; zero page errors / external HTTP requests.
 - Source parity and intentional mismatch rejection: PASS.
-- Executable: `dist/spec-to-mask-v1.1.1.html`; SHA256 `082e9dc478d6fb0905f50d13a431c1014faaef06e863d6f46daeb8c88fb9c625`.
-- Source/build checkpoint: `4c6be84af526f2a6ce7129a7ed04330e1dffafe7`. Complete evidence: `artifacts/v111-live/manifest.json` and `browser/results.json`.
+- Executable: `dist/spec-to-mask-v1.1.1.html`; SHA256 `d3718f1393f7237aa84b872e82a2ff5cb3e2e222ad573ae4cdee4fceb3157cdf`.
+- Source/build checkpoint: `6d4b1165a49f008933007f6ea6feddbbc4715f03`. Complete evidence: `artifacts/v111-live/manifest.json` and `browser/results.json`.
 - Stacked PR #20: final exact-head CI is reported in the PR after this artifact checkpoint. Source checkpoint CI is not substituted for it.
 
 Local dependencies reuse the existing unchanged dependency lock; no package upgrades. Local Chromium 153 was extracted from an already cached package. The local OS has no Korean system font; geometry screenshots therefore do not certify Korean glyph rendering. No external fonts or runtime requests are added.
@@ -41,3 +41,9 @@ This increment is the Live UI and automatic evaluation milestone only. The follo
 4. Independent FMCW LiDAR chapter, separate project progression and capstone.
 
 User play review of this increment precedes the next course/model expansion. Main merge and formal release require separate user approval.
+
+## Final input-draft correction and interrupted-file recovery
+
+The added Lab regression reproduced an invalid draft being overwritten when focus left before the 90ms render. Scheduled rendering now preserves incomplete fields even after blur; intentional navigation still rebuilds controls. The regression fails before this fix and passes afterward. No solver changes.
+
+2026-10-17: the interrupted local HTML was incomplete. Rebuilding from source reproduced the exact previously tested `d3718f…3157cdf` bytes (168 browser checks), and all 56 state checks were completed again against that canonical file. Only complete logs count as PASS. Prior f9473e8 CI completed successfully; the latest follow-up commit's CI is reported separately in PR #20.
