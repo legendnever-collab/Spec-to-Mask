@@ -1,3 +1,5 @@
+> **Recovery update (2026-10-16):** The report below is historical evidence for its stated HTML hash. The current Atomic Test Gate executable, 39 Studio / 141 Browser checks, SHA256 and environment limits are in [the recovery acceptance report](../artifacts/v110-recovery/README.md). Do not use the older hash as the current RC.
+
 # SPEC-to-MASK Quest v1.1.0 — QA Report
 
 ## Frozen executable and provenance

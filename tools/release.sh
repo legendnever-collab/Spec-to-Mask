@@ -8,6 +8,11 @@ OUT=release
 mkdir -p "$OUT"
 if [ -n "$(git status --porcelain --untracked-files=no)" ]; then echo 'WARNING: source has uncommitted changes; do not call this a frozen release' >&2; fi
 SMQ_RELEASE=1 SMQ_OFFLINE=1 sh tools/build.sh "$OUT/spec-to-mask-v$VER.html"
+# Ship the exact acceptance-tested bytes after checking them against a fresh source build.
+if [ -f "dist/spec-to-mask-v$VER.html" ]; then
+  node tools/check_rc.js "$OUT/spec-to-mask-v$VER.html"
+  cp "dist/spec-to-mask-v$VER.html" "$OUT/spec-to-mask-v$VER.html"
+fi
 if grep -Eq 'fonts.googleapis.com|<script[^>]+src=' "$OUT/spec-to-mask-v$VER.html"; then echo 'external runtime dependency in offline release' >&2; exit 1; fi
 git archive --format=zip --prefix="spec-to-mask-v$VER/" -o "$OUT/spec-to-mask-v$VER-source.zip" HEAD
 for d in RELEASE_NOTES VERIFICATION_REPORT USER_GUIDE MODEL_LIMITATIONS; do cp "docs/release/$d-v$MM.md" "$OUT/"; done

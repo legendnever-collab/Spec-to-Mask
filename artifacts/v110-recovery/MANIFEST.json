@@ -1,0 +1,26 @@
+{
+  "version": "1.1.0",
+  "application_source_commit": "af18d590636140832645564fb6434033e8328d51",
+  "application_source_changed_since_commit": false,
+  "test_revision": "Regression files in the same checkpoint as this manifest; SHA256 below",
+  "canonical_html": "dist/spec-to-mask-v1.1.0.html",
+  "html_sha256": "c7d327a6c07420f2ba903bc14d723bab4b525bd10ec4c7d3d6cd493ef52fd71e",
+  "supersedes_html_sha256": "fa91d6fe9bd5e38a6cf18e881134bbc9f7a412e10c8cad9be472fcf7cc33282e",
+  "source_parity": "PASS; only immutable SMQ_BUILD provenance excluded",
+  "negative_parity": "PASS; deliberate Atomic code mutation rejected",
+  "studio_assertions": 39,
+  "browser_assertions": 141,
+  "browser_errors": [],
+  "external_requests": [],
+  "migration": "PASS",
+  "backup_restore": "PASS",
+  "syntax": "PASS; 71 JS files plus assembled script",
+  "dependency_install": "npm ci --offline FAILED (ENOTCACHED); reused prior node_modules after exact package-lock comparison; npm ls confirmed jsdom 24.1.3 / playwright 1.62.1",
+  "prior_engine_gds_evidence": "Historical evidence retained in artifacts/v110-qa; not rerun locally; application src unchanged since af18d590",
+  "ci": "Pending new checkpoint; follow PR #19 for exact HEAD run",
+  "main_merge": "NOT PERFORMED",
+  "test_sha256": {
+    "test/e2e/studio_state.js": "9f2b558d88103e8f0b84d169d0aa2794a09765b862bd16ccc4eff70d229f8ff1",
+    "test/browser/studio.js": "b6bfa85545e3b5b2b701df348e9dd67c3f81421da5102344ccc1703d5a49583c"
+  }
+}
