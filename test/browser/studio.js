@@ -68,6 +68,8 @@ while(!await page.evaluate(()=>!!SMQ_STUDIO.workspace().finished)){
    if(name==='mzm-dr8'){
     const pending=await page.evaluate(()=>{const input=document.querySelector('[data-lfine="W"]'),good=input.value;input.value=input.min;input.dispatchEvent(new Event('input',{bubbles:true}));const blocked=document.querySelector('#studioNext').disabled&&!SMQ_STUDIO.fresh();document.querySelector('#studioNext').dispatchEvent(new MouseEvent('click',{bubbles:true}));return {good,blocked,failed:!LABUI.state().s.live.floorplan,same:SMQ_STUDIO.workspace().level===2};});
     ok(pending.blocked&&pending.failed&&pending.same,'Lab immediate edit / Next evaluates failing geometry before delayed renderer');await lab('W',pending.good);
+    await page.evaluate(()=>{const e=document.querySelector('[data-lfine="W"]');e.focus();e.dispatchEvent(new Event('input',{bubbles:true}));e.value='';e.dispatchEvent(new Event('input',{bubbles:true}));e.blur();});await pause(250);
+    ok(await page.locator('[data-lfine="W"]').inputValue()===''&&await page.locator('#studioNext').isDisabled(),'Lab delayed render retains blank input after blur and keeps Next blocked');await lab('W',pending.good);
     ok(await page.locator('#studioLabMetrics').isVisible()&&await page.locator('#tiles').isHidden(),'Lab Inspect shows its own metrics, not previous device values');
    }
   }

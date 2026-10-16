@@ -9607,17 +9607,17 @@ window.LABUI = (() => {
   const inputValid = () => ![...document.querySelectorAll('[data-lfine]')].some(e => e.value === '' || !e.validity.valid);
   const evaluationCurrent = () => !!C && inputValid() && evaluatedDesign === JSON.stringify(des());
   function evaluateNow() { if (!isOpen || !inputValid()) return false; clearTimeout(timer); renderAll(); return true; }
-  function renderAll(refit) {
+  function renderAll(refit, preserveDrafts = false) {
     if (!isOpen) return;
-    const active = document.activeElement, edit = active?.dataset.lfine ? {key:active.dataset.lfine,value:active.value,invalid:active.getAttribute('aria-invalid')} : null;
+    const active = document.activeElement, edits = [...document.querySelectorAll('[data-lfine]')].filter(e => e === active || preserveDrafts && (e.value === '' || !e.validity.valid)).map(e => ({key:e.dataset.lfine,value:e.value,invalid:e.getAttribute('aria-invalid'),focused:e === active}));
     recompute(); renderHead(); renderParams(); renderLib(); legend(); renderSel(); renderOut(); renderCoach();
-    if (edit) { const input = document.querySelector(`[data-lfine="${edit.key}"]`); if (input) { input.value=edit.value; if(edit.invalid)input.setAttribute('aria-invalid',edit.invalid); input.focus({preventScroll:true}); } }
+    for (const edit of edits) { const input = document.querySelector(`[data-lfine="${edit.key}"]`); if (input) { input.value=edit.value; if(edit.invalid)input.setAttribute('aria-invalid',edit.invalid); if(edit.focused)input.focus({preventScroll:true}); } }
     if (refit || !cam) fit(); else size();
     draw();
     if (SH() && SH().refreshMap) SH().refreshMap();
     renderHooks.forEach((f) => { try { f(); } catch (e) { /* learning layer */ } });
   }
-  const sched = (refit) => { window.SMQ_STUDIO?.invalidate(); clearTimeout(timer); timer = setTimeout(() => renderAll(refit), 90); };
+  const sched = (refit) => { window.SMQ_STUDIO?.invalidate(); clearTimeout(timer); timer = setTimeout(() => renderAll(refit, true), 90); };
   function fineInput(fi) {
     const p=pfP()[fi.dataset.lfine],valid=fi.value!==''&&fi.validity.valid;
     fi.setAttribute('aria-invalid',String(!valid));
