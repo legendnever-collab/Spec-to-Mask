@@ -1,0 +1,91 @@
+{
+  "completed": {
+    "0": 1792154384516,
+    "1": 1792154385652,
+    "2": 1792154387166,
+    "3": 1792154388888,
+    "4": 1792154390373,
+    "5": 1792154392190
+  },
+  "lab": {
+    "d": {
+      "mod": 2,
+      "share": 0,
+      "edge": 50,
+      "fp": 127,
+      "rf": 1,
+      "rfSide": 0,
+      "pp": 100,
+      "bend": 1,
+      "R": 10,
+      "wr": 1,
+      "jog": 4,
+      "mon": 0,
+      "W": 0.9,
+      "H": 0.5,
+      "P": 127,
+      "stag": 0,
+      "rp": 40
+    },
+    "v": 2,
+    "done": {
+      "schematic": true,
+      "floorplan": true,
+      "routing": true,
+      "electrical": true,
+      "verification": true,
+      "export": true
+    },
+    "live": {
+      "schematic": true,
+      "floorplan": true,
+      "routing": true,
+      "electrical": true,
+      "verification": true,
+      "export": true
+    },
+    "cur": 5,
+    "ran": {
+      "hash": "f27fd31c",
+      "sig": "fc1a2d8f",
+      "at": "2026-10-16T12:39:50.717Z"
+    },
+    "exported": {
+      "at": "2026-10-16T12:39:51.528Z",
+      "hash": "f27fd31c"
+    }
+  },
+  "designs": {
+    "1-7": {
+      "ord": 3,
+      "wa": 1,
+      "dL1": 10.87,
+      "dL2": 5.48,
+      "t1": -0.85,
+      "t2a": 0.23,
+      "t2b": 0.79,
+      "useCard": 0
+    },
+    "2-3R": {
+      "R": 6.1,
+      "g": 0.185,
+      "dop": 0.8,
+      "vb": 0.7,
+      "vpp": 3,
+      "det": -0.28,
+      "bm": 0.5,
+      "useCard": 0,
+      "useHeater": 0
+    },
+    "3W": {
+      "P": 14.5,
+      "grid": 2,
+      "R": 5.55,
+      "rad": 1,
+      "asg": 1,
+      "src": 0,
+      "pitch": 40,
+      "useCard": 0
+    }
+  }
+}

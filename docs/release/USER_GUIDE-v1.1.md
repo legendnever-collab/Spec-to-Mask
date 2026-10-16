@@ -1,5 +1,8 @@
 # v1.1 사용법
 
+> v1.1.1 Live UI update: Tune / Build and bottom Inspect are visible together. More is in the top navigation. Device evaluation is automatic; Next validates the current design. Lab verification and Export remain explicit. The earlier v1.1.0 Test-button instructions and QA totals below describe the historical UI. Current evidence: `docs/DEVELOPMENT_V111.md` and `artifacts/v111-live/manifest.json`.
+
+
 1. Platform에서 Si / SiN, O-band / C-band를 고릅니다. 기존 사용자는 원래 설계가 자동 복원됩니다.
 2. 첫 안내에서 Track을 선택합니다. 이후 Header의 Track/Level selector로 이동합니다. Level 번호는 Track마다 1–6입니다.
 3. Device는 Tune의 Slider / ± / 숫자로 조절합니다. Canvas Drag / Pinch / Pan은 보기만 바꿉니다. Fit으로 원래 보기를 복원합니다.

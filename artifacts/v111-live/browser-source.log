@@ -1,0 +1,201 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.1.1 test:browser
+> node test/browser/studio.js
+
+PASS HTML5 / UTF-8 / Korean language
+PASS Reference Preview preserves design
+PASS atomic setup: reference solver PASS and Next enabled
+PASS failed evaluation identity matches actual failing solver
+PASS immediate input / evaluation / Next uses current solver and blocks failing design
+PASS atomic recovery: Reference Apply / evaluation re-enables Next
+PASS number input evaluates failing value without blur and keeps focus
+PASS blank number input blocks Next
+PASS number input recovery automatically enables Next without Test
+PASS Escape closes only More and preserves both live panels
+PASS no bottom tabs or generic evaluation
+PASS More between Start New and Guide
+PASS 1440x900: first-screen Canvas (335.453125px)
+PASS 1440x900: no body overflow
+PASS 1440x900: 44px top actions
+PASS 1440x900: Tune and Inspect visible together
+PASS 1440x900: results below Canvas
+PASS 1440x900: Tune beside Canvas
+PASS 1280x800: first-screen Canvas (280.90625px)
+PASS 1280x800: no body overflow
+PASS 1280x800: 44px top actions
+PASS 1280x800: Tune and Inspect visible together
+PASS 1280x800: results below Canvas
+PASS 1280x800: Tune beside Canvas
+PASS 1024x640: first-screen Canvas (193.625px)
+PASS 1024x640: no body overflow
+PASS 1024x640: 44px top actions
+PASS 1024x640: Tune and Inspect visible together
+PASS 1024x640: results below Canvas
+PASS 1024x640: Tune beside Canvas
+PASS 390x844: first-screen Canvas (303.546875px)
+PASS 390x844: no body overflow
+PASS 390x844: 44px top actions
+PASS 390x844: Tune and Inspect visible together
+PASS 390x844: results below Canvas
+PASS 360x640: first-screen Canvas (190.21875px)
+PASS 360x640: no body overflow
+PASS 360x640: 44px top actions
+PASS 360x640: Tune and Inspect visible together
+PASS 360x640: results below Canvas
+PASS 320x568: first-screen Canvas (150.21875px)
+PASS 320x568: no body overflow
+PASS 320x568: 44px top actions
+PASS 320x568: Tune and Inspect visible together
+PASS 320x568: results below Canvas
+PASS 844x390: first-screen Canvas (134px)
+PASS 844x390: no body overflow
+PASS 844x390: 44px top actions
+PASS 844x390: Tune and Inspect visible together
+PASS 844x390: results below Canvas
+PASS 844x390: Tune beside Canvas
+PASS 667x375: first-screen Canvas (119px)
+PASS 667x375: no body overflow
+PASS 667x375: 44px top actions
+PASS 667x375: Tune and Inspect visible together
+PASS 667x375: results below Canvas
+PASS 667x375: Tune beside Canvas
+PASS mzm-dr8: independent workspace selected
+STEP mzm-dr8 {"level":0,"sub":0,"id":"2-2","lab":false,"mission":null}
+PASS Reference Preview preserves design
+PASS mzm-dr8: edit is automatically evaluated for current identity
+PASS mzm-dr8: Reference Apply reproducible
+PASS mzm-dr8: L1.1 actual engine gate and fresh test
+STEP mzm-dr8 {"level":0,"sub":1,"id":"2-3","lab":false,"mission":null}
+PASS Reference Preview preserves design
+PASS mzm-dr8: L1.2 actual engine gate and fresh test
+STEP mzm-dr8 {"level":1,"sub":0,"id":"3A","lab":false,"mission":null}
+PASS Reference Preview preserves design
+PASS mzm-dr8: L2.1 actual engine gate and fresh test
+STEP mzm-dr8 {"level":1,"sub":1,"id":"3A+","lab":false,"mission":null}
+PASS Reference Preview preserves design
+PASS mzm-dr8: L2.2 actual engine gate and fresh test
+STEP mzm-dr8 {"level":2,"sub":0,"id":"3A+","lab":true,"mission":0}
+PASS mzm-dr8: L3.1 actual engine gate and fresh test
+STEP mzm-dr8 {"level":2,"sub":1,"id":"3A+","lab":true,"mission":1}
+PASS Lab immediate edit / Next evaluates failing geometry before delayed renderer
+PASS Lab Inspect shows its own metrics, not previous device values
+PASS mzm-dr8: L3.2 actual engine gate and fresh test
+STEP mzm-dr8 {"level":3,"sub":0,"id":"3A+","lab":true,"mission":2}
+PASS mzm-dr8: L4.1 actual engine gate and fresh test
+STEP mzm-dr8 {"level":4,"sub":0,"id":"3A+","lab":true,"mission":3}
+PASS mzm-dr8: L5.1 actual engine gate and fresh test
+STEP mzm-dr8 {"level":5,"sub":0,"id":"3A+","lab":true,"mission":4}
+PASS mzm-dr8: L6.1 actual engine gate and fresh test
+STEP mzm-dr8 {"level":5,"sub":1,"id":"3A+","lab":true,"mission":5}
+PASS mzm-dr8: L6.2 actual engine gate and fresh test
+PASS mzm-dr8: all six Levels completed
+PASS mzm-dr8: current Verification and Circuit Export valid
+PASS mzm-dr8: Foundry Readiness truthful
+PASS mzm-dr8: resume after file reload
+PASS mrr-dr8: independent workspace selected
+STEP mrr-dr8 {"level":0,"sub":0,"id":"2-3R","lab":false,"mission":null}
+PASS Reference Preview preserves design
+PASS mrr-dr8: edit is automatically evaluated for current identity
+PASS mrr-dr8: Reference Apply reproducible
+PASS mrr-dr8: L1.1 actual engine gate and fresh test
+STEP mrr-dr8 {"level":1,"sub":0,"id":"2-1","lab":false,"mission":null}
+PASS Reference Preview preserves design
+PASS mrr-dr8: L2.1 actual engine gate and fresh test
+STEP mrr-dr8 {"level":1,"sub":1,"id":"3A+","lab":false,"mission":null}
+PASS Reference Preview preserves design
+PASS mrr-dr8: L2.2 actual engine gate and fresh test
+STEP mrr-dr8 {"level":2,"sub":0,"id":"3A+","lab":true,"mission":0}
+PASS mrr-dr8: L3.1 actual engine gate and fresh test
+STEP mrr-dr8 {"level":2,"sub":1,"id":"3A+","lab":true,"mission":1}
+PASS mrr-dr8: L3.2 actual engine gate and fresh test
+STEP mrr-dr8 {"level":3,"sub":0,"id":"3A+","lab":true,"mission":2}
+PASS mrr-dr8: L4.1 actual engine gate and fresh test
+STEP mrr-dr8 {"level":4,"sub":0,"id":"3A+","lab":true,"mission":3}
+PASS mrr-dr8: L5.1 actual engine gate and fresh test
+STEP mrr-dr8 {"level":5,"sub":0,"id":"3A+","lab":true,"mission":4}
+PASS mrr-dr8: L6.1 actual engine gate and fresh test
+STEP mrr-dr8 {"level":5,"sub":1,"id":"3A+","lab":true,"mission":5}
+PASS mrr-dr8: L6.2 actual engine gate and fresh test
+PASS mrr-dr8: all six Levels completed
+PASS mrr-dr8: current Verification and Circuit Export valid
+PASS mrr-dr8: Foundry Readiness truthful
+PASS mrr-dr8: resume after file reload
+PASS mrr-wdm8: independent workspace selected
+STEP mrr-wdm8 {"level":0,"sub":0,"id":"1-7","lab":false,"mission":null}
+PASS Reference Preview preserves design
+PASS mrr-wdm8: edit is automatically evaluated for current identity
+PASS mrr-wdm8: Reference Apply reproducible
+PASS mrr-wdm8: L1.1 actual engine gate and fresh test
+STEP mrr-wdm8 {"level":1,"sub":0,"id":"2-3R","lab":false,"mission":null}
+PASS Reference Preview preserves design
+PASS mrr-wdm8: L2.1 actual engine gate and fresh test
+STEP mrr-wdm8 {"level":2,"sub":0,"id":"3W","lab":false,"mission":null}
+PASS Reference Preview preserves design
+PASS mrr-wdm8: L3.1 actual engine gate and fresh test
+STEP mrr-wdm8 {"level":3,"sub":0,"id":"3W","lab":true,"mission":0}
+PASS mrr-wdm8: L4.1 actual engine gate and fresh test
+STEP mrr-wdm8 {"level":3,"sub":1,"id":"3W","lab":true,"mission":1}
+PASS mrr-wdm8: L4.2 actual engine gate and fresh test
+STEP mrr-wdm8 {"level":4,"sub":0,"id":"3W","lab":true,"mission":2}
+PASS mrr-wdm8: L5.1 actual engine gate and fresh test
+STEP mrr-wdm8 {"level":4,"sub":1,"id":"3W","lab":true,"mission":3}
+PASS mrr-wdm8: L5.2 actual engine gate and fresh test
+STEP mrr-wdm8 {"level":5,"sub":0,"id":"3W","lab":true,"mission":4}
+PASS mrr-wdm8: L6.1 actual engine gate and fresh test
+STEP mrr-wdm8 {"level":5,"sub":1,"id":"3W","lab":true,"mission":5}
+PASS mrr-wdm8: L6.2 actual engine gate and fresh test
+PASS mrr-wdm8: all six Levels completed
+PASS mrr-wdm8: current Verification and Circuit Export valid
+PASS mrr-wdm8: Foundry Readiness truthful
+PASS mrr-wdm8: resume after file reload
+PASS Reference Preview preserves design
+PASS fundamentals: Level 1 current gate
+PASS Reference Preview preserves design
+PASS fundamentals: Level 2 current gate
+PASS Reference Preview preserves design
+PASS fundamentals: Level 3 current gate
+PASS Reference Preview preserves design
+PASS fundamentals: Level 3 current gate
+PASS Reference Preview preserves design
+PASS fundamentals: Level 3 current gate
+PASS Reference Preview preserves design
+PASS fundamentals: Level 4 current gate
+PASS Reference Preview preserves design
+PASS fundamentals: Level 5 current gate
+PASS Reference Preview preserves design
+PASS fundamentals: Level 6 current gate
+PASS Reference Preview preserves design
+PASS fundamentals: Level 6 current gate
+PASS fundamentals: guided supported flow complete
+PASS Reference Preview preserves design
+PASS lidar-ttd: Level 1 current gate
+PASS Reference Preview preserves design
+PASS lidar-ttd: Level 2 current gate
+PASS Reference Preview preserves design
+PASS lidar-ttd: Level 3 current gate
+PASS Reference Preview preserves design
+PASS lidar-ttd: Level 4 current gate
+PASS Reference Preview preserves design
+PASS lidar-ttd: Level 5 current gate
+PASS lidar-ttd: Level 6 current gate
+PASS lidar-ttd: guided supported flow complete
+PASS LiDAR summary labels unsupported full PIC GDS
+PASS actual two-finger Pinch / Pan changes visualization view
+PASS Touch view interaction preserves design
+PASS Touch manipulation does not scroll body
+PASS Fit resets device view
+PASS panel scroll keeps Canvas fixed
+PASS Mobile numeric Parameter control changes actual design
+PASS actual Lab Pinch / two-finger Pan changes rendered canvas
+PASS Lab Touch preserves Geometry Hash
+PASS Reference Preview preserves design
+PASS actual Track Fab Run stores seed / sample count
+PASS Track Fab fixed seed reproduces actual result
+PASS Fab displays interval and statistical interpretation
+PASS single HTML Dark toggle
+PASS Theme preserves design / Fab / seed
+PASS Theme survives file reload
+PASS no browser page errors: 
+PASS no external HTTP runtime requests
+Browser checks: 167 PASS
