@@ -1,0 +1,11 @@
+COMMAND npm run test:dr8
+HTML_SHA256 fa91d6fe9bd5e38a6cf18e881134bbc9f7a412e10c8cad9be472fcf7cc33282e
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.1.0 test:dr8
+> node test/t_dr8.js
+
+  BASELINE fa9f16a:src/kinds/xcvr.js blob ada9e90fe3b1853288195a6faddb9eb2a511f6c8
+  BASELINE fa9f16a:src/data/pspec.json blob 67ca38d6c431233de9553d7a3b2682b46e2bc6cb
+  IDENTITY test:dr8 MZM path + specs: 12/12 checks run against fa9f16a
+87/87 checks passed

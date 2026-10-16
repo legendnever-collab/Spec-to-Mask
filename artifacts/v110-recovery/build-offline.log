@@ -1,0 +1,7 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.1.0 build:offline
+> SMQ_OFFLINE=1 sh tools/build.sh dist/index-offline.html
+
+tables.js 901 KB; ssc platforms ['si1310', 'si1550', 'sin1310', 'sin1550']
+BUILD OK 2135936 bytes -> dist/index-offline.html

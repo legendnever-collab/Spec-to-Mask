@@ -7,10 +7,11 @@ window.LABUI = (() => {
   if (!box || typeof LAB === 'undefined') return null;
   const KEY = 'smq3-lab';
   const load = () => { try { const v = localStorage.getItem(KEY); return v ? JSON.parse(v) : {}; } catch (e) { return {}; } };
-  const save = () => SMQ_STORE.set(KEY, LS);   // a refused write shows in the header save chip (src/persist.js)
+  const save = () => scope ? (window.SMQ_STUDIO && window.SMQ_STUDIO.save()) : SMQ_STORE.set(KEY, LS);   // a refused write shows in the header save chip (src/persist.js)
   let LS = load(), isOpen = false, C = null, CHK = null, MS = null, sel = null, cam = null, drag = null, timer = null, diag = null;
   const SH = () => window.GAME_SHELL;
-  const S = () => { const p = SH().plat(); LS[p] = LS[p] || {}; return LS[p]; };
+  let scope = null;
+  const S = () => { if (scope) return scope.lab || (scope.lab = {}); const p = SH().plat(); LS[p] = LS[p] || {}; return LS[p]; };
   const ctx = () => ({ pf: SH().pf(), lev: (id) => window.GAME_LEV(id), cards: SH().cards(), des3: Object.keys(SH().design('3A+')).length ? SH().design('3A+') : null, desW: Object.keys(SH().design('3W') || {}).length ? SH().design('3W') : null, gds: S().gds || null });
   function arch3() {
     const cd = SH().cards()['3A+']; if (cd && cd.d) return { mod: cd.d.mod | 0, share: cd.d.share | 0, src: '내 3A+ 카드' };
@@ -61,7 +62,7 @@ window.LABUI = (() => {
       done: (m, v) => v.exp && m.verification }
   ];
   // map label: missions valid for the current design (last computed), plus the historical count when it is higher
-  const progress = () => { if (!SH() || !SH().plat()) return '—'; const s = LS[SH().plat()] || {}, n = MISS.filter((m) => (s.live || {})[m.id]).length, h = MISS.filter((m) => (s.done || {})[m.id]).length; return `미션 ${n}/${MISS.length}${h > n ? ` · 이전 ${h}` : ''}`; };
+  const progress = () => { if (!SH() || !SH().plat()) return '—'; const s = scope ? (scope.lab || {}) : LS[SH().plat()] || {}, n = MISS.filter((m) => (s.live || {})[m.id]).length, h = MISS.filter((m) => (s.done || {})[m.id]).length; return `미션 ${n}/${MISS.length}${h > n ? ` · 이전 ${h}` : ''}`; };
 
   /* ---------------- compute ---------------- */
   /* Three kinds of state (docs/design_lab.md §상태):
@@ -136,7 +137,7 @@ window.LABUI = (() => {
   function renderParams() {
     const s = S(), m = MISS[cur()], P = pfP(), d = des(), wdm = (d.mod | 0) === 2, skipW = ['share', 'P', 'stag', 'fp', 'rf', 'rfSide', 'pp'];
     const keys = m.keys.concat((s.mode || 'beginner') === 'advanced' ? m.adv : []).concat(wdm && m.id === 'floorplan' ? ['rp'] : []).filter((k) => !(wdm && skipW.includes(k)));
-    let h = keys.map((k) => { const p = P[k]; return `<div class="prm"><div class="prm-h"><label for="lp-${k}">${p.label}<i>${p.sym}</i></label><output id="lo-${k}">${fmtV(p, d[k])}</output></div><div class="prm-r"><input type="range" id="lp-${k}" data-lk="${k}" min="${p.min}" max="${p.max}" step="${p.step}" value="${d[k]}"></div></div>`; }).join('');
+    let h = keys.map((k) => { const p = P[k]; return `<div class="prm"><div class="prm-h"><label for="lp-${k}">${p.label}<i>${p.sym}</i></label><output id="lo-${k}">${fmtV(p, d[k])}</output></div><div class="prm-r"><button class="nudge" data-lnudge="${k}" data-d="-1" aria-label="${p.label} 감소">−</button><input type="range" id="lp-${k}" data-lk="${k}" min="${p.min}" max="${p.max}" step="${p.step}" value="${d[k]}"><button class="nudge" data-lnudge="${k}" data-d="1" aria-label="${p.label} 증가">+</button></div><input class="fine-value" type="number" data-lfine="${k}" aria-label="${p.label} 정확한 값" min="${p.min}" max="${p.max}" step="${p.step}" value="${d[k]}"></div>`; }).join('');
     if (wdm && m.id === 'schematic') h += `<p class="note">WDM8: 다파장 광원 입력 1개 → 버스 하나에 링 8개(3W 설계: <b>${C.wdm.s}</b> · ${C.wdm.r.grid} GHz · R ${C.wdm.d.R} µm · ${(C.wdm.d.rad | 0) ? '계단 반경' : '같은 반경'} · ${(C.wdm.d.asg | 0) ? '순환 배정' : '고정 배정'}) → 출력 1개. 링 설계는 3W 레벨에서 바꿉니다.</p>`;
     if (wdm && m.id === 'electrical') h += '<p class="note">WDM8은 플립칩 마이크로범프만: 링마다 S 범프(북쪽 2열)·G 범프(남쪽 2열), 히터 16선은 남쪽 범프 열로 평면 팬아웃(M2).</p>';
     if (m.id === 'schematic' && !wdm) { const a = arch3(); h += `<p class="note">아키텍처 출처: <b>${a.src}</b> (${a.mod ? 'MRR' : 'MZM'} ×8, ${SHL[a.share]}). 바꾸면 시스템 예측도 Lab 구성으로 다시 계산합니다.</p><div class="row-btns"><button class="btn" data-la="arch">3A+ 구성으로 되돌리기</button></div>`; }
@@ -308,7 +309,7 @@ window.LABUI = (() => {
 
   /* ---------------- canvas ---------------- */
   const CV = $('#lab-cv'), cv = () => CV;   // cached: TX/TY run per drawn point
-  function size() { const c = cv(), w = Math.max(280, c.parentElement.clientWidth || 600), h = Math.round(Math.min(640, Math.max(280, w * 0.62))); c.width = w * DPR; c.height = h * DPR; c.style.height = h + 'px'; return { w: c.width, h: c.height }; }
+  function size() { const c = cv(), w = Math.max(100, c.parentElement.clientWidth || 600), h = document.body.classList.contains('studio-ready') && c.parentElement.clientHeight ? Math.max(100,c.parentElement.clientHeight) : Math.round(Math.min(640, Math.max(280, w * 0.62))); c.width = w * DPR; c.height = h * DPR; c.style.height = h + 'px'; return { w: c.width, h: c.height }; }
   function world() { return (S().view || 'layout') === 'layout' ? { x0: 0, y0: 0, x1: C.W, y1: C.H } : schemBox(); }
   function fit() { const { w, h } = size(), b = world(), s = Math.min(w / (b.x1 - b.x0), h / (b.y1 - b.y0)) * 0.94; cam = { s, x: (b.x0 + b.x1) / 2, y: (b.y0 + b.y1) / 2 }; }
   const TX = (x) => (x - cam.x) * cam.s + CV.width / 2, TY = (y) => CV.height / 2 - (y - cam.y) * cam.s;
@@ -488,15 +489,17 @@ window.LABUI = (() => {
     renderHooks.forEach((f) => { try { f(); } catch (e) { /* learning layer */ } });
   }
   const sched = (refit) => { clearTimeout(timer); timer = setTimeout(() => renderAll(refit), 90); };
-  box.addEventListener('input', (e) => { const t = e.target.closest('[data-lk]'); if (!t) return; const p = pfP()[t.dataset.lk], v = +t.value; $('#lo-' + p.k).textContent = fmtV(p, v); setV(p.k, v); sched(p.k === 'W' || p.k === 'H' || p.k === 'mod' || p.k === 'share'); });
-  box.addEventListener('change', (e) => {
+  document.addEventListener('input', (e) => { if (!e.target.closest('#lab,#lab-insp,#lab-lib,#lab-out,.lab-head')) return; const t = e.target.closest('[data-lk]'); if (!t) return; const p = pfP()[t.dataset.lk], v = +t.value; $('#lo-' + p.k).textContent = fmtV(p, v); setV(p.k, v); sched(p.k === 'W' || p.k === 'H' || p.k === 'mod' || p.k === 'share'); });
+  document.addEventListener('change', (e) => { if (!e.target.closest('#lab,#lab-insp,#lab-lib,#lab-out,.lab-head')) return;
+    const fi = e.target.closest('[data-lfine]'); if (fi) { const p=pfP()[fi.dataset.lfine]; if(Number.isFinite(+fi.value)) {setV(p.k, Math.max(p.min,Math.min(p.max,+(p.min+Math.round((+fi.value-p.min)/p.step)*p.step).toFixed(6))));sched(p.k==='W'||p.k==='H'||p.k==='mod'||p.k==='share');} return; }
     const ly = e.target.closest && e.target.closest('[data-ly]'); if (ly) { const L2 = { opt: 1, ele: 1, drc: 1, ...(S().layers || {}) }; L2[ly.dataset.ly] = ly.checked ? 1 : 0; S().layers = L2; save(); draw(); return; }
     if (e.target.id !== 'lab-gds' || !e.target.files || !e.target.files[0]) return;
     const f = e.target.files[0], rd = new FileReader();
     rd.onload = () => { importGds(String(rd.result)); save(); renderAll(); };
     rd.readAsText(f);
   });
-  box.addEventListener('click', (e) => {
+  document.addEventListener('click', (e) => { if (!e.target.closest('#lab,#lab-insp,#lab-lib,#lab-out,.lab-head')) return;
+    const nu=e.target.closest('[data-lnudge]'); if(nu){const p=pfP()[nu.dataset.lnudge];setV(p.k,Math.max(p.min,Math.min(p.max,+(des()[p.k]+ +nu.dataset.d*p.step).toFixed(6))));renderAll(p.k==='W'||p.k==='H');return;}
     const lm = e.target.closest('[data-lm]'), ms = e.target.closest('[data-ms]'), nx = e.target.closest('#lab-next'), la = e.target.closest('[data-la]'), lv = e.target.closest('[data-lv]'), lt = e.target.closest('[data-lt]'), z = e.target.closest('[data-z]');
     if (lm) { S().mode = lm.dataset.lm; save(); renderAll(); return; }
     if (ms) { S().cur = +ms.dataset.ms; save(); renderAll(); return; }
@@ -532,9 +535,9 @@ window.LABUI = (() => {
   // two fingers pinch-zoom (touch); one finger / mouse drags; a tap selects
   const touches = new Map(); let pinch = null;
   const tdist = () => { const v = [...touches.values()]; return Math.hypot(v[0].x - v[1].x, v[0].y - v[1].y); };
-  c0.addEventListener('pointerdown', (e) => { touches.set(e.pointerId, { x: e.clientX, y: e.clientY }); if (touches.size === 2 && cam) { pinch = { d0: tdist(), s0: cam.s }; drag = null; return; } drag = { x: e.clientX, y: e.clientY, cx: cam && cam.x, cy: cam && cam.y, moved: false }; c0.setPointerCapture && c0.setPointerCapture(e.pointerId); });
+  c0.addEventListener('pointerdown', (e) => { touches.set(e.pointerId, { x: e.clientX, y: e.clientY }); if (touches.size === 2 && cam) { pinch = { d0: tdist(), s0: cam.s, x: cam.x, y: cam.y, mid: [...touches.values()].reduce((a,p)=>({x:a.x+p.x/2,y:a.y+p.y/2}),{x:0,y:0}) }; drag = null; return; } drag = { x: e.clientX, y: e.clientY, cx: cam && cam.x, cy: cam && cam.y, moved: false }; c0.setPointerCapture && c0.setPointerCapture(e.pointerId); });
   ['pointerup', 'pointercancel'].forEach((ev) => c0.addEventListener(ev, (e) => { touches.delete(e.pointerId); if (touches.size < 2) pinch = null; }));
-  c0.addEventListener('pointermove', (e) => { if (touches.has(e.pointerId)) touches.set(e.pointerId, { x: e.clientX, y: e.clientY }); if (pinch && touches.size === 2 && cam) { cam.s = pinch.s0 * Math.max(0.2, Math.min(8, tdist() / Math.max(1, pinch.d0))); draw(); return; } if (!drag || !cam) return; const dx = (e.clientX - drag.x) * DPR, dy = (e.clientY - drag.y) * DPR; if (Math.abs(dx) + Math.abs(dy) > 4) drag.moved = true; if (drag.moved) { cam.x = drag.cx - dx / cam.s; cam.y = drag.cy + dy / cam.s; draw(); } });
+  c0.addEventListener('pointermove', (e) => { if (touches.has(e.pointerId)) touches.set(e.pointerId, { x: e.clientX, y: e.clientY }); if (pinch && touches.size === 2 && cam) { cam.s = pinch.s0 * Math.max(0.2, Math.min(8, tdist() / Math.max(1, pinch.d0))); const mid = [...touches.values()].reduce((a,p)=>({x:a.x+p.x/2,y:a.y+p.y/2}),{x:0,y:0}); cam.x = pinch.x - (mid.x-pinch.mid.x)*DPR/cam.s; cam.y = pinch.y + (mid.y-pinch.mid.y)*DPR/cam.s; draw(); return; } if (!drag || !cam) return; const dx = (e.clientX - drag.x) * DPR, dy = (e.clientY - drag.y) * DPR; if (Math.abs(dx) + Math.abs(dy) > 4) drag.moved = true; if (drag.moved) { cam.x = drag.cx - dx / cam.s; cam.y = drag.cy + dy / cam.s; draw(); } });
   c0.addEventListener('pointerup', (e) => { if (!drag) return; const moved = drag.moved; drag = null; if (moved || !C) return; const r = c0.getBoundingClientRect(), I = hit((e.clientX - r.left) * DPR, (e.clientY - r.top) * DPR); sel = I ? { id: I.id, type: I.type } : null; renderLib(); renderSel(); draw(); });
   c0.addEventListener('wheel', (e) => { if (!(e.ctrlKey || e.metaKey) || !cam) return; e.preventDefault(); const r = c0.getBoundingClientRect(), px = (e.clientX - r.left) * DPR, py = (e.clientY - r.top) * DPR, wx = IX(px), wy = IY(py); cam.s *= e.deltaY < 0 ? 1.25 : 0.8; cam.x = wx - (px - c0.width / 2) / cam.s; cam.y = wy + (py - c0.height / 2) / cam.s; draw(); }, { passive: false });
   if (typeof ResizeObserver !== 'undefined') new ResizeObserver(() => { if (isOpen && C) { fit(); draw(); } }).observe(c0.parentElement);
@@ -545,6 +548,6 @@ window.LABUI = (() => {
   const focus = (x, y, w) => { if (!C || !CV) return; cam = { s: CV.width / w, x, y }; draw(); };
   const renderHooks = [];
   const mission = (k) => { S().cur = Math.max(0, Math.min(MISS.length - 1, k | 0)); save(); renderAll(); };
-  return { open, close, isOpen: () => isOpen, progress, focus, mission, onRender: (f) => renderHooks.push(f), state: () => ({ C, CHK, MS, d: isOpen ? des() : null, s: SH() && SH().plat() ? S() : null }), MISS };
+  return { open, close, setScope: (v) => { clearTimeout(timer); scope = v; C = null; CHK = null; MS = null; cam = null; sel = null; diag = null; }, redraw: () => { if (isOpen && C) { size(); draw(); } }, gdsPaste: (txt) => { importGds(txt); save(); renderAll(); }, isOpen: () => isOpen, progress, focus, mission, onRender: (f) => renderHooks.push(f), state: () => ({ C, CHK, MS, d: isOpen ? des() : null, s: SH() && SH().plat() ? S() : null }), MISS };
 })();
 if (window.LABUI && window.GAME_SHELL && window.GAME_SHELL.plat()) window.GAME_SHELL.refreshMap();

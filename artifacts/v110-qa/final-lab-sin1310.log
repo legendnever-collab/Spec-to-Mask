@@ -1,0 +1,41 @@
+COMMAND node test/e2e/lab.js sin1310
+HTML_SHA256 fa91d6fe9bd5e38a6cf18e881134bbc9f7a412e10c8cad9be472fcf7cc33282e
+lab e2e · sin1310
+  ok campaign map shows the Design Lab node (LAB1.6T Tx PIC 설계미션 0/6)
+  ok the lab replaces the level screen
+  ok Mission 1: the auto-generated schematic is complete (8 lanes, connectivity)
+  ok design library lists the parts and their sources
+  ok laser sharing 1:4 → 2 inputs and 6 splitter MMIs
+  ok the lab design is stored under smq3-lab
+  ok a 1.5 mm die is Infeasible with the reason and the required size
+  ok “필요 크기로 맞춤” → 8.2 × 2.7 mm fits (was 8.5)
+  ok routing table lists 30 nets, all routed
+  ok coach explains the on-chip routing loss when the link budget fails
+  ok wide routes with tapers on the long nets
+  ok electrical interface: every port on a pad, RF lines planar
+  ok verification is not shown as done before it is run
+  ok verification table: PASS 17 · WARNING 4 · FAIL 1 · NOT VERIFIED 4
+  ok layout vs 3A+ system prediction table
+  ok smq-circuit/1 export: schematic, layout primitives, verification
+  ok final summary marks the export and the abstraction level
+  ok before import: Geometry Rechecked pending, GDS 재검사 NOT VERIFIED
+  ok a verification file without gds_recheck is refused
+  ok a re-check of another design (hash mismatch) is not applied
+  ok a re-check with a FAIL (counted from its checks, not its summary) → GDS 재검사 FAIL
+  ok matching design hash, FAIL 0 → GDS 재검사 PASS, Geometry Rechecked ✓
+  ok changing the design makes the imported GDS stale
+  ok restoring the design restores the match (same design hash)
+  ok Learning Guide A–G for Mission 3 with a row per mission parameter
+  ok guide closes
+  ok MRR drive line: edge pads WARNING → flip-chip PASS
+  ok WDM8: one bus with eight 3W rings, one output; laser sharing hidden
+  ok library lists the WDM shared bus with its radii and FSR
+  ok WDM8 electrical: flip-chip bumps per ring (S north / G south), planar heaters, mission complete
+  ok WDM8 verification: FSR alias, resonance assignment / tuning, 3W system prediction
+  ok WDM8 export: architecture.wdm + mrr_wdm instance
+  ok back to DR8 (MZM): eight outputs again
+  ok back to the campaign
+  ok stars, cards and level designs untouched by the lab
+  ok map node shows lab progress (LAB1.6T Tx PIC 설계미션 4/6 · 이전 6)
+  ok no page errors ()
+lab checks passed

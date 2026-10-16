@@ -1,0 +1,10 @@
+COMMAND npm run test:mrr
+HTML_SHA256 fa91d6fe9bd5e38a6cf18e881134bbc9f7a412e10c8cad9be472fcf7cc33282e
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.1.0 test:mrr
+> node test/t_mrr.js
+
+  BASELINE f08011b:src/data/pspec.json blob 3f99d52bc8389ac6308dce977906ab9c82dc8bf6
+  IDENTITY test:mrr spec identity: 1/1 checks run against f08011b
+182/182 checks passed

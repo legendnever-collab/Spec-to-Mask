@@ -13,14 +13,20 @@ else
   BUILD_JS="const SMQ_BUILD = { version: '$VER', channel: 'dev', commit: null, date: null, offline: ${SMQ_OFFLINE:-0} === 1 };"
 fi
 {
-  if [ "${SMQ_OFFLINE:-0}" = 1 ]; then grep -v 'fonts.googleapis.com\|fonts.gstatic.com' src/head.html; else cat src/head.html; fi
+  python3 - <<'PYHEAD'
+from pathlib import Path
+head = Path('src/head.html').read_text(encoding='utf-8')
+style = '<style>\n' + Path('src/studio.css').read_text(encoding='utf-8') + '\n</style>\n'
+print(head.replace('</head>', style + '</head>', 1))
+PYHEAD
   echo '<script>'
   echo "$BUILD_JS"
   echo 'const KINDS = {};'
-  for f in src/util.js src/ui_util.js src/persist.js src/engine_mmi.js src/data/tables.js src/platforms.js src/kinds/wg.js src/kinds/dc.js src/kinds/mmi.js src/kinds/ssc.js src/kinds/cwdm.js src/kinds/to.js src/kinds/pn.js src/kinds/mzm.js src/kinds/mrr.js src/kinds/pd.js src/kinds/els.js src/kinds/xcvr.js src/kinds/wdm.js src/kinds/spiral.js src/kinds/ttd.js src/kinds/chirp.js src/kinds/fpsa.js src/kinds/lidar.js src/lab/engine.js src/data/pspec.js src/levels.js src/shell.js src/guide.js src/lab/ui.js src/learn.js; do
+  for f in src/util.js src/palette.js src/ui_util.js src/persist.js src/engine_mmi.js src/data/tables.js src/platforms.js src/kinds/wg.js src/kinds/dc.js src/kinds/mmi.js src/kinds/ssc.js src/kinds/cwdm.js src/kinds/to.js src/kinds/pn.js src/kinds/mzm.js src/kinds/mrr.js src/kinds/pd.js src/kinds/els.js src/kinds/xcvr.js src/kinds/wdm.js src/kinds/spiral.js src/kinds/ttd.js src/kinds/chirp.js src/kinds/fpsa.js src/kinds/lidar.js src/lab/engine.js src/data/pspec.js src/levels.js src/shell.js src/guide.js src/lab/ui.js src/learn.js src/studio.js; do
     sed "/^if (typeof module !== 'undefined')/d" "$f"; echo
   done
   echo '</script>'
+  echo '</body></html>'
 } > "$OUT"
 CHK=$(mktemp --suffix=.js)
 sed -n '/<script>/,/<\/script>/p' "$OUT" | sed '1d;$d' > "$CHK"

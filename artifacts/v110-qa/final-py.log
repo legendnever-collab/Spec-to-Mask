@@ -1,0 +1,55 @@
+COMMAND npm run test:py
+HTML_SHA256 fa91d6fe9bd5e38a6cf18e881134bbc9f7a412e10c8cad9be472fcf7cc33282e
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.1.0 test:py
+> cd tools && python ../test/py/test_smq2gds.py && python ../test/py/test_circuit.py
+
+ok smq_si1310_1-3.json mmi 
+ok smq_si1310_1-4.json mmi 
+ok smq_si1310_1-5.json mmi 
+ok smq_si1310_2-3R.json ring_allpass R=6.099 g=0.185
+ok smq_si1310_D-1.json spiral euler
+ok smq_si1310_D-1.json spiral arc
+ok smq_si1310_D-1_rect.json spiral_rect euler-u
+ok smq_si1310_D-1_rectarc.json spiral_rect arc
+ok smq_si1550_1-3.json mmi 
+ok smq_si1550_1-4.json mmi 
+ok smq_si1550_1-5.json mmi 
+ok smq_si1550_2-3R.json ring_allpass R=6.674 g=0.24
+ok smq_si1550_D-1.json spiral euler
+ok smq_si1550_D-1.json spiral arc
+ok smq_si1550_D-1_rect.json spiral_rect euler-u
+ok smq_si1550_D-1_rectarc.json spiral_rect arc
+ok smq_sin1310_1-3.json mmi 
+ok smq_sin1310_1-4.json mmi 
+ok smq_sin1310_1-5.json mmi 
+ok smq_sin1310_2-3R.json ring_allpass R=5.366 g=0.19
+ok smq_sin1310_D-1.json spiral euler
+ok smq_sin1310_D-1.json spiral arc
+ok smq_sin1310_D-1_rect.json spiral_rect euler-u
+ok smq_sin1310_D-1_rectarc.json spiral_rect arc
+ok smq_sin1550_1-3.json mmi 
+ok smq_sin1550_1-4.json mmi 
+ok smq_sin1550_1-5.json mmi 
+ok smq_sin1550_2-3R.json ring_allpass R=7.051 g=0.23
+ok smq_sin1550_D-1.json spiral euler
+ok smq_sin1550_D-1.json spiral arc
+ok smq_sin1550_D-1_rect.json spiral_rect euler-u
+ok smq_sin1550_D-1_rectarc.json spiral_rect arc
+  si1310_mrr_dr8_engine_layout: 19 checks, FAIL 0 · route area 1712.6 µm² (∫w ds 1712.6)
+  si1310_mrr_wdm8_engine_layout: 19 checks, FAIL 0 · route area 310.8 µm² (∫w ds 310.8)
+  si1310_mzm_dr8_engine_layout: 19 checks, FAIL 0 · route area 26181.6 µm² (∫w ds 26181.6)
+  si1550_mrr_dr8_engine_layout: 19 checks, FAIL 0 · route area 1467.7 µm² (∫w ds 1467.7)
+  si1550_mrr_wdm8_engine_layout: 19 checks, FAIL 0 · route area 400.5 µm² (∫w ds 400.5)
+  si1550_mzm_dr8_engine_layout: 19 checks, FAIL 0 · route area 27042.2 µm² (∫w ds 27042.2)
+  sin1310_mrr_dr8_engine_layout: 20 checks, FAIL 0 · route area 2752.5 µm² (∫w ds 2752.4)
+  sin1310_mrr_wdm8_engine_layout: 20 checks, FAIL 0 · route area 202.8 µm² (∫w ds 202.8)
+  sin1310_mzm_dr8_engine_layout: 20 checks, FAIL 0 · route area 73412.7 µm² (∫w ds 73412.8)
+  sin1550_mrr_dr8_engine_layout: 20 checks, FAIL 0 · route area 1465.7 µm² (∫w ds 1465.7)
+  sin1550_mrr_wdm8_engine_layout: 20 checks, FAIL 0 · route area 347.5 µm² (∫w ds 347.5)
+  sin1550_mzm_dr8_engine_layout: 20 checks, FAIL 0 · route area 75366.5 µm² (∫w ds 75366.6)
+  si1310_mzm_dr8: off-port end, missing route, moved instance, RF short, foreign verification → FAIL as expected
+  sin1550_mrr_dr8: off-port end, missing route, moved instance, RF short, foreign verification → FAIL as expected
+  si1310_mrr_wdm8: ring cell moved off the bus → connectivity FAIL as expected
+test_circuit: OK

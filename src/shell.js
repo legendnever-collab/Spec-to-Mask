@@ -30,8 +30,10 @@ if (!P || !P.by) {
 }
 if (!Array.isArray(DB)) DB = [];
 DES = DES || {};
-const PP = () => (P.by[state.plat] = P.by[state.plat] || emptyNS());
-const DESP = () => (DES[state.plat] = DES[state.plat] || {});
+let studioScope = null;
+const legacyPP = () => (P.by[state.plat] = P.by[state.plat] || emptyNS());
+const PP = () => { if (!studioScope) return legacyPP(); const n = studioScope.progress || (studioScope.progress = emptyNS()); n.stars = legacyPP().stars; n.cards = legacyPP().cards; return n; };
+const DESP = () => studioScope ? (studioScope.designs || (studioScope.designs = {})) : (DES[state.plat] = DES[state.plat] || {});
 
 const state = {
   plat: PLATFORMS[P.plat] ? P.plat : null,
@@ -41,7 +43,7 @@ const state = {
 };
 { const sid = store.get('smq3-id', '1-1'); if (LMAP[sid] && !LMAP[sid].locked) state.id = sid; }
 { const M = MODES[state.mode]; state.hintTier = clamp(store.get('smq-hint-v1', M.hint) | 0, 0, M.maxHint); }
-const persist = () => { P.plat = state.plat; store.set('smq3-progress', P); store.set('smq3-designs', DES); store.set('smq3-id', state.id); };
+const persist = () => { P.plat = state.plat; store.set('smq3-progress', P); store.set('smq3-designs', DES); store.set('smq3-id', state.id); if (window.SMQ_STUDIO) window.SMQ_STUDIO.save(); };
 const persistDB = () => { if (DB.length > 5000) DB = DB.slice(-5000); store.set('smq3-db', DB); };
 function applyPlatform() {
   const pf = PLATFORMS[state.plat]; PQ.setPlatform(pf.mat, pf.t, pf.rules);
@@ -71,6 +73,16 @@ window.GAME_SHELL = { plat: () => state.plat, pf: () => (state.plat ? PLATFORMS[
   curId: () => state.id, levels: () => PLAY.map((l) => ({ id: l.id, name: l.name, stage: l.stage, kind: l.kind })),
   go: (id) => { if (!LMAP[id] || state.fabRunning || state.aiRunning != null) return; if (window.LABUI && window.LABUI.isOpen()) window.LABUI.close(); if (state.id !== id) { state.id = id; state.lastLogged = ''; persist(); } setupLevel(); },
   review: () => (state.plat ? (PP().review = PP().review || {}) : {}), save: () => persist(), ui: () => UI, saveUI: () => store.set('smq3-ui', UI),
+  studioScope: () => studioScope,
+  legacyDesigns: () => JSON.parse(JSON.stringify(DES[state.plat] || {})),
+  setScope: (scope) => { clearTimeout(commitT); clearTimeout(idleT); studioScope = scope; ['fab','wafer','seedFix','credits','fromAI'].forEach(k => { state[k] = scope ? (scope[k] || (scope[k] = {})) : {}; }); state.land = {}; state.cur = null; state.lastLogged = ''; },
+  applyDesign: (d, full) => { if (state.fabRunning) return; if (full && kind().steps) { guideNS(state.id).mode = 'full'; } DESP()[state.id] = JSON.parse(JSON.stringify(d)); setupLevel(); persist(); },
+  setValue: (k,v) => setParam(k,v,true),
+  // A queued animation-frame evaluation must never lend its old pass to a newly edited design.
+  testNow: () => { if (!state.plat || state.fabRunning || state.aiRunning != null) return false; evaluate(); return true; },
+  currentGate: () => { if (!state.cur || state.cur.key !== keyOf(dv())) return false; const c = state.cur; return c.S ? !!c.S.done(c.l,c.res,stepMem(c.S)) : !c.pr && objectives()[0].pass; },
+  testIdentity: () => JSON.stringify([state.plat,state.mode,state.id,dv(),curStep() && curStep().id,dv().useCard ? PP().cards : null,MODEL_VERSION]),
+  redraw: () => { if(!state.cur || window.LABUI?.isOpen()) return; sizeCanvas(); computeChart(); drawWafer(state.wafer[state.id], (state.wafer[state.id] || []).length); },
   onLevel: (f) => levelHooks.push(f), progress: () => progressCount() };
 const levelHooks = [];
 window.GAME_CTX = () => {
@@ -192,7 +204,7 @@ function setParam(k, v, fromBtn) {
 {
   const list = $('#prm-list');
   list.addEventListener('input', (e) => { const el = e.target; if (el.type === 'range') setParam(el.dataset.k, +el.value, false); });
-  list.addEventListener('change', (e) => { const el = e.target; if (el.type === 'checkbox') { des()[el.dataset.k] = el.checked ? 1 : 0; state.fromAI[state.id] = false; requestEval(); scheduleCommit(); } });
+  list.addEventListener('change', (e) => { const el = e.target; if (el.dataset.fine) { if (Number.isFinite(+el.value)) setParam(el.dataset.fine,+el.value,true); return; } if (el.type === 'checkbox') { des()[el.dataset.k] = el.checked ? 1 : 0; state.fromAI[state.id] = false; requestEval(); scheduleCommit(); } });
   let holdT = null, holdI = null; const stop = () => { clearTimeout(holdT); clearInterval(holdI); holdT = holdI = null; };
   list.addEventListener('pointerdown', (e) => {
     const b = e.target.closest('.nudge'); if (!b) return; e.preventDefault();
@@ -558,12 +570,14 @@ function renderCards() {
 /* ---------- HUD, view, chart ---------- */
 function sizeCanvas() {
   const cv = $('#field'), w = $('#cwrap').clientWidth, K = kind(), S = curStep();
-  const h = Math.max(180, Math.min(400, Math.round(w * ((S && S.aspect) || K.aspect || 0.44))));
+  if (!w) return; // Hidden device stage while Lab is active: keep the last readable backing size.
+  const h = document.body.classList.contains('studio-ready') && $('#cwrap').clientHeight > 0 ? Math.max(100, $('#cwrap').clientHeight) : Math.max(180, Math.min(400, Math.round(w * ((S && S.aspect) || K.aspect || 0.44))));
   cv.width = Math.round(w * DPR); cv.height = Math.round(h * DPR); cv.style.height = h + 'px';
   if (state.cur) drawView();
 }
 function drawView() { const c = state.cur; if (c) $('#field').setAttribute('aria-label', `${c.l.id} ${c.l.name} 소자 화면 — 점수·핵심 수치는 아래 타일, 목표는 미션 카드에 텍스트로 있습니다`); if (!c || c.l.id !== state.id) return; ((c.S && c.S.draw) || kind().draw)($('#field'), c.l, c.res, { hintTier: state.hintTier, redraw: drawView }); }
 function renderHUD() {
+  if (window.SMQ_STUDIO) window.SMQ_STUDIO.refreshSoon();
   const c = state.cur, K = kind();
   if (c.S) {
     const n = stepsOf().length;

@@ -22,13 +22,16 @@ function boot(seed) {
   // 1) first run: Stage 0 → onboarding once; path A; finish → first step
   const A = boot(), { w, $, $$ } = A; await sleep(400);
   $('#pick-lam .choice[data-lam="1.31"]').click(); $('#pick-mat .choice[data-mat="si"]').click(); $('#btn-start').click(); await sleep(600);
-  okm(!$('#onb-dlg').hidden && /무엇을 하는 프로그램/.test($('#onb-h').textContent), 'a new player sees the onboarding after Stage 0');
-  $('[data-opath="A"]').click(); await sleep(50);
-  for (let i = 0; i < 3; i++) { $('#onb-next').click(); await sleep(50); }
-  okm(/Design Valid/.test($('#onb-b').textContent) && /Foundry Readiness/.test($('#onb-b').textContent) && /백업/.test($('#onb-b').textContent), 'onboarding explains Learning Guide, Design Lab vs GDS levels, and backup');
-  $('#onb-next').click(); await sleep(400);
+  okm(!$('#studioWelcome').hidden && $$('#studioWelcome [data-welcome-track]').length === 5, 'compact onboarding offers five tracks from Level 1');
+  okm(/Design Valid/.test($('#studioWelcome').textContent) && /Foundry Readiness/.test($('#studioWelcome').textContent) && /Paste Restore/.test($('#studioWelcome').textContent), 'onboarding distinguishes validity / foundry and text restore');
+  $('#studioWelcomeSkip').click(); await sleep(100);
   const UI = () => JSON.parse(w.localStorage.getItem('smq3-ui') || '{}');
-  okm($('#onb-dlg').hidden && UI().onboarded === 1 && UI().path === 'A', 'finishing stores onboarded + path A');
+  okm($('#studioWelcome').hidden && UI().studioWelcomed === 1, 'skip preserves design and remembers compact onboarding');
+  // The legacy learning paths and their replay remain available under Advanced.
+  w.GAME_LEARN.openOnb(0); $('[data-opath="A"]').click();
+  for (let i = 0; i < 4; i++) { $('#onb-next').click(); await sleep(50); }
+  await sleep(400);
+  okm($('#onb-dlg').hidden && UI().path === 'A', 'legacy path A remains replayable');
   okm(/학습 경로 A/.test($('#pathbar').textContent) && $$('#pathbar .pb-st').length === 5 && /다음 권장: 1-1/.test($('#pathbar').textContent), `path bar: 5 steps, next recommended ${($('.pb-next') || {}).textContent}`);
   // 2) parameter → result feedback with the guide's physics and trade-off
   const r = $('#p-w'); r.value = '0.8'; r.dispatchEvent(new w.Event('input', { bubbles: true })); await sleep(300);

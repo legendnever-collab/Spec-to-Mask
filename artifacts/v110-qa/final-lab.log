@@ -1,0 +1,128 @@
+COMMAND npm run test:lab
+HTML_SHA256 fa91d6fe9bd5e38a6cf18e881134bbc9f7a412e10c8cad9be472fcf7cc33282e
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.1.0 test:lab
+> node test/t_lab.js && node test/e2e/lab.js si1310 && node test/e2e/lab.js sin1550 && node test/e2e/lab_state.js si1310 && node test/e2e/lab_state.js sin1550
+
+440/440 checks passed
+lab e2e · si1310
+  ok campaign map shows the Design Lab node (LAB1.6T Tx PIC 설계미션 0/6)
+  ok the lab replaces the level screen
+  ok Mission 1: the auto-generated schematic is complete (8 lanes, connectivity)
+  ok design library lists the parts and their sources
+  ok laser sharing 1:4 → 2 inputs and 6 splitter MMIs
+  ok the lab design is stored under smq3-lab
+  ok a 1.5 mm die is Infeasible with the reason and the required size
+  ok “필요 크기로 맞춤” → 5.8 × 2.7 mm fits (was 6)
+  ok routing table lists 30 nets, all routed
+  ok coach explains the on-chip routing loss when the link budget fails
+  ok wide routes with tapers on the long nets
+  ok electrical interface: every port on a pad, RF lines planar
+  ok verification is not shown as done before it is run
+  ok verification table: PASS 17 · WARNING 4 · FAIL 1 · NOT VERIFIED 4
+  ok layout vs 3A+ system prediction table
+  ok smq-circuit/1 export: schematic, layout primitives, verification
+  ok final summary marks the export and the abstraction level
+  ok before import: Geometry Rechecked pending, GDS 재검사 NOT VERIFIED
+  ok a verification file without gds_recheck is refused
+  ok a re-check of another design (hash mismatch) is not applied
+  ok a re-check with a FAIL (counted from its checks, not its summary) → GDS 재검사 FAIL
+  ok matching design hash, FAIL 0 → GDS 재검사 PASS, Geometry Rechecked ✓
+  ok changing the design makes the imported GDS stale
+  ok restoring the design restores the match (same design hash)
+  ok Learning Guide A–G for Mission 3 with a row per mission parameter
+  ok guide closes
+  ok MRR drive line: edge pads WARNING → flip-chip PASS
+  ok WDM8: one bus with eight 3W rings, one output; laser sharing hidden
+  ok library lists the WDM shared bus with its radii and FSR
+  ok WDM8 electrical: flip-chip bumps per ring (S north / G south), planar heaters, mission complete
+  ok WDM8 verification: FSR alias, resonance assignment / tuning, 3W system prediction
+  ok WDM8 export: architecture.wdm + mrr_wdm instance
+  ok back to DR8 (MZM): eight outputs again
+  ok back to the campaign
+  ok stars, cards and level designs untouched by the lab
+  ok map node shows lab progress (LAB1.6T Tx PIC 설계미션 4/6 · 이전 6)
+  ok no page errors ()
+lab checks passed
+lab e2e · sin1550
+  ok campaign map shows the Design Lab node (LAB1.6T Tx PIC 설계미션 0/6)
+  ok the lab replaces the level screen
+  ok Mission 1: the auto-generated schematic is complete (8 lanes, connectivity)
+  ok design library lists the parts and their sources
+  ok laser sharing 1:4 → 2 inputs and 6 splitter MMIs
+  ok the lab design is stored under smq3-lab
+  ok a 1.5 mm die is Infeasible with the reason and the required size
+  ok “필요 크기로 맞춤” → 7.9 × 2.7 mm fits (was 8)
+  ok routing table lists 30 nets, all routed
+  ok coach explains the on-chip routing loss when the link budget fails
+  ok wide routes with tapers on the long nets
+  ok electrical interface: every port on a pad, RF lines planar
+  ok verification is not shown as done before it is run
+  ok verification table: PASS 17 · WARNING 4 · FAIL 1 · NOT VERIFIED 4
+  ok layout vs 3A+ system prediction table
+  ok smq-circuit/1 export: schematic, layout primitives, verification
+  ok final summary marks the export and the abstraction level
+  ok before import: Geometry Rechecked pending, GDS 재검사 NOT VERIFIED
+  ok a verification file without gds_recheck is refused
+  ok a re-check of another design (hash mismatch) is not applied
+  ok a re-check with a FAIL (counted from its checks, not its summary) → GDS 재검사 FAIL
+  ok matching design hash, FAIL 0 → GDS 재검사 PASS, Geometry Rechecked ✓
+  ok changing the design makes the imported GDS stale
+  ok restoring the design restores the match (same design hash)
+  ok Learning Guide A–G for Mission 3 with a row per mission parameter
+  ok guide closes
+  ok MRR drive line: edge pads WARNING → flip-chip PASS
+  ok WDM8: one bus with eight 3W rings, one output; laser sharing hidden
+  ok library lists the WDM shared bus with its radii and FSR
+  ok WDM8 electrical: flip-chip bumps per ring (S north / G south), planar heaters, mission complete
+  ok WDM8 verification: FSR alias, resonance assignment / tuning, 3W system prediction
+  ok WDM8 export: architecture.wdm + mrr_wdm instance
+  ok back to DR8 (MZM): eight outputs again
+  ok back to the campaign
+  ok stars, cards and level designs untouched by the lab
+  ok map node shows lab progress (LAB1.6T Tx PIC 설계미션 4/6 · 이전 6)
+  ok no page errors ()
+lab checks passed
+lab state integrity · si1310
+    fails: none
+  ok all six missions PASS on the current design (live and historical)
+  ok export and verification run carry the design hash
+  ok Foundry Readiness is shown as NOT VERIFIED, never ✓
+  ok matching GDS re-check → Geometry Rechecked ✓
+  ok die 1.5 mm: Floorplan FAIL, Verification / Export invalid now, history kept
+  ok stepper and mission note show "이전 완료 · 현재 무효"
+  ok Design Valid off, imported GDS re-check stale
+  ok map label separates current and historical (미션 1/6 · 이전 6)
+  ok restoring the design (same hash) → all missions, export and re-check valid again
+  ok bend radius 1 µm → Routing FAIL (최소 굽힘 반경 R ≥ 2 µm (w0, 90° 방사 < 0.005 dB)), verification / export invalid
+  ok a different valid design: Routing PASS, but Verification needs a new run and Export is stale
+  ok re-run → Verification PASS; Export still stale (other design hash)
+  ok re-export → all six missions PASS again
+  ok stars, cards and level designs unchanged
+  ok no page errors ()
+  ok v1 lab state migrates: ran → null, exported → { hash: null }
+  ok migrated state: Verification / Export not valid now, historical completion kept
+  ok no page errors after migration
+lab state checks passed
+lab state integrity · sin1550
+    fails: none
+  ok all six missions PASS on the current design (live and historical)
+  ok export and verification run carry the design hash
+  ok Foundry Readiness is shown as NOT VERIFIED, never ✓
+  ok matching GDS re-check → Geometry Rechecked ✓
+  ok die 1.5 mm: Floorplan FAIL, Verification / Export invalid now, history kept
+  ok stepper and mission note show "이전 완료 · 현재 무효"
+  ok Design Valid off, imported GDS re-check stale
+  ok map label separates current and historical (미션 1/6 · 이전 6)
+  ok restoring the design (same hash) → all missions, export and re-check valid again
+  ok bend radius 10 µm → Routing FAIL (최소 굽힘 반경 R ≥ 20 µm (w0, 90° 방사 < 0.005 dB)), verification / export invalid
+  ok a different valid design: Routing PASS, but Verification needs a new run and Export is stale
+  ok re-run → Verification PASS; Export still stale (other design hash)
+  ok re-export → all six missions PASS again
+  ok stars, cards and level designs unchanged
+  ok no page errors ()
+  ok v1 lab state migrates: ran → null, exported → { hash: null }
+  ok migrated state: Verification / Export not valid now, historical completion kept
+  ok no page errors after migration
+lab state checks passed

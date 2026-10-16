@@ -1,0 +1,10 @@
+COMMAND npm run test:wdm
+HTML_SHA256 fa91d6fe9bd5e38a6cf18e881134bbc9f7a412e10c8cad9be472fcf7cc33282e
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.1.0 test:wdm
+> node test/t_wdm.js
+
+  BASELINE ad7188f:src/data/pspec.json blob 6f1468dd3793f17ca3c932e1eb1464aa1050cbcd
+  IDENTITY test:wdm spec identity: 4/4 checks run against ad7188f
+81/81 checks passed

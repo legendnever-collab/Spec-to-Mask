@@ -1,0 +1,840 @@
+{
+  "html": "/workspace/scratch/4f7e8220ee6d/Spec-to-Mask/dist/spec-to-mask-v1.1.0.html",
+  "sha256": "fa91d6fe9bd5e38a6cf18e881134bbc9f7a412e10c8cad9be472fcf7cc33282e",
+  "checks": [
+    {
+      "ok": true,
+      "message": "HTML5 / UTF-8 / Korean language"
+    },
+    {
+      "ok": true,
+      "message": "1440x900: first-screen Canvas (606px)"
+    },
+    {
+      "ok": true,
+      "message": "1440x900: no body overflow"
+    },
+    {
+      "ok": true,
+      "message": "1440x900: 44px context actions"
+    },
+    {
+      "ok": true,
+      "message": "1440x900: Canvas / Inspector separated"
+    },
+    {
+      "ok": true,
+      "message": "1280x800: first-screen Canvas (506px)"
+    },
+    {
+      "ok": true,
+      "message": "1280x800: no body overflow"
+    },
+    {
+      "ok": true,
+      "message": "1280x800: 44px context actions"
+    },
+    {
+      "ok": true,
+      "message": "1280x800: Canvas / Inspector separated"
+    },
+    {
+      "ok": true,
+      "message": "1024x640: first-screen Canvas (346px)"
+    },
+    {
+      "ok": true,
+      "message": "1024x640: no body overflow"
+    },
+    {
+      "ok": true,
+      "message": "1024x640: 44px context actions"
+    },
+    {
+      "ok": true,
+      "message": "1024x640: Canvas / Inspector separated"
+    },
+    {
+      "ok": true,
+      "message": "390x844: first-screen Canvas (650px)"
+    },
+    {
+      "ok": true,
+      "message": "390x844: no body overflow"
+    },
+    {
+      "ok": true,
+      "message": "390x844: 44px context actions"
+    },
+    {
+      "ok": true,
+      "message": "360x640: first-screen Canvas (446px)"
+    },
+    {
+      "ok": true,
+      "message": "360x640: no body overflow"
+    },
+    {
+      "ok": true,
+      "message": "360x640: 44px context actions"
+    },
+    {
+      "ok": true,
+      "message": "320x568: first-screen Canvas (374px)"
+    },
+    {
+      "ok": true,
+      "message": "320x568: no body overflow"
+    },
+    {
+      "ok": true,
+      "message": "320x568: 44px context actions"
+    },
+    {
+      "ok": true,
+      "message": "844x390: first-screen Canvas (218px)"
+    },
+    {
+      "ok": true,
+      "message": "844x390: no body overflow"
+    },
+    {
+      "ok": true,
+      "message": "844x390: 44px context actions"
+    },
+    {
+      "ok": true,
+      "message": "667x375: first-screen Canvas (203px)"
+    },
+    {
+      "ok": true,
+      "message": "667x375: no body overflow"
+    },
+    {
+      "ok": true,
+      "message": "667x375: 44px context actions"
+    },
+    {
+      "ok": true,
+      "message": "mzm-dr8: independent workspace selected"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "mzm-dr8: edit makes Test stale"
+    },
+    {
+      "ok": true,
+      "message": "mzm-dr8: Reference Apply reproducible"
+    },
+    {
+      "ok": true,
+      "message": "mzm-dr8: L1.1 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "mzm-dr8: L1.2 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "mzm-dr8: L2.1 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "mzm-dr8: L2.2 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "mzm-dr8: L3.1 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "mzm-dr8: L3.2 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "mzm-dr8: L4.1 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "mzm-dr8: L5.1 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "mzm-dr8: L6.1 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "mzm-dr8: L6.2 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "mzm-dr8: all six Levels completed"
+    },
+    {
+      "ok": true,
+      "message": "mzm-dr8: current Verification and Circuit Export valid"
+    },
+    {
+      "ok": true,
+      "message": "mzm-dr8: Foundry Readiness truthful"
+    },
+    {
+      "ok": true,
+      "message": "mzm-dr8: resume after file reload"
+    },
+    {
+      "ok": true,
+      "message": "mrr-dr8: independent workspace selected"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "mrr-dr8: edit makes Test stale"
+    },
+    {
+      "ok": true,
+      "message": "mrr-dr8: Reference Apply reproducible"
+    },
+    {
+      "ok": true,
+      "message": "mrr-dr8: L1.1 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "mrr-dr8: L2.1 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "mrr-dr8: L2.2 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "mrr-dr8: L3.1 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "mrr-dr8: L3.2 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "mrr-dr8: L4.1 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "mrr-dr8: L5.1 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "mrr-dr8: L6.1 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "mrr-dr8: L6.2 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "mrr-dr8: all six Levels completed"
+    },
+    {
+      "ok": true,
+      "message": "mrr-dr8: current Verification and Circuit Export valid"
+    },
+    {
+      "ok": true,
+      "message": "mrr-dr8: Foundry Readiness truthful"
+    },
+    {
+      "ok": true,
+      "message": "mrr-dr8: resume after file reload"
+    },
+    {
+      "ok": true,
+      "message": "mrr-wdm8: independent workspace selected"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "mrr-wdm8: edit makes Test stale"
+    },
+    {
+      "ok": true,
+      "message": "mrr-wdm8: Reference Apply reproducible"
+    },
+    {
+      "ok": true,
+      "message": "mrr-wdm8: L1.1 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "mrr-wdm8: L2.1 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "mrr-wdm8: L3.1 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "mrr-wdm8: L4.1 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "mrr-wdm8: L4.2 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "mrr-wdm8: L5.1 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "mrr-wdm8: L5.2 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "mrr-wdm8: L6.1 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "mrr-wdm8: L6.2 actual engine gate and fresh test"
+    },
+    {
+      "ok": true,
+      "message": "mrr-wdm8: all six Levels completed"
+    },
+    {
+      "ok": true,
+      "message": "mrr-wdm8: current Verification and Circuit Export valid"
+    },
+    {
+      "ok": true,
+      "message": "mrr-wdm8: Foundry Readiness truthful"
+    },
+    {
+      "ok": true,
+      "message": "mrr-wdm8: resume after file reload"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "fundamentals: Level 1 current gate"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "fundamentals: Level 2 current gate"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "fundamentals: Level 3 current gate"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "fundamentals: Level 3 current gate"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "fundamentals: Level 3 current gate"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "fundamentals: Level 4 current gate"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "fundamentals: Level 5 current gate"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "fundamentals: Level 6 current gate"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "fundamentals: Level 6 current gate"
+    },
+    {
+      "ok": true,
+      "message": "fundamentals: guided supported flow complete"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "lidar-ttd: Level 1 current gate"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "lidar-ttd: Level 2 current gate"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "lidar-ttd: Level 3 current gate"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "lidar-ttd: Level 4 current gate"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "lidar-ttd: Level 5 current gate"
+    },
+    {
+      "ok": true,
+      "message": "lidar-ttd: Level 6 current gate"
+    },
+    {
+      "ok": true,
+      "message": "lidar-ttd: guided supported flow complete"
+    },
+    {
+      "ok": true,
+      "message": "LiDAR summary labels unsupported full PIC GDS"
+    },
+    {
+      "ok": true,
+      "message": "actual two-finger Pinch / Pan changes visualization view"
+    },
+    {
+      "ok": true,
+      "message": "Touch view interaction preserves design"
+    },
+    {
+      "ok": true,
+      "message": "Touch manipulation does not scroll body"
+    },
+    {
+      "ok": true,
+      "message": "Fit resets device view"
+    },
+    {
+      "ok": true,
+      "message": "panel scroll keeps Canvas fixed"
+    },
+    {
+      "ok": true,
+      "message": "Mobile numeric Parameter control changes actual design"
+    },
+    {
+      "ok": true,
+      "message": "actual Lab Pinch / two-finger Pan changes rendered canvas"
+    },
+    {
+      "ok": true,
+      "message": "Lab Touch preserves Geometry Hash"
+    },
+    {
+      "ok": true,
+      "message": "Reference Preview preserves design"
+    },
+    {
+      "ok": true,
+      "message": "actual Track Fab Run stores seed / sample count"
+    },
+    {
+      "ok": true,
+      "message": "Track Fab fixed seed reproduces actual result"
+    },
+    {
+      "ok": true,
+      "message": "Fab displays interval and statistical interpretation"
+    },
+    {
+      "ok": true,
+      "message": "single HTML Dark toggle"
+    },
+    {
+      "ok": true,
+      "message": "Theme preserves design / Fab / seed"
+    },
+    {
+      "ok": true,
+      "message": "Theme survives file reload"
+    },
+    {
+      "ok": true,
+      "message": "no browser page errors: "
+    },
+    {
+      "ok": true,
+      "message": "no external HTTP runtime requests"
+    }
+  ],
+  "errors": [],
+  "requests": [],
+  "measurements": [
+    {
+      "width": 1440,
+      "height": 900,
+      "canvas": {
+        "x": 11,
+        "y": 223,
+        "width": 1082,
+        "height": 606,
+        "top": 223,
+        "right": 1093,
+        "bottom": 829,
+        "left": 11
+      },
+      "goal": {
+        "x": 0,
+        "y": 113,
+        "width": 1440,
+        "height": 62,
+        "top": 113,
+        "right": 1440,
+        "bottom": 175,
+        "left": 0
+      },
+      "panel": {
+        "x": 1104,
+        "y": 175,
+        "width": 336,
+        "height": 666,
+        "top": 175,
+        "right": 1440,
+        "bottom": 841,
+        "left": 1104
+      },
+      "overflow": false,
+      "bodyScroll": false,
+      "touch": [
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "canvas": {
+        "x": 11,
+        "y": 223,
+        "width": 922,
+        "height": 506,
+        "top": 223,
+        "right": 933,
+        "bottom": 729,
+        "left": 11
+      },
+      "goal": {
+        "x": 0,
+        "y": 113,
+        "width": 1280,
+        "height": 62,
+        "top": 113,
+        "right": 1280,
+        "bottom": 175,
+        "left": 0
+      },
+      "panel": {
+        "x": 944,
+        "y": 175,
+        "width": 336,
+        "height": 566,
+        "top": 175,
+        "right": 1280,
+        "bottom": 741,
+        "left": 944
+      },
+      "overflow": false,
+      "bodyScroll": false,
+      "touch": [
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1024,
+      "height": 640,
+      "canvas": {
+        "x": 11,
+        "y": 223,
+        "width": 666,
+        "height": 346,
+        "top": 223,
+        "right": 677,
+        "bottom": 569,
+        "left": 11
+      },
+      "goal": {
+        "x": 0,
+        "y": 113,
+        "width": 1024,
+        "height": 62,
+        "top": 113,
+        "right": 1024,
+        "bottom": 175,
+        "left": 0
+      },
+      "panel": {
+        "x": 688,
+        "y": 175,
+        "width": 336,
+        "height": 406,
+        "top": 175,
+        "right": 1024,
+        "bottom": 581,
+        "left": 688
+      },
+      "overflow": false,
+      "bodyScroll": false,
+      "touch": [
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "canvas": {
+        "x": 0,
+        "y": 137,
+        "width": 390,
+        "height": 650,
+        "top": 137,
+        "right": 390,
+        "bottom": 787,
+        "left": 0
+      },
+      "goal": {
+        "x": 0,
+        "y": 48,
+        "width": 390,
+        "height": 58,
+        "top": 48,
+        "right": 390,
+        "bottom": 106,
+        "left": 0
+      },
+      "overflow": false,
+      "bodyScroll": false,
+      "touch": [
+        45,
+        45,
+        45,
+        45
+      ]
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "canvas": {
+        "x": 0,
+        "y": 137,
+        "width": 360,
+        "height": 446,
+        "top": 137,
+        "right": 360,
+        "bottom": 583,
+        "left": 0
+      },
+      "goal": {
+        "x": 0,
+        "y": 48,
+        "width": 360,
+        "height": 58,
+        "top": 48,
+        "right": 360,
+        "bottom": 106,
+        "left": 0
+      },
+      "overflow": false,
+      "bodyScroll": false,
+      "touch": [
+        45,
+        45,
+        45,
+        45
+      ]
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "canvas": {
+        "x": 0,
+        "y": 137,
+        "width": 320,
+        "height": 374,
+        "top": 137,
+        "right": 320,
+        "bottom": 511,
+        "left": 0
+      },
+      "goal": {
+        "x": 0,
+        "y": 48,
+        "width": 320,
+        "height": 58,
+        "top": 48,
+        "right": 320,
+        "bottom": 106,
+        "left": 0
+      },
+      "overflow": false,
+      "bodyScroll": false,
+      "touch": [
+        45,
+        45,
+        45,
+        45
+      ]
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "canvas": {
+        "x": 0,
+        "y": 121,
+        "width": 844,
+        "height": 218,
+        "top": 121,
+        "right": 844,
+        "bottom": 339,
+        "left": 0
+      },
+      "goal": {
+        "x": 0,
+        "y": 44,
+        "width": 844,
+        "height": 50,
+        "top": 44,
+        "right": 844,
+        "bottom": 94,
+        "left": 0
+      },
+      "overflow": false,
+      "bodyScroll": false,
+      "touch": [
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 667,
+      "height": 375,
+      "canvas": {
+        "x": 0,
+        "y": 121,
+        "width": 667,
+        "height": 203,
+        "top": 121,
+        "right": 667,
+        "bottom": 324,
+        "left": 0
+      },
+      "goal": {
+        "x": 0,
+        "y": 44,
+        "width": 667,
+        "height": 50,
+        "top": 44,
+        "right": 667,
+        "bottom": 94,
+        "left": 0
+      },
+      "overflow": false,
+      "bodyScroll": false,
+      "touch": [
+        44,
+        44,
+        44,
+        44
+      ]
+    }
+  ]
+}

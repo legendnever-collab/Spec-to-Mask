@@ -1,0 +1,15 @@
+{
+  "version": "1.1.0",
+  "html_sha256": "fa91d6fe9bd5e38a6cf18e881134bbc9f7a412e10c8cad9be472fcf7cc33282e",
+  "regression_suites": 33,
+  "regression_failed": 0,
+  "additional_export": "PASS",
+  "browser_assertions": 136,
+  "browser_errors": 0,
+  "external_requests": 0,
+  "engine_assertions": 707,
+  "lab_assertions": 440,
+  "studio_state_assertions": 21,
+  "all_tracks_supported_flow": "PASS",
+  "main_merge": "NOT AUTHORIZED / NOT PERFORMED"
+}

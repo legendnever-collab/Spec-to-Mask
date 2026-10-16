@@ -1,0 +1,35 @@
+COMMAND npm run test:learn
+HTML_SHA256 fa91d6fe9bd5e38a6cf18e881134bbc9f7a412e10c8cad9be472fcf7cc33282e
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.1.0 test:learn
+> node test/e2e/learn.js
+
+learning layer e2e
+  ok compact onboarding offers five tracks from Level 1
+  ok onboarding distinguishes validity / foundry and text restore
+  ok skip preserves design and remembers compact onboarding
+  ok legacy path A remains replayable
+  ok path bar: 5 steps, next recommended 다음 권장: 1-1 도파로와 모드 →
+  ok delta box: changed knob, moved mission metrics (before → after), physical reason, trade-off
+  ok path cleared → free exploration
+  ok path B → next recommended opens 2-3 and marks it current
+  ok changing the path deletes no progress
+  ok Engineering Review on 2-3 (MZM vs MRR, 2 questions)
+  ok a wrong answer gets the engineering explanation and the right answer
+  ok answers are kept as a learning record
+  ok reviews never change stars
+  ok comparison rows carry model-confidence badges (shape + text)
+  ok 3A+ panel: MRR thermal sensitivity (nominal / conservative / experimental ref.)
+  ok badge → Learning Guide, model limits section
+  ok 1.6T rate definition on 3A+ (line vs data rate, FEC, standard status)
+  ok onboarding is not shown again on level changes
+  ok replay from the path bar
+  ok an existing player is not interrupted by the onboarding
+  ok a FAIL row offers “위치 보기”
+  ok diagnosis in the inspector: cause, the knob, a jump to the mission
+  ok the instances named by the check are highlighted (not a guessed point)
+  ok layer toggle stored as a view preference
+  ok Lab Mission 5 has its Engineering Review
+  ok no page errors ()
+learning checks passed
