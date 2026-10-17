@@ -43,3 +43,7 @@
 - User should review desktop60/40, mobile physical→KPI→control priority, existing Lab bend path vs width fallback, and nonblocking Discover→Engineer behavior.
 
 See [acceptance contracts](../../docs/V2_ACCEPTANCE_TESTS.md) for future gates and [checkpoint log](../../docs/V2_CHECKPOINT_LOG.md) for exact commit/CI handoff.
+
+## Publication provenance
+
+Published implementation: `b77ca3c21f7c532cbd1901bdb7dc531f004615cd`, complete tree `9a99fe110650398811d2c87676f663d4a7e5afa3` matches local tested tree exactly. Receipt-only documentation changes preserve HTML/screenshots/checksums. Initial implementation-head CI is in progress at receipt; use the final PR body/report for the observed latest-head outcome. This document does not claim an unobserved CI success.

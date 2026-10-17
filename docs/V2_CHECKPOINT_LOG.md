@@ -97,3 +97,14 @@ P1 proposed scope only: reviewed fixed-platform Waveguide lesson, existing loss 
 Copyable future instruction (use only after user P1 approval): “Read V2_MASTER_PLAN, all P0 artifacts and V2_CHECKPOINT_LOG; confirm remote HEAD and P0 approval; implement P1 only using the approved Waveguide model path; preserve main/PR#23 and all saves; do not merge main or start P2.”
 
 Implementation commit, artifact SHA256 and latest CI receipt are appended after the review payload is committed. This avoids pretending a commit can contain its own final SHA.
+
+### P0 publication receipt
+
+- Published implementation commit: **`b77ca3c21f7c532cbd1901bdb7dc531f004615cd`**.
+- Complete tree: `9a99fe110650398811d2c87676f663d4a7e5afa3`, exactly equal to the locally tested/committed tree (all44 files, including binary screenshots). GitHub connector upload used because terminal HTTPS writes had no credential; no force push or competing branch.
+- Local unpublished preparation commit `81f73d5d755bb5fe031f8ed232b0e3d3e39a0ef4` has the same tree and remains recoverable in local git history/reflog. Local branch metadata synchronized only after tree equality; file content was not discarded.
+- Prototype HTML SHA256: **`70d592522514a06e842e669b2aa613938763d17ed3abc4eab66ebf6ffb584dd2`**. `sha256sum -c prototypes/v2-p0/SHA256SUMS` passes all34 entries.
+- Local prototype164 browser assertions PASS. This is the exact payload tested; follow-up receipt changes only checkpoint/QA text.
+- Implementation-head CI started: [P0 browser39047325099](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39047325099), [production CI39047325119](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39047325119). **IN PROGRESS at receipt**, not reported as PASS here.
+- Latest receipt-head CI must be read from [branch runs](https://github.com/legendnever-collab/Spec-to-Mask/actions?query=branch%3Afeature%2Fv2-learning-experience); final PR body/report records the actually observed outcome. Later canceled superseded runs are not failures of physics.
+- Main and PR#23 remain unchanged; PR#24 stays Draft. No P1 authorization, no main merge, no scientific/user-learning acceptance inferred.
