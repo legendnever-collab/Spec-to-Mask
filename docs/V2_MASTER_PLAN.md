@@ -3,7 +3,7 @@
 > **Authoritative project brief** — 2026-10-18 (Asia/Seoul)  
 > Repository: https://github.com/legendnever-collab/Spec-to-Mask  
 > Development branch: `feature/v2-learning-experience`  
-> Current status: **P0 NOT STARTED** (this document records approved intent; no v2.0 implementation or user play validation is claimed).  
+> Current status: **P0 blueprint delivered — user review pending** ([architecture](V2_UX_ARCHITECTURE.md), [wireframes](V2_WIREFRAMES.md), [reuse map](V2_REUSE_MAP.md), [acceptance tests](V2_ACCEPTANCE_TESTS.md)). No P1+ production implementation or user play validation is claimed.
 > Release policy: each checkpoint requires an offline playable review artifact; **do not merge main without explicit user approval**.
 
 ## 0. The non-negotiable product mission
