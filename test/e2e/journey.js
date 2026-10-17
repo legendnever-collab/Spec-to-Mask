@@ -22,7 +22,13 @@ let n=0;const ok=(v,m)=>{assert(v,m);console.log('PASS',m);n++;};
  ok(j().isActive()&&j().step().id==='0-2','reload resumes current Step 2');ok(!C.current(ws(),'si1310','0-1'),'reload never trusts saved numeric PASS');
  const saved=store.makeBackup(true);ok(store.validate(saved).ok,'new additive curriculum backup validates');const bad=C.copy(saved);bad.data['smq3-studio'].journey.by.si1310.index=99;bad.checksum='fnv1a32:'+store.fnv(JSON.stringify(bad.data));ok(!store.validate(bad).ok,'malformed curriculum rejected despite valid checksum');
  const records=JSON.stringify(ws().designs);$('#journeyAdvanced').click();await wait(80);ok(!j().isActive()&&w.SMQ_STUDIO.active()==='fundamentals','Advanced content remains accessible');$('#journeyResume').click();await wait(80);ok(j().step().id==='0-2'&&JSON.stringify(ws().designs)===records,'Advanced return resumes exact curriculum design and step');
- for(const pf of ['si1550','sin1310','sin1550']){const x=C.createPlatform();saved.data['smq3-studio'].journey.by[pf]=x;ok(x.index===0&&x.tutorial.designId!==ws().designId&&x.mzm.designId!==x.tutorial.designId,pf+' has isolated tutorial and MZM workspaces');}
+ const originalId=ws().designId;
+ for(const pf of ['si1550','sin1310','sin1550','si1310']){
+  $('#plat-chip').click();$('[data-lam="'+(pf.endsWith('1310')?'1.31':'1.55')+'"]').click();$('[data-mat="'+(pf.startsWith('sin')?'sin':'si')+'"]').click();$('#btn-start').click();await wait(100);
+  ok(w.GAME_SHELL.plat()===pf&&j().isActive(),pf+' actual Platform switch resumes curriculum');
+  if(pf!=='si1310')ok(j().step().id==='0-1'&&ws().designId!==originalId&&j().calculate().bench.samples.length===120,pf+' independent workspace uses actual platform model');
+ }
+ ok(j().step().id==='0-2'&&ws().designId===originalId&&JSON.stringify(ws().designs)===records,'return to original Platform restores current step and exact design');
  ok(JSON.parse(w.localStorage.getItem('smq3-studio')).customField.keep===1,'unknown Legacy root fields preserved');
  ok(w.localStorage.getItem('smq3-lab')===JSON.stringify(seed['smq3-lab'])&&JSON.parse(w.localStorage.getItem('smq3-progress')).by.si1310.stars.std['2-3']===7,'Legacy Lab and stars preserved');
  ok(store.restore(old).ok,'actual beta.2 backup Restore succeeds');const restored=boot(storage(w));await wait(100);ok(restored.w.SMQ_STUDIO.root().by.si1310.fundamentals.designs['1-1'].w===.67&&!restored.w.SMQ_JOURNEY.isActive(),'old backup loads Legacy and grants no curriculum progress');restored.close();ok(store.undo().ok,'Restore Undo retains original state');

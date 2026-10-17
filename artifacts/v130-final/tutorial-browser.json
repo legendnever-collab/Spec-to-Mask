@@ -1,0 +1,658 @@
+{
+  "file": "/workspace/scratch/220e784a5cf1/Spec-to-Mask/dist/index.html",
+  "sha256": "580c0d4387e9bf573f21f56c77db0020f56f2d0898ac0ceb96a9a916147871ab",
+  "checks": [
+    {
+      "ok": true,
+      "message": "1440x900-light: one primary Start Learning action"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-light: 0-1 Canvas visible without horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-light: simultaneous Tune / live Inspect and Canvas first"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-light: missing actual Laser practice blocks Next"
+    },
+    {
+      "ok": true,
+      "message": "read-only Solution preserves Design / Progress / Evaluation"
+    },
+    {
+      "ok": true,
+      "message": "Explicit Apply is not hands-on practice and cannot auto-complete"
+    },
+    {
+      "ok": true,
+      "message": "Restore Original protects the initial complete Tutorial design"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-light: Laser P changes model output and current completion gate"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-light: PAM4 112 GBd computes actual 224 Gb/s raw dynamic Eye"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-light: 0-2 Canvas visible without horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-light: simultaneous Tune / live Inspect and Canvas first"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-light: Step 2 reload retains design, requires fresh verification"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-light: Verify current design PASS still requires Solution Preview"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-light: read-only preview enables final learned Next"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-light: actual player completes Tutorial"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-light: Chapter 1 entry unlocked but unimplemented missions remain Preview"
+    },
+    {
+      "ok": true,
+      "message": "Journey map offers completed revisits and explicitly preview-only Chapters 1–4"
+    },
+    {
+      "ok": true,
+      "message": "Advanced round trip keeps current Tutorial step and exact designs"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-light: theme preserved through reload and journey"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-dark: one primary Start Learning action"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-dark: 0-1 Canvas visible without horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-dark: simultaneous Tune / live Inspect and Canvas first"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-dark: missing actual Laser practice blocks Next"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-dark: Laser P changes model output and current completion gate"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-dark: PAM4 112 GBd computes actual 224 Gb/s raw dynamic Eye"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-dark: 0-2 Canvas visible without horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-dark: simultaneous Tune / live Inspect and Canvas first"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-dark: Step 2 reload retains design, requires fresh verification"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-dark: Verify current design PASS still requires Solution Preview"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-dark: read-only preview enables final learned Next"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-dark: actual player completes Tutorial"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-dark: Chapter 1 entry unlocked but unimplemented missions remain Preview"
+    },
+    {
+      "ok": true,
+      "message": "1440x900-dark: theme preserved through reload and journey"
+    },
+    {
+      "ok": true,
+      "message": "390x844-light: one primary Start Learning action"
+    },
+    {
+      "ok": true,
+      "message": "390x844-light: 0-1 Canvas visible without horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "390x844-light: simultaneous Tune / live Inspect and Canvas first"
+    },
+    {
+      "ok": true,
+      "message": "390x844-light: missing actual Laser practice blocks Next"
+    },
+    {
+      "ok": true,
+      "message": "390x844-light: Laser P changes model output and current completion gate"
+    },
+    {
+      "ok": true,
+      "message": "390x844-light: PAM4 112 GBd computes actual 224 Gb/s raw dynamic Eye"
+    },
+    {
+      "ok": true,
+      "message": "390x844-light: 0-2 Canvas visible without horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "390x844-light: simultaneous Tune / live Inspect and Canvas first"
+    },
+    {
+      "ok": true,
+      "message": "390x844-light: Step 2 reload retains design, requires fresh verification"
+    },
+    {
+      "ok": true,
+      "message": "390x844-light: Verify current design PASS still requires Solution Preview"
+    },
+    {
+      "ok": true,
+      "message": "390x844-light: read-only preview enables final learned Next"
+    },
+    {
+      "ok": true,
+      "message": "390x844-light: actual player completes Tutorial"
+    },
+    {
+      "ok": true,
+      "message": "390x844-light: Chapter 1 entry unlocked but unimplemented missions remain Preview"
+    },
+    {
+      "ok": true,
+      "message": "390x844-light: theme preserved through reload and journey"
+    },
+    {
+      "ok": true,
+      "message": "390x844-dark: one primary Start Learning action"
+    },
+    {
+      "ok": true,
+      "message": "390x844-dark: 0-1 Canvas visible without horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "390x844-dark: simultaneous Tune / live Inspect and Canvas first"
+    },
+    {
+      "ok": true,
+      "message": "390x844-dark: missing actual Laser practice blocks Next"
+    },
+    {
+      "ok": true,
+      "message": "390x844-dark: Laser P changes model output and current completion gate"
+    },
+    {
+      "ok": true,
+      "message": "390x844-dark: PAM4 112 GBd computes actual 224 Gb/s raw dynamic Eye"
+    },
+    {
+      "ok": true,
+      "message": "390x844-dark: 0-2 Canvas visible without horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "390x844-dark: simultaneous Tune / live Inspect and Canvas first"
+    },
+    {
+      "ok": true,
+      "message": "Tutorial touch Pinch/Pan changes view and preserves design"
+    },
+    {
+      "ok": true,
+      "message": "390x844-dark: Step 2 reload retains design, requires fresh verification"
+    },
+    {
+      "ok": true,
+      "message": "390x844-dark: Verify current design PASS still requires Solution Preview"
+    },
+    {
+      "ok": true,
+      "message": "390x844-dark: read-only preview enables final learned Next"
+    },
+    {
+      "ok": true,
+      "message": "390x844-dark: actual player completes Tutorial"
+    },
+    {
+      "ok": true,
+      "message": "390x844-dark: Chapter 1 entry unlocked but unimplemented missions remain Preview"
+    },
+    {
+      "ok": true,
+      "message": "390x844-dark: theme preserved through reload and journey"
+    },
+    {
+      "ok": true,
+      "message": "320x568-light: one primary Start Learning action"
+    },
+    {
+      "ok": true,
+      "message": "320x568-light: 0-1 Canvas visible without horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "320x568-light: simultaneous Tune / live Inspect and Canvas first"
+    },
+    {
+      "ok": true,
+      "message": "320x568-light: missing actual Laser practice blocks Next"
+    },
+    {
+      "ok": true,
+      "message": "320x568-light: Laser P changes model output and current completion gate"
+    },
+    {
+      "ok": true,
+      "message": "320x568-light: PAM4 112 GBd computes actual 224 Gb/s raw dynamic Eye"
+    },
+    {
+      "ok": true,
+      "message": "320x568-light: 0-2 Canvas visible without horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "320x568-light: simultaneous Tune / live Inspect and Canvas first"
+    },
+    {
+      "ok": true,
+      "message": "320x568-light: Step 2 reload retains design, requires fresh verification"
+    },
+    {
+      "ok": true,
+      "message": "320x568-light: Verify current design PASS still requires Solution Preview"
+    },
+    {
+      "ok": true,
+      "message": "320x568-light: read-only preview enables final learned Next"
+    },
+    {
+      "ok": true,
+      "message": "320x568-light: actual player completes Tutorial"
+    },
+    {
+      "ok": true,
+      "message": "320x568-light: Chapter 1 entry unlocked but unimplemented missions remain Preview"
+    },
+    {
+      "ok": true,
+      "message": "320x568-light: theme preserved through reload and journey"
+    },
+    {
+      "ok": true,
+      "message": "320x568-dark: one primary Start Learning action"
+    },
+    {
+      "ok": true,
+      "message": "320x568-dark: 0-1 Canvas visible without horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "320x568-dark: simultaneous Tune / live Inspect and Canvas first"
+    },
+    {
+      "ok": true,
+      "message": "320x568-dark: missing actual Laser practice blocks Next"
+    },
+    {
+      "ok": true,
+      "message": "320x568-dark: Laser P changes model output and current completion gate"
+    },
+    {
+      "ok": true,
+      "message": "320x568-dark: PAM4 112 GBd computes actual 224 Gb/s raw dynamic Eye"
+    },
+    {
+      "ok": true,
+      "message": "320x568-dark: 0-2 Canvas visible without horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "320x568-dark: simultaneous Tune / live Inspect and Canvas first"
+    },
+    {
+      "ok": true,
+      "message": "320x568-dark: Step 2 reload retains design, requires fresh verification"
+    },
+    {
+      "ok": true,
+      "message": "320x568-dark: Verify current design PASS still requires Solution Preview"
+    },
+    {
+      "ok": true,
+      "message": "320x568-dark: read-only preview enables final learned Next"
+    },
+    {
+      "ok": true,
+      "message": "same-task blank parameter / Next cannot reuse earlier PASS"
+    },
+    {
+      "ok": true,
+      "message": "320x568-dark: actual player completes Tutorial"
+    },
+    {
+      "ok": true,
+      "message": "320x568-dark: Chapter 1 entry unlocked but unimplemented missions remain Preview"
+    },
+    {
+      "ok": true,
+      "message": "320x568-dark: theme preserved through reload and journey"
+    },
+    {
+      "ok": true,
+      "message": "Uncaught Page Error 0"
+    },
+    {
+      "ok": true,
+      "message": "External Runtime HTTP Request 0"
+    }
+  ],
+  "errors": [],
+  "requests": [],
+  "layouts": [
+    {
+      "label": "1440x900-light",
+      "step": "0-1",
+      "canvas": {
+        "x": 11,
+        "y": 188,
+        "w": 1082,
+        "h": 372.359375
+      },
+      "tune": {
+        "x": 1104,
+        "y": 177,
+        "w": 336,
+        "h": 723
+      },
+      "inspect": {
+        "x": 0,
+        "y": 571.359375,
+        "w": 1104,
+        "h": 328.640625
+      },
+      "overflow": false
+    },
+    {
+      "label": "1440x900-light",
+      "step": "0-2",
+      "canvas": {
+        "x": 11,
+        "y": 188,
+        "w": 1082,
+        "h": 372.359375
+      },
+      "tune": {
+        "x": 1104,
+        "y": 177,
+        "w": 336,
+        "h": 723
+      },
+      "inspect": {
+        "x": 0,
+        "y": 571.359375,
+        "w": 1104,
+        "h": 328.640625
+      },
+      "overflow": false
+    },
+    {
+      "label": "1440x900-dark",
+      "step": "0-1",
+      "canvas": {
+        "x": 11,
+        "y": 188,
+        "w": 1082,
+        "h": 372.359375
+      },
+      "tune": {
+        "x": 1104,
+        "y": 177,
+        "w": 336,
+        "h": 723
+      },
+      "inspect": {
+        "x": 0,
+        "y": 571.359375,
+        "w": 1104,
+        "h": 328.640625
+      },
+      "overflow": false
+    },
+    {
+      "label": "1440x900-dark",
+      "step": "0-2",
+      "canvas": {
+        "x": 11,
+        "y": 188,
+        "w": 1082,
+        "h": 372.359375
+      },
+      "tune": {
+        "x": 1104,
+        "y": 177,
+        "w": 336,
+        "h": 723
+      },
+      "inspect": {
+        "x": 0,
+        "y": 571.359375,
+        "w": 1104,
+        "h": 328.640625
+      },
+      "overflow": false
+    },
+    {
+      "label": "390x844-light",
+      "step": "0-1",
+      "canvas": {
+        "x": 0,
+        "y": 142,
+        "w": 390,
+        "h": 356.15625
+      },
+      "tune": {
+        "x": 0,
+        "y": 580.15625,
+        "w": 390,
+        "h": 263.84375
+      },
+      "inspect": {
+        "x": 0,
+        "y": 498.15625,
+        "w": 390,
+        "h": 82
+      },
+      "overflow": false
+    },
+    {
+      "label": "390x844-light",
+      "step": "0-2",
+      "canvas": {
+        "x": 0,
+        "y": 142,
+        "w": 390,
+        "h": 356.15625
+      },
+      "tune": {
+        "x": 0,
+        "y": 580.15625,
+        "w": 390,
+        "h": 263.84375
+      },
+      "inspect": {
+        "x": 0,
+        "y": 498.15625,
+        "w": 390,
+        "h": 82
+      },
+      "overflow": false
+    },
+    {
+      "label": "390x844-dark",
+      "step": "0-1",
+      "canvas": {
+        "x": 0,
+        "y": 142,
+        "w": 390,
+        "h": 356.15625
+      },
+      "tune": {
+        "x": 0,
+        "y": 580.15625,
+        "w": 390,
+        "h": 263.84375
+      },
+      "inspect": {
+        "x": 0,
+        "y": 498.15625,
+        "w": 390,
+        "h": 82
+      },
+      "overflow": false
+    },
+    {
+      "label": "390x844-dark",
+      "step": "0-2",
+      "canvas": {
+        "x": 0,
+        "y": 142,
+        "w": 390,
+        "h": 356.15625
+      },
+      "tune": {
+        "x": 0,
+        "y": 580.15625,
+        "w": 390,
+        "h": 263.84375
+      },
+      "inspect": {
+        "x": 0,
+        "y": 498.15625,
+        "w": 390,
+        "h": 82
+      },
+      "overflow": false
+    },
+    {
+      "label": "320x568-light",
+      "step": "0-1",
+      "canvas": {
+        "x": 0,
+        "y": 142,
+        "w": 320,
+        "h": 197.609375
+      },
+      "tune": {
+        "x": 0,
+        "y": 421.609375,
+        "w": 320,
+        "h": 146.390625
+      },
+      "inspect": {
+        "x": 0,
+        "y": 339.609375,
+        "w": 320,
+        "h": 82
+      },
+      "overflow": false
+    },
+    {
+      "label": "320x568-light",
+      "step": "0-2",
+      "canvas": {
+        "x": 0,
+        "y": 142,
+        "w": 320,
+        "h": 197.609375
+      },
+      "tune": {
+        "x": 0,
+        "y": 421.609375,
+        "w": 320,
+        "h": 146.390625
+      },
+      "inspect": {
+        "x": 0,
+        "y": 339.609375,
+        "w": 320,
+        "h": 82
+      },
+      "overflow": false
+    },
+    {
+      "label": "320x568-dark",
+      "step": "0-1",
+      "canvas": {
+        "x": 0,
+        "y": 142,
+        "w": 320,
+        "h": 197.609375
+      },
+      "tune": {
+        "x": 0,
+        "y": 421.609375,
+        "w": 320,
+        "h": 146.390625
+      },
+      "inspect": {
+        "x": 0,
+        "y": 339.609375,
+        "w": 320,
+        "h": 82
+      },
+      "overflow": false
+    },
+    {
+      "label": "320x568-dark",
+      "step": "0-2",
+      "canvas": {
+        "x": 0,
+        "y": 142,
+        "w": 320,
+        "h": 197.609375
+      },
+      "tune": {
+        "x": 0,
+        "y": 421.609375,
+        "w": 320,
+        "h": 146.390625
+      },
+      "inspect": {
+        "x": 0,
+        "y": 339.609375,
+        "w": 320,
+        "h": 82
+      },
+      "overflow": false
+    }
+  ]
+}

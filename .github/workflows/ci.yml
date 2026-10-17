@@ -62,7 +62,7 @@ jobs:
           test "$(grep -c '^  IDENTITY test:' identity.log)" -eq 4
           grep -E '^  (BASELINE|IDENTITY) ' identity.log | sed 's/^  /::notice title=identity evidence::/'
       - name: Sequential curriculum state and migration
-        run: npm run test:journey
+        run: npm run test:journey && npm run test:tutorial
       - name: MZM bench analytical limits and legacy EO parity
         run: npm run test:mzm-bench
       - name: Missing-baseline regression (no history → fail, never a silent skip)
@@ -168,6 +168,7 @@ jobs:
         run: |
           RC="dist/spec-to-mask-v$(node -p "require('./package.json').version").html"
           if [ -f "$RC" ]; then node tools/check_rc.js; export SMQ_HTML="$RC"; else export SMQ_HTML=dist/index-offline.html; fi
+          SMQ_QA_OUT=artifacts/studio-ci-browser/tutorial npm run test:browser:tutorial
           npm run test:browser
           SMQ_QA_OUT=artifacts/studio-ci-browser/mzm npm run test:browser:mzm
         env:

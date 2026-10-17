@@ -8,7 +8,7 @@ Curriculum architecture and all 23 step contracts documented before application 
 
 Checkpoints B–F pending implementation and actual validation; baseline test counts are not alpha.1 PASS.
 
-## Checkpoints B–D (implementation checkpoint)
+## Recovered local report — unverified and superseded by scoped B/C
 
 Sequential controller and isolated Tutorial/MZM workspaces, contextual knowledge, current-design evidence, live PN/Bench adapter, Optical Budget assumptions, Solution/Original, revisions and Final Review implemented. Original model source unchanged. Studio state regression: 56 PASS on the new working build; not final release acceptance. Browser QA and migration adversarial checks remain pending. New PR #23 is Draft.
 
@@ -25,3 +25,18 @@ Changed: `src/journey/{schema,core,ui}.js`, additive Studio/persistence adapters
 Validation on current source build: `npm ci`, build, syntax (80 source/test/tool files + assembled script), 31 controller/migration checks, Studio 56, MZM model 111, upgrade 357/357, MRR 182/182, DR8 87/87, WDM 81/81, Design Lab unit/e2e/state across Si1310 and SiN1550 PASS. Physics, Bench equations, level IDs, thresholds and Lab engine have zero diff from baseline. Browser acceptance is running separately; it is not inferred from baseline CI. Initial browser run overlapped a build and observed an incomplete file during reload; rerun against the completed build is required.
 
 Remaining: Checkpoint C playable Tutorial; D MZM 1-1…1-8; E review/migration/QA; F offline release candidate. PR #23 stays Draft and main remains unmerged.
+
+
+## Checkpoint C — Playable Tutorial, 2026-10-17
+
+Checkpoint B was saved first as GitHub `63efbf00dde0463e784fb968f675069c2cf84e2b`; its exact-head CI 39032264453 succeeded. Native Git push had no credentials, so the connected GitHub write path saved an identical Git tree. The original local checkout and Git bundle remain intact. No force push, new branch, duplicate PR or main merge.
+
+Implemented only Tutorial 0-1…0-3 with original ELS and mzm-eye/1 models, mission-specific Tune, a readable optical-flow Canvas and actual dynamic Eye, live KPI strip, explicit observation/concept/Verify gates, read-only Solution, protected Original and snapshots, completion screen and a Preview-only Chapter 1 entry. Tutorial and MZM workspace identity and progress remain separate. No MZM Chapter 1 missions are active.
+
+Controller evidence requires current source-model signature, current design identity/revision and current session. Next checks the current valid inputs synchronously; blank fields, edits, restores, changed platforms and source dependencies cannot reuse saved numeric PASS. Optional common content does not alter the workspace. Actual ± edits are recognized. Delayed legacy star/card/DB awards are suppressed only for private Curriculum scopes. Old platform scope is detached before platform setup to prevent default-design contamination. Original physics and specification files have zero baseline diff.
+
+Final new-build validation: npm ci, build, syntax, Studio 56, Lab 440 + two-platform e2e/state, MZM 111, controller/migration/actual four-platform switch 36, playable Tutorial 26 PASS. Browser Tutorial 93, Studio 168, MZM 37 PASS at the current HTML digest. Tutorial completed on all requested viewports and themes; zero page errors, external HTTP and body overflow. Detailed report: QA_V130_BC.md. Exact fresh rebuild / dist / Preview byte parity and SHA256 map recorded.
+
+Changed files: `src/journey/tutorial.js`, journey controller/UI, minimal Studio and Shell guards, Tutorial CSS, build atomic publication, tests, workflow and Preview artifact. Source canonical beta artifacts remain preserved. Current source commit is the Checkpoint C commit containing this entry; exact remote SHA is recorded on PR #23 after write. New CI must be checked at that C HEAD.
+
+Known scope limits: Tutorial PASS is educational, not engineering link qualification; 112 GBd PAM4 is raw 224 Gb/s. Chapter 1–4 are Preview only. Final alpha.1 canonical HTML, source ZIP, review, full migration acceptance and release packaging remain D/E/F. This Work ends at C.

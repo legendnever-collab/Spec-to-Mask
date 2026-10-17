@@ -49,7 +49,7 @@ function evaluate(w,pf,step,r){return {
  session,at:Date.now(),source:step.id==='0-1'?'KINDS.els':'mzm-bench/2 / mzm-eye/1',
  calculation:{rawGbps:r.bench.eye.rawGbps,eyeGap:r.bench.eye.opening,laserOutput:r.laser.rx,laserMargin:r.laser.margin},external:'NOT VERIFIED'
 };}
-function current(w,pf,id){const e=w.evidence[id];return !!e?.ok&&e.currentDesignEvaluated===true&&e.session===session&&e.revision===w.revision&&e.designIdentity===w.designId&&e.fingerprint===fingerprint(w,pf);}
+function current(w,pf,id){const e=w.evidence[id];return !!w.introduced[id]&&practice(w,id)&&!!e?.ok&&e.currentDesignEvaluated===true&&e.session===session&&e.revision===w.revision&&e.designIdentity===w.designId&&e.fingerprint===fingerprint(w,pf);}
 function complete(p,pf,r){const x=steps[p.index],w=p.tutorial;if(!x||!current(w,pf,x.id)||!evaluate(w,pf,x,r).ok)return false;
  w.completed[x.id]={at:Date.now(),fingerprint:fingerprint(w,pf),revision:w.revision};
  if(x.id==='0-3')w.finished={at:Date.now(),fingerprint:fingerprint(w,pf)};

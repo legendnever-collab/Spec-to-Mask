@@ -348,6 +348,8 @@ $('#xp-body').addEventListener('click', (e) => { const b = e.target.closest('[da
 let commitT = null;
 function scheduleCommit() { clearTimeout(commitT); commitT = setTimeout(commit, 450); }
 function commit() {
+  // Curriculum owns its learning evidence; delayed Legacy awards must not mutate its progress or global DB.
+  if (studioScope?.privateHistory) { persist(); return; }
   const c = state.cur; if (!c) return;
   persist();
   if (c.S || c.pr || (c.res.drc && c.res.drc.length) || state.fromAI[state.id]) return;

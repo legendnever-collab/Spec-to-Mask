@@ -31,7 +31,9 @@
     "test:browser": "node test/browser/studio.js",
     "test:mzm-bench": "node test/t_mzm_bench.js",
     "test:browser:mzm": "node test/browser/mzm_bench.js",
-    "test:journey": "node test/e2e/journey.js"
+    "test:journey": "node test/e2e/journey.js",
+    "test:tutorial": "node test/e2e/tutorial.js",
+    "test:browser:tutorial": "node test/browser/tutorial.js"
   },
   "devDependencies": {
     "jsdom": "^24.1.3",
