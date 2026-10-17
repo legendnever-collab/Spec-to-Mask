@@ -130,7 +130,11 @@ function guide(replay){openSheet('inspect');if(LU.isOpen()){LU.mission(phase()?.
 $('#studioGuide').onclick=()=>guide(true);$('#studioReplay').onclick=()=>guide(false);
 $('#studioFree').onclick=()=>{if(ws){ws.mode='free';save();}if(!LU.isOpen())document.querySelector('[data-gm="full"]')?.click();openSheet('tune');tell('Free Exploration · 현재 Design은 유지됩니다. 현재 설계의 계산 결과로 완료 여부를 판정합니다.');};
 function renderReference(){const c=window.GAME_CTX();if(LU.isOpen()){
- const st=LU.state(),i=st.s.cur,m=LU.MISS[i],steps=[
+ const st=LU.state(),i=st?.s?.cur,m=Number.isInteger(i)&&i>=0&&i<LU.MISS.length?LU.MISS[i]:null;
+ // Lab entry/close and restored legacy state can briefly expose no active mission.
+ // Keep the reference pane truthful without mutating Lab state or verification/export.
+ if(!m){reference.innerHTML='<h2>Solution · Lab Mission</h2><p class="note">Mission 선택 또는 상태 복원을 기다리는 중입니다. 현재 설계와 검증 결과는 유지됩니다.</p>';return;}
+ const steps=[
   'Track에 맞는 MZM / MRR / WDM 구성을 선택하고 Laser sharing과 Monitor tap을 정하세요. Connectivity 검사에서 미연결 포트를 확인하세요.',
   '필요 크기로 맞춤 → 자동 배치 값 복원을 사용한 뒤 다이 경계와 충돌을 확인하세요. 필요한 크기는 현재 소자에 따라 달라집니다.',
   '실패한 넷을 선택하고 굽힘 반경·폭·배선 공간을 확인하세요. 공간 부족은 Floorplan에서 다이를 늘려 해결하세요.',
