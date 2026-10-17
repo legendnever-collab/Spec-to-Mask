@@ -1,0 +1,43 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.2.0-beta.2 test:browser:mzm
+> node test/browser/mzm_bench.js
+
+PASS MZM level exposes simultaneous Tune controls and Inspect bench
+PASS live analysis includes complete sweep and honest reference status
+PASS bench setting changes its own current identity synchronously
+PASS source experiment preserves original Mission design
+PASS blank bench field invalidates export and result immediately
+PASS refresh preserves invalid draft after blur and hides stale plots
+PASS out-of-range bench condition cannot export stale analysis
+PASS device edit invalidates analysis before animation-frame evaluation
+PASS refreshed analysis belongs to current device identity
+PASS Reference Apply refreshes device analysis and preserves independent experiment settings
+PASS Original Restore recomputes protected device
+PASS Solution button immediately exposes example parameter values and comparison
+PASS Solution preview does not apply values or complete levels
+PASS explicit Bench Solution links saved PN geometry to 28 GBd NRZ eye
+PASS Restore Bench Original restores protected experiment conditions
+PASS actual bias input updates dynamic eye and exported operating point
+PASS PN domain violation hides invalid eye without a false pass
+PASS PN geometry changes invalidate eye identity before render
+PASS live report recomputes changed upstream PN geometry
+PASS non-MZM Track hides and clears previous analysis
+PASS Track resume restores device and experiment identity
+PASS reload resumes current MZM bench settings
+PASS full backup restores Track including bench settings
+PASS backup / reload recomputes exact saved analysis
+PASS Snapshot Restore recomputes saved bench conditions in same workspace
+PASS download binds design, model, conditions and port conventions
+PASS bench fits viewport 1440x900
+PASS Solution / Next remain reachable without overlap at 1440
+PASS bench fits viewport 390x844
+PASS Solution / Next remain reachable without overlap at 390
+PASS bench fits viewport 320x720
+PASS Solution / Next remain reachable without overlap at 320
+PASS bench supports shared dark theme
+PASS Dynamic Eye shortcut opens the linked result beside Tune
+PASS Lab Solution provides mission steps without changing layout or verification
+PASS no browser page errors
+PASS offline executable makes no external HTTP requests
+37 MZM bench browser checks passed

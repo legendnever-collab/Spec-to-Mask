@@ -1,0 +1,46 @@
+{
+  "version": "1.2.0-beta.1",
+  "scope": "First single-lane MZM analytical bench increment; full transceiver curriculum incomplete",
+  "sourceCommit": "e88ce59f88bc80d47659fe680a30a8065716e5a2",
+  "baseMain": "713a063b515bf4461920986e523dca523316845c",
+  "html": "dist/spec-to-mask-v1.2.0-beta.1.html",
+  "htmlBytes": 2154987,
+  "sha256": "735a1dce82a43d7932d60fa6f27edbcae656d88d9d78e52fe904b7603a26da37",
+  "tests": {
+    "build": "PASS",
+    "sourceParity": "PASS",
+    "syntax": "PASS (75 JavaScript files + assembled script)",
+    "model": "PASS (58 analytical / four-platform legacy EO checks; source test)",
+    "studioState": "PASS (56 checks on canonical HTML)",
+    "mzmBrowser": "PASS (23 checks on canonical HTML)",
+    "studioBrowser": "PASS (168 checks on canonical HTML)",
+    "externalHttpRequests": 0,
+    "pageErrors": 0
+  },
+  "historicalEvidence": {
+    "mergedV111Head": "6afe5069ac969d8fedb175406d780e521b624704",
+    "mergedV111PrCi": {
+      "run": 38974493796,
+      "status": "SUCCESS"
+    },
+    "mergedMainCi": {
+      "run": 38975984531,
+      "status": "SUCCESS"
+    },
+    "physicsFabGds": "Legacy source unchanged. Historical v1.1.1 full-matrix evidence retained; this local checkpoint does not rerun the full release matrix."
+  },
+  "environment": {
+    "node": "v24.19.0",
+    "browser": "Cached Chromium 153 via SMQ_BROWSER; no external font download",
+    "dependencies": "Reused installed dependencies matching unchanged dependency lock entries; clean npm ci is performed by CI",
+    "fonts": "Local host lacks Korean system glyph coverage. Screenshots verify geometry; UTF-8 checked."
+  },
+  "ci": {
+    "finalCommitStatus": "Pending publication at evidence creation; see PR exact-head checks"
+  },
+  "limits": [
+    "Educational model; quantitative reference reproduction NOT VERIFIED",
+    "Independent bench conditions do not alter legacy Mission / Canvas eye / Next",
+    "PN bias dependence, calibrated geometry, dynamic eye integration, Tx/Rx/GDS course, TFLN, MRM expansion and independent LiDAR remain later increments"
+  ]
+}

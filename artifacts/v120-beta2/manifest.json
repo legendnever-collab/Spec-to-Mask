@@ -1,0 +1,43 @@
+{
+  "version": "1.2.0-beta.2",
+  "sourceCommit": "3df1ea609d306e4d52e5b114a8c1e49d0db93f7c",
+  "sourceTree": "bbbb47332bd845c96d2d375b79b488b348676716",
+  "baseMain": "713a063b515bf4461920986e523dca523316845c",
+  "html": "dist/spec-to-mask-v1.2.0-beta.2.html",
+  "htmlBytes": 2168142,
+  "sha256": "b5ad7068ef669da067bdb9577d0efde07fa65c3a5d761ba437e1de62a3a76691",
+  "tests": {
+    "sourceParity": "PASS; only immutable SMQ_BUILD provenance differs from dist/index.html",
+    "syntax": "PASS; 75 JS files + assembled script",
+    "model": "PASS; 111 checks",
+    "studioState": "PASS; 56 checks on canonical HTML",
+    "mzmBrowser": "PASS; 37 checks on canonical HTML",
+    "studioBrowser": "PASS; 168 checks on canonical HTML",
+    "externalHttpRequests": 0,
+    "pageErrors": 0
+  },
+  "sourceCi": {
+    "run": 39013245792,
+    "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39013245792",
+    "status": "SUCCESS; all 7 jobs",
+    "scope": "same frozen source: build integrity, syntax, engine, Design Lab, E2E, Python GDS, four-platform regression and Bot gate; source CI predates this canonical file checkpoint"
+  },
+  "checkpointCi": "Pending publication; inspect PR #22 exact-head checks. Source CI success is not checkpoint CI success.",
+  "environment": {
+    "node": "v24.19.0",
+    "browser": "Chromium 153.0.8010.0, preserved binary, Playwright via SMQ_BROWSER",
+    "fonts": "Host lacks Korean glyph coverage; local screenshot review is layout-only. Korean UTF-8 verified. No external fonts downloaded.",
+    "setup": "Default Playwright download failed; reused preserved Chromium binary. App source and test assertions unchanged."
+  },
+  "limits": [
+    "Educational model; quantitative external reference reproduction NOT VERIFIED",
+    "Bench dynamic eye is separate from legacy Canvas Eye / Mission / Next",
+    "Raw eye gap is not BER, compliance or foundry signoff",
+    "Full Tx/Rx/GDS, calibration, nonlinear PN/TFLN, MRM and LiDAR remain future milestones"
+  ],
+  "review": {
+    "pr": 22,
+    "draft": true,
+    "mergeAuthorized": false
+  }
+}

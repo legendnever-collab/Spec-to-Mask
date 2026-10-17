@@ -1,0 +1,60 @@
+// Live bench uses the Studio's current evaluated design. Bench experiments have their own identity.
+(() => {
+  const $=s=>document.querySelector(s), SH=window.GAME_SHELL, B=MZM_BENCH;
+  const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  let controls, panel, owner=null, saved=null, result=null, identity=null;
+  const workspace=()=>window.SMQ_STUDIO?.workspace();
+  function pnContext(){const g=workspace()?.designs?.['2-2'];return {geometry:g||window.GAME_LEV('2-2')?.ref,source:g?'Track 2-2 geometry':'platform reference geometry (no saved 2-2)'};}
+  function settings(){return Object.fromEntries(B.fields.map(f=>[f.k,+$('[data-bench="'+f.k+'"]').value]));}
+  function inputsValid(){return controls && [...controls.querySelectorAll('input')].every(e=>e.value!==''&&e.validity.valid)&&B.valid(settings());}
+  function key(){const cfg=settings();return JSON.stringify([SH.testIdentity(),B.version,cfg,cfg.pnMode?pnContext():null]);}
+  function invalidate(){result=null;identity=null;if(!panel)return;$('#mzmBenchStatus').textContent='STALE · 현재 입력 확인 / 계산 중';$('#mzmBenchExport').disabled=true;$('#mzmBenchPlots').hidden=true;panel.setAttribute('aria-busy','true');}
+  function init(){
+    controls=document.createElement('section');controls.id='mzmBenchControls';controls.className='card';controls.hidden=true;
+    controls.innerHTML='<h2>Single-lane Bench · 실험 조건</h2><button class="btn" id="mzmBenchEyeFocus">Dynamic Eye 보기</button><p class="note">위의 L / Gap / η / RT와 아래 조건을 연결한 Dynamic Eye를 Inspect에서 보세요. 기존 Canvas Eye·Mission·Next는 기존 학습 조건을 유지합니다. Live PN은 이 Track의 2-2 geometry를 사용합니다.</p>'+B.fields.map(f=>`<label class="mzm-bench-input">${f.label} <small>${f.unit||''}</small>${f.options?`<select data-bench="${f.k}" aria-label="Bench ${f.label}">${f.options.map((o,i)=>`<option value="${i}"${i===f.value?' selected':''}>${o}</option>`).join('')}</select>`:`<input type="number" data-bench="${f.k}" aria-label="Bench ${f.label}" min="${f.min}" max="${f.max}" step="${f.step}" value="${f.value}">`}</label>`).join('')+'<button class="btn" id="mzmBenchReset">기본 실험 조건</button>';
+    $('#studioTune').append(controls);
+    $('#mzmBenchEyeFocus').onclick=()=>{if(!$('#studioInspect').classList.contains('expanded'))$('#studioInspectExpand').click();$('#mzmDynamicEye')?.scrollIntoView({block:'start'});};
+    panel=document.createElement('section');panel.id='mzmBench';panel.className='card';panel.hidden=true;
+    panel.innerHTML=`<div class="mzm-bench-heading"><h2>TW-MZM · Single-lane Bench</h2><b id="mzmBenchStatus" role="status"></b><button class="btn" id="mzmBenchExport" disabled>Export analysis JSON</button></div>
+      <p class="note">Educational model · Reference checked: <b>NOT VERIFIED</b>. 현재 PN 카드 / 기준 PN과 기존 loaded CPW 모델을 사용합니다. 순수 SiN PN 변조를 뜻하지 않으며 SiN 플랫폼에서는 hybrid active component 가정입니다.</p>
+      <div id="mzmBenchPlots"></div>
+      <details><summary>읽는 순서 · 모델과 참조 범위</summary><ol><li>L·Gap·η·RT를 조절하며 RF 손실, 속도 정합, 반사를 비교하세요.</li><li>Source resistance / drive와 Optical group index를 바꾸어 전극 전압과 EO 응답의 차이를 보세요.</li><li>Phase bias를 바꾸어 main / complementary 출력과 quadrature를 확인하세요.</li></ol><p class="note">S-parameter 기준은 양 끝 50 Ω, 기준면은 전극 양 끝입니다. Loaded Γ는 실제 RT를 사용하고, RC Γ는 전체 active length의 lumped series PN pair입니다. EO는 0.001 GHz 유효 접합 전압으로 정규화합니다. RF 손실·속도 지수는 같은 loaded CPW 모델의 값입니다. Static transfer와 Dynamic Eye는 일정 손실·선형 PN 위상과 cosine 변환을 사용합니다. Live PN은 역바이어스에 따라 C′·R′·VπL·손실을 재계산합니다. Eye는 256개 반복 심볼, 16 samples/UI, 240 GHz 대역 제한, 2차 Butterworth driver를 사용합니다. 잡음·FFE·CDR·대신호 carrier dynamics·BER는 모델링하지 않습니다. PN 접합의 Vb ± Vdiff/2가 0–3 V를 벗어나면 Eye를 숨깁니다.</p><p class="note">Ansys Si PN의 charge → RC → optical → RF → circuit 흐름을 교육용 분석 화면에 연결합니다. 원본 curve와의 수치 비교는 아직 없습니다. PhotonForge TFLN Pockels / LNOI400 모델은 별도 예정이며 Si PN으로 대체하지 않습니다.</p><p><a href="https://optics.ansys.com/hc/en-us/articles/360042328774-Traveling-Wave-Mach-Zehnder-Modulator" target="_blank" rel="noopener">Ansys · Si PN reference</a> · <a href="https://docs.flexcompute.com/projects/photonforge/en/v1.1.6/examples/EO-MZM.html" target="_blank" rel="noopener">PhotonForge 1.1.6 · TFLN reference</a></p></details>`;
+    $('#studioResults').prepend(panel);
+    controls.addEventListener('input',e=>{if(!e.target.matches('[data-bench]'))return;invalidate();if(inputsValid()&&workspace()){workspace().mzmBench=settings();window.SMQ_STUDIO.save();}refresh(window.GAME_CTX(),window.LABUI.isOpen());});
+    $('#mzmBenchReset').onclick=()=>{B.fields.forEach(f=>$('[data-bench="'+f.k+'"]').value=f.value);if(workspace()){workspace().mzmBench=B.defaults();window.SMQ_STUDIO.save();}refresh(window.GAME_CTX(),window.LABUI.isOpen());};
+    $('#mzmBenchExport').onclick=()=>{const data=report();if(!data){invalidate();return;}const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='mzm-single-lane-analysis.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+  }
+  function chart(title,series,y0,y1,ylab,yticks){return `<article><h3>${title}</h3>`+svgChart({x0:0,x1:120,y0,y1,aria:title,xlab:'GHz',ylab,xticks:[0,30,56,90,120],yticks,series:series.map(([pts,color])=>({pts,color,width:2}))})+'</article>';}
+  function smith(r){const pts=k=>r.samples.map(s=>`${(150+120*s[k][0]).toFixed(2)},${(150-120*s[k][1]).toFixed(2)}`).join(' ');
+    let grid='<circle cx="150" cy="150" r="120"/><path d="M30 150H270"/>';
+    for(const resistance of [.2,.5,1,2,5])grid+=`<circle cx="${150+120*resistance/(1+resistance)}" cy="150" r="${120/(1+resistance)}"/>`;
+    for(const reactance of [-2,-1,-.5,.5,1,2])grid+=`<circle cx="270" cy="${150-120/reactance}" r="${120/Math.abs(reactance)}"/>`;
+    return `<article><h3>Smith · Γ @ 50 Ω · 1–120 GHz</h3><svg viewBox="0 0 300 300" role="img" aria-label="Smith chart: terminated electrode and lumped PN pair"><defs><clipPath id="mzmSmithClip"><circle cx="150" cy="150" r="120"/></clipPath></defs><g clip-path="url(#mzmSmithClip)" fill="none"><g stroke="currentColor" opacity=".2">${grid}</g><polyline points="${pts('loadedReflection')}" stroke="var(--cyan)" stroke-width="2.5"/><polyline points="${pts('rcReflection')}" stroke="var(--amber)" stroke-width="2"/></g><text x="150" y="292" text-anchor="middle" fill="currentColor" font-size="11">+j upper · −j lower · center = matched</text></svg><p class="note">Cyan: loaded electrode Γ (actual RT) · Amber: lumped PN pair Γ</p></article>`;}
+  function eyeChart(r){const e=r.eye;
+    const graphic=e.traces.length?svgChart({x0:-.5,x1:1.5,y0:0,y1:r.through,aria:'Dynamic optical eye',xlab:'UI · sampling at 0',ylab:'Pout / Pin',xticks:[-.5,0,.5,1,1.5],yticks:[0,r.through/2,r.through].map(v=>v.toFixed(3)),series:e.traces.map(t=>({pts:t.map((v,i)=>[i/e.sps-.5,v]),color:'var(--cyan)',width:1}))}):'<p class="note">접합 전압 범위를 벗어나 Eye가 유효하지 않습니다. Vpp를 낮추거나 역바이어스를 조절하세요.</p>';
+    return `<article id="mzmDynamicEye"><h3>Dynamic ${e.modulation} Eye · ${e.baud} GBd / ${e.rawGbps} Gb/s raw</h3>${graphic}<p class="note"><b>${e.status}</b><br>Raw gap: ${e.opening===null?'N/A':e.opening.toFixed(5)} Pout/Pin · Driver ${r.settings.driver} GHz · seed ${e.seed}<br>${r.settings.pnMode?`PN junction range ${e.reverseBiasMin.toFixed(2)}–${e.reverseBiasMax.toFixed(2)} V · `:''}No FFE / noise / BER · 수치가 양수여도 통신 규격 PASS를 뜻하지 않습니다.</p></article>`;
+  }
+  function pnChart(r){if(!r.pnSweep)return '<article><h3>PN bias sweep</h3><p class="note">Fixed card / reference 모드입니다. PN source를 Live workspace PN geometry로 바꾸면 이 Track의 PN 형상과 역바이어스가 RF·EO·Eye에 연결됩니다.</p></article>';
+    const pts=r.pnSweep,plot=(key,label,unit)=>{const ys=pts.map(p=>p[key]),lo=Math.min(...ys),hi=Math.max(...ys),pad=Math.max((hi-lo)*.1,Math.abs(hi)*.01,1e-12);return `<h3>${label}</h3>`+svgChart({x0:0,x1:3,y0:lo-pad,y1:hi+pad,aria:label,xlab:'Reverse bias V',ylab:unit,xticks:[0,1,2,3],yticks:[lo,hi].map(v=>v.toFixed(3)),series:[{pts:pts.map(p=>[p.vb,p[key]]),color:'var(--amber)',width:2}]});};
+    return `<article id="mzmPNSweep"><h3>PN bias → RC / optical</h3>${plot('Cp','Junction capacitance','pF/mm')}${plot('VpiL','Local VπL','V·cm')}<p class="note">${esc(r.pnInput.source)} · operating bias ${r.settings.reverseBias} V. R′, loss, Δn, depletion width 및 31개 sweep 값은 analysis JSON에 포함됩니다. VπL은 ±0.01 V 차분이며 기존 카드의 1 V secant와 구분합니다.</p></article>`;
+  }
+  function render(r){const s=r.probe,fmt=(v,n=2)=>v.toFixed(n),complex=z=>`${fmt(z[0])} ${z[1]<0?'−':'+'} j${fmt(Math.abs(z[1]))}`;
+    $('#mzmBenchPlots').innerHTML=`<p class="mzm-bench-summary">@ ${s.f} GHz · Zc ${complex(s.zc)} Ω · nRF ${fmt(s.nRF)} / ng ${fmt(r.settings.ng)} · αRF ${fmt(s.alphaDbPerCm)} dB/cm<br>EO −3 dB: ${r.bandwidth===null?'&gt;120 GHz (no crossing)':fmt(r.bandwidth,1)+' GHz'} · Vπ ${fmt(r.vpi)} V · DC electrode ${fmt(r.dcElectrodeVpp)} Vpp / source ${fmt(r.settings.vpp)} Vpp<br>Electrical S11 ${fmt(B.db(s.s11))} dB · loaded Γ ${fmt(B.db(s.loadedReflection))} dB · RC Γ ${fmt(B.db(s.rcReflection))} dB<br>${esc(r.pn.src)} · C′ ${fmt(r.pn.Cp,3)} pF/mm · R′ ${fmt(r.pn.Rp)} Ω·mm · VπL ${fmt(r.pn.VpiL,3)} V·cm</p><div class="mzm-bench-grid">`+
+      eyeChart(r)+pnChart(r)+chart('EO normalized (cyan) / electrical S21 (amber)',[[r.samples.map(s=>[s.f,s.eoDb]),'var(--cyan)'],[r.samples.map(s=>[s.f,s.s21Db]),'var(--amber)']],Math.min(-20,Math.floor(Math.min(...r.samples.flatMap(s=>[s.eoDb,s.s21Db]))/10)*10),6,'dB',[-20,-10,-3,0,6])+smith(r)+
+      chart('RF characteristic impedance · Re cyan / Im amber',[[r.samples.map(s=>[s.f,s.zc[0]]),'var(--cyan)'],[r.samples.map(s=>[s.f,s.zc[1]]),'var(--amber)']],Math.min(-20,...r.samples.map(s=>s.zc[1])),Math.max(100,...r.samples.map(s=>s.zc[0])),'Ω',[-20,0,25,50,75,100])+
+      `<article><h3>Static optical transfer · main / complementary</h3>${svgChart({x0:-r.settings.vpp/2,x1:r.settings.vpp/2,y0:0,y1:1,aria:'Main and complementary optical power / input power',xlab:'Electrode differential V',ylab:'Pout / Pin',xticks:[-r.settings.vpp/2,0,r.settings.vpp/2],yticks:[0,.25,.5,.75,1],series:[{pts:r.transfer.map(p=>[p.v,p.main]),color:'var(--cyan)',width:2},{pts:r.transfer.map(p=>[p.v,p.complement]),color:'var(--amber)',width:2}]})}<p class="note">Main + complementary = ${fmt(r.through,3)} · IL ${fmt(r.il)} dB. Static voltage sweep, not a dynamic eye.</p></article></div>`;
+  }
+  function refresh(c,lab){
+    if(!controls)init();const ws=workspace(),show=!!ws&&!lab&&c?.kindId==='mzm';controls.hidden=panel.hidden=!show;
+    if(!show){owner=null;invalidate();return;}
+    if(owner!==ws||saved!==ws.mzmBench){owner=ws;saved=ws.mzmBench;const cfg=B.migrate(ws.mzmBench);B.fields.forEach(f=>$('[data-bench="'+f.k+'"]').value=cfg[f.k]);identity=null;}
+    if(!SH.evaluationCurrent()||!inputsValid()){invalidate();return;}
+    const id=key();if(identity===id)return;
+    try{result=B.analyse(c.l,c.d,settings(),pnContext());}catch(e){invalidate();$('#mzmBenchStatus').textContent=e.message;return;}
+    identity=id;render(result);$('#mzmBenchPlots').hidden=false;panel.setAttribute('aria-busy','false');$('#mzmBenchStatus').textContent='CURRENT · Educational model';$('#mzmBenchExport').disabled=false;
+  }
+  function report(){if(!result||panel.hidden||!SH.evaluationCurrent()||!inputsValid()||identity!==key())return null;return {schema:'smq-mzm-bench/2',application:SMQ_BUILD,platform:SH.plat(),track:window.SMQ_STUDIO.active(),designIdentity:SH.testIdentity(),analysisIdentity:identity,...JSON.parse(JSON.stringify(result))};}
+  const solutionSettings=()=>({...B.defaults(),pnMode:1,baud:28,modulation:0});
+  function applySolution(restore=false){const ws=workspace();if(!ws)return;if(restore){if(!ws.mzmBenchOriginal)return;ws.mzmBench={...ws.mzmBenchOriginal};}else{if(!inputsValid())return;ws.mzmBenchOriginal=ws.mzmBenchOriginal||settings();ws.mzmBench=solutionSettings();}invalidate();window.SMQ_STUDIO.save();refresh(window.GAME_CTX(),window.LABUI.isOpen());}
+  window.MZM_BENCH_UI={refresh,invalidate,report,solutionSettings,applySolution};
+})();

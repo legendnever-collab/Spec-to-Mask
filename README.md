@@ -1,15 +1,16 @@
-# SPEC-to-MASK Quest v1.1.1 — Live Tune / Inspect RC
+# SPEC-to-MASK Quest v1.2.0-beta.2 — Solution + Live PN / Dynamic Eye Bench
 
 Canvas-first PIC learning with five six-Level Tracks: PIC Fundamentals, MZM DR8, MRR DR8, MRR WDM8, FMCW LiDAR / TTD. One offline HTML with saved Light/Dark theme, independent Track workspaces, automatic current-design evaluation and protected Reference / Original. Tune stays beside Canvas, Inspect below; More is in the top navigation.
 
-- [Run v1.1.1 offline HTML](dist/spec-to-mask-v1.1.1.html) · [Live UI development / QA](docs/DEVELOPMENT_V111.md) · [Exact HTML SHA256](artifacts/v111-live/SHA256SUMS.txt)
+- [Run MZM bench beta](dist/spec-to-mask-v1.2.0-beta.2.html) · [Bench scope / models / QA](docs/DEVELOPMENT_V120.md)
+- [Stable v1.1.1 offline HTML](dist/spec-to-mask-v1.1.1.html) · [Live UI development / QA](docs/DEVELOPMENT_V111.md) · [Exact HTML SHA256](artifacts/v111-live/SHA256SUMS.txt)
 - Existing 21 Level IDs, four Platforms, six Lab missions, Physics / Fab / GDS models and v1.0 backup formats are retained.
 - [v1.1 user guide](docs/release/USER_GUIDE-v1.1.md) · [Tracks](docs/TRACKS_V110.md) · [Migration](docs/MIGRATION_V110.md) · [QA](docs/TEST_REPORT_V110.md) · [Handoff](docs/HANDOFF_v1.1.0.md)
 - `npm ci && npm run build` → `dist/index.html`; `npm run release` → exact-version offline executable / Source ZIP / Python handoff.
 - `npm run test:studio` validates Track isolation / protected Original / old backups / checksum / quarantine. `npm run test:browser` exercises the actual current HTML in Chromium, measures Canvas rectangles and completes all supported Track flows.
 - Circuit JSON / GDS geometry recheck are separate from manufacturing approval. **Foundry Readiness: NOT VERIFIED.** Full LiDAR PIC GDS is unsupported.
 
-Release Candidate: user play review and approval are required before main merge. Historical documentation below describes the original engine and remains applicable within its stated model boundaries.
+PR #19 and #20 were merged with user approval (main `713a063`). The MZM bench beta is a separate review checkpoint; it does not claim the full v1.2 transceiver course is complete. Historical documentation below describes the original engine and remains applicable within its stated model boundaries.
 
 ---
 

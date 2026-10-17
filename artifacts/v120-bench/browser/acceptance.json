@@ -1,0 +1,99 @@
+{
+  "htmlSha256": "735a1dce82a43d7932d60fa6f27edbcae656d88d9d78e52fe904b7603a26da37",
+  "checks": [
+    {
+      "ok": true,
+      "message": "MZM level exposes simultaneous Tune controls and Inspect bench"
+    },
+    {
+      "ok": true,
+      "message": "live analysis includes complete sweep and honest reference status"
+    },
+    {
+      "ok": true,
+      "message": "bench setting changes its own current identity synchronously"
+    },
+    {
+      "ok": true,
+      "message": "source experiment preserves original Mission design"
+    },
+    {
+      "ok": true,
+      "message": "blank bench field invalidates export and result immediately"
+    },
+    {
+      "ok": true,
+      "message": "refresh preserves invalid draft after blur and hides stale plots"
+    },
+    {
+      "ok": true,
+      "message": "out-of-range bench condition cannot export stale analysis"
+    },
+    {
+      "ok": true,
+      "message": "device edit invalidates analysis before animation-frame evaluation"
+    },
+    {
+      "ok": true,
+      "message": "refreshed analysis belongs to current device identity"
+    },
+    {
+      "ok": true,
+      "message": "Reference Apply refreshes device analysis and preserves independent experiment settings"
+    },
+    {
+      "ok": true,
+      "message": "Original Restore recomputes protected device"
+    },
+    {
+      "ok": true,
+      "message": "non-MZM Track hides and clears previous analysis"
+    },
+    {
+      "ok": true,
+      "message": "Track resume restores device and experiment identity"
+    },
+    {
+      "ok": true,
+      "message": "reload resumes current MZM bench settings"
+    },
+    {
+      "ok": true,
+      "message": "full backup restores Track including bench settings"
+    },
+    {
+      "ok": true,
+      "message": "backup / reload recomputes exact saved analysis"
+    },
+    {
+      "ok": true,
+      "message": "Snapshot Restore recomputes saved bench conditions in same workspace"
+    },
+    {
+      "ok": true,
+      "message": "download binds design, model, conditions and port conventions"
+    },
+    {
+      "ok": true,
+      "message": "bench fits viewport 1440x900"
+    },
+    {
+      "ok": true,
+      "message": "bench fits viewport 390x844"
+    },
+    {
+      "ok": true,
+      "message": "bench supports shared dark theme"
+    },
+    {
+      "ok": true,
+      "message": "no browser page errors"
+    },
+    {
+      "ok": true,
+      "message": "offline executable makes no external HTTP requests"
+    }
+  ],
+  "errors": [],
+  "requests": []
+}

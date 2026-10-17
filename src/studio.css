@@ -44,3 +44,19 @@ body.studio-ready{height:var(--app-height,100dvh);overflow:hidden}.studio-ready 
 }
 .b-an,.conf-an{color:var(--pass)}.b-semi,.conf-semi{color:var(--cyan)}.b-pre{color:var(--series-d)}.b-emp,.conf-asm{color:var(--warn)}.b-exp,.conf-exp{color:var(--fg)}.b-asm,.conf-nv{color:var(--fg-2)}.b-fw{color:var(--rose)}.btn.danger,.btn.pri.danger{color:var(--panel)}.stp[aria-current=step] .num{color:var(--panel)}
 .studio-sheet .lab-head{display:block}.studio-sheet .lab-head .mode-row{display:block}.studio-sheet .lab-head .mode-r{justify-content:flex-start;margin-top:8px}.studio-sheet .lab-head .lab-title{font-size:17px}.studio-sheet .lab-head .eyebrow{font-size:11px}.studio-sheet .lab-head .stepper{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.studio-sheet .lab-head .stp{min-width:0;padding:5px;font-size:12px}.studio-sheet .lab-head .lab-prog{gap:4px}.studio-sheet .lab-head .lab-prog span{font-size:12px}.studio-sheet .lab-head .sn-b{font-size:14px}
+
+/* Single-lane bench; scrolls inside existing Tune/Inspect, never replaces the Canvas. */
+.mzm-bench-input{display:grid;grid-template-columns:1fr auto;align-items:center;gap:6px;margin:12px 0}
+.mzm-bench-input input,.mzm-bench-input select{grid-column:1/-1;width:100%;min-height:44px;box-sizing:border-box}
+.mzm-bench-heading{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.mzm-bench-heading h2{margin-right:auto}.mzm-bench-heading b{font-size:11px;color:var(--cyan)}
+.mzm-bench-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.mzm-bench-grid article{min-width:0}.mzm-bench-grid h3{font-size:12px;line-height:1.5}
+.mzm-bench-grid svg{width:100%;max-height:240px}.mzm-bench-summary{font-size:12px;line-height:1.8}
+#mzmBench summary{cursor:pointer;min-height:44px;display:flex;align-items:center}
+#mzmBenchControls[hidden],#mzmBench[hidden]{display:none!important}
+@media(max-width:700px){.mzm-bench-grid{grid-template-columns:1fr}}
+#mzmBench{grid-column:1/-1;min-width:0}
+
+#studioSolution{min-height:44px}#studioRefTable{overflow-x:auto}#studioReference table{width:100%;font-size:12px}#studioReference th,#studioReference td{padding:6px;text-align:left}
+#mzmDynamicEye{scroll-margin-top:44px}
