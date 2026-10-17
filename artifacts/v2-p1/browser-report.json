@@ -1,0 +1,1376 @@
+{
+  "html": "/workspace/scratch/414323827069/Spec-to-Mask/dist/spec-to-mask-v2.0.0-alpha.1-p1.html",
+  "htmlSHA256": "9e4be1bd32fe6a5b61f53b2357d923a20ffefd45e580aa238b4d73d4e560c487",
+  "browser": "153.0.8010.0",
+  "checks": [
+    {
+      "ok": true,
+      "message": "overview/light/1440: horizontal overflow absent"
+    },
+    {
+      "ok": true,
+      "message": "overview/light/1440: visible buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "overview/light/1440: desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "overview/light/1440: Korean predicate in heading"
+    },
+    {
+      "ok": true,
+      "message": "overview/dark/1440: horizontal overflow absent"
+    },
+    {
+      "ok": true,
+      "message": "overview/dark/1440: visible buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "overview/dark/1440: desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "overview/dark/1440: Korean predicate in heading"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/light/1440: horizontal overflow absent"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/light/1440: visible buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/light/1440: desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/light/1440: panel content does not overflow"
+    },
+    {
+      "ok": true,
+      "message": "light/1440: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "light/1440: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "light/1440: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "light/1440: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "light/1440: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/light/1440: Korean predicate in heading"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/dark/1440: horizontal overflow absent"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/dark/1440: visible buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/dark/1440: desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/dark/1440: panel content does not overflow"
+    },
+    {
+      "ok": true,
+      "message": "dark/1440: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "dark/1440: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "dark/1440: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "dark/1440: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "dark/1440: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/dark/1440: Korean predicate in heading"
+    },
+    {
+      "ok": true,
+      "message": "overview/light/1366: horizontal overflow absent"
+    },
+    {
+      "ok": true,
+      "message": "overview/light/1366: visible buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "overview/light/1366: desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "overview/light/1366: Korean predicate in heading"
+    },
+    {
+      "ok": true,
+      "message": "overview/dark/1366: horizontal overflow absent"
+    },
+    {
+      "ok": true,
+      "message": "overview/dark/1366: visible buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "overview/dark/1366: desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "overview/dark/1366: Korean predicate in heading"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/light/1366: horizontal overflow absent"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/light/1366: visible buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/light/1366: desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/light/1366: panel content does not overflow"
+    },
+    {
+      "ok": true,
+      "message": "light/1366: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "light/1366: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "light/1366: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "light/1366: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "light/1366: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/light/1366: Korean predicate in heading"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/dark/1366: horizontal overflow absent"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/dark/1366: visible buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/dark/1366: desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/dark/1366: panel content does not overflow"
+    },
+    {
+      "ok": true,
+      "message": "dark/1366: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "dark/1366: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "dark/1366: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "dark/1366: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "dark/1366: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/dark/1366: Korean predicate in heading"
+    },
+    {
+      "ok": true,
+      "message": "overview/light/390: horizontal overflow absent"
+    },
+    {
+      "ok": true,
+      "message": "overview/light/390: visible buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "overview/light/390: Korean predicate in heading"
+    },
+    {
+      "ok": true,
+      "message": "overview/dark/390: horizontal overflow absent"
+    },
+    {
+      "ok": true,
+      "message": "overview/dark/390: visible buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "overview/dark/390: Korean predicate in heading"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/light/390: horizontal overflow absent"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/light/390: visible buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "light/390: slider hit height44px"
+    },
+    {
+      "ok": true,
+      "message": "light/390: physical view retained"
+    },
+    {
+      "ok": true,
+      "message": "light/390: knob not hidden by fixed bar"
+    },
+    {
+      "ok": true,
+      "message": "light/390: KPI not hidden by fixed bar"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/light/390: Korean predicate in heading"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/dark/390: horizontal overflow absent"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/dark/390: visible buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "dark/390: slider hit height44px"
+    },
+    {
+      "ok": true,
+      "message": "dark/390: physical view retained"
+    },
+    {
+      "ok": true,
+      "message": "dark/390: knob not hidden by fixed bar"
+    },
+    {
+      "ok": true,
+      "message": "dark/390: KPI not hidden by fixed bar"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/dark/390: Korean predicate in heading"
+    },
+    {
+      "ok": true,
+      "message": "overview/light/320: horizontal overflow absent"
+    },
+    {
+      "ok": true,
+      "message": "overview/light/320: visible buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "overview/light/320: Korean predicate in heading"
+    },
+    {
+      "ok": true,
+      "message": "overview/dark/320: horizontal overflow absent"
+    },
+    {
+      "ok": true,
+      "message": "overview/dark/320: visible buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "overview/dark/320: Korean predicate in heading"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/light/320: horizontal overflow absent"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/light/320: visible buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "light/320: slider hit height44px"
+    },
+    {
+      "ok": true,
+      "message": "light/320: physical view retained"
+    },
+    {
+      "ok": true,
+      "message": "light/320: knob not hidden by fixed bar"
+    },
+    {
+      "ok": true,
+      "message": "light/320: KPI not hidden by fixed bar"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/light/320: Korean predicate in heading"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/dark/320: horizontal overflow absent"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/dark/320: visible buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "dark/320: slider hit height44px"
+    },
+    {
+      "ok": true,
+      "message": "dark/320: physical view retained"
+    },
+    {
+      "ok": true,
+      "message": "dark/320: knob not hidden by fixed bar"
+    },
+    {
+      "ok": true,
+      "message": "dark/320: KPI not hidden by fixed bar"
+    },
+    {
+      "ok": true,
+      "message": "waveguide/dark/320: Korean predicate in heading"
+    },
+    {
+      "ok": true,
+      "message": "immediate edit cannot lend previous current result"
+    },
+    {
+      "ok": true,
+      "message": "actual bend loss falls while area rises"
+    },
+    {
+      "ok": true,
+      "message": "hands-on observation recorded from current model"
+    },
+    {
+      "ok": true,
+      "message": "all three views use one identity"
+    },
+    {
+      "ok": true,
+      "message": "comparison restoration works"
+    },
+    {
+      "ok": true,
+      "message": "protected Original intact"
+    },
+    {
+      "ok": true,
+      "message": "Learn uses selected parameter and separates losses"
+    },
+    {
+      "ok": true,
+      "message": "Learn/Escape preserves complete learning state"
+    },
+    {
+      "ok": true,
+      "message": "Learn returns focus"
+    },
+    {
+      "ok": true,
+      "message": "blank numeric input invalidates old result"
+    },
+    {
+      "ok": true,
+      "message": "live update preserves numeric focus"
+    },
+    {
+      "ok": true,
+      "message": "platform switch retains first workspace"
+    },
+    {
+      "ok": true,
+      "message": "platform return resumes exact radius"
+    },
+    {
+      "ok": true,
+      "message": "full Backup carries v2 namespace"
+    },
+    {
+      "ok": true,
+      "message": "validated Backup enables explicit Restore"
+    },
+    {
+      "ok": true,
+      "message": "edited Backup invalidates previous validation"
+    },
+    {
+      "ok": true,
+      "message": "reload resumes design and reevaluates"
+    },
+    {
+      "ok": true,
+      "message": "keyboard range evaluation works"
+    },
+    {
+      "ok": true,
+      "message": "Continue completes observation without optimization gate"
+    },
+    {
+      "ok": true,
+      "message": "legacy data bytes unchanged by Tutorial"
+    },
+    {
+      "ok": true,
+      "message": "Advanced / Legacy remains accessible"
+    },
+    {
+      "ok": true,
+      "message": "return from Legacy reopens learning workspace"
+    },
+    {
+      "ok": true,
+      "message": "no browser runtime errors"
+    },
+    {
+      "ok": true,
+      "message": "no external runtime HTTP requests"
+    },
+    {
+      "ok": true,
+      "message": "embedded Korean font loaded"
+    }
+  ],
+  "bounds": [
+    {
+      "scene": "overview",
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "knob": null,
+      "kpis": null,
+      "physical": null,
+      "plot": null,
+      "actions": {
+        "x": 889.796875,
+        "y": 747.609375,
+        "width": 497.203125,
+        "height": 44,
+        "top": 747.609375,
+        "right": 1387,
+        "bottom": 791.609375,
+        "left": 889.796875
+      },
+      "aside": null,
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "scene": "overview",
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "knob": null,
+      "kpis": null,
+      "physical": null,
+      "plot": null,
+      "actions": {
+        "x": 889.796875,
+        "y": 747.609375,
+        "width": 497.203125,
+        "height": 44,
+        "top": 747.609375,
+        "right": 1387,
+        "bottom": 791.609375,
+        "left": 889.796875
+      },
+      "aside": null,
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "scene": "waveguide",
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "knob": {
+        "x": 885.796875,
+        "y": 353.625,
+        "width": 505.203125,
+        "height": 44,
+        "top": 353.625,
+        "right": 1391,
+        "bottom": 397.625,
+        "left": 885.796875
+      },
+      "kpis": {
+        "x": 885.796875,
+        "y": 435.203125,
+        "width": 505.203125,
+        "height": 95.78125,
+        "top": 435.203125,
+        "right": 1391,
+        "bottom": 530.984375,
+        "left": 885.796875
+      },
+      "physical": {
+        "x": 28,
+        "y": 207.78125,
+        "width": 820.796875,
+        "height": 394.09375,
+        "top": 207.78125,
+        "right": 848.796875,
+        "bottom": 601.875,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 617.875,
+        "width": 820.796875,
+        "height": 260.125,
+        "top": 617.875,
+        "right": 848.796875,
+        "bottom": 878,
+        "left": 28
+      },
+      "actions": {
+        "x": 885.796875,
+        "y": 813,
+        "width": 505.203125,
+        "height": 44,
+        "top": 813,
+        "right": 1391,
+        "bottom": 857,
+        "left": 885.796875
+      },
+      "aside": {
+        "x": 864.796875,
+        "y": 207.78125,
+        "width": 547.203125,
+        "height": 670.21875,
+        "top": 207.78125,
+        "right": 1412,
+        "bottom": 878,
+        "left": 864.796875
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "scene": "waveguide",
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "knob": {
+        "x": 885.796875,
+        "y": 353.625,
+        "width": 505.203125,
+        "height": 44,
+        "top": 353.625,
+        "right": 1391,
+        "bottom": 397.625,
+        "left": 885.796875
+      },
+      "kpis": {
+        "x": 885.796875,
+        "y": 435.203125,
+        "width": 505.203125,
+        "height": 95.78125,
+        "top": 435.203125,
+        "right": 1391,
+        "bottom": 530.984375,
+        "left": 885.796875
+      },
+      "physical": {
+        "x": 28,
+        "y": 207.78125,
+        "width": 820.796875,
+        "height": 394.09375,
+        "top": 207.78125,
+        "right": 848.796875,
+        "bottom": 601.875,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 617.875,
+        "width": 820.796875,
+        "height": 260.125,
+        "top": 617.875,
+        "right": 848.796875,
+        "bottom": 878,
+        "left": 28
+      },
+      "actions": {
+        "x": 885.796875,
+        "y": 813,
+        "width": 505.203125,
+        "height": 44,
+        "top": 813,
+        "right": 1391,
+        "bottom": 857,
+        "left": 885.796875
+      },
+      "aside": {
+        "x": 864.796875,
+        "y": 207.78125,
+        "width": 547.203125,
+        "height": 670.21875,
+        "top": 207.78125,
+        "right": 1412,
+        "bottom": 878,
+        "left": 864.796875
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "scene": "overview",
+      "theme": "light",
+      "width": 1366,
+      "height": 768,
+      "scrollWidth": 1366,
+      "scrollHeight": 768,
+      "knob": null,
+      "kpis": null,
+      "physical": null,
+      "plot": null,
+      "actions": {
+        "x": 841.390625,
+        "y": 627.609375,
+        "width": 475.59375,
+        "height": 44,
+        "top": 627.609375,
+        "right": 1316.984375,
+        "bottom": 671.609375,
+        "left": 841.390625
+      },
+      "aside": null,
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "scene": "overview",
+      "theme": "dark",
+      "width": 1366,
+      "height": 768,
+      "scrollWidth": 1366,
+      "scrollHeight": 768,
+      "knob": null,
+      "kpis": null,
+      "physical": null,
+      "plot": null,
+      "actions": {
+        "x": 841.390625,
+        "y": 627.609375,
+        "width": 475.59375,
+        "height": 44,
+        "top": 627.609375,
+        "right": 1316.984375,
+        "bottom": 671.609375,
+        "left": 841.390625
+      },
+      "aside": null,
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "scene": "waveguide",
+      "theme": "light",
+      "width": 1366,
+      "height": 768,
+      "scrollWidth": 1366,
+      "scrollHeight": 768,
+      "knob": {
+        "x": 837.390625,
+        "y": 335.84375,
+        "width": 483.59375,
+        "height": 44,
+        "top": 335.84375,
+        "right": 1320.984375,
+        "bottom": 379.84375,
+        "left": 837.390625
+      },
+      "kpis": {
+        "x": 837.390625,
+        "y": 417.421875,
+        "width": 483.59375,
+        "height": 95.78125,
+        "top": 417.421875,
+        "right": 1320.984375,
+        "bottom": 513.203125,
+        "left": 837.390625
+      },
+      "physical": {
+        "x": 28,
+        "y": 194,
+        "width": 776.390625,
+        "height": 322.890625,
+        "top": 194,
+        "right": 804.390625,
+        "bottom": 516.890625,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 532.890625,
+        "width": 776.390625,
+        "height": 213.09375,
+        "top": 532.890625,
+        "right": 804.390625,
+        "bottom": 745.984375,
+        "left": 28
+      },
+      "actions": {
+        "x": 837.390625,
+        "y": 684.984375,
+        "width": 483.59375,
+        "height": 44,
+        "top": 684.984375,
+        "right": 1320.984375,
+        "bottom": 728.984375,
+        "left": 837.390625
+      },
+      "aside": {
+        "x": 820.390625,
+        "y": 194,
+        "width": 517.59375,
+        "height": 551.984375,
+        "top": 194,
+        "right": 1337.984375,
+        "bottom": 745.984375,
+        "left": 820.390625
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "scene": "waveguide",
+      "theme": "dark",
+      "width": 1366,
+      "height": 768,
+      "scrollWidth": 1366,
+      "scrollHeight": 768,
+      "knob": {
+        "x": 837.390625,
+        "y": 335.84375,
+        "width": 483.59375,
+        "height": 44,
+        "top": 335.84375,
+        "right": 1320.984375,
+        "bottom": 379.84375,
+        "left": 837.390625
+      },
+      "kpis": {
+        "x": 837.390625,
+        "y": 417.421875,
+        "width": 483.59375,
+        "height": 95.78125,
+        "top": 417.421875,
+        "right": 1320.984375,
+        "bottom": 513.203125,
+        "left": 837.390625
+      },
+      "physical": {
+        "x": 28,
+        "y": 194,
+        "width": 776.390625,
+        "height": 322.890625,
+        "top": 194,
+        "right": 804.390625,
+        "bottom": 516.890625,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 532.890625,
+        "width": 776.390625,
+        "height": 213.09375,
+        "top": 532.890625,
+        "right": 804.390625,
+        "bottom": 745.984375,
+        "left": 28
+      },
+      "actions": {
+        "x": 837.390625,
+        "y": 684.984375,
+        "width": 483.59375,
+        "height": 44,
+        "top": 684.984375,
+        "right": 1320.984375,
+        "bottom": 728.984375,
+        "left": 837.390625
+      },
+      "aside": {
+        "x": 820.390625,
+        "y": 194,
+        "width": 517.59375,
+        "height": 551.984375,
+        "top": 194,
+        "right": 1337.984375,
+        "bottom": 745.984375,
+        "left": 820.390625
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "scene": "overview",
+      "theme": "light",
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "scrollHeight": 1450,
+      "knob": null,
+      "kpis": null,
+      "physical": null,
+      "plot": null,
+      "actions": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "aside": null,
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "scene": "overview",
+      "theme": "dark",
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "scrollHeight": 1450,
+      "knob": null,
+      "kpis": null,
+      "physical": null,
+      "plot": null,
+      "actions": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "aside": null,
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "scene": "waveguide",
+      "theme": "light",
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "scrollHeight": 1283,
+      "knob": {
+        "x": 27,
+        "y": 611.984375,
+        "width": 336,
+        "height": 44,
+        "top": 611.984375,
+        "right": 363,
+        "bottom": 655.984375,
+        "left": 27
+      },
+      "kpis": {
+        "x": 14,
+        "y": 460.03125,
+        "width": 362,
+        "height": 87.265625,
+        "top": 460.03125,
+        "right": 376,
+        "bottom": 547.296875,
+        "left": 14
+      },
+      "physical": {
+        "x": 14,
+        "y": 240.03125,
+        "width": 362,
+        "height": 208,
+        "top": 240.03125,
+        "right": 376,
+        "bottom": 448.03125,
+        "left": 14
+      },
+      "plot": {
+        "x": 14,
+        "y": 704.671875,
+        "width": 362,
+        "height": 210,
+        "top": 704.671875,
+        "right": 376,
+        "bottom": 914.671875,
+        "left": 14
+      },
+      "actions": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "aside": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "scene": "waveguide",
+      "theme": "dark",
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "scrollHeight": 1283,
+      "knob": {
+        "x": 27,
+        "y": 611.984375,
+        "width": 336,
+        "height": 44,
+        "top": 611.984375,
+        "right": 363,
+        "bottom": 655.984375,
+        "left": 27
+      },
+      "kpis": {
+        "x": 14,
+        "y": 460.03125,
+        "width": 362,
+        "height": 87.265625,
+        "top": 460.03125,
+        "right": 376,
+        "bottom": 547.296875,
+        "left": 14
+      },
+      "physical": {
+        "x": 14,
+        "y": 240.03125,
+        "width": 362,
+        "height": 208,
+        "top": 240.03125,
+        "right": 376,
+        "bottom": 448.03125,
+        "left": 14
+      },
+      "plot": {
+        "x": 14,
+        "y": 704.671875,
+        "width": 362,
+        "height": 210,
+        "top": 704.671875,
+        "right": 376,
+        "bottom": 914.671875,
+        "left": 14
+      },
+      "actions": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "aside": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "scene": "overview",
+      "theme": "light",
+      "width": 320,
+      "height": 568,
+      "scrollWidth": 320,
+      "scrollHeight": 1496,
+      "knob": null,
+      "kpis": null,
+      "physical": null,
+      "plot": null,
+      "actions": {
+        "x": 0,
+        "y": 503,
+        "width": 320,
+        "height": 65,
+        "top": 503,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "aside": null,
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "scene": "overview",
+      "theme": "dark",
+      "width": 320,
+      "height": 568,
+      "scrollWidth": 320,
+      "scrollHeight": 1496,
+      "knob": null,
+      "kpis": null,
+      "physical": null,
+      "plot": null,
+      "actions": {
+        "x": 0,
+        "y": 503,
+        "width": 320,
+        "height": 65,
+        "top": 503,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "aside": null,
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "scene": "waveguide",
+      "theme": "light",
+      "width": 320,
+      "height": 568,
+      "scrollWidth": 320,
+      "scrollHeight": 1080,
+      "knob": {
+        "x": 21,
+        "y": 442.1875,
+        "width": 278,
+        "height": 44,
+        "top": 442.1875,
+        "right": 299,
+        "bottom": 486.1875,
+        "left": 21
+      },
+      "kpis": {
+        "x": 10,
+        "y": 329.859375,
+        "width": 300,
+        "height": 75.03125,
+        "top": 329.859375,
+        "right": 310,
+        "bottom": 404.890625,
+        "left": 10
+      },
+      "physical": {
+        "x": 10,
+        "y": 205.859375,
+        "width": 300,
+        "height": 116,
+        "top": 205.859375,
+        "right": 310,
+        "bottom": 321.859375,
+        "left": 10
+      },
+      "plot": {
+        "x": 10,
+        "y": 508.9375,
+        "width": 300,
+        "height": 210,
+        "top": 508.9375,
+        "right": 310,
+        "bottom": 718.9375,
+        "left": 10
+      },
+      "actions": {
+        "x": 0,
+        "y": 509,
+        "width": 320,
+        "height": 59,
+        "top": 509,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "aside": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "scene": "waveguide",
+      "theme": "dark",
+      "width": 320,
+      "height": 568,
+      "scrollWidth": 320,
+      "scrollHeight": 1080,
+      "knob": {
+        "x": 21,
+        "y": 442.1875,
+        "width": 278,
+        "height": 44,
+        "top": 442.1875,
+        "right": 299,
+        "bottom": 486.1875,
+        "left": 21
+      },
+      "kpis": {
+        "x": 10,
+        "y": 329.859375,
+        "width": 300,
+        "height": 75.03125,
+        "top": 329.859375,
+        "right": 310,
+        "bottom": 404.890625,
+        "left": 10
+      },
+      "physical": {
+        "x": 10,
+        "y": 205.859375,
+        "width": 300,
+        "height": 116,
+        "top": 205.859375,
+        "right": 310,
+        "bottom": 321.859375,
+        "left": 10
+      },
+      "plot": {
+        "x": 10,
+        "y": 508.9375,
+        "width": 300,
+        "height": 210,
+        "top": 508.9375,
+        "right": 310,
+        "bottom": 718.9375,
+        "left": 10
+      },
+      "actions": {
+        "x": 0,
+        "y": 509,
+        "width": 320,
+        "height": 59,
+        "top": 509,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "aside": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    }
+  ],
+  "errors": [],
+  "requests": [],
+  "scope": "Actual P1 model and UI; user learning study not performed"
+}

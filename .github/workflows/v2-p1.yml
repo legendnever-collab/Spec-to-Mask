@@ -1,0 +1,32 @@
+name: v2 P1 Waveguide acceptance
+on:
+  push:
+    branches: [feature/v2-learning-experience]
+    paths: ['src/**', 'tools/**', 'test/**', 'dist/**', 'package*.json', '.github/workflows/v2-p1.yml']
+  pull_request:
+    paths: ['src/**', 'tools/**', 'test/**', 'dist/**', 'package*.json', '.github/workflows/v2-p1.yml']
+permissions:
+  contents: read
+jobs:
+  waveguide:
+    name: P1 model, Save and Korean UI
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: git diff --exit-code -- dist/index.html
+      - run: node tools/check_rc.js
+      - run: npm run test:v2
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser:v2
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v2-p1-waveguide-evidence
+          path: artifacts/v2-p1/

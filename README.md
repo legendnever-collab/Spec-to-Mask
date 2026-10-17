@@ -1,5 +1,10 @@
 > **v2.0 Learning Experience Redesign — Draft plan (not released)**: [Master Plan](docs/V2_MASTER_PLAN.md) · [GPT-6.1 Sol P0 Work Order](docs/V2_P0_SOL_WORK_ORDER.md) · [Checkpoint / Handoff Log](docs/V2_CHECKPOINT_LOG.md). P0–P8 are proposed development checkpoints, **not implemented features**. This v2 branch must not be merged into main before user approval. Historical v1.2.0-beta.2 content below remains the stable baseline.
 
+## v2 P1 — Waveguide Tutorial 검토
+
+기술 용어는 English, 설명과 서술어는 한글로 작성했습니다. 기존 Model을 연결한 [P1 실행 HTML](dist/spec-to-mask-v2.0.0-alpha.1-p1.html)을 다운로드해 Browser에서 열 수 있습니다. [P1 개발 기록](docs/V2_P1_WAVEGUIDE.md), [Language Policy](docs/V2_LANGUAGE_POLICY.md), [Checkpoint Log](docs/V2_CHECKPOINT_LOG.md)에서 범위와 검증 상태를 확인하세요. P2와 main 병합은 사용자 승인 후 진행합니다.
+
+
 ---
 
 # SPEC-to-MASK Quest v1.2.0-beta.2 — Solution + Live PN / Dynamic Eye Bench

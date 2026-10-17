@@ -3,8 +3,12 @@
 > **Authoritative project brief** — 2026-10-18 (Asia/Seoul)  
 > Repository: https://github.com/legendnever-collab/Spec-to-Mask  
 > Development branch: `feature/v2-learning-experience`  
-> Current status: **P0 blueprint delivered — user review pending** ([architecture](V2_UX_ARCHITECTURE.md), [wireframes](V2_WIREFRAMES.md), [reuse map](V2_REUSE_MAP.md), [acceptance tests](V2_ACCEPTANCE_TESTS.md)). No P1+ production implementation or user play validation is claimed.
+> Current status: **P1 Waveguide Tutorial을 구현했으며 Play Review를 기다립니다.** ([architecture](V2_UX_ARCHITECTURE.md), [wireframes](V2_WIREFRAMES.md), [reuse map](V2_REUSE_MAP.md), [acceptance tests](V2_ACCEPTANCE_TESTS.md)). P1 구현 범위는 [V2_P1_WAVEGUIDE.md](V2_P1_WAVEGUIDE.md)에 기록합니다. 사용자 학습 효율 검증과 P2 개발은 완료했다고 주장하지 않습니다.
 > Release policy: each checkpoint requires an offline playable review artifact; **do not merge main without explicit user approval**.
+
+## Language policy — 사용자 확정 (2026-10-18)
+
+기술 용어와 Parameter/KPI 이름은 English로 유지하고, 설명·질문·서술어는 한글로 작성한다. 예: “Bend Radius를 늘리면 Bend Radiation Loss가 감소하지만 Footprint는 증가합니다.” 신규 UI, Learn Physics, Discovery, 오류 안내와 인수인계에 적용한다. 기존 Legacy 문구와 Historical Artifact의 일괄 번역은 이번 P1 범위에 포함하지 않는다.
 
 ## 0. The non-negotiable product mission
 

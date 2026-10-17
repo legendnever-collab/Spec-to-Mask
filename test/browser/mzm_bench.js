@@ -7,7 +7,7 @@ const ok=(v,m)=>{checks.push({ok:!!v,message:m});console.log(v?'PASS':'FAIL',m);
  const browser=await chromium.launch({executablePath:process.env.SMQ_BROWSER||undefined,args:process.env.SMQ_BROWSER?['--no-sandbox','--disable-gpu','--disable-software-rasterizer','--no-zygote','--single-process','--disable-dev-shm-usage']:['--no-sandbox']});
  try {
  const page=await browser.newPage({viewport:{width:1440,height:900}});page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(/^https?:/.test(r.url()))requests.push(r.url());});page.on('dialog',d=>d.accept());
- await page.goto('file://'+html);await page.click('[data-lam="1.31"]');await page.click('[data-mat="si"]');await page.click('#btn-start');await page.click('[data-welcome-track="mzm-dr8"]');
+ await page.goto('file://'+html+'?experience=legacy');await page.click('[data-lam="1.31"]');await page.click('[data-mat="si"]');await page.click('#btn-start');await page.click('[data-welcome-track="mzm-dr8"]');
  await page.click('#studioMoreToggle');await page.click('#studioApply');await page.click('#studioMoreToggle');await page.click('#studioNext');
  await page.waitForFunction(()=>GAME_CTX()?.kindId==='mzm'&&MZM_BENCH_UI.report());
  ok(await page.locator('#mzmBenchControls').isVisible()&&await page.locator('#mzmBench').isVisible(),'MZM level exposes simultaneous Tune controls and Inspect bench');

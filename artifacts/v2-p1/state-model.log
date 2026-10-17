@@ -1,0 +1,99 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@2.0.0-alpha.1-p1 test:v2
+> node test/t_v2.js
+
+PASS si1310: unchanged LAB arc loss at 1
+PASS si1310: physical geometry uses declared radius and width
+PASS si1310: passive power and honest model confidence
+PASS si1310: unchanged LAB arc loss at 4.5
+PASS si1310: physical geometry uses declared radius and width
+PASS si1310: passive power and honest model confidence
+PASS si1310: unchanged LAB arc loss at 8
+PASS si1310: physical geometry uses declared radius and width
+PASS si1310: passive power and honest model confidence
+PASS si1310: previous request cannot be current
+PASS si1310: previous revision invalidated
+PASS si1310: same revision on another design rejected
+PASS si1310: invalid radius rejected
+PASS si1310: invalid radius rejected
+PASS si1310: invalid radius rejected
+PASS si1310: invalid radius rejected
+PASS si1550: unchanged LAB arc loss at 1
+PASS si1550: physical geometry uses declared radius and width
+PASS si1550: passive power and honest model confidence
+PASS si1550: unchanged LAB arc loss at 5.5
+PASS si1550: physical geometry uses declared radius and width
+PASS si1550: passive power and honest model confidence
+PASS si1550: unchanged LAB arc loss at 10
+PASS si1550: physical geometry uses declared radius and width
+PASS si1550: passive power and honest model confidence
+PASS si1550: previous request cannot be current
+PASS si1550: previous revision invalidated
+PASS si1550: same revision on another design rejected
+PASS si1550: invalid radius rejected
+PASS si1550: invalid radius rejected
+PASS si1550: invalid radius rejected
+PASS si1550: invalid radius rejected
+PASS sin1310: unchanged LAB arc loss at 10
+PASS sin1310: physical geometry uses declared radius and width
+PASS sin1310: passive power and honest model confidence
+PASS sin1310: unchanged LAB arc loss at 45
+PASS sin1310: physical geometry uses declared radius and width
+PASS sin1310: passive power and honest model confidence
+PASS sin1310: unchanged LAB arc loss at 80
+PASS sin1310: physical geometry uses declared radius and width
+PASS sin1310: passive power and honest model confidence
+PASS sin1310: previous request cannot be current
+PASS sin1310: previous revision invalidated
+PASS sin1310: same revision on another design rejected
+PASS sin1310: invalid radius rejected
+PASS sin1310: invalid radius rejected
+PASS sin1310: invalid radius rejected
+PASS sin1310: invalid radius rejected
+PASS sin1550: unchanged LAB arc loss at 10
+PASS sin1550: physical geometry uses declared radius and width
+PASS sin1550: passive power and honest model confidence
+PASS sin1550: unchanged LAB arc loss at 55
+PASS sin1550: physical geometry uses declared radius and width
+PASS sin1550: passive power and honest model confidence
+PASS sin1550: unchanged LAB arc loss at 100
+PASS sin1550: physical geometry uses declared radius and width
+PASS sin1550: passive power and honest model confidence
+PASS sin1550: previous request cannot be current
+PASS sin1550: previous revision invalidated
+PASS sin1550: same revision on another design rejected
+PASS sin1550: invalid radius rejected
+PASS sin1550: invalid radius rejected
+PASS sin1550: invalid radius rejected
+PASS sin1550: invalid radius rejected
+PASS initial state evaluated without Verify
+PASS edit synchronously invalidates prior result
+PASS edited value evaluates
+PASS larger radius reduces radiation and increases area
+PASS physical view / plot / KPI use same full identity
+PASS comparison restore uses captured design
+PASS Original protected independently
+PASS Learn is read only for complete state
+PASS blank numeric value cannot borrow old result
+PASS out-of-domain numeric input rejected
+PASS Skip remains available for invalid input
+PASS P1 preserves existing smq3-studio bytes
+PASS P1 preserves existing smq3-designs bytes
+PASS P1 preserves existing smq3-lab bytes
+PASS P1 preserves existing smq3-db bytes
+PASS seed fixture not mutated
+PASS PR23 nested Journey preserved in Full Backup without granting v2 completion
+PASS Full Backup includes validated v2 workspace
+PASS structurally bad v2 backup rejected with valid checksum
+PASS old backup without v2 namespace remains valid
+PASS Full Restore applies validated v2 data transactionally
+PASS Undo Restore recovers preceding v2 design
+PASS reload preserves design identity and history
+PASS reload does not load saved current-result evidence
+PASS corrupt v2 raw bytes quarantined before reset
+PASS Continue without manipulation does not award completion
+PASS Skip does not award observed completion
+PASS failed v2 write announces Save failure
+PASS no script errors
+93 P1 state/model checks passed
