@@ -2,6 +2,12 @@
 
 This increment stays on `feature/v1.2-mzm-bench` / PR #22. The user requested the next version before merging; this PR remains unmerged. Beta.1 evidence below is historical. Exact beta.2 source/artifact hashes and completed test results live in `artifacts/v120-beta2/manifest.json`.
 
+## beta.2 artifact checkpoint — 2026-10-17
+
+Application source is frozen at `3df1ea609d306e4d52e5b114a8c1e49d0db93f7c`. `dist/spec-to-mask-v1.2.0-beta.2.html` passes source parity, 111 model checks, 56 Studio state checks, 37 MZM browser checks and 168 existing browser checks. Both browser suites bind to SHA256 `b5ad7068ef669da067bdb9577d0efde07fa65c3a5d761ba437e1de62a3a76691` and report zero page errors / external HTTP requests.
+
+Source CI 39013245792 passed all seven jobs. Final artifact checkpoint CI is separate; consult PR #22 current-head checks. Details and immutable evidence: `artifacts/v120-beta2/manifest.json`, `README.md`, `source-ci.json` and `SHA256SUMS.txt`. Release guides now describe beta.2. Physics, thresholds and workflows are unchanged. PR remains Draft; no main merge.
+
 ## What to try
 
 1. Open **Solution** beside Next at any device level. It immediately shows the example parameter values and same-condition metrics. **Explicit Apply** protects the original device; **Restore Original** restores it. Opening Solution alone changes neither designs nor completion records. Lab missions show actionable, mission-specific steps, preserving explicit verification/export.

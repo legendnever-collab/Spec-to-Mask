@@ -1,0 +1,62 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.2.0-beta.2 test:studio
+> node test/e2e/studio_state.js
+
+PASS v1.0 legacy design automatically restored
+PASS new track starts at local Level 1
+PASS legacy design is not silently copied
+PASS explicit Legacy Copy imports design and protects a snapshot
+PASS another track starts in its own Level 1
+PASS track switching resumes exact design
+PASS preview never applies reference
+PASS Reference Apply protects Original
+PASS repeated Apply does not overwrite protected Original
+PASS historic stars do not satisfy a fresh hard gate
+PASS all legacy platform stars preserved
+PASS legacy Lab untouched by Track isolation
+PASS legacy DB record preserved
+PASS text backup includes Track workspaces
+PASS new full backup schema / checksum valid
+PASS tampered Track checksum rejected
+PASS invalid Track structure rejected even with valid checksum
+PASS v1.0 backup without Track key still validates
+PASS bottom tabs and generic evaluation button removed
+PASS More is between Start New and Guide
+PASS Tune and Inspect stay open together
+PASS atomic evaluation setup uses a valid actual design
+PASS actual solver provides a failing in-range parameter
+PASS queued edit immediately invalidates current PASS and disables Next
+PASS immediate evaluation evaluates current design and blocks failing Next
+PASS failed evaluation reports actual failing solver and new design identity
+PASS failed evaluation is recorded against current identity
+PASS failing evaluation cannot advance
+PASS reload resumes failed design without borrowing previous PASS
+PASS Track switch preserves failed identity and blocked Next
+PASS restoring valid parameter and immediate evaluation re-enables Next
+PASS Reference Apply and evaluation recover PASS
+PASS Original Restore blocks the protected failing design
+PASS failed-design full backup restores successfully
+PASS backup / reload restores failed identity and blocks prior PASS
+PASS Full Design reference has a passing evaluation
+PASS Guided mode evaluates its own identity
+PASS Full Design evaluates its own identity
+PASS Full Design reevaluation recovers Next
+PASS number input invalidates Next before blur
+PASS number input automatically evaluates actual failing design
+PASS number input recovery automatically passes
+PASS empty number input blocks Next and explains why
+PASS out-of-range numeric input cannot lend old PASS
+PASS Reference recovers from invalid numeric entry
+PASS Lab verification is an explicit action, not auto-awarded
+PASS Lab floorplan fitted design passes automatically
+PASS pending Lab number edit invalidates prior PASS before 90ms render
+PASS immediate Lab Next evaluates failing geometry and blocks progression
+PASS Lab numeric recovery automatically enables Next
+PASS Lab automatic rendering preserves numeric keyboard focus
+PASS blank Lab numeric field blocks Next
+PASS pending Lab render preserves invalid draft after blur
+PASS automatic Track resume after fresh application boot
+PASS state regression has no page errors
+PASS corrupt Track JSON raw preserved in Quarantine
+56 studio state checks passed

@@ -1,5 +1,9 @@
-# v1.2.0-beta.1 — MZM analysis checkpoint
+# v1.2.0-beta.2 — Solution and live PN / dynamic eye
 
-Adds a single-lane observation bench to TW-MZM in the existing MZM DR8 Track. Simultaneous Tune/Inspect shows independent source/bias/group-index experiments, RF/EO curves, a Smith chart and complementary static transfer. Export binds current design and conditions to numerical samples.
+This release candidate adds Solution preview, explicit Apply and protected Original restore to the existing Studio. Lab Solution explains the current mission without changing verification or export state. The Lab reference pane now tolerates a transient missing mission.
 
-This is an early beta of the first v1.2 milestone. Existing Mission/eye/Next uses the legacy conditions; independent bench conditions are clearly labeled. Full Tx/Rx/GDS curriculum, TFLN, MRM expansion and independent LiDAR remain future increments. See `docs/DEVELOPMENT_V120.md` and `artifacts/v120-bench/manifest.json`.
+The single-lane MZM bench supports live workspace PN geometry, a 0–3 V reverse-bias sweep, and a deterministic NRZ/PAM4 dynamic eye. Source/load conditions, driver bandwidth, symbol rate and bias update the linked Inspect plots. Bench Solution provides a labeled 28 GBd NRZ starting experiment; it is not an imported reference or guaranteed PASS.
+
+The bench remains independent of the legacy Canvas Eye, Mission score and Next gate. Legacy physics and thresholds are unchanged. Quantitative external reference reproduction is NOT VERIFIED; full Tx/Rx/GDS curriculum, calibrated geometry, nonlinear PN, TFLN, MRM expansion and standalone LiDAR remain future milestones.
+
+Exact beta.2 executable evidence: `artifacts/v120-beta2/manifest.json`. Beta.1 files and evidence are preserved as historical results. PR #22 remains Draft and unmerged pending user play review.

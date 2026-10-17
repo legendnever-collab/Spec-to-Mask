@@ -1,0 +1,117 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.2.0-beta.2 test:mzm-bench
+> node test/t_mzm_bench.js
+
+PASS lossless matched line: no reflection and unit transmitted power
+PASS matched lossy line gives exp(-alpha L) field attenuation
+PASS zero-length network is identity even with complex Zc
+PASS velocity match integral has stable analytic limit
+PASS one-cycle velocity mismatch cancels EO integral
+PASS invalid fractional probe rejected
+PASS si1310: analysis never changes input design
+PASS si1310: complete finite sweep
+PASS si1310: default EO equals existing engine at every frequency
+PASS si1310: DC electrode voltage respects source/load divider
+PASS si1310: passive two-port power bound
+PASS si1310: optical output power conservation including loss
+PASS si1310: quadrature has equal output powers at zero RF voltage
+PASS si1310: zero phase directs all surviving light to main
+PASS si1310: source voltage differs from electrode voltage and does not redefine S parameters
+PASS si1310: optical velocity mismatch affects EO, not electrical S21
+PASS si1310: terminated reflection distinguished from two-port S11
+PASS si1310: EO and electrical S21 are distinct
+PASS si1310: uncalibrated reference never marked verified
+PASS si1550: analysis never changes input design
+PASS si1550: complete finite sweep
+PASS si1550: default EO equals existing engine at every frequency
+PASS si1550: DC electrode voltage respects source/load divider
+PASS si1550: passive two-port power bound
+PASS si1550: optical output power conservation including loss
+PASS si1550: quadrature has equal output powers at zero RF voltage
+PASS si1550: zero phase directs all surviving light to main
+PASS si1550: source voltage differs from electrode voltage and does not redefine S parameters
+PASS si1550: optical velocity mismatch affects EO, not electrical S21
+PASS si1550: terminated reflection distinguished from two-port S11
+PASS si1550: EO and electrical S21 are distinct
+PASS si1550: uncalibrated reference never marked verified
+PASS sin1310: analysis never changes input design
+PASS sin1310: complete finite sweep
+PASS sin1310: default EO equals existing engine at every frequency
+PASS sin1310: DC electrode voltage respects source/load divider
+PASS sin1310: passive two-port power bound
+PASS sin1310: optical output power conservation including loss
+PASS sin1310: quadrature has equal output powers at zero RF voltage
+PASS sin1310: zero phase directs all surviving light to main
+PASS sin1310: source voltage differs from electrode voltage and does not redefine S parameters
+PASS sin1310: optical velocity mismatch affects EO, not electrical S21
+PASS sin1310: terminated reflection distinguished from two-port S11
+PASS sin1310: EO and electrical S21 are distinct
+PASS sin1310: uncalibrated reference never marked verified
+PASS sin1550: analysis never changes input design
+PASS sin1550: complete finite sweep
+PASS sin1550: default EO equals existing engine at every frequency
+PASS sin1550: DC electrode voltage respects source/load divider
+PASS sin1550: passive two-port power bound
+PASS sin1550: optical output power conservation including loss
+PASS sin1550: quadrature has equal output powers at zero RF voltage
+PASS sin1550: zero phase directs all surviving light to main
+PASS sin1550: source voltage differs from electrode voltage and does not redefine S parameters
+PASS sin1550: optical velocity mismatch affects EO, not electrical S21
+PASS sin1550: terminated reflection distinguished from two-port S11
+PASS sin1550: EO and electrical S21 are distinct
+PASS sin1550: uncalibrated reference never marked verified
+PASS beta.1 settings migrate additively without changing existing source
+PASS discrete settings reject fractional values
+PASS flat channel NRZ: exact analytical cosine level spacing
+PASS flat channel NRZ: no source amplitude renormalization / optical power gain
+PASS seeded NRZ eye repeats exactly
+PASS flat channel PAM4: exact analytical cosine level spacing
+PASS flat channel PAM4: no source amplitude renormalization / optical power gain
+PASS seeded PAM4 eye repeats exactly
+PASS si1310: live PN calculation does not mutate workspace geometry
+PASS si1310: complete finite 0–3 V PN sweep
+PASS si1310: increased reverse bias widens depletion and reduces capacitance / absorption
+PASS si1310: reverse bias propagates through RF / EO and dynamic eye
+PASS si1310: dynamic power bound and valid junction reverse bias
+PASS si1310: slower PAM4 has less ISI with identical channel / seed
+PASS si1310: NRZ / PAM4 grouping and raw-rate accounting
+PASS si1310: narrow driver closes eye instead of rescaling it open
+PASS si1310: forward-bias excursion cannot produce a valid eye
+PASS si1310: fixed card does not invent PN bias dependence
+PASS si1310: folded optical levels cannot claim an open data eye
+PASS si1550: live PN calculation does not mutate workspace geometry
+PASS si1550: complete finite 0–3 V PN sweep
+PASS si1550: increased reverse bias widens depletion and reduces capacitance / absorption
+PASS si1550: reverse bias propagates through RF / EO and dynamic eye
+PASS si1550: dynamic power bound and valid junction reverse bias
+PASS si1550: slower PAM4 has less ISI with identical channel / seed
+PASS si1550: NRZ / PAM4 grouping and raw-rate accounting
+PASS si1550: narrow driver closes eye instead of rescaling it open
+PASS si1550: forward-bias excursion cannot produce a valid eye
+PASS si1550: fixed card does not invent PN bias dependence
+PASS si1550: folded optical levels cannot claim an open data eye
+PASS sin1310: live PN calculation does not mutate workspace geometry
+PASS sin1310: complete finite 0–3 V PN sweep
+PASS sin1310: increased reverse bias widens depletion and reduces capacitance / absorption
+PASS sin1310: reverse bias propagates through RF / EO and dynamic eye
+PASS sin1310: dynamic power bound and valid junction reverse bias
+PASS sin1310: slower PAM4 has less ISI with identical channel / seed
+PASS sin1310: NRZ / PAM4 grouping and raw-rate accounting
+PASS sin1310: narrow driver closes eye instead of rescaling it open
+PASS sin1310: forward-bias excursion cannot produce a valid eye
+PASS sin1310: fixed card does not invent PN bias dependence
+PASS sin1310: folded optical levels cannot claim an open data eye
+PASS sin1550: live PN calculation does not mutate workspace geometry
+PASS sin1550: complete finite 0–3 V PN sweep
+PASS sin1550: increased reverse bias widens depletion and reduces capacitance / absorption
+PASS sin1550: reverse bias propagates through RF / EO and dynamic eye
+PASS sin1550: dynamic power bound and valid junction reverse bias
+PASS sin1550: slower PAM4 has less ISI with identical channel / seed
+PASS sin1550: NRZ / PAM4 grouping and raw-rate accounting
+PASS sin1550: narrow driver closes eye instead of rescaling it open
+PASS sin1550: forward-bias excursion cannot produce a valid eye
+PASS sin1550: fixed card does not invent PN bias dependence
+PASS sin1550: folded optical levels cannot claim an open data eye
+PASS missing live PN geometry rejected
+111 MZM bench model checks passed
