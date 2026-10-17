@@ -1,3 +1,7 @@
+> **v2.0 Learning Experience Redesign — Draft plan (not released)**: [Master Plan](docs/V2_MASTER_PLAN.md) · [GPT-6.1 Sol P0 Work Order](docs/V2_P0_SOL_WORK_ORDER.md) · [Checkpoint / Handoff Log](docs/V2_CHECKPOINT_LOG.md). P0–P8 are proposed development checkpoints, **not implemented features**. This v2 branch must not be merged into main before user approval. Historical v1.2.0-beta.2 content below remains the stable baseline.
+
+---
+
 # SPEC-to-MASK Quest v1.2.0-beta.2 — Solution + Live PN / Dynamic Eye Bench
 
 Canvas-first PIC learning with five six-Level Tracks: PIC Fundamentals, MZM DR8, MRR DR8, MRR WDM8, FMCW LiDAR / TTD. One offline HTML with saved Light/Dark theme, independent Track workspaces, automatic current-design evaluation and protected Reference / Original. Tune stays beside Canvas, Inspect below; More is in the top navigation.

@@ -1,0 +1,1964 @@
+{
+  "scope": "P0 UX MOCK ONLY; no user learning or production physics validation",
+  "browser": "153.0.8010.0",
+  "node": "v24.19.0",
+  "htmlSHA256": "70d592522514a06e842e669b2aa613938763d17ed3abc4eab66ebf6ffb584dd2",
+  "results": [
+    {
+      "ok": true,
+      "message": "overview light 1440: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "overview light 1440x900: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "overview light 1440x900: desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "overview dark 1440: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "overview dark 1440x900: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "overview dark 1440x900: desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "wg light 1440: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "wg light 1440: range input at least44px"
+    },
+    {
+      "ok": true,
+      "message": "wg light 1440x900: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "wg light 1440x900: desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "wg light 1440: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "wg light 1440: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "wg light 1440: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "wg light 1440: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "wg light 1440: aside in viewport"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 1440: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 1440: range input at least44px"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 1440x900: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 1440x900: desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 1440: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 1440: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 1440: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 1440: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 1440: aside in viewport"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 1440: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 1440: range input at least44px"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 1440x900: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 1440x900: desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 1440: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 1440: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 1440: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 1440: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 1440: aside in viewport"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 1440: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 1440: range input at least44px"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 1440x900: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 1440x900: desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 1440: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 1440: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 1440: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 1440: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 1440: aside in viewport"
+    },
+    {
+      "ok": true,
+      "message": "overview light 1366: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "overview light 1366x768: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "overview light 1366x768: desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "overview dark 1366: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "overview dark 1366x768: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "overview dark 1366x768: desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "wg light 1366: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "wg light 1366: range input at least44px"
+    },
+    {
+      "ok": true,
+      "message": "wg light 1366x768: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "wg light 1366x768: desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "wg light 1366: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "wg light 1366: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "wg light 1366: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "wg light 1366: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "wg light 1366: aside in viewport"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 1366: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 1366: range input at least44px"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 1366x768: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 1366x768: desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 1366: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 1366: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 1366: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 1366: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 1366: aside in viewport"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 1366: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 1366: range input at least44px"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 1366x768: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 1366x768: desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 1366: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 1366: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 1366: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 1366: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 1366: aside in viewport"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 1366: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 1366: range input at least44px"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 1366x768: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 1366x768: desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 1366: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 1366: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 1366: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 1366: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 1366: aside in viewport"
+    },
+    {
+      "ok": true,
+      "message": "overview light 390: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "overview light 390x844: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "overview dark 390: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "overview dark 390x844: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "wg light 390: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "wg light 390: range input at least44px"
+    },
+    {
+      "ok": true,
+      "message": "wg light 390x844: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "wg light 390: physical view readable"
+    },
+    {
+      "ok": true,
+      "message": "wg light 390: KPI above action bar"
+    },
+    {
+      "ok": true,
+      "message": "wg light 390: primary knob above action bar"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 390: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 390: range input at least44px"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 390x844: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 390: physical view readable"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 390: KPI above action bar"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 390: primary knob above action bar"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 390: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 390: range input at least44px"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 390x844: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 390: physical view readable"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 390: KPI above action bar"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 390: primary knob above action bar"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 390: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 390: range input at least44px"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 390x844: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 390: physical view readable"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 390: KPI above action bar"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 390: primary knob above action bar"
+    },
+    {
+      "ok": true,
+      "message": "overview light 320: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "overview light 320x568: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "overview dark 320: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "overview dark 320x568: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "wg light 320: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "wg light 320: range input at least44px"
+    },
+    {
+      "ok": true,
+      "message": "wg light 320x568: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "wg light 320: physical view readable"
+    },
+    {
+      "ok": true,
+      "message": "wg light 320: KPI above action bar"
+    },
+    {
+      "ok": true,
+      "message": "wg light 320: primary knob above action bar"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 320: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 320: range input at least44px"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 320x568: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 320: physical view readable"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 320: KPI above action bar"
+    },
+    {
+      "ok": true,
+      "message": "wg dark 320: primary knob above action bar"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 320: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 320: range input at least44px"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 320x568: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 320: physical view readable"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 320: KPI above action bar"
+    },
+    {
+      "ok": true,
+      "message": "mzm light 320: primary knob above action bar"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 320: buttons at least44px"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 320: range input at least44px"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 320x568: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 320: physical view readable"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 320: KPI above action bar"
+    },
+    {
+      "ok": true,
+      "message": "mzm dark 320: primary knob above action bar"
+    },
+    {
+      "ok": true,
+      "message": "MZM fixture: length, normalized Vπ and active loss change together"
+    },
+    {
+      "ok": true,
+      "message": "physical / plot / KPI share one revision"
+    },
+    {
+      "ok": true,
+      "message": "fixture diagram and plot rendered"
+    },
+    {
+      "ok": true,
+      "message": "Learn opens"
+    },
+    {
+      "ok": true,
+      "message": "Learn reflects selected parameter and model confidence"
+    },
+    {
+      "ok": true,
+      "message": "Learn open/Escape preserves complete memory state"
+    },
+    {
+      "ok": true,
+      "message": "Learn returns keyboard focus"
+    },
+    {
+      "ok": true,
+      "message": "Learn explicit close preserves state"
+    },
+    {
+      "ok": true,
+      "message": "Engineer adds constraints without changing design or revision"
+    },
+    {
+      "ok": true,
+      "message": "Discover → Engineer retains physical panel and reveals constraints"
+    },
+    {
+      "ok": true,
+      "message": "captured comparison restores independently of Original"
+    },
+    {
+      "ok": true,
+      "message": "protected Original remains 2 mm"
+    },
+    {
+      "ok": true,
+      "message": "slider supports keyboard arrow"
+    },
+    {
+      "ok": true,
+      "message": "theme is a presentation preference, no design change"
+    },
+    {
+      "ok": true,
+      "message": "Waveguide radius changes geometric area"
+    },
+    {
+      "ok": true,
+      "message": "bend loss is unavailable, never fabricated"
+    },
+    {
+      "ok": true,
+      "message": "Continue after observation requires no engineering target"
+    },
+    {
+      "ok": true,
+      "message": "Skip continues without falsely awarding completion"
+    },
+    {
+      "ok": true,
+      "message": "Continue without manipulation does not award Discover completion"
+    },
+    {
+      "ok": true,
+      "message": "Engineer constraints fit desktop 1366x768"
+    },
+    {
+      "ok": true,
+      "message": "prototype performs no localStorage writes"
+    },
+    {
+      "ok": true,
+      "message": "preexisting legacy storage bytes preserved"
+    },
+    {
+      "ok": true,
+      "message": "offline runtime requests no external HTTP"
+    },
+    {
+      "ok": true,
+      "message": "no browser runtime errors"
+    }
+  ],
+  "measurements": [
+    {
+      "scene": "overview",
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "scrollWidth": 1440,
+      "scrollHeight": 901,
+      "knob": null,
+      "physical": null,
+      "plot": null,
+      "kpis": null,
+      "aside": null,
+      "action": {
+        "x": 889.796875,
+        "y": 771.609375,
+        "width": 497.203125,
+        "height": 44,
+        "top": 771.609375,
+        "right": 1387,
+        "bottom": 815.609375,
+        "left": 889.796875
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "overview",
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "scrollWidth": 1440,
+      "scrollHeight": 901,
+      "knob": null,
+      "physical": null,
+      "plot": null,
+      "kpis": null,
+      "aside": null,
+      "action": {
+        "x": 889.796875,
+        "y": 771.609375,
+        "width": 497.203125,
+        "height": 44,
+        "top": 771.609375,
+        "right": 1387,
+        "bottom": 815.609375,
+        "left": 889.796875
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "wg",
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "scrollWidth": 1440,
+      "scrollHeight": 901,
+      "knob": {
+        "x": 885.796875,
+        "y": 333.375,
+        "width": 505.203125,
+        "height": 44,
+        "top": 333.375,
+        "right": 1391,
+        "bottom": 377.375,
+        "left": 885.796875
+      },
+      "physical": {
+        "x": 28,
+        "y": 207.78125,
+        "width": 820.796875,
+        "height": 394.09375,
+        "top": 207.78125,
+        "right": 848.796875,
+        "bottom": 601.875,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 617.875,
+        "width": 820.796875,
+        "height": 260.125,
+        "top": 617.875,
+        "right": 848.796875,
+        "bottom": 878,
+        "left": 28
+      },
+      "kpis": {
+        "x": 885.796875,
+        "y": 412.953125,
+        "width": 505.203125,
+        "height": 95.78125,
+        "top": 412.953125,
+        "right": 1391,
+        "bottom": 508.734375,
+        "left": 885.796875
+      },
+      "aside": {
+        "x": 864.796875,
+        "y": 207.78125,
+        "width": 547.203125,
+        "height": 670.21875,
+        "top": 207.78125,
+        "right": 1412,
+        "bottom": 878,
+        "left": 864.796875
+      },
+      "action": {
+        "x": 885.796875,
+        "y": 813,
+        "width": 505.203125,
+        "height": 44,
+        "top": 813,
+        "right": 1391,
+        "bottom": 857,
+        "left": 885.796875
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "wg",
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "scrollWidth": 1440,
+      "scrollHeight": 901,
+      "knob": {
+        "x": 885.796875,
+        "y": 333.375,
+        "width": 505.203125,
+        "height": 44,
+        "top": 333.375,
+        "right": 1391,
+        "bottom": 377.375,
+        "left": 885.796875
+      },
+      "physical": {
+        "x": 28,
+        "y": 207.78125,
+        "width": 820.796875,
+        "height": 394.09375,
+        "top": 207.78125,
+        "right": 848.796875,
+        "bottom": 601.875,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 617.875,
+        "width": 820.796875,
+        "height": 260.125,
+        "top": 617.875,
+        "right": 848.796875,
+        "bottom": 878,
+        "left": 28
+      },
+      "kpis": {
+        "x": 885.796875,
+        "y": 412.953125,
+        "width": 505.203125,
+        "height": 95.78125,
+        "top": 412.953125,
+        "right": 1391,
+        "bottom": 508.734375,
+        "left": 885.796875
+      },
+      "aside": {
+        "x": 864.796875,
+        "y": 207.78125,
+        "width": 547.203125,
+        "height": 670.21875,
+        "top": 207.78125,
+        "right": 1412,
+        "bottom": 878,
+        "left": 864.796875
+      },
+      "action": {
+        "x": 885.796875,
+        "y": 813,
+        "width": 505.203125,
+        "height": 44,
+        "top": 813,
+        "right": 1391,
+        "bottom": 857,
+        "left": 885.796875
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "mzm",
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "scrollWidth": 1440,
+      "scrollHeight": 901,
+      "knob": {
+        "x": 885.796875,
+        "y": 333.375,
+        "width": 505.203125,
+        "height": 44,
+        "top": 333.375,
+        "right": 1391,
+        "bottom": 377.375,
+        "left": 885.796875
+      },
+      "physical": {
+        "x": 28,
+        "y": 207.78125,
+        "width": 820.796875,
+        "height": 394.09375,
+        "top": 207.78125,
+        "right": 848.796875,
+        "bottom": 601.875,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 617.875,
+        "width": 820.796875,
+        "height": 260.125,
+        "top": 617.875,
+        "right": 848.796875,
+        "bottom": 878,
+        "left": 28
+      },
+      "kpis": {
+        "x": 885.796875,
+        "y": 412.953125,
+        "width": 505.203125,
+        "height": 95.78125,
+        "top": 412.953125,
+        "right": 1391,
+        "bottom": 508.734375,
+        "left": 885.796875
+      },
+      "aside": {
+        "x": 864.796875,
+        "y": 207.78125,
+        "width": 547.203125,
+        "height": 670.21875,
+        "top": 207.78125,
+        "right": 1412,
+        "bottom": 878,
+        "left": 864.796875
+      },
+      "action": {
+        "x": 885.796875,
+        "y": 813,
+        "width": 505.203125,
+        "height": 44,
+        "top": 813,
+        "right": 1391,
+        "bottom": 857,
+        "left": 885.796875
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "mzm",
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "scrollWidth": 1440,
+      "scrollHeight": 901,
+      "knob": {
+        "x": 885.796875,
+        "y": 333.375,
+        "width": 505.203125,
+        "height": 44,
+        "top": 333.375,
+        "right": 1391,
+        "bottom": 377.375,
+        "left": 885.796875
+      },
+      "physical": {
+        "x": 28,
+        "y": 207.78125,
+        "width": 820.796875,
+        "height": 394.09375,
+        "top": 207.78125,
+        "right": 848.796875,
+        "bottom": 601.875,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 617.875,
+        "width": 820.796875,
+        "height": 260.125,
+        "top": 617.875,
+        "right": 848.796875,
+        "bottom": 878,
+        "left": 28
+      },
+      "kpis": {
+        "x": 885.796875,
+        "y": 412.953125,
+        "width": 505.203125,
+        "height": 95.78125,
+        "top": 412.953125,
+        "right": 1391,
+        "bottom": 508.734375,
+        "left": 885.796875
+      },
+      "aside": {
+        "x": 864.796875,
+        "y": 207.78125,
+        "width": 547.203125,
+        "height": 670.21875,
+        "top": 207.78125,
+        "right": 1412,
+        "bottom": 878,
+        "left": 864.796875
+      },
+      "action": {
+        "x": 885.796875,
+        "y": 813,
+        "width": 505.203125,
+        "height": 44,
+        "top": 813,
+        "right": 1391,
+        "bottom": 857,
+        "left": 885.796875
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "overview",
+      "theme": "light",
+      "width": 1366,
+      "height": 768,
+      "scrollWidth": 1366,
+      "scrollHeight": 769,
+      "knob": null,
+      "physical": null,
+      "plot": null,
+      "kpis": null,
+      "aside": null,
+      "action": {
+        "x": 841.390625,
+        "y": 651.609375,
+        "width": 475.59375,
+        "height": 44,
+        "top": 651.609375,
+        "right": 1316.984375,
+        "bottom": 695.609375,
+        "left": 841.390625
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "overview",
+      "theme": "dark",
+      "width": 1366,
+      "height": 768,
+      "scrollWidth": 1366,
+      "scrollHeight": 769,
+      "knob": null,
+      "physical": null,
+      "plot": null,
+      "kpis": null,
+      "aside": null,
+      "action": {
+        "x": 841.390625,
+        "y": 651.609375,
+        "width": 475.59375,
+        "height": 44,
+        "top": 651.609375,
+        "right": 1316.984375,
+        "bottom": 695.609375,
+        "left": 841.390625
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "wg",
+      "theme": "light",
+      "width": 1366,
+      "height": 768,
+      "scrollWidth": 1366,
+      "scrollHeight": 769,
+      "knob": {
+        "x": 837.390625,
+        "y": 315.59375,
+        "width": 483.59375,
+        "height": 44,
+        "top": 315.59375,
+        "right": 1320.984375,
+        "bottom": 359.59375,
+        "left": 837.390625
+      },
+      "physical": {
+        "x": 28,
+        "y": 194,
+        "width": 776.390625,
+        "height": 322.890625,
+        "top": 194,
+        "right": 804.390625,
+        "bottom": 516.890625,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 532.890625,
+        "width": 776.390625,
+        "height": 213.09375,
+        "top": 532.890625,
+        "right": 804.390625,
+        "bottom": 745.984375,
+        "left": 28
+      },
+      "kpis": {
+        "x": 837.390625,
+        "y": 395.171875,
+        "width": 483.59375,
+        "height": 95.78125,
+        "top": 395.171875,
+        "right": 1320.984375,
+        "bottom": 490.953125,
+        "left": 837.390625
+      },
+      "aside": {
+        "x": 820.390625,
+        "y": 194,
+        "width": 517.59375,
+        "height": 551.984375,
+        "top": 194,
+        "right": 1337.984375,
+        "bottom": 745.984375,
+        "left": 820.390625
+      },
+      "action": {
+        "x": 837.390625,
+        "y": 684.984375,
+        "width": 483.59375,
+        "height": 44,
+        "top": 684.984375,
+        "right": 1320.984375,
+        "bottom": 728.984375,
+        "left": 837.390625
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "wg",
+      "theme": "dark",
+      "width": 1366,
+      "height": 768,
+      "scrollWidth": 1366,
+      "scrollHeight": 769,
+      "knob": {
+        "x": 837.390625,
+        "y": 315.59375,
+        "width": 483.59375,
+        "height": 44,
+        "top": 315.59375,
+        "right": 1320.984375,
+        "bottom": 359.59375,
+        "left": 837.390625
+      },
+      "physical": {
+        "x": 28,
+        "y": 194,
+        "width": 776.390625,
+        "height": 322.890625,
+        "top": 194,
+        "right": 804.390625,
+        "bottom": 516.890625,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 532.890625,
+        "width": 776.390625,
+        "height": 213.09375,
+        "top": 532.890625,
+        "right": 804.390625,
+        "bottom": 745.984375,
+        "left": 28
+      },
+      "kpis": {
+        "x": 837.390625,
+        "y": 395.171875,
+        "width": 483.59375,
+        "height": 95.78125,
+        "top": 395.171875,
+        "right": 1320.984375,
+        "bottom": 490.953125,
+        "left": 837.390625
+      },
+      "aside": {
+        "x": 820.390625,
+        "y": 194,
+        "width": 517.59375,
+        "height": 551.984375,
+        "top": 194,
+        "right": 1337.984375,
+        "bottom": 745.984375,
+        "left": 820.390625
+      },
+      "action": {
+        "x": 837.390625,
+        "y": 684.984375,
+        "width": 483.59375,
+        "height": 44,
+        "top": 684.984375,
+        "right": 1320.984375,
+        "bottom": 728.984375,
+        "left": 837.390625
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "mzm",
+      "theme": "light",
+      "width": 1366,
+      "height": 768,
+      "scrollWidth": 1366,
+      "scrollHeight": 769,
+      "knob": {
+        "x": 837.390625,
+        "y": 315.59375,
+        "width": 483.59375,
+        "height": 44,
+        "top": 315.59375,
+        "right": 1320.984375,
+        "bottom": 359.59375,
+        "left": 837.390625
+      },
+      "physical": {
+        "x": 28,
+        "y": 194,
+        "width": 776.390625,
+        "height": 322.890625,
+        "top": 194,
+        "right": 804.390625,
+        "bottom": 516.890625,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 532.890625,
+        "width": 776.390625,
+        "height": 213.09375,
+        "top": 532.890625,
+        "right": 804.390625,
+        "bottom": 745.984375,
+        "left": 28
+      },
+      "kpis": {
+        "x": 837.390625,
+        "y": 395.171875,
+        "width": 483.59375,
+        "height": 95.78125,
+        "top": 395.171875,
+        "right": 1320.984375,
+        "bottom": 490.953125,
+        "left": 837.390625
+      },
+      "aside": {
+        "x": 820.390625,
+        "y": 194,
+        "width": 517.59375,
+        "height": 551.984375,
+        "top": 194,
+        "right": 1337.984375,
+        "bottom": 745.984375,
+        "left": 820.390625
+      },
+      "action": {
+        "x": 837.390625,
+        "y": 684.984375,
+        "width": 483.59375,
+        "height": 44,
+        "top": 684.984375,
+        "right": 1320.984375,
+        "bottom": 728.984375,
+        "left": 837.390625
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "mzm",
+      "theme": "dark",
+      "width": 1366,
+      "height": 768,
+      "scrollWidth": 1366,
+      "scrollHeight": 769,
+      "knob": {
+        "x": 837.390625,
+        "y": 315.59375,
+        "width": 483.59375,
+        "height": 44,
+        "top": 315.59375,
+        "right": 1320.984375,
+        "bottom": 359.59375,
+        "left": 837.390625
+      },
+      "physical": {
+        "x": 28,
+        "y": 194,
+        "width": 776.390625,
+        "height": 322.890625,
+        "top": 194,
+        "right": 804.390625,
+        "bottom": 516.890625,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 532.890625,
+        "width": 776.390625,
+        "height": 213.09375,
+        "top": 532.890625,
+        "right": 804.390625,
+        "bottom": 745.984375,
+        "left": 28
+      },
+      "kpis": {
+        "x": 837.390625,
+        "y": 395.171875,
+        "width": 483.59375,
+        "height": 95.78125,
+        "top": 395.171875,
+        "right": 1320.984375,
+        "bottom": 490.953125,
+        "left": 837.390625
+      },
+      "aside": {
+        "x": 820.390625,
+        "y": 194,
+        "width": 517.59375,
+        "height": 551.984375,
+        "top": 194,
+        "right": 1337.984375,
+        "bottom": 745.984375,
+        "left": 820.390625
+      },
+      "action": {
+        "x": 837.390625,
+        "y": 684.984375,
+        "width": 483.59375,
+        "height": 44,
+        "top": 684.984375,
+        "right": 1320.984375,
+        "bottom": 728.984375,
+        "left": 837.390625
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "overview",
+      "theme": "light",
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "scrollHeight": 1335,
+      "knob": null,
+      "physical": null,
+      "plot": null,
+      "kpis": null,
+      "aside": null,
+      "action": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "overview",
+      "theme": "dark",
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "scrollHeight": 1335,
+      "knob": null,
+      "physical": null,
+      "plot": null,
+      "kpis": null,
+      "aside": null,
+      "action": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "wg",
+      "theme": "light",
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "scrollHeight": 1387,
+      "knob": {
+        "x": 27,
+        "y": 645.5,
+        "width": 336,
+        "height": 44,
+        "top": 645.5,
+        "right": 363,
+        "bottom": 689.5,
+        "left": 27
+      },
+      "physical": {
+        "x": 14,
+        "y": 244.75,
+        "width": 362,
+        "height": 208,
+        "top": 244.75,
+        "right": 376,
+        "bottom": 452.75,
+        "left": 14
+      },
+      "plot": {
+        "x": 14,
+        "y": 735.1875,
+        "width": 362,
+        "height": 210,
+        "top": 735.1875,
+        "right": 376,
+        "bottom": 945.1875,
+        "left": 14
+      },
+      "kpis": {
+        "x": 14,
+        "y": 464.75,
+        "width": 362,
+        "height": 116.0625,
+        "top": 464.75,
+        "right": 376,
+        "bottom": 580.8125,
+        "left": 14
+      },
+      "aside": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "action": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "wg",
+      "theme": "dark",
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "scrollHeight": 1387,
+      "knob": {
+        "x": 27,
+        "y": 645.5,
+        "width": 336,
+        "height": 44,
+        "top": 645.5,
+        "right": 363,
+        "bottom": 689.5,
+        "left": 27
+      },
+      "physical": {
+        "x": 14,
+        "y": 244.75,
+        "width": 362,
+        "height": 208,
+        "top": 244.75,
+        "right": 376,
+        "bottom": 452.75,
+        "left": 14
+      },
+      "plot": {
+        "x": 14,
+        "y": 735.1875,
+        "width": 362,
+        "height": 210,
+        "top": 735.1875,
+        "right": 376,
+        "bottom": 945.1875,
+        "left": 14
+      },
+      "kpis": {
+        "x": 14,
+        "y": 464.75,
+        "width": 362,
+        "height": 116.0625,
+        "top": 464.75,
+        "right": 376,
+        "bottom": 580.8125,
+        "left": 14
+      },
+      "aside": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "action": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "mzm",
+      "theme": "light",
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "scrollHeight": 1359,
+      "knob": {
+        "x": 27,
+        "y": 617.90625,
+        "width": 336,
+        "height": 44,
+        "top": 617.90625,
+        "right": 363,
+        "bottom": 661.90625,
+        "left": 27
+      },
+      "physical": {
+        "x": 14,
+        "y": 244.75,
+        "width": 362,
+        "height": 208,
+        "top": 244.75,
+        "right": 376,
+        "bottom": 452.75,
+        "left": 14
+      },
+      "plot": {
+        "x": 14,
+        "y": 707.59375,
+        "width": 362,
+        "height": 210,
+        "top": 707.59375,
+        "right": 376,
+        "bottom": 917.59375,
+        "left": 14
+      },
+      "kpis": {
+        "x": 14,
+        "y": 464.75,
+        "width": 362,
+        "height": 88.46875,
+        "top": 464.75,
+        "right": 376,
+        "bottom": 553.21875,
+        "left": 14
+      },
+      "aside": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "action": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "mzm",
+      "theme": "dark",
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "scrollHeight": 1359,
+      "knob": {
+        "x": 27,
+        "y": 617.90625,
+        "width": 336,
+        "height": 44,
+        "top": 617.90625,
+        "right": 363,
+        "bottom": 661.90625,
+        "left": 27
+      },
+      "physical": {
+        "x": 14,
+        "y": 244.75,
+        "width": 362,
+        "height": 208,
+        "top": 244.75,
+        "right": 376,
+        "bottom": 452.75,
+        "left": 14
+      },
+      "plot": {
+        "x": 14,
+        "y": 707.59375,
+        "width": 362,
+        "height": 210,
+        "top": 707.59375,
+        "right": 376,
+        "bottom": 917.59375,
+        "left": 14
+      },
+      "kpis": {
+        "x": 14,
+        "y": 464.75,
+        "width": 362,
+        "height": 88.46875,
+        "top": 464.75,
+        "right": 376,
+        "bottom": 553.21875,
+        "left": 14
+      },
+      "aside": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "action": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "overview",
+      "theme": "light",
+      "width": 320,
+      "height": 568,
+      "scrollWidth": 320,
+      "scrollHeight": 1448,
+      "knob": null,
+      "physical": null,
+      "plot": null,
+      "kpis": null,
+      "aside": null,
+      "action": {
+        "x": 0,
+        "y": 503,
+        "width": 320,
+        "height": 65,
+        "top": 503,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "overview",
+      "theme": "dark",
+      "width": 320,
+      "height": 568,
+      "scrollWidth": 320,
+      "scrollHeight": 1448,
+      "knob": null,
+      "physical": null,
+      "plot": null,
+      "kpis": null,
+      "aside": null,
+      "action": {
+        "x": 0,
+        "y": 503,
+        "width": 320,
+        "height": 65,
+        "top": 503,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "wg",
+      "theme": "light",
+      "width": 320,
+      "height": 568,
+      "scrollWidth": 320,
+      "scrollHeight": 1195,
+      "knob": {
+        "x": 21,
+        "y": 451.390625,
+        "width": 278,
+        "height": 44,
+        "top": 451.390625,
+        "right": 299,
+        "bottom": 495.390625,
+        "left": 21
+      },
+      "physical": {
+        "x": 10,
+        "y": 219.859375,
+        "width": 300,
+        "height": 110,
+        "top": 219.859375,
+        "right": 310,
+        "bottom": 329.859375,
+        "left": 10
+      },
+      "plot": {
+        "x": 10,
+        "y": 519.140625,
+        "width": 300,
+        "height": 210,
+        "top": 519.140625,
+        "right": 310,
+        "bottom": 729.140625,
+        "left": 10
+      },
+      "kpis": {
+        "x": 10,
+        "y": 337.859375,
+        "width": 300,
+        "height": 76.234375,
+        "top": 337.859375,
+        "right": 310,
+        "bottom": 414.09375,
+        "left": 10
+      },
+      "aside": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "action": {
+        "x": 0,
+        "y": 509,
+        "width": 320,
+        "height": 59,
+        "top": 509,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "wg",
+      "theme": "dark",
+      "width": 320,
+      "height": 568,
+      "scrollWidth": 320,
+      "scrollHeight": 1195,
+      "knob": {
+        "x": 21,
+        "y": 451.390625,
+        "width": 278,
+        "height": 44,
+        "top": 451.390625,
+        "right": 299,
+        "bottom": 495.390625,
+        "left": 21
+      },
+      "physical": {
+        "x": 10,
+        "y": 219.859375,
+        "width": 300,
+        "height": 110,
+        "top": 219.859375,
+        "right": 310,
+        "bottom": 329.859375,
+        "left": 10
+      },
+      "plot": {
+        "x": 10,
+        "y": 519.140625,
+        "width": 300,
+        "height": 210,
+        "top": 519.140625,
+        "right": 310,
+        "bottom": 729.140625,
+        "left": 10
+      },
+      "kpis": {
+        "x": 10,
+        "y": 337.859375,
+        "width": 300,
+        "height": 76.234375,
+        "top": 337.859375,
+        "right": 310,
+        "bottom": 414.09375,
+        "left": 10
+      },
+      "aside": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "action": {
+        "x": 0,
+        "y": 509,
+        "width": 320,
+        "height": 59,
+        "top": 509,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "mzm",
+      "theme": "light",
+      "width": 320,
+      "height": 568,
+      "scrollWidth": 320,
+      "scrollHeight": 1232,
+      "knob": {
+        "x": 21,
+        "y": 451.390625,
+        "width": 278,
+        "height": 44,
+        "top": 451.390625,
+        "right": 299,
+        "bottom": 495.390625,
+        "left": 21
+      },
+      "physical": {
+        "x": 10,
+        "y": 219.859375,
+        "width": 300,
+        "height": 110,
+        "top": 219.859375,
+        "right": 310,
+        "bottom": 329.859375,
+        "left": 10
+      },
+      "plot": {
+        "x": 10,
+        "y": 519.140625,
+        "width": 300,
+        "height": 210,
+        "top": 519.140625,
+        "right": 310,
+        "bottom": 729.140625,
+        "left": 10
+      },
+      "kpis": {
+        "x": 10,
+        "y": 337.859375,
+        "width": 300,
+        "height": 76.234375,
+        "top": 337.859375,
+        "right": 310,
+        "bottom": 414.09375,
+        "left": 10
+      },
+      "aside": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "action": {
+        "x": 0,
+        "y": 509,
+        "width": 320,
+        "height": 59,
+        "top": 509,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "minButtonHeight": 44
+    },
+    {
+      "scene": "mzm",
+      "theme": "dark",
+      "width": 320,
+      "height": 568,
+      "scrollWidth": 320,
+      "scrollHeight": 1232,
+      "knob": {
+        "x": 21,
+        "y": 451.390625,
+        "width": 278,
+        "height": 44,
+        "top": 451.390625,
+        "right": 299,
+        "bottom": 495.390625,
+        "left": 21
+      },
+      "physical": {
+        "x": 10,
+        "y": 219.859375,
+        "width": 300,
+        "height": 110,
+        "top": 219.859375,
+        "right": 310,
+        "bottom": 329.859375,
+        "left": 10
+      },
+      "plot": {
+        "x": 10,
+        "y": 519.140625,
+        "width": 300,
+        "height": 210,
+        "top": 519.140625,
+        "right": 310,
+        "bottom": 729.140625,
+        "left": 10
+      },
+      "kpis": {
+        "x": 10,
+        "y": 337.859375,
+        "width": 300,
+        "height": 76.234375,
+        "top": 337.859375,
+        "right": 310,
+        "bottom": 414.09375,
+        "left": 10
+      },
+      "aside": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "action": {
+        "x": 0,
+        "y": 509,
+        "width": 320,
+        "height": 59,
+        "top": 509,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "minButtonHeight": 44
+    }
+  ],
+  "errors": [],
+  "requests": []
+}
