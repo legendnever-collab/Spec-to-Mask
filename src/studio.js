@@ -44,16 +44,18 @@ const TRACKS = [
 ];
 const KEY='smq3-studio';
 let root=SMQ_STORE.get(KEY,null);
-if (!root || root.schema!=='smq-studio/1' || !root.by || SMQ_STORE.status().corrupt.some(x=>x.key===KEY)) root={schema:'smq-studio/1',by:{},active:null};
-let active=null, ws=null, entering=false, raf=0, dirty=false, solutionVisible=false;
+// A malformed additive journey is quarantined by the scanner; keep valid Legacy and unknown fields.
+if(root&&root.journey&&!SMQ_JOURNEY_SCHEMA.valid(root.journey))delete root.journey;
+if (!root || SMQ_STORE.checkKey(KEY,root).errors.length) root={schema:'smq-studio/1',by:{},active:null};
+let active=null, ws=null, entering=false, raf=0, dirty=false, solutionVisible=false, external=null;
 const track=()=>TRACKS.find(t=>t.id===active), phase=()=>ws && track().levels[ws.level], step=()=>ws && (ws.sub|0);
 const scopeKey=()=>SH.plat()+'|'+active;
 const historyKey=()=>ws.level+':'+step();
-function save(){if(ws){ws.updated=Date.now();ws.id=SH.curId();} return SMQ_STORE.set(KEY,root);}
+function save(){if(external)external.save();if(ws){ws.updated=Date.now();ws.id=SH.curId();} return SMQ_STORE.set(KEY,root);}
 function newWS(){return {level:0,sub:0,designs:{},lab:{},progress:{stars:{easy:{},std:{},hard:{}},cards:{},best:{},ai:{},missions:{}},tests:{},completed:{},original:{},snapshots:[],mode:'guided'};}
 function syncScope(){if(!SH.plat())return;const p=root.by[SH.plat()]||(root.by[SH.plat()]={});ws=p[active]||(p[active]=newWS());SH.setScope(ws);LU.setScope(ws);}
-function leave(){if(ws)save();SH.setScope(null);LU.setScope(null);active=null;ws=null;root.active=null;save();}
-function enter(id,level){if(!SH.plat() || SH.busy())return;if(!TRACKS.some(t=>t.id===id))return;if(ws)save();active=id;root.active=id;syncScope();if(level!=null){ws.level=level;ws.sub=0;}navigate();}
+function leave(){if(external){external.leave();external=null;}if(ws)save();SH.setScope(null);LU.setScope(null);active=null;ws=null;root.active=null;save();}
+function enter(id,level){if(external){external.leave();external=null;}if(!SH.plat() || SH.busy())return;if(!TRACKS.some(t=>t.id===id))return;if(ws)save();active=id;root.active=id;syncScope();if(level!=null){ws.level=level;ws.sub=0;}navigate();}
 function navigate(){if(!ws||entering)return;entering=true;closeSheets();const p=phase(),t=track();
  if(p.summary){LU.close();SH.go('B-3');}
  else if(p.ids){const id=p.ids[Math.min(step(),p.ids.length-1)];LU.close();if(!ws.designs[id]){const l=window.GAME_LEV(id);ws.designs[id]=clone(l.start);if(id==='3A+')ws.designs[id].mod=t.mod===1?1:0;}
@@ -102,7 +104,7 @@ function liveGate(){const p=phase();if(p?.summary)return [0,1,2,3,4].every(i=>ws
 // Device evaluations are automatic. Lab verification/export keep their explicit, hash-bound actions.
 function fresh(){return !!ws && (LU.isOpen()?LU.evaluationCurrent():phase()?.summary||SH.evaluationCurrent()) && !SH.busy() && liveGate();}
 function recordEvaluation(){if(!ws||!(LU.isOpen()?LU.evaluationCurrent():SH.evaluationCurrent()))return;const id=identity(),ok=liveGate(),key=historyKey();ws.tests=ws.tests||{};const old=ws.tests[key];if(old?.identity===id&&old.ok===ok)return;ws.tests[key]={identity:id,ok,at:Date.now(),automatic:true};save();}
-function invalidate(){window.MZM_BENCH_UI?.invalidate();$('#studioNext').disabled=true;$('#studioStatus').textContent=(LU.isOpen()?LU.inputValid():SH.inputValid())?'계산 중…':'입력값 확인';$('#studioStatus').dataset.state='pending';inspect.setAttribute('aria-busy','true');metrics.dataset.stale='true';}
+function invalidate(){window.MZM_BENCH_UI?.invalidate();if(external){external.invalidate();return;}$('#studioNext').disabled=true;$('#studioStatus').textContent=(LU.isOpen()?LU.inputValid():SH.inputValid())?'계산 중…':'입력값 확인';$('#studioStatus').dataset.state='pending';inspect.setAttribute('aria-busy','true');metrics.dataset.stale='true';}
 function advance(){if(!ws||SH.busy())return;
  // Always evaluate in this event, even if a pending frame still shows a previous PASS.
  if(!(LU.isOpen()?LU.evaluateNow():SH.testNow())){invalidate();return;}
@@ -160,7 +162,7 @@ function summary(){if(!ws){$('#studioSummary').innerHTML='<p class="note">Legacy
  const st=LU.isOpen()?LU.state():null;const g=ws.lab?.gds;const gmatch=g&&st?.C&&g.design_hash===st.C.hash;
  $('#studioSummary').innerHTML=`<h2>Final Engineering Summary</h2><p><b>${esc(track().name)}</b> · 완료 기록 ${Object.keys(ws.completed||{}).length}/6 · 현재 Level ${ws.level+1}</p><p>Current Design: ${liveGate()?'VALID':'검토 필요'} · Evaluation: ${fresh()?'CURRENT / PASS':'미충족 / 확인 필요'}</p><p>Design Valid: ${st?.CHK?st.CHK.checks.some(c=>c.status==='FAIL')?'FAIL':st.s.live.verification?'VALID':'검증 실행 필요':'현재 Lab 검사 미실시'}<br>Geometry Rechecked: ${gmatch&&!g.summary?.FAIL?'PASS':'NOT VERIFIED'}<br>Foundry Readiness: <b>NOT VERIFIED</b></p><p class="note">${track().mod==null?'Device / System 학습과 Component JSON을 지원합니다. 전체 LiDAR PIC GDS 생성은 미지원입니다.':'Circuit JSON은 브라우저에서 Export합니다. 실제 GDS 생성·Geometry Recheck는 동봉된 Python 도구로 실행하며, 결과를 같은 Design Hash에 붙여넣습니다.'}</p><p class="note">Snapshot / Revision ${ws.snapshots?.length||0} · Stars / Cards는 Platform 공유 학습 자산이며 현재 판정과 구분됩니다.</p>`;
 }
-function refresh(){if(entering)return;const c=window.GAME_CTX(),lab=LU.isOpen();document.body.classList.toggle('studio-lab',lab);$('#pcol').hidden=lab;$('#btn-wipe').hidden=!!ws;$('#lab-insp').hidden=!lab;$('.lab-head').hidden=!lab;$('#lab-out').hidden=!lab;$('#mission').hidden=lab;$('#lab-lib').hidden=!lab;$('#tiles').hidden=lab;labMetrics.hidden=!lab;
+function refresh(){if(entering)return;if(external){window.MZM_BENCH_UI?.refresh(window.GAME_CTX(),false);external.refresh();return;}const c=window.GAME_CTX(),lab=LU.isOpen();document.body.classList.toggle('studio-lab',lab);$('#pcol').hidden=lab;$('#btn-wipe').hidden=!!ws;$('#lab-insp').hidden=!lab;$('.lab-head').hidden=!lab;$('#lab-out').hidden=!lab;$('#mission').hidden=lab;$('#lab-lib').hidden=!lab;$('#tiles').hidden=lab;labMetrics.hidden=!lab;
  if(lab){const st=LU.state(),sys=st.CHK.sys;labMetrics.innerHTML=[['Layout margin',sys.marginLayout.toFixed(2)+' dB'],['Routing loss',sys.extra.toFixed(2)+' dB'],['FAIL',st.CHK.checks.filter(x=>x.status==='FAIL').length],['Verification',st.s.live.verification?'CURRENT':'NOT RUN / STALE']].map(([k,v])=>`<div class="tile"><div class="l">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join('');}
  ['#coach','#delta','#spec','#xpanel','#cmpcard','#fab'].forEach(s=>{const el=$(s);if(lab)el.dataset.studioHidden=el.hidden?'1':'0';if(lab)el.style.display='none';else el.style.removeProperty('display');});
  tune.querySelector('.sheet-heading b').textContent=lab?'Build · Parameters':'Tune · Parameters';recordEvaluation();
@@ -173,11 +175,11 @@ function refresh(){if(entering)return;const c=window.GAME_CTX(),lab=LU.isOpen();
 }
 function refreshSoon(){if(raf)return;raf=requestAnimationFrame(()=>{raf=0;refresh();});}
 function resize(){if(window.visualViewport)document.documentElement.style.setProperty('--app-height',window.visualViewport.height+'px');if(SH.plat())SH.redraw();LU.redraw();}
-const wel=document.createElement('div');wel.id='studioWelcome';wel.className='studio-welcome';wel.hidden=true;wel.innerHTML=`<section role="dialog" aria-modal="true" aria-labelledby="studioWelcomeTitle"><h2 id="studioWelcomeTitle">Unified Photonics Studio</h2><p>Tune / Build를 조절하면 아래 Inspect에서 결과를 바로 볼 수 있습니다. 현재 목표를 만족하면 Next로 진행하세요. Lab 검증과 Export는 해당 단계에서 실행합니다.</p><div class="studio-track-choices">${TRACKS.map(t=>`<button class="btn" data-welcome-track="${t.id}">${t.name} · Level 1</button>`).join('')}</div><p>Design Valid · Geometry Rechecked · Foundry Readiness: NOT VERIFIED를 구분합니다. Save에서 Text Backup / Paste Restore가 가능합니다.</p><button class="btn" id="studioWelcomeSkip">Skip · 자유 탐색</button></section>`;document.body.append(wel);
+const wel=document.createElement('div');wel.id='studioWelcome';wel.className='studio-welcome';wel.hidden=true;wel.innerHTML=`<section role="dialog" aria-modal="true" aria-labelledby="studioWelcomeTitle"><h2 id="studioWelcomeTitle">SPEC-to-MASK Quest</h2><p>Your Photonics Learning Journey</p><p id="journeyWelcomeCourse">Chapter 0 — Tutorial · Step 1 of 3</p><h3 id="journeyWelcomeMission">Understand Optical Communication</h3><button class="btn pri" id="journeyWelcome">Start Learning</button><p>빛의 흐름을 보고, 값을 바꾸고, 현재 결과를 확인하세요.</p><details id="welcomeAdvanced"><summary>Advanced / Legacy · 기존 콘텐츠</summary><div class="studio-track-choices">${TRACKS.map(t=>`<button class="btn" data-welcome-track="${t.id}">${t.name} · Level 1</button>`).join('')}</div><p>Design Valid · Geometry Rechecked · Foundry Readiness: NOT VERIFIED를 구분합니다. Save에서 Text Backup / Paste Restore가 가능합니다.</p><button class="btn" id="studioWelcomeSkip">Skip · 자유 탐색</button></details></section>`;document.body.append(wel);
 function dismissWelcome(){wel.hidden=true;$('.wrap').inert=false;shellUI.studioWelcomed=1;SH.saveUI();$('#studioTrack').focus();}
 function welcome(){wel.hidden=false;$('.wrap').inert=true;wel.querySelector('button').focus();}
-wel.addEventListener('click',e=>{const b=e.target.closest('[data-welcome-track]');if(b){dismissWelcome();enter(b.dataset.welcomeTrack);}if(e.target.closest('#studioWelcomeSkip'))dismissWelcome();});wel.addEventListener('keydown',e=>{if(e.key==='Escape')dismissWelcome();if(e.key==='Tab'){const bs=[...wel.querySelectorAll('button')],a=document.activeElement; if(e.shiftKey&&a===bs[0]){e.preventDefault();bs.at(-1).focus();}else if(!e.shiftKey&&a===bs.at(-1)){e.preventDefault();bs[0].focus();}}});
-window.SMQ_STUDIO={save,refreshSoon,invalidate,tracks:TRACKS,enter,active:()=>active,workspace:()=>ws,identity,fresh,liveGate};
+wel.addEventListener('click',e=>{const b=e.target.closest('[data-welcome-track]');if(b){window.SMQ_JOURNEY?.ensurePlatform();dismissWelcome();enter(b.dataset.welcomeTrack);}if(e.target.closest('#studioWelcomeSkip'))dismissWelcome();});wel.addEventListener('keydown',e=>{if(e.key==='Escape')dismissWelcome();if(e.key==='Tab'){const bs=[...wel.querySelectorAll('button')],a=document.activeElement; if(e.shiftKey&&a===bs[0]){e.preventDefault();bs.at(-1).focus();}else if(!e.shiftKey&&a===bs.at(-1)){e.preventDefault();bs[0].focus();}}});
+window.SMQ_STUDIO={save,refreshSoon,invalidate,tracks:TRACKS,enter,active:()=>external?'journey-tutorial':active,workspace:()=>external?.workspace||ws,root:()=>root,mountJourney:x=>{if(ws)save();ws=null;active=null;external=x;SH.setScope(x.workspace);LU.setScope(x.workspace);},exitJourney:()=>{if(external){external.leave();external=null;}SH.setScope(null);LU.setScope(null);},dismissWelcome,welcome,identity,fresh,liveGate};
 theme.onclick=()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');
 SH.onLevel(()=>{if(!entering&&active&&SH.plat()&&SH.studioScope()!==ws)syncScope();refreshSoon();});LU.onRender(refreshSoon);
 // Legacy navigation is explicit and does not overwrite a Track workspace.

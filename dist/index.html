@@ -619,6 +619,26 @@ body.studio-ready{height:var(--app-height,100dvh);overflow:hidden}.studio-ready 
 
 #studioSolution{min-height:44px}#studioRefTable{overflow-x:auto}#studioReference table{width:100%;font-size:12px}#studioReference th,#studioReference td{padding:6px;text-align:left}
 #mzmDynamicEye{scroll-margin-top:44px}
+/* Sequential journey leaves the original Advanced shell intact. */
+[hidden]{display:none!important}
+#journeyNav{display:flex;align-items:center;gap:8px;padding:5px 16px;border-bottom:1px solid var(--line);background:var(--panel);flex:none;min-height:48px}
+#journeyNav b{flex:1;font-size:15px}#journeyNav button{font-size:13px}
+.journey-ready #studioNav{display:none}.journey-ready #view .hud{display:none}.journey-ready #studioGoalLine{font-size:13px}
+.journey-ready #studioGoal{height:66px}.journey-ready #studioTitle{font-size:17px}.journey-ready #studioStatus{font-size:12px}
+.journey-ready #studioReplay,.journey-ready #btn-wipe,.journey-ready #minibar{display:none!important}
+#journeyMission{font-size:15px;line-height:1.6}#journeyMission h2{font-size:20px;line-height:1.35;margin:8px 0}#journeyMission p{margin:8px 0}#journeyMission label{display:block;font-size:14px}#journeyMission select,#journeyMission textarea{display:block;width:100%;margin:6px 0;box-sizing:border-box;font-size:15px}#journeyMission .row-btns{display:flex;flex-wrap:wrap}#journeyMission .row-btns button{flex:1;font-size:14px}
+.journey-eyebrow{font-size:12px;color:var(--cyan)}#journeyGateReason{padding:8px;background:var(--panel-2);border-radius:8px}
+#journeyLive{margin:0 0 8px;line-height:1.5}#journeyLive>b{font-size:14px}.journey-kpis{display:flex;flex-wrap:wrap;gap:8px;font-size:14px}.journey-kpis strong{font-size:18px;color:var(--cyan)}#journeyLive small{font-size:12px;color:var(--fg-2)}
+#journeyReview{grid-column:1/-1;line-height:1.6;font-size:15px}#journeyReview table{width:100%;border-collapse:collapse;font-size:14px}#journeyReview th,#journeyReview td{padding:8px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+#journeyDialog{color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:16px;width:min(650px,calc(100vw - 36px));max-height:85dvh;padding:18px;box-sizing:border-box;font-size:16px;line-height:1.6}#journeyDialog::backdrop{background:#10203399}.journey-dialog-head{position:sticky;top:-18px;background:var(--panel);display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding:8px 0;z-index:2}.journey-steps{display:grid;gap:6px}.journey-steps button{text-align:left}#journeyDialog pre{font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere}.journey-steps [aria-current=step]{border:2px solid var(--cyan)}
+#welcomeAdvanced summary{cursor:pointer;padding:14px 0;font-size:14px}#journeyWelcome{width:100%;font-size:17px}
+@media(max-width:900px){
+ #journeyNav{min-height:44px;padding:2px 8px;gap:5px}#journeyNav b{font-size:12px;line-height:1.3}#journeyNav button{font-size:11px;padding:5px;max-width:95px}
+ .journey-ready .top{height:44px}.journey-ready #studioGoal{height:66px;padding:3px 8px;gap:4px}.journey-ready #studioTitle{font-size:14px;white-space:normal;line-height:1.25}.journey-ready #studioGoalLine{display:none}.journey-ready #studioStatus{font-size:10px;max-width:48px}.journey-ready #studioSolution{font-size:11px;padding:4px;min-width:48px}.journey-ready #studioNext{font-size:12px;padding:4px;min-width:46px}
+ .journey-ready #gamewrap{grid-template-rows:minmax(150px,1fr) 92px minmax(140px,.85fr)}.journey-ready #gamewrap:has(#studioInspect.expanded){grid-template-rows:minmax(145px,1fr) minmax(150px,.9fr) minmax(140px,.8fr)}
+ .journey-ready #studioInspect{grid-template-columns:58px minmax(0,1fr)}#journeyLive{min-width:0;margin:0;padding:5px;overflow:auto;font-size:11px;border:0}.journey-kpis{gap:1px 9px;font-size:11px}.journey-kpis strong{font-size:14px}#journeyLive>b{font-size:11px}#journeyLive small{font-size:10px}
+ .journey-ready #studioTune{padding:8px}.journey-ready #studioMetrics span{font-size:10px}.journey-ready #studioMetrics>span:first-child{display:none}#journeyMission h2{font-size:18px}#journeyMission{font-size:15px}
+}
 
 </style>
 </head>
@@ -882,8 +902,9 @@ body.studio-ready{height:var(--app-height,100dvh);overflow:hidden}.studio-ready 
 </div>
 
 <script>
-const SMQ_BUILD = { version: '1.2.0-beta.2', channel: 'dev', commit: null, date: null, offline: 0 === 1 };
+const SMQ_BUILD = { version: '1.3.0-alpha.1', channel: 'dev', commit: null, date: null, offline: 0 === 1 };
 const KINDS = {};
+const SMQ_JOURNEY_MODEL_SIGNATURE = '2cf64c7b52fed42f3628cb57fc11632a64ea710317e6f663c887f5d3a3a9c670';
 // ===== shared math / process utilities =====
 const band = (a, b, n) => Array.from({ length: n }, (_, i) => +(a + (b - a) * i / (n - 1)).toFixed(4));
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -1162,6 +1183,16 @@ function pairedText(A, B, aOnly, bOnly, short) {
   return `${pre} — 이 웨이퍼·이 공정 모델에서는 ${t.dir > 0 ? B : A} 쪽이 공정 변동에 더 견고하다는 근거입니다.${short ? ' 한 웨이퍼의 공간 상관된 다이라 p는 낙관적입니다(우열의 증명 아님).' : ' 한 웨이퍼의 다이는 공간 상관이 있어 p는 낙관적이므로, 다른 시드에서도 같은 방향인지 확인하세요 (설계 우열의 증명은 아닙니다).'}`;
 }
 
+// Shared startup / backup validation, loaded before the persistence scanner.
+const SMQ_JOURNEY_SCHEMA = (() => {
+ const obj=v=>!!v&&typeof v==='object'&&!Array.isArray(v);
+ const record=v=>obj(v)&&!Object.keys(v).some(k=>['__proto__','constructor','prototype'].includes(k));
+ const snapshot=v=>record(v)&&record(v.designs)&&record(v.mzmBench)&&record(v.budget)&&Number.isInteger(v.revision)&&v.revision>=0;
+ function work(w){return record(w)&&record(w.designs)&&record(w.lab)&&record(w.progress)&&record(w.progress.stars)&&['easy','std','hard'].every(k=>record(w.progress.stars[k]))&&['cards','best','ai','missions'].every(k=>record(w.progress[k]))&&['tests','completed','original','introduced','practice','evidence'].every(k=>record(w[k]))&&Number.isInteger(w.revision)&&w.revision>=0&&typeof w.designId==='string'&&w.designId.length>0&&record(w.mzmBench)&&Array.isArray(w.snapshots)&&w.snapshots.every(snapshot)&&(!w.protectedOriginal||snapshot(w.protectedOriginal));}
+ function valid(j){return record(j)&&j.schema==='smq-journey/1'&&typeof j.active==='boolean'&&record(j.by)&&Object.entries(j.by).every(([pf,p])=>['si1310','si1550','sin1310','sin1550'].includes(pf)&&record(p)&&Number.isInteger(p.index)&&Number.isInteger(p.unlocked)&&p.index>=0&&p.index<=p.unlocked&&p.unlocked<=3&&work(p.tutorial)&&work(p.mzm)&&Array.from({length:p.unlocked},(_,i)=>p.tutorial.completed['0-'+(i+1)]).every(v=>record(v)&&Number.isFinite(v.at)));}
+ return {valid};
+})();
+
 // ===== Persistence: one place that writes localStorage, reports save state, and makes / checks / restores full backups =====
 // Every write goes through SMQ_STORE.set, which returns false and flips the state to 'failed' when the browser refuses
 // (quota, private mode, blocked storage). Nothing is retried silently: the header shows the state and the data dialog
@@ -1193,6 +1224,9 @@ const SMQ_STORE = (() => {
   function checkKey(k, v, ctx) {
     const errors = [], warnings = [], plats = (ctx && ctx.platforms) || null, levels = (ctx && ctx.levels) || null;
     if (k === 'smq3-studio' && (!isObj(v) || v.schema !== 'smq-studio/1' || !isObj(v.by) || Object.values(v.by).some(p => !isObj(p) || Object.values(p).some(w => !isObj(w) || !isObj(w.designs) || !isObj(w.lab) || !Number.isInteger(w.level) || w.level < 0 || w.level > 5 || (w.sub != null && (!Number.isInteger(w.sub) || w.sub < 0 || w.sub > 3)))))) errors.push('smq3-studio 구조가 올바르지 않습니다.');
+    if (k === 'smq3-studio' && isObj(v) && v.journey != null) {
+      if (!SMQ_JOURNEY_SCHEMA.valid(v.journey)) errors.push('smq3-studio Curriculum 구조가 올바르지 않습니다.');
+    }
     if (k === 'smq3-progress') {
       if (!isObj(v) || !isObj(v.by)) errors.push('smq3-progress 구조가 올바르지 않습니다 (by 없음).');
       else Object.entries(v.by).forEach(([pid, ns]) => {
@@ -1363,7 +1397,7 @@ const SMQ_STORE = (() => {
     catch (e) { Object.entries(now).forEach(([k, v]) => { try { if (v == null) LS().removeItem(k); else LS().setItem(k, v); } catch (e2) { /* best effort */ } }); return { ok: false, err: String((e && e.name) || e) }; }
   }
   scan();
-  return { get, set, isLocked: () => locked, pending, status, usage, backupAdvice, makeBackup, markBackup, validate, restore, undo, undoInfo, quarantine, clearQuarantine, subscribe: (f) => subs.push(f), KEYS, UI_KEYS, SCHEMA, QUAR, fnv };
+  return { get, set, isLocked: () => locked, pending, status, usage, backupAdvice, makeBackup, markBackup, validate, restore, undo, undoInfo, quarantine, clearQuarantine, subscribe: (f) => subs.push(f), KEYS, UI_KEYS, SCHEMA, QUAR, fnv, checkKey };
 })();
 if (typeof window !== 'undefined') { window.SMQ_STORE = SMQ_STORE; window.SMQ_BUILD_INFO = BUILD; }
 
@@ -7446,7 +7480,7 @@ if (!Array.isArray(DB)) DB = [];
 DES = DES || {};
 let studioScope = null;
 const legacyPP = () => (P.by[state.plat] = P.by[state.plat] || emptyNS());
-const PP = () => { if (!studioScope) return legacyPP(); const n = studioScope.progress || (studioScope.progress = emptyNS()); n.stars = legacyPP().stars; n.cards = legacyPP().cards; return n; };
+const PP = () => { if (!studioScope) return legacyPP(); const n = studioScope.progress || (studioScope.progress = emptyNS()); if (!studioScope.privateHistory) { n.stars = legacyPP().stars; n.cards = legacyPP().cards; } return n; };
 const DESP = () => studioScope ? (studioScope.designs || (studioScope.designs = {})) : (DES[state.plat] = DES[state.plat] || {});
 
 const state = {
@@ -10097,16 +10131,18 @@ const TRACKS = [
 ];
 const KEY='smq3-studio';
 let root=SMQ_STORE.get(KEY,null);
-if (!root || root.schema!=='smq-studio/1' || !root.by || SMQ_STORE.status().corrupt.some(x=>x.key===KEY)) root={schema:'smq-studio/1',by:{},active:null};
-let active=null, ws=null, entering=false, raf=0, dirty=false, solutionVisible=false;
+// A malformed additive journey is quarantined by the scanner; keep valid Legacy and unknown fields.
+if(root&&root.journey&&!SMQ_JOURNEY_SCHEMA.valid(root.journey))delete root.journey;
+if (!root || SMQ_STORE.checkKey(KEY,root).errors.length) root={schema:'smq-studio/1',by:{},active:null};
+let active=null, ws=null, entering=false, raf=0, dirty=false, solutionVisible=false, external=null;
 const track=()=>TRACKS.find(t=>t.id===active), phase=()=>ws && track().levels[ws.level], step=()=>ws && (ws.sub|0);
 const scopeKey=()=>SH.plat()+'|'+active;
 const historyKey=()=>ws.level+':'+step();
-function save(){if(ws){ws.updated=Date.now();ws.id=SH.curId();} return SMQ_STORE.set(KEY,root);}
+function save(){if(external)external.save();if(ws){ws.updated=Date.now();ws.id=SH.curId();} return SMQ_STORE.set(KEY,root);}
 function newWS(){return {level:0,sub:0,designs:{},lab:{},progress:{stars:{easy:{},std:{},hard:{}},cards:{},best:{},ai:{},missions:{}},tests:{},completed:{},original:{},snapshots:[],mode:'guided'};}
 function syncScope(){if(!SH.plat())return;const p=root.by[SH.plat()]||(root.by[SH.plat()]={});ws=p[active]||(p[active]=newWS());SH.setScope(ws);LU.setScope(ws);}
-function leave(){if(ws)save();SH.setScope(null);LU.setScope(null);active=null;ws=null;root.active=null;save();}
-function enter(id,level){if(!SH.plat() || SH.busy())return;if(!TRACKS.some(t=>t.id===id))return;if(ws)save();active=id;root.active=id;syncScope();if(level!=null){ws.level=level;ws.sub=0;}navigate();}
+function leave(){if(external){external.leave();external=null;}if(ws)save();SH.setScope(null);LU.setScope(null);active=null;ws=null;root.active=null;save();}
+function enter(id,level){if(external){external.leave();external=null;}if(!SH.plat() || SH.busy())return;if(!TRACKS.some(t=>t.id===id))return;if(ws)save();active=id;root.active=id;syncScope();if(level!=null){ws.level=level;ws.sub=0;}navigate();}
 function navigate(){if(!ws||entering)return;entering=true;closeSheets();const p=phase(),t=track();
  if(p.summary){LU.close();SH.go('B-3');}
  else if(p.ids){const id=p.ids[Math.min(step(),p.ids.length-1)];LU.close();if(!ws.designs[id]){const l=window.GAME_LEV(id);ws.designs[id]=clone(l.start);if(id==='3A+')ws.designs[id].mod=t.mod===1?1:0;}
@@ -10155,7 +10191,7 @@ function liveGate(){const p=phase();if(p?.summary)return [0,1,2,3,4].every(i=>ws
 // Device evaluations are automatic. Lab verification/export keep their explicit, hash-bound actions.
 function fresh(){return !!ws && (LU.isOpen()?LU.evaluationCurrent():phase()?.summary||SH.evaluationCurrent()) && !SH.busy() && liveGate();}
 function recordEvaluation(){if(!ws||!(LU.isOpen()?LU.evaluationCurrent():SH.evaluationCurrent()))return;const id=identity(),ok=liveGate(),key=historyKey();ws.tests=ws.tests||{};const old=ws.tests[key];if(old?.identity===id&&old.ok===ok)return;ws.tests[key]={identity:id,ok,at:Date.now(),automatic:true};save();}
-function invalidate(){window.MZM_BENCH_UI?.invalidate();$('#studioNext').disabled=true;$('#studioStatus').textContent=(LU.isOpen()?LU.inputValid():SH.inputValid())?'계산 중…':'입력값 확인';$('#studioStatus').dataset.state='pending';inspect.setAttribute('aria-busy','true');metrics.dataset.stale='true';}
+function invalidate(){window.MZM_BENCH_UI?.invalidate();if(external){external.invalidate();return;}$('#studioNext').disabled=true;$('#studioStatus').textContent=(LU.isOpen()?LU.inputValid():SH.inputValid())?'계산 중…':'입력값 확인';$('#studioStatus').dataset.state='pending';inspect.setAttribute('aria-busy','true');metrics.dataset.stale='true';}
 function advance(){if(!ws||SH.busy())return;
  // Always evaluate in this event, even if a pending frame still shows a previous PASS.
  if(!(LU.isOpen()?LU.evaluateNow():SH.testNow())){invalidate();return;}
@@ -10213,7 +10249,7 @@ function summary(){if(!ws){$('#studioSummary').innerHTML='<p class="note">Legacy
  const st=LU.isOpen()?LU.state():null;const g=ws.lab?.gds;const gmatch=g&&st?.C&&g.design_hash===st.C.hash;
  $('#studioSummary').innerHTML=`<h2>Final Engineering Summary</h2><p><b>${esc(track().name)}</b> · 완료 기록 ${Object.keys(ws.completed||{}).length}/6 · 현재 Level ${ws.level+1}</p><p>Current Design: ${liveGate()?'VALID':'검토 필요'} · Evaluation: ${fresh()?'CURRENT / PASS':'미충족 / 확인 필요'}</p><p>Design Valid: ${st?.CHK?st.CHK.checks.some(c=>c.status==='FAIL')?'FAIL':st.s.live.verification?'VALID':'검증 실행 필요':'현재 Lab 검사 미실시'}<br>Geometry Rechecked: ${gmatch&&!g.summary?.FAIL?'PASS':'NOT VERIFIED'}<br>Foundry Readiness: <b>NOT VERIFIED</b></p><p class="note">${track().mod==null?'Device / System 학습과 Component JSON을 지원합니다. 전체 LiDAR PIC GDS 생성은 미지원입니다.':'Circuit JSON은 브라우저에서 Export합니다. 실제 GDS 생성·Geometry Recheck는 동봉된 Python 도구로 실행하며, 결과를 같은 Design Hash에 붙여넣습니다.'}</p><p class="note">Snapshot / Revision ${ws.snapshots?.length||0} · Stars / Cards는 Platform 공유 학습 자산이며 현재 판정과 구분됩니다.</p>`;
 }
-function refresh(){if(entering)return;const c=window.GAME_CTX(),lab=LU.isOpen();document.body.classList.toggle('studio-lab',lab);$('#pcol').hidden=lab;$('#btn-wipe').hidden=!!ws;$('#lab-insp').hidden=!lab;$('.lab-head').hidden=!lab;$('#lab-out').hidden=!lab;$('#mission').hidden=lab;$('#lab-lib').hidden=!lab;$('#tiles').hidden=lab;labMetrics.hidden=!lab;
+function refresh(){if(entering)return;if(external){window.MZM_BENCH_UI?.refresh(window.GAME_CTX(),false);external.refresh();return;}const c=window.GAME_CTX(),lab=LU.isOpen();document.body.classList.toggle('studio-lab',lab);$('#pcol').hidden=lab;$('#btn-wipe').hidden=!!ws;$('#lab-insp').hidden=!lab;$('.lab-head').hidden=!lab;$('#lab-out').hidden=!lab;$('#mission').hidden=lab;$('#lab-lib').hidden=!lab;$('#tiles').hidden=lab;labMetrics.hidden=!lab;
  if(lab){const st=LU.state(),sys=st.CHK.sys;labMetrics.innerHTML=[['Layout margin',sys.marginLayout.toFixed(2)+' dB'],['Routing loss',sys.extra.toFixed(2)+' dB'],['FAIL',st.CHK.checks.filter(x=>x.status==='FAIL').length],['Verification',st.s.live.verification?'CURRENT':'NOT RUN / STALE']].map(([k,v])=>`<div class="tile"><div class="l">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join('');}
  ['#coach','#delta','#spec','#xpanel','#cmpcard','#fab'].forEach(s=>{const el=$(s);if(lab)el.dataset.studioHidden=el.hidden?'1':'0';if(lab)el.style.display='none';else el.style.removeProperty('display');});
  tune.querySelector('.sheet-heading b').textContent=lab?'Build · Parameters':'Tune · Parameters';recordEvaluation();
@@ -10226,11 +10262,11 @@ function refresh(){if(entering)return;const c=window.GAME_CTX(),lab=LU.isOpen();
 }
 function refreshSoon(){if(raf)return;raf=requestAnimationFrame(()=>{raf=0;refresh();});}
 function resize(){if(window.visualViewport)document.documentElement.style.setProperty('--app-height',window.visualViewport.height+'px');if(SH.plat())SH.redraw();LU.redraw();}
-const wel=document.createElement('div');wel.id='studioWelcome';wel.className='studio-welcome';wel.hidden=true;wel.innerHTML=`<section role="dialog" aria-modal="true" aria-labelledby="studioWelcomeTitle"><h2 id="studioWelcomeTitle">Unified Photonics Studio</h2><p>Tune / Build를 조절하면 아래 Inspect에서 결과를 바로 볼 수 있습니다. 현재 목표를 만족하면 Next로 진행하세요. Lab 검증과 Export는 해당 단계에서 실행합니다.</p><div class="studio-track-choices">${TRACKS.map(t=>`<button class="btn" data-welcome-track="${t.id}">${t.name} · Level 1</button>`).join('')}</div><p>Design Valid · Geometry Rechecked · Foundry Readiness: NOT VERIFIED를 구분합니다. Save에서 Text Backup / Paste Restore가 가능합니다.</p><button class="btn" id="studioWelcomeSkip">Skip · 자유 탐색</button></section>`;document.body.append(wel);
+const wel=document.createElement('div');wel.id='studioWelcome';wel.className='studio-welcome';wel.hidden=true;wel.innerHTML=`<section role="dialog" aria-modal="true" aria-labelledby="studioWelcomeTitle"><h2 id="studioWelcomeTitle">SPEC-to-MASK Quest</h2><p>Your Photonics Learning Journey</p><p id="journeyWelcomeCourse">Chapter 0 — Tutorial · Step 1 of 3</p><h3 id="journeyWelcomeMission">Understand Optical Communication</h3><button class="btn pri" id="journeyWelcome">Start Learning</button><p>빛의 흐름을 보고, 값을 바꾸고, 현재 결과를 확인하세요.</p><details id="welcomeAdvanced"><summary>Advanced / Legacy · 기존 콘텐츠</summary><div class="studio-track-choices">${TRACKS.map(t=>`<button class="btn" data-welcome-track="${t.id}">${t.name} · Level 1</button>`).join('')}</div><p>Design Valid · Geometry Rechecked · Foundry Readiness: NOT VERIFIED를 구분합니다. Save에서 Text Backup / Paste Restore가 가능합니다.</p><button class="btn" id="studioWelcomeSkip">Skip · 자유 탐색</button></details></section>`;document.body.append(wel);
 function dismissWelcome(){wel.hidden=true;$('.wrap').inert=false;shellUI.studioWelcomed=1;SH.saveUI();$('#studioTrack').focus();}
 function welcome(){wel.hidden=false;$('.wrap').inert=true;wel.querySelector('button').focus();}
-wel.addEventListener('click',e=>{const b=e.target.closest('[data-welcome-track]');if(b){dismissWelcome();enter(b.dataset.welcomeTrack);}if(e.target.closest('#studioWelcomeSkip'))dismissWelcome();});wel.addEventListener('keydown',e=>{if(e.key==='Escape')dismissWelcome();if(e.key==='Tab'){const bs=[...wel.querySelectorAll('button')],a=document.activeElement; if(e.shiftKey&&a===bs[0]){e.preventDefault();bs.at(-1).focus();}else if(!e.shiftKey&&a===bs.at(-1)){e.preventDefault();bs[0].focus();}}});
-window.SMQ_STUDIO={save,refreshSoon,invalidate,tracks:TRACKS,enter,active:()=>active,workspace:()=>ws,identity,fresh,liveGate};
+wel.addEventListener('click',e=>{const b=e.target.closest('[data-welcome-track]');if(b){window.SMQ_JOURNEY?.ensurePlatform();dismissWelcome();enter(b.dataset.welcomeTrack);}if(e.target.closest('#studioWelcomeSkip'))dismissWelcome();});wel.addEventListener('keydown',e=>{if(e.key==='Escape')dismissWelcome();if(e.key==='Tab'){const bs=[...wel.querySelectorAll('button')],a=document.activeElement; if(e.shiftKey&&a===bs[0]){e.preventDefault();bs.at(-1).focus();}else if(!e.shiftKey&&a===bs.at(-1)){e.preventDefault();bs[0].focus();}}});
+window.SMQ_STUDIO={save,refreshSoon,invalidate,tracks:TRACKS,enter,active:()=>external?'journey-tutorial':active,workspace:()=>external?.workspace||ws,root:()=>root,mountJourney:x=>{if(ws)save();ws=null;active=null;external=x;SH.setScope(x.workspace);LU.setScope(x.workspace);},exitJourney:()=>{if(external){external.leave();external=null;}SH.setScope(null);LU.setScope(null);},dismissWelcome,welcome,identity,fresh,liveGate};
 theme.onclick=()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');
 SH.onLevel(()=>{if(!entering&&active&&SH.plat()&&SH.studioScope()!==ws)syncScope();refreshSoon();});LU.onRender(refreshSoon);
 // Legacy navigation is explicit and does not overwrite a Track workspace.
@@ -10252,6 +10288,157 @@ document.body.classList.add('studio-ready');setTheme(shellUI.theme==='dark'?'dar
 // Resume only a previously selected Track; v1.0 users retain their exact legacy workspace until choosing Copy/Track.
 if(root.active&&TRACKS.some(t=>t.id===root.active)&&SH.plat())enter(root.active);else refresh();
 resize();
+})();
+
+// Additive curriculum controller. Device solvers and legacy objectives are unchanged.
+const SMQ_JOURNEY_CORE = (() => {
+'use strict';
+const copy=v=>JSON.parse(JSON.stringify(v));
+const session=Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
+const steps=[
+ {id:'0-1',ch:0,n:1,title:'Understand Optical Communication',level:'2-5',keys:['P']},
+ {id:'0-2',ch:0,n:2,title:'Understanding 200G',level:'2-3',keys:['modulation','baud']},
+ {id:'0-3',ch:0,n:3,title:'Learn the Controls',level:'2-3',keys:['L','driver']}
+];
+const chapters=['Tutorial','Build a 200G MZM Link','Learn the Microring','Build a 200G MRM Link','Architecture Decision'];
+function workspace(level){return {privateHistory:true,level:0,sub:0,designs:{},lab:{},progress:{stars:{easy:{},std:{},hard:{}},cards:{},best:{},ai:{},missions:{}},tests:{},completed:{},original:{},snapshots:[],mzmBench:{...MZM_BENCH.defaults(),pnMode:1,modulation:0,baud:28},introduced:{},practice:{},evidence:{},revision:0,designId:level+'-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8),budget:null,rationale:''};}
+function engineLevels(get){return Object.fromEntries(['2-2','2-3','2-4','2-5'].map(id=>[id,get(id)]));}
+function init(w,ls){for(const [id,l] of Object.entries(ls))if(!w.designs[id])w.designs[id]=copy(l.start);if(!w.budget)w.budget={channel:2,coupling:ls['2-5'].parts.ssc,sensitivity:KINDS.pd.evaluate(ls['2-4'],ls['2-4'].ref).sensDbm};}
+function validDesign(w,ls){return Object.entries(ls).every(([id,l])=>KINDS[l.kind].params(l).every(p=>Number.isFinite(w.designs[id]?.[p.k])&&w.designs[id][p.k]>=p.min&&w.designs[id][p.k]<=p.max))&&MZM_BENCH.valid(w.mzmBench)&&w.budget&&[['channel',0,20],['coupling',0,5],['sensitivity',-40,10]].every(([k,lo,hi])=>Number.isFinite(w.budget[k])&&w.budget[k]>=lo&&w.budget[k]<=hi);}
+function calculate(w,ls){
+ if(!validDesign(w,ls))throw Error('유효하지 않은 설계/실험/예산 입력');
+ const pn=KINDS.pn.evaluate(ls['2-2'],w.designs['2-2']),bench=MZM_BENCH.analyse(ls['2-3'],{...w.designs['2-3'],useCard:0},w.mzmBench,{geometry:w.designs['2-2'],source:'Chapter-local PN geometry · '+w.designId});
+ const e=bench.eye,outerOMA=e.ideal?.length===4?Math.abs(e.ideal[0]-e.ideal[3]):null;
+ let link=null;
+ if(outerOMA>0){const parts={...ls['2-5'].parts,ssc:w.budget.coupling,split:0,mux:0,gain:10*Math.log10(outerOMA),pen:0,sens:w.budget.sensitivity};const r=KINDS.els.evaluate({...ls['2-5'],parts},{...w.designs['2-5'],ns:0,useCard:0});
+ link={laserDbm:w.designs['2-5'].P,outerOMA,omaGainDb:parts.gain,channel:w.budget.channel,couplingEach:w.budget.coupling,couplingCount:3,sensitivity:w.budget.sensitivity,rxOMA:r.rx+r.chan-w.budget.channel,rinPenalty:r.rin,margin:r.margin+r.chan-w.budget.channel,laserPj:r.pj,source:'KINDS.els, explicit single-lane loss adapter',limitation:'Independent reference PD sensitivity; static outer OMA, no dynamic ISI penalty in budget; no joint BER/FEC simulation'};}
+ const laser=KINDS.els.evaluate(ls['2-5'],w.designs['2-5']);
+ return {laser,pn:{Cp:pn.Cp,Rp:pn.Rp,VpiL:pn.VpiL,loss:pn.loss,fRC:pn.fRC},pnPass:KINDS.pn.objectives(ls['2-2'],pn).t1.every(x=>x.ok),bench,link};
+}
+
+function fingerprint(w,pf){return SMQ_STORE.fnv(JSON.stringify([pf,SMQ_JOURNEY_MODEL_SIGNATURE,MODEL_VERSION,MZM_BENCH.version,'journey-controller/2',w.designId,w.designs,w.mzmBench,w.budget]));}
+function createPlatform(){return {index:0,unlocked:0,tutorial:workspace('tutorial'),mzm:workspace('mzm')};}
+function unlocked(p){let i=0;while(i<3&&p.tutorial.completed[steps[i].id])i++;return i;}
+function canGo(p,i){return Number.isInteger(i)&&i>=0&&i<=3&&i<=unlocked(p);}
+function navigate(p,i){if(!canGo(p,i))return false;p.index=i;p.unlocked=unlocked(p);return true;}
+function touch(w,pf,before,key,kind='Tune'){
+ const after=fingerprint(w,pf);if(before===after)return false;
+ w.revision++;w.finished=null;
+ // Only real parameter edits earn the tutorial's hands-on practice. Apply/restore are design revisions.
+ if(key&&kind==='Tune'){const [id,field]=key.split(':');const a=w.practice[id]||(w.practice[id]={fields:{},at:Date.now()});a.fields[field]=true;}
+ return true;
+}
+function practice(w,id){const f=w.practice[id]?.fields||{};return id==='0-1'?!!f.P:id==='0-2'?!!f.modulation&&!!f.baud:!!f.L||!!f.driver;}
+function objective(id,r,w){
+ if(id==='0-1')return !!r.laser&&Number.isFinite(r.laser.rx)&&Number.isFinite(r.laser.margin);
+ if(id==='0-2')return w.mzmBench.modulation===1&&w.mzmBench.baud===112&&r.bench.eye.rawGbps===224&&r.bench.eye.traces.length>0;
+ return r.bench.samples.length===120&&r.bench.samples.every(v=>Number.isFinite(v.eoDb));
+}
+function evaluate(w,pf,step,r){return {
+ ok:!!(w.introduced[step.id]&&practice(w,step.id)&&objective(step.id,r,w)),
+ conceptIntroduced:!!w.introduced[step.id],practiceCompleted:practice(w,step.id),currentDesignEvaluated:true,
+ engineeringObjectiveMet:objective(step.id,r,w),fingerprint:fingerprint(w,pf),revision:w.revision,designIdentity:w.designId,
+ session,at:Date.now(),source:step.id==='0-1'?'KINDS.els':'mzm-bench/2 / mzm-eye/1',
+ calculation:{rawGbps:r.bench.eye.rawGbps,eyeGap:r.bench.eye.opening,laserOutput:r.laser.rx,laserMargin:r.laser.margin},external:'NOT VERIFIED'
+};}
+function current(w,pf,id){const e=w.evidence[id];return !!e?.ok&&e.currentDesignEvaluated===true&&e.session===session&&e.revision===w.revision&&e.designIdentity===w.designId&&e.fingerprint===fingerprint(w,pf);}
+function complete(p,pf,r){const x=steps[p.index],w=p.tutorial;if(!x||!current(w,pf,x.id)||!evaluate(w,pf,x,r).ok)return false;
+ w.completed[x.id]={at:Date.now(),fingerprint:fingerprint(w,pf),revision:w.revision};
+ if(x.id==='0-3')w.finished={at:Date.now(),fingerprint:fingerprint(w,pf)};
+ p.unlocked=unlocked(p);p.index=Math.min(p.index+1,3);return true;
+}
+function snapshot(w,label){const v=copy({designs:w.designs,mzmBench:w.mzmBench,budget:w.budget,rationale:w.rationale,revision:w.revision});w.snapshots.push({label,at:Date.now(),...v});w.snapshots=w.snapshots.slice(-12);return v;}
+return {steps,chapters,copy,workspace,createPlatform,engineLevels,init,validDesign,calculate,fingerprint,touch,practice,objective,evaluate,current,unlocked,canGo,navigate,complete,snapshot,session};
+})();
+if (typeof window !== 'undefined') window.SMQ_JOURNEY_CORE = SMQ_JOURNEY_CORE;
+
+// Sequential presentation adapter. Legacy Studio remains a separate workspace.
+(() => {
+'use strict';
+const C=SMQ_JOURNEY_CORE, ST=window.SMQ_STUDIO, SH=window.GAME_SHELL;
+const $=s=>document.querySelector(s), esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const root=ST.root();
+if(!root.journey)root.journey={schema:'smq-journey/1',active:false,by:{}};
+const journey=root.journey;
+let running=false,ctx=null,w=null,ls=null,rendering=false,loading=false,last=null,returnFocus=null;
+const step=()=>C.steps[ctx?.index], pf=()=>SH.plat(), tutorial=()=>window.SMQ_TUTORIAL;
+const save=()=>SMQ_STORE.set('smq3-studio',root);
+function state(){return journey.by[pf()]||(journey.by[pf()]=C.createPlatform());}
+function ensurePlatform(){if(pf())return;$('.wrap').inert=false;$('[data-lam="1.31"]').click();$('[data-mat="si"]').click();$('#btn-start').click();}
+const nav=document.createElement('nav');nav.id='journeyNav';nav.hidden=true;nav.setAttribute('aria-label','Learning journey');
+nav.innerHTML='<button class="btn" id="journeySteps">Journey</button><b id="journeyChapter"></b><button class="btn" id="journeyAdvanced">Advanced / Legacy</button>';
+$('#studioNav').after(nav);
+const resume=document.createElement('button');resume.id='journeyResume';resume.className='btn';resume.textContent='Learning Journey';$('#studioNav').prepend(resume);
+const mission=document.createElement('section');mission.id='journeyMission';mission.className='card';mission.hidden=true;$('#studioTune').insertBefore(mission,$('#pcol'));
+const live=document.createElement('section');live.id='journeyLive';live.className='card';live.hidden=true;$('#studioInspect').insertBefore(live,$('#tiles'));
+const dialog=document.createElement('dialog');dialog.id='journeyDialog';dialog.innerHTML='<div class="journey-dialog-head"><b id="journeyDialogTitle"></b><button class="btn" id="journeyDialogClose">Close · 돌아가기</button></div><div id="journeyDialogBody"></div>';document.body.append(dialog);
+function openDialog(title,html){returnFocus=document.activeElement;$('#journeyDialogTitle').textContent=title;$('#journeyDialogBody').innerHTML=html;if(!dialog.open)dialog.showModal();$('#journeyDialogClose').focus();}
+$('#journeyDialogClose').onclick=()=>dialog.close();dialog.addEventListener('close',()=>returnFocus?.isConnected&&returnFocus.focus({preventScroll:true}));
+function menu(){openDialog('Your Photonics Learning Journey',C.chapters.map((title,ch)=>`<section><h3>Chapter ${ch} — ${esc(title)}</h3>${ch===0?C.steps.map((s,i)=>`<button class="btn journey-step" data-jstep="${i}" ${C.canGo(ctx,i)?'':'disabled'} ${ctx.index===i?'aria-current="step"':''}>Step ${s.n} · ${esc(s.title)} · ${w.completed[s.id]?'COMPLETED':ctx.index===i?'CURRENT':'LOCKED'}</button>`).join(''):`<p>PREVIEW ONLY · ${ch===1?(ctx.unlocked===3?'Curriculum entry unlocked. Missions planned for Checkpoint D.':'Complete Tutorial to unlock the curriculum entry.'):'Not implemented in this milestone.'}</p>${ch===1?`<button class="btn" data-jstep="3" ${C.canGo(ctx,3)?'':'disabled'}>View Chapter 1 Preview</button>`:''}`}</section>`).join(''));}
+$('#journeySteps').onclick=menu;
+dialog.addEventListener('click',e=>{const b=e.target.closest('[data-jstep]');if(b&&C.canGo(ctx,+b.dataset.jstep)){dialog.close();go(+b.dataset.jstep);}if(e.target.closest('#journeyApply'))apply();if(e.target.closest('#journeyOriginal'))restore();});
+function leave(){if(!running)return;sync();running=false;journey.active=false;save();document.body.classList.remove('journey-ready','journey-preview');nav.hidden=mission.hidden=live.hidden=true;$('#pcol').hidden=false;$('#studioNext').textContent='Next';$('#studioSolution').disabled=false;$('#field').removeAttribute('aria-label');$('#pcol').querySelectorAll('.prm').forEach(e=>e.hidden=false);$('#mzmBenchControls').querySelectorAll('label').forEach(e=>e.hidden=false);}
+function enter(){if(loading||SH.busy())return;loading=true;try{ensurePlatform();ST.dismissWelcome();if(window.LABUI.isOpen())window.LABUI.close();ctx=state();ctx.unlocked=C.unlocked(ctx);ctx.index=Math.min(ctx.index,ctx.unlocked);journey.active=true;running=true;document.body.classList.add('journey-ready');go(ctx.index);}finally{loading=false;}}
+function go(index){if(!running||SH.busy()||!C.navigate(ctx,index))return;w=ctx.tutorial;ls=C.engineLevels(window.GAME_LEV);C.init(w,ls);
+ ST.mountJourney({workspace:w,save,leave,refresh,invalidate});
+ const x=step();if(x){w.progress.guide=w.progress.guide||{};w.progress.guide[x.level]={mode:'full',done:{},mem:{},cur:0};SH.go(x.level);SH.applyDesign(w.designs[x.level],true);}
+ last=C.fingerprint(w,pf());buildMission();refresh();save();$('#studioTune').scrollTop=0;
+}
+$('#journeyAdvanced').onclick=()=>{if(SH.busy())return;ST.exitJourney();ST.enter('fundamentals');};resume.onclick=enter;$('#journeyWelcome').onclick=enter;
+$('#btn-start').addEventListener('click',()=>{if(!loading&&journey.active)enter();});
+function buildMission(){const x=step();document.body.classList.toggle('journey-preview',!x);
+ if(!x){mission.innerHTML='<h2>Tutorial Complete!</h2><p>You are ready to build your first 200G MZM optical link.</p><h3>Chapter 1 — Build a 200G MZM Link</h3><p><b>PREVIEW ONLY</b> · Curriculum entry unlocked.</p><p>The eight engineering missions will be implemented in Checkpoint D.</p><button class="btn" id="journeyRevisit">Revisit Tutorial</button>';$('#journeyRevisit').onclick=()=>go(0);return;}
+ mission.innerHTML=`<div class="journey-eyebrow">Step ${x.n} of 3 · Understand → Tune → Observe → Verify → Next</div><h2>${esc(x.title)}</h2><div id="journeyLesson">${tutorial()?tutorial().lesson(x):'<p>Navigation checkpoint. Playable Tutorial arrives in Checkpoint C.</p>'}</div><div class="row-btns"><button class="btn" id="journeyLearn">Learn Why</button><button class="btn pri" id="journeyVerify">Verify</button></div><p id="journeyGateReason" role="status"></p>`;
+ tutorial()?.bind({step:x,workspace:w,refresh,save,observe,showKnowledge:knowledge});
+ $('#journeyLearn').onclick=knowledge;$('#journeyVerify').onclick=verify;
+}
+function sync(){if(!running||!w)return;const now=C.fingerprint(w,pf());if(last&&last!==now){C.touch(w,pf(),last,null,'Dependency');last=now;save();}}
+function inputsValid(){return SH.inputValid()&&[...document.querySelectorAll('#mzmBenchControls:not([hidden]) input')].every(e=>e.value!==''&&e.validity.valid);}
+function compute(){sync();if(!inputsValid())throw Error('입력값을 확인하세요.');return C.calculate(w,ls);}
+function observe(kind){if(!running||!step())return;w.observed=w.observed||{};w.observed[step().id]=w.observed[step().id]||{};w.observed[step().id][kind]=C.fingerprint(w,pf());save();refresh();}
+function gate(r){return !!step()&&!!tutorial()&&C.current(w,pf(),step().id)&&C.evaluate(w,pf(),step(),r).ok&&tutorial().ready(step(),w,pf(),r);}
+function verify(){if(!running||!step()||!tutorial()||SH.busy())return;SH.testNow();try{const r=compute();w.evidence[step().id]=C.evaluate(w,pf(),step(),r);if(!tutorial().ready(step(),w,pf(),r))w.evidence[step().id].ok=false;}catch(e){w.evidence[step().id]={ok:false,reason:e.message};}save();refresh();}
+function next(){if(!running||!step()||!tutorial()||SH.busy())return;SH.testNow();let r;try{r=compute();}catch{invalidate();return;}if(!gate(r)||!C.complete(ctx,pf(),r)){refresh();return;}go(ctx.index);}
+$('#studioNext').addEventListener('click',e=>{if(running){e.preventDefault();e.stopImmediatePropagation();next();}},true);
+$('#studioSolution').addEventListener('click',e=>{if(running){e.preventDefault();e.stopImmediatePropagation();solution();}},true);
+$('#studioMoreToggle').addEventListener('click',e=>{if(running){e.preventDefault();e.stopImmediatePropagation();menu();}},true);
+function knowledge(){openDialog('Common Knowledge · Optional',tutorial()?tutorial().knowledge(step()):'<p>Laser → Modulator → Fiber → PD → Electrical Output.</p>');}
+function solutionData(){const d=C.copy(w.designs),bench={...w.mzmBench};if(step()?.id==='0-1')d['2-5'].P=Math.min(ls['2-5'].ref.P+1,KINDS.els.params(ls['2-5']).find(p=>p.k==='P').max);else if(step()?.id==='0-2'){bench.modulation=1;bench.baud=112;}else d['2-3'].L=ls['2-3'].ref.L;return {designs:d,mzmBench:bench,budget:C.copy(w.budget)};}
+function solution(){if(!step())return;const ex=solutionData(),r=C.calculate({...w,...ex},ls);openDialog('Solution Preview · '+step().title,`<p>Preview는 현재 설계, 완료 기록, Verify 결과를 바꾸지 않습니다.</p><pre>${esc(JSON.stringify(step().id==='0-1'?{laserPower:ex.designs['2-5'].P}:step().id==='0-2'?{modulation:'PAM4',baud:112,rawGbps:224}:{length:ex.designs['2-3'].L},null,2))}</pre><p>Example calculation: ${r.bench.eye.rawGbps} Gb/s raw. Laser model output ${r.laser.rx.toFixed(2)} dBm.</p><p>Explicit Apply는 예제 값을 실제 설계에 넣고 Original을 보존합니다. Restore Original은 처음 보호한 설계로 돌아갑니다. 두 동작 모두 다시 직접 Tune하고 Verify해야 합니다.</p><button class="btn" id="journeyApply">Explicit Apply</button><button class="btn" id="journeyOriginal" ${w.protectedOriginal?'':'disabled'}>Restore Original</button>`);
+ // Read-only preview has no stored side effects. The controls tutorial records the view in memory only.
+ tutorial()?.previewOpened(step(),w,C.fingerprint(w,pf()));
+}
+function replaceDesign(ex,label){const before=C.fingerprint(w,pf());C.snapshot(w,label);Object.assign(w,ex);if(!C.touch(w,pf(),before,null,'Restore')){w.revision++;w.finished=null;}last=C.fingerprint(w,pf());dialog.close();go(ctx.index);}
+function apply(){w.protectedOriginal=w.protectedOriginal||C.snapshot(w,'Protected Original');replaceDesign(solutionData(),'Before Explicit Apply');}
+function restore(){if(!w.protectedOriginal)return;const o=C.copy(w.protectedOriginal);replaceDesign({designs:o.designs,mzmBench:o.mzmBench,budget:o.budget},'Before Restore Original');}
+function edited(e){if(!running||!step())return;const key=e.target.dataset.fine||e.target.dataset.k||e.target.dataset.bench;if(!key)return;
+ const now=C.fingerprint(w,pf());if(last!==now){C.touch(w,pf(),last,step().id+':'+key);last=now;save();}refresh();}
+$('#studioTune').addEventListener('input',edited);$('#studioTune').addEventListener('change',edited);
+function invalidate(){if(!running)return;$('#studioNext').disabled=true;$('#studioStatus').textContent='STALE';live.textContent='STALE · 현재 입력 계산 중';}
+function refresh(){if(!running||!w||rendering)return;rendering=true;try{
+ sync();nav.hidden=mission.hidden=live.hidden=false;$('#studioWelcome').hidden=true;$('.wrap').inert=false;
+ const x=step();$('#journeyChapter').textContent=x?`Chapter 0 — Tutorial · Step ${x.n} of 3`:'Chapter 1 — PREVIEW';
+ $('#studioTitle').textContent=x?x.title:'Tutorial Complete!';$('#studioGoalLine').textContent='Your Photonics Learning Journey';$('#studioNext').textContent=x?.id==='0-3'?'Finish Tutorial':'Next';$('#studioNext').disabled=true;$('#studioSolution').disabled=!x;
+ document.body.classList.remove('studio-lab');$('#pcol').hidden=!x;$('#studioMetrics').textContent='';
+ ['#lab-insp','.lab-head','#lab-out','#lab-lib','#studioLabMetrics','#tiles','#mission'].forEach(q=>{$(q).hidden=true;});
+ ['#spec','#xpanel','#delta','#coach','#cmpcard','#fab','#mzmBench','#mzmBenchControls'].forEach(q=>{$(q).hidden=true;});
+ // Keep only this step's controls visible. Advanced retains the full original set.
+ const c=window.GAME_CTX();if(c&&x){for(const p of c.params){const row=$('#p-'+p.k)?.closest('.prm');if(!row)continue;row.hidden=!x.keys.includes(p.k);row.classList.toggle('studio-target',x.keys.includes(p.k));if(!row.querySelector('.fine-value')){const n=document.createElement('input');Object.assign(n,{type:'number',className:'fine-value',min:p.min,max:p.max,step:p.step,value:c.d[p.k]});n.dataset.fine=p.k;n.setAttribute('aria-label',p.label+' 정확한 값');row.append(n);}}
+ if(x.id==='0-2'||x.id==='0-3'){$('#mzmBenchControls').hidden=false;$('#mzmBenchControls').querySelectorAll('[data-bench]').forEach(e=>e.closest('label').hidden=!x.keys.includes(e.dataset.bench));}}
+ if(!x){$('#studioStatus').textContent='PREVIEW';live.innerHTML='<b>Tutorial saved ✓</b><p>Chapter 1 entry unlocked · missions are not playable yet.</p>';return;}
+ let r;try{r=compute();}catch(e){$('#studioStatus').textContent='입력 확인';live.textContent='STALE · '+e.message;$('#journeyGateReason').textContent='빈 값과 범위를 벗어난 값은 완료할 수 없습니다.';return;}
+ const ready=gate(r);$('#studioNext').disabled=!ready;$('#studioStatus').textContent=ready?'PASS':w.evidence[x.id]?'STALE / VERIFY':'VERIFY';$('#studioStatus').dataset.state=ready?'pass':'pending';
+ live.innerHTML=tutorial()?tutorial().inspect(x,r,w):`<b>Current model</b><p>${r.bench.eye.rawGbps} Gb/s raw · Laser ${r.laser.rx.toFixed(2)} dBm</p>`;
+ $('#journeyGateReason').textContent=ready?'현재 설계 확인 ✓ Next로 진행하세요.':tutorial()?tutorial().reason(x,w,pf(),r):'Playable Tutorial is pending Checkpoint C.';
+ tutorial()?.update({step:x,workspace:w,result:r,platform:pf(),observe,refresh,save});
+ }finally{rendering=false;}}
+// Preserve all original control visibility on leaving the learning workspace.
+$('#journeyAdvanced').addEventListener('click',()=>{$('#pcol').querySelectorAll('.prm').forEach(e=>e.hidden=false);$('#mzmBenchControls').querySelectorAll('label').forEach(e=>e.hidden=false);});
+window.addEventListener('pagehide',()=>{if(running)save();});
+window.SMQ_JOURNEY={enter,go,verify,next,refresh,state:()=>ctx,workspace:()=>w,step,isActive:()=>running,calculate:()=>compute(),ensurePlatform,observe};
+const initial=pf()&&journey.by[pf()];
+if(initial){$('#journeyWelcome').textContent='Continue Learning';$('#journeyWelcomeCourse').textContent=initial.index===3?'Chapter 1 — PREVIEW':`Chapter 0 — Tutorial · Step ${initial.index+1} of 3`;$('#journeyWelcomeMission').textContent=C.steps[initial.index]?.title||'Tutorial Complete!';}
+if(journey.active&&pf())enter();else if(!SH.ui().studioWelcomed)ST.welcome();
 })();
 
 </script>

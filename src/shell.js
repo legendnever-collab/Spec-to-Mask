@@ -32,7 +32,7 @@ if (!Array.isArray(DB)) DB = [];
 DES = DES || {};
 let studioScope = null;
 const legacyPP = () => (P.by[state.plat] = P.by[state.plat] || emptyNS());
-const PP = () => { if (!studioScope) return legacyPP(); const n = studioScope.progress || (studioScope.progress = emptyNS()); n.stars = legacyPP().stars; n.cards = legacyPP().cards; return n; };
+const PP = () => { if (!studioScope) return legacyPP(); const n = studioScope.progress || (studioScope.progress = emptyNS()); if (!studioScope.privateHistory) { n.stars = legacyPP().stars; n.cards = legacyPP().cards; } return n; };
 const DESP = () => studioScope ? (studioScope.designs || (studioScope.designs = {})) : (DES[state.plat] = DES[state.plat] || {});
 
 const state = {

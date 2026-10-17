@@ -8,7 +8,7 @@ function ok(c,m){checks.push({ok:!!c,message:m});console.log(c?'PASS':'FAIL',m);
 const pause=ms=>new Promise(r=>setTimeout(r,ms));
 (async()=>{const browser=await chromium.launch({executablePath:process.env.SMQ_BROWSER||undefined,args:process.env.SMQ_BROWSER?['--no-sandbox','--disable-gpu','--disable-software-rasterizer','--no-zygote','--single-process','--disable-dev-shm-usage']:['--no-sandbox'],headless:true});
 try{const ctx=await browser.newContext({viewport:{width:1440,height:900},hasTouch:true,acceptDownloads:true}),page=await ctx.newPage();page.on('pageerror',e=>{errors.push(e.message);console.log('PAGE ERROR',e.stack);});page.on('request',r=>{if(/^https?:/.test(r.url()))requests.push(r.url());});page.on('dialog',d=>d.accept());
-await page.goto('file://'+html);await page.click('[data-lam="1.31"]');await page.click('[data-mat="si"]');await page.click('#btn-start');await page.click('[data-welcome-track="mzm-dr8"]');await pause(300);
+await page.goto('file://'+html);await page.locator('#welcomeAdvanced').evaluate(e=>e.open=true);await page.click('[data-welcome-track="mzm-dr8"]');await pause(300);
 ok(await page.evaluate(()=>document.characterSet==='UTF-8'&&document.documentElement.lang==='ko'&&document.compatMode==='CSS1Compat'),'HTML5 / UTF-8 / Korean language');
 async function sheet(id){
  const more=page.locator('#studioMoreToggle');
