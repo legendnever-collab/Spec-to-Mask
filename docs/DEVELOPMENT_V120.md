@@ -1,3 +1,40 @@
+# v1.2.0-beta.2 — Solution and live PN / dynamic eye
+
+This increment stays on `feature/v1.2-mzm-bench` / PR #22. The user requested the next version before merging; this PR remains unmerged. Beta.1 evidence below is historical. Exact beta.2 source/artifact hashes and completed test results live in `artifacts/v120-beta2/manifest.json`.
+
+## What to try
+
+1. Open **Solution** beside Next at any device level. It immediately shows the example parameter values and same-condition metrics. **Explicit Apply** protects the original device; **Restore Original** restores it. Opening Solution alone changes neither designs nor completion records. Lab missions show actionable, mission-specific steps, preserving explicit verification/export.
+2. In MZM DR8 → Level 1 → TW-MZM, Solution also offers **Apply Bench Solution**: live Track PN geometry, 1.5 V reverse bias, 50 Ω source, 2.5 Vpp open circuit, quadrature, 70 GHz driver, **28 GBd NRZ**. This is an educational starting experiment, not an imported Ansys solution or guaranteed PASS. **Restore Bench Original** recovers the first protected experiment settings independently of the device Original.
+3. In Tune, select fixed PN card/reference or **Live workspace PN geometry**. Live mode uses the current Track's saved 2-2 geometry (explicitly labeled platform reference fallback if absent), not an inferred geometry from the rounded card. Change reverse bias and see capacitance, local VπL, RF/EO and dynamic Eye change together.
+4. Switch NRZ/PAM4, symbol rate (10–112 GBd), driver bandwidth, drive voltage and seed. **Dynamic Eye 보기** brings the result into Inspect. 112 GBd PAM4 is 224 Gb/s raw per lane; it is not a claim of net 200G certification.
+
+## Versioned model contract
+
+Bench `mzm-bench/2`, eye `mzm-eye/1`, export `smq-mzm-bench/2`. Legacy engine/scoring/model versions and physics source remain unchanged. Fixed mode reproduces beta.1 RF/EO response. Beta.1 workspace settings migrate additively, retaining their values and fixed PN mode.
+
+Live PN reuses the existing Si depletion/overlap model. C′, R′ and depletion width are computed at the selected bias. VπL uses the local optical slope from ±0.01 V differences (one-sided at 0/3 V), rather than the legacy card's 1 V secant. Optical loss is the bias-point carrier absorption plus the existing 0.15 dB/mm sidewall term. The 31-point 0–3 V sweep exports Δn, loss, C′, R′, VπL, fRC and depletion width. SiN still assumes hybrid Si active devices.
+
+The dynamic model filters a deterministic 256-symbol, 16 samples/UI periodic NRZ/PAM4 pattern through the 2nd-order Butterworth driver and complex loaded-CPW/junction response. It retains actual source/load voltage division and absolute Pout/Pin. Optical conversion is equal-arm cosine transfer with constant loss and linearized PN slope. Above 240 GHz the response is truncated. Reported raw vertical gap uses the best of 16 sample phases and ±8 UI delays, without FFE, noise, CDR, BER or compliance scoring. Folded/non-monotonic optical levels have no opening value. In live mode the equal-series junction excursions Vbias ± Vdiff/2 must stay within 0–3 V; otherwise the eye is hidden and its opening is null. This is not a large-signal carrier simulation.
+
+Bench settings affect the new Inspect Eye, not the legacy Canvas Eye / Mission / Next experiment. Both boundaries are stated in the UI. This increment does not claim that the bench constitutes the complete 1.6T Tx/Rx/GDS path. Reference checked remains **NOT VERIFIED** until numerical reference fixtures are actually compared.
+
+## Freshness and persistence
+
+Analysis identity includes model, full shell design/card identity, all bench settings and upstream PN geometry/source when live. Pending device edits or changed upstream geometry immediately block old exports. Invalid numeric drafts remain visible while stale plots are hidden. Track, reload, backup and snapshot restore recompute results. Solution preview is read-only; applying/restoring settings triggers recalculation without adding Mission PASS records.
+
+## Validation
+
+The expanded model regression covers analytical flat-channel NRZ/PAM4 level spacings, source amplitude/power bounds, deterministic seed, 4-platform PN dependency, lower capacitance/absorption with increased reverse bias, bitrate/driver ISI effects, invalid bias domain and folded levels. Browser acceptance exercises actual input events, Solution preview/apply/restore, upstream identity, existing persistence, JSON schema and 320/390/1440 px layouts. Existing atomic/Studio and offline browser regression remain required. Final exact-file logs are under `artifacts/v120-beta2/`; never attribute beta.1 SHA or CI results to beta.2.
+
+Historical beta.1 exact-head PR CI `38998308787` completed all seven jobs successfully before this update. New beta.2 CI must be evaluated at its own final commit.
+
+## Remaining work
+
+Reference fixture calibration, nonlinear PN/TFLN external-solver packs, monitored 8-lane Tx, high-speed Rx/link and complete GDS course integration remain subsequent milestones; MRM and standalone LiDAR chapters follow the approved plan. No threshold was relaxed and no foundry/compliance claim added.
+
+---
+
 # v1.2.0-beta.1 — Single-lane MZM analysis checkpoint
 
 ## Approved baseline

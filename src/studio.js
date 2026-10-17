@@ -45,7 +45,7 @@ const TRACKS = [
 const KEY='smq3-studio';
 let root=SMQ_STORE.get(KEY,null);
 if (!root || root.schema!=='smq-studio/1' || !root.by || SMQ_STORE.status().corrupt.some(x=>x.key===KEY)) root={schema:'smq-studio/1',by:{},active:null};
-let active=null, ws=null, entering=false, raf=0, dirty=false;
+let active=null, ws=null, entering=false, raf=0, dirty=false, solutionVisible=false;
 const track=()=>TRACKS.find(t=>t.id===active), phase=()=>ws && track().levels[ws.level], step=()=>ws && (ws.sub|0);
 const scopeKey=()=>SH.plat()+'|'+active;
 const historyKey=()=>ws.level+':'+step();
@@ -64,7 +64,7 @@ function navigate(){if(!ws||entering)return;entering=true;closeSheets();const p=
 // Compact shell and original semantic DOM nodes: existing event handlers and model views are retained.
 const nav=document.createElement('nav');nav.id='studioNav';nav.setAttribute('aria-label','Track / Level');nav.innerHTML=`<select id="studioTrack" aria-label="Architecture Track"><option value="legacy">Legacy · 자유 탐색</option>${TRACKS.map(t=>`<option value="${t.id}">${t.name}</option>`).join('')}</select><select id="studioLevel" aria-label="Track-local Level"></select><button class="btn" id="studioStart">Start New…</button><button class="btn" id="studioMoreToggle" aria-expanded="false" aria-controls="studioMore">More</button><button class="btn" id="studioReplay">Guide</button>`;
 $('.top').after(nav);
-const goal=document.createElement('section');goal.id='studioGoal';goal.innerHTML='<div><b id="studioTitle"></b><span id="studioGoalLine"></span></div><span id="studioStatus" role="status"></span><button class="btn pri" id="studioNext">Next</button>';
+const goal=document.createElement('section');goal.id='studioGoal';goal.innerHTML='<div><b id="studioTitle"></b><span id="studioGoalLine"></span></div><span id="studioStatus" role="status"></span><button class="btn" id="studioSolution" aria-controls="studioReference">Solution</button><button class="btn pri" id="studioNext">Next</button>';
 nav.after(goal);
 const theme=document.createElement('button');theme.id='themeToggle';theme.className='btn';$('.hdr-r').append(theme);
 const shellUI=SH.ui();
@@ -89,12 +89,13 @@ const scrim=document.createElement('div');scrim.id='studioScrim';scrim.addEventL
 const banner=document.createElement('div');banner.id='studioBanner';banner.hidden=true;goal.after(banner);
 function tell(msg){banner.textContent=msg;banner.hidden=false;setTimeout(()=>banner.hidden=true,6000);}
 const mobile=()=>window.innerWidth<=900;
-function closeSheets(){const was=more.classList.contains('open');more.classList.remove('open');scrim.classList.remove('open');$('#studioMoreToggle').setAttribute('aria-expanded','false');if(was)$('#studioMoreToggle').focus({preventScroll:true});}
+function closeSheets(){const was=more.classList.contains('open');more.classList.remove('open');scrim.classList.remove('open');solutionVisible=false;$('#studioMoreToggle').setAttribute('aria-expanded','false');if(was)$('#studioMoreToggle').focus({preventScroll:true});}
 function openSheet(id){
  if(id==='more'){more.classList.add('open');scrim.classList.add('open');$('#studioMoreToggle').setAttribute('aria-expanded','true');more.tabIndex=-1;more.focus({preventScroll:true});return;}
  closeSheets();if(id==='inspect'&&mobile()&&!inspect.classList.contains('expanded'))expand.click();
 }
 $('#studioMoreToggle').onclick=()=>more.classList.contains('open')?closeSheets():openSheet('more');
+$('#studioSolution').onclick=()=>{solutionVisible=true;renderReference();openSheet('more');reference.scrollIntoView?.({block:'start'});reference.tabIndex=-1;reference.focus({preventScroll:true});};
 document.addEventListener('click',e=>{if(e.target.closest('[data-close-sheet]'))closeSheets();});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheets();});
 function identity(){if(LU.isOpen()){const a=LU.state();return JSON.stringify([SH.plat(),a.C?.hash,a.C?.mod,a.C&&a.C.d,a.CHK?.sig]);}return SH.testIdentity();}
 function liveGate(){const p=phase();if(p?.summary)return [0,1,2,3,4].every(i=>ws.completed[i]);if(LU.isOpen()){if(!LU.evaluationCurrent())return false;const st=LU.state(),i=p?.lab?.[step()]??(st.s.cur|0);return !!st.s.live?.[LU.MISS[i].id] && (track()?.mod==null || st.C.d.mod===track().mod);}const c=window.GAME_CTX();return SH.currentGate() && !(c?.id==='3A+' && track()?.mod!=null && +c.d.mod!==(track().mod===1?1:0));}
@@ -128,11 +129,26 @@ $('#studioBackup').onclick=()=>window.GAME_DATA.open('#bk-copy');
 function guide(replay){openSheet('inspect');if(LU.isOpen()){LU.mission(phase()?.lab?.[step()]??0);}else {if(replay)document.querySelector('[data-gm="guided"]')?.click();$('#m-guided').hidden?window.GAME_GUIDE?.open():$('#m-guided').scrollIntoView?.({block:'start'});}highlight();}
 $('#studioGuide').onclick=()=>guide(true);$('#studioReplay').onclick=()=>guide(false);
 $('#studioFree').onclick=()=>{if(ws){ws.mode='free';save();}if(!LU.isOpen())document.querySelector('[data-gm="full"]')?.click();openSheet('tune');tell('Free Exploration · 현재 Design은 유지됩니다. 현재 설계의 계산 결과로 완료 여부를 판정합니다.');};
-function renderReference(){const c=window.GAME_CTX();if(LU.isOpen()){reference.innerHTML='<h2>Reference · Lab</h2><p class="note">기존 Lab Library의 Reference / 내 카드 출처를 확인하세요. 실제 배치 수정은 Inspector에서 수행합니다.</p>';return;}if(!c)return;
- let rows=[];try{const r=c.K.evaluate(c.l,clone(c.l.ref),null,{full:true});rows=c.K.tiles(c.l,r)||[];}catch(e){/* unavailable reference shown explicitly */}
- reference.innerHTML=`<h2>Reference / Same-condition Compare</h2><p class="note">${esc(c.id)} · ${esc(c.plat)} · ${esc(c.mode)} · ${c.step?'Full Reference와 Guided 결과는 다른 목표입니다.':'동일 Platform / 난이도 / Physics 모델'}</p><div class="row-btns"><button class="btn" id="studioPreview">Reference Preview</button><button class="btn" id="studioApply">Explicit Apply</button><button class="btn" id="studioSuggest">Suggested Change</button><button class="btn" id="studioOriginal">Restore Original</button></div><div id="studioRefTable" hidden><table><thead><tr><th>Metric</th><th>My Design</th><th>Reference</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td>${esc(text(r[0]??r.l??r.k??'Metric'))}</td><td>${esc(text((c.K.tiles(c.l,c.res)?.[i]||[])[1]??'—'))}</td><td>${esc(text(r[1]??r.v??'—'))}</td></tr>`).join('')}</tbody></table><p class="note">Analytical / Surrogate · 실제 모델 수치. Fab 비교는 Inspect의 Same-wafer Comparison에서 같은 Seed로 실행하세요.</p></div>`;
+function renderReference(){const c=window.GAME_CTX();if(LU.isOpen()){
+ const st=LU.state(),i=st.s.cur,m=LU.MISS[i],steps=[
+  'Track에 맞는 MZM / MRR / WDM 구성을 선택하고 Laser sharing과 Monitor tap을 정하세요. Connectivity 검사에서 미연결 포트를 확인하세요.',
+  '필요 크기로 맞춤 → 자동 배치 값 복원을 사용한 뒤 다이 경계와 충돌을 확인하세요. 필요한 크기는 현재 소자에 따라 달라집니다.',
+  '실패한 넷을 선택하고 굽힘 반경·폭·배선 공간을 확인하세요. 공간 부족은 Floorplan에서 다이를 늘려 해결하세요.',
+  'RF 급전 방식과 pad side / pitch를 조절하고 RF·DC 연결을 확인하세요. 추상 RF pad는 foundry 검증을 뜻하지 않습니다.',
+  '현재 설계에서 검사 실행을 누르세요. FAIL을 해결하고 다시 실행해야 합니다. Solution 열기는 검증 결과를 만들지 않습니다.',
+  '검사 통과 후 smq-circuit/1 내보내기를 실행하세요. Python tools/smq2gds로 GDS를 만들고 같은 design hash의 재검사 결과를 가져오세요.'
+ ];
+ reference.innerHTML=`<h2>Solution · ${esc(m.title)}</h2><p>${esc(m.intro)}</p><p><b>풀이 순서</b><br>${esc(steps[i])}</p><p class="note">현재 구성에 대한 안내입니다. PASS·Export·Geometry Recheck는 실제 작업 결과로만 갱신됩니다.</p><button class="btn" id="studioLabSolutionGo">해당 Tune / Inspect로 이동</button>`;
+ $('#studioLabSolutionGo').onclick=()=>{closeSheets();openSheet(i>=4?'inspect':'tune');$(i>=4?'#lab-out':'#lab-insp').scrollIntoView?.({block:'start'});};return;}if(!c)return;
+ const ref=clone(c.l.ref);if(c.id==='3A+'&&track()?.mod===1)ref.mod=1;
+ const parameterRows=Object.keys(ref).map(k=>{const p=c.K.params(c.l)?.find(p=>p.k===k);return `<tr><td>${esc(text(p?.label||k))}</td><td>${esc(c.d[k]??'—')}</td><td>${esc(ref[k])} ${esc(p?.unit||'')}</td></tr>`;}).join('');
+ const bench=c.kindId==='mzm'&&ws?`<h3>Bench Solution · 28 GBd NRZ에서 시작</h3><p class="note">현재 PN / MZM 형상에서 시작하는 학습용 설정입니다. Live PN · 1.5 V reverse bias · 50 Ω source · 2.5 Vpp · 70 GHz driver · quadrature. 적용 후 PAM4 / 112 GBd로 올리며 Eye 변화를 비교하세요. Reference 수치 재현이나 PASS를 보장하지 않습니다.</p><div class="row-btns"><button class="btn" id="studioBenchApply">Apply Bench Solution</button><button class="btn" id="studioBenchOriginal" ${ws.mzmBenchOriginal?'':'disabled'}>Restore Bench Original</button></div>`:'';
+ let rows=[];try{const r=c.K.evaluate(c.l,ref,null,{full:true});rows=c.K.tiles(c.l,r)||[];}catch(e){/* unavailable reference shown explicitly */}
+ reference.innerHTML=`<h2>Solution / Reference · 예제 풀이</h2><p class="note">${esc(c.id)} · ${esc(c.plat)} · ${esc(c.mode)} · ${c.step?'Full Reference와 Guided 결과는 다른 목표입니다.':'동일 Platform / 난이도 / Physics 모델'}</p><div class="row-btns"><button class="btn" id="studioPreview">Reference Preview</button><button class="btn" id="studioApply">Explicit Apply</button><button class="btn" id="studioSuggest">Suggested Change</button><button class="btn" id="studioOriginal">Restore Original</button></div><div id="studioRefTable" ${solutionVisible?'':'hidden'}><p class="note">아래 예제 값을 비교하고 Explicit Apply로 적용하세요. 먼저 현재 설계를 Original로 보호합니다. 미리보기는 설계와 완료 상태를 바꾸지 않습니다.</p><table><thead><tr><th>Parameter</th><th>My Design</th><th>Solution</th></tr></thead><tbody>${parameterRows}</tbody></table>${bench}<h3>Same-condition Compare</h3><table><thead><tr><th>Metric</th><th>My Design</th><th>Reference</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td>${esc(text(r[0]??r.l??r.k??'Metric'))}</td><td>${esc(text((c.K.tiles(c.l,c.res)?.[i]||[])[1]??'—'))}</td><td>${esc(text(r[1]??r.v??'—'))}</td></tr>`).join('')}</tbody></table><p class="note">Analytical / Surrogate · 실제 모델 수치. Fab 비교는 Inspect의 Same-wafer Comparison에서 같은 Seed로 실행하세요.</p></div>`;
  $('#studioSuggest').onclick=()=>{openSheet('inspect');$('#coach').scrollIntoView?.({block:'center'});};
- $('#studioPreview').onclick=()=>$('#studioRefTable').hidden=!$('#studioRefTable').hidden;
+ $('#studioPreview').onclick=()=>{solutionVisible=!solutionVisible;$('#studioRefTable').hidden=!solutionVisible;};
+ if($('#studioBenchApply'))$('#studioBenchApply').onclick=()=>{window.MZM_BENCH_UI.applySolution();renderReference();};
+ if($('#studioBenchOriginal'))$('#studioBenchOriginal').onclick=()=>{window.MZM_BENCH_UI.applySolution(true);renderReference();};
  $('#studioApply').onclick=()=>{if(!ws)return tell('보호된 Original을 위해 Track을 먼저 선택하세요.');ws.original=ws.original||{};if(!ws.original[c.id])ws.original[c.id]={d:clone(SH.design(c.id)),guide:clone(ws.progress.guide?.[c.id]||null)};snapshot('Before Reference Apply');const d=clone(c.l.ref);if(c.id==='3A+'&&track().mod===1)d.mod=1;SH.applyDesign(d,true);save();refresh();tell('Reference 적용 완료 · 현재 설계의 결과를 확인하세요.');};
  $('#studioOriginal').onclick=()=>{if(!ws?.original?.[c.id])return tell('보호된 Original이 없습니다.');const o=ws.original[c.id];if(o.d){if(o.guide){ws.progress.guide=ws.progress.guide||{};ws.progress.guide[c.id]=clone(o.guide);}SH.applyDesign(clone(o.d),!o.guide);}else SH.applyDesign(clone(o),true);save();refresh();};
 }

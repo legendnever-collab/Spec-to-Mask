@@ -1,8 +1,8 @@
-# SPEC-to-MASK Quest v1.2.0-beta.1 — Single-lane MZM Bench
+# SPEC-to-MASK Quest v1.2.0-beta.2 — Solution + Live PN / Dynamic Eye Bench
 
 Canvas-first PIC learning with five six-Level Tracks: PIC Fundamentals, MZM DR8, MRR DR8, MRR WDM8, FMCW LiDAR / TTD. One offline HTML with saved Light/Dark theme, independent Track workspaces, automatic current-design evaluation and protected Reference / Original. Tune stays beside Canvas, Inspect below; More is in the top navigation.
 
-- [Run MZM bench beta](dist/spec-to-mask-v1.2.0-beta.1.html) · [Bench scope / models / QA](docs/DEVELOPMENT_V120.md)
+- [Run MZM bench beta](dist/spec-to-mask-v1.2.0-beta.2.html) · [Bench scope / models / QA](docs/DEVELOPMENT_V120.md)
 - [Stable v1.1.1 offline HTML](dist/spec-to-mask-v1.1.1.html) · [Live UI development / QA](docs/DEVELOPMENT_V111.md) · [Exact HTML SHA256](artifacts/v111-live/SHA256SUMS.txt)
 - Existing 21 Level IDs, four Platforms, six Lab missions, Physics / Fab / GDS models and v1.0 backup formats are retained.
 - [v1.1 user guide](docs/release/USER_GUIDE-v1.1.md) · [Tracks](docs/TRACKS_V110.md) · [Migration](docs/MIGRATION_V110.md) · [QA](docs/TEST_REPORT_V110.md) · [Handoff](docs/HANDOFF_v1.1.0.md)

@@ -27,4 +27,38 @@ for(const pid of Object.keys(G.PLATFORMS)){
  ok(Math.abs(r.probe.eoDb-r.probe.s21Db)>.01,pid+': EO and electrical S21 are distinct');
  ok(!r.referenceChecked&&r.confidence==='Educational model',pid+': uncalibrated reference never marked verified');
 }
+// Versioned dynamic eye and live PN coupling, independent of Mission scoring.
+const old={source:75,vpp:2.5,ng:3.9,bias:.5,probe:56};
+ok(B.migrate(old).source===75&&B.migrate(old).pnMode===0&&B.migrate(old).baud===112,'beta.1 settings migrate additively without changing existing source');
+ok(!B.valid({...B.defaults(),modulation:.5})&&!B.valid({...B.defaults(),seed:1.5}),'discrete settings reject fractional values');
+for(const modulation of [0,1]) {
+ const cfg={...B.defaults(),modulation},e=B.dynamicEye(cfg,()=>[.5,0],2,.8);
+ const idealGap=Math.min(...e.ideal.slice(1).map((v,i)=>Math.abs(v-e.ideal[i])));
+ ok(near(e.opening,idealGap,1e-10),'flat channel '+e.modulation+': exact analytical cosine level spacing');
+ ok(near(e.voltageMin,-.5)&&near(e.voltageMax,.5)&&e.powerMin>=0&&e.powerMax<=.8,'flat channel '+e.modulation+': no source amplitude renormalization / optical power gain');
+ const e2=B.dynamicEye(cfg,()=>[.5,0],2,.8);ok(JSON.stringify(e)===JSON.stringify(e2),'seeded '+e.modulation+' eye repeats exactly');
+}
+for(const pid of Object.keys(G.PLATFORMS)) {
+ const l={...G.LEVELS.find(l=>l.id==='2-3'),...G.PSPEC[pid]['2-3'],pf:G.PLATFORMS[pid]},d={...l.ref};
+ const pl={...G.LEVELS.find(l=>l.id==='2-2'),...G.PSPEC[pid]['2-2']},context={geometry:{...pl.ref},source:'test workspace'},before=JSON.stringify(context);
+ const cfg={...B.defaults(),pnMode:1},r=B.analyse(l,d,cfg,context),hi=B.analyse(l,d,{...cfg,reverseBias:2.5},context);
+ ok(JSON.stringify(context)===before,pid+': live PN calculation does not mutate workspace geometry');
+ ok(r.pnSweep.length===31&&r.pnSweep.every(s=>Number.isFinite(s.VpiL)&&s.Cp>0&&s.Rp>0&&s.alpha>=0),pid+': complete finite 0–3 V PN sweep');
+ ok(hi.pn.Cp<r.pn.Cp&&hi.pn.loss<r.pn.loss&&hi.pn.Wd>r.pn.Wd,pid+': increased reverse bias widens depletion and reduces capacitance / absorption');
+ ok(!near(hi.probe.eoDb,r.probe.eoDb)&&JSON.stringify(hi.eye.traces)!==JSON.stringify(r.eye.traces),pid+': reverse bias propagates through RF / EO and dynamic eye');
+ ok(r.eye.powerMin>=0&&r.eye.powerMax<=r.through&&r.eye.biasDomainValid,pid+': dynamic power bound and valid junction reverse bias');
+ const fast=r.eye,slow=B.analyse(l,d,{...cfg,baud:20},context).eye;
+ ok(slow.opening>fast.opening,pid+': slower PAM4 has less ISI with identical channel / seed');
+ const nrz=B.analyse(l,d,{...cfg,modulation:0},context).eye;
+ ok(nrz.groups.length===2&&fast.groups.length===4&&nrz.rawGbps===112&&fast.rawGbps===224,pid+': NRZ / PAM4 grouping and raw-rate accounting');
+ const narrow=B.analyse(l,d,{...cfg,driver:5},context).eye;
+ ok(narrow.opening<fast.opening,pid+': narrow driver closes eye instead of rescaling it open');
+ const bad=B.analyse(l,d,{...cfg,reverseBias:0},context).eye;
+ ok(!bad.biasDomainValid&&bad.opening===null&&bad.traces.length===0,pid+': forward-bias excursion cannot produce a valid eye');
+ const fixed=B.analyse(l,d,{...B.defaults(),reverseBias:0}),fixed2=B.analyse(l,d,{...B.defaults(),reverseBias:3});
+ ok(JSON.stringify(fixed.eye.traces)===JSON.stringify(fixed2.eye.traces),pid+': fixed card does not invent PN bias dependence');
+ const folded=B.analyse(l,d,{...B.defaults(),bias:0}).eye;
+ ok(!folded.monotonic&&folded.opening===null,pid+': folded optical levels cannot claim an open data eye');
+}
+assert.throws(()=>B.analyse({},{}, {...B.defaults(),pnMode:1}));count++;console.log('PASS missing live PN geometry rejected');
 console.log(count+' MZM bench model checks passed');
