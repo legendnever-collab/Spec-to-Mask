@@ -1,0 +1,64 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.2.0-beta.1 test:mzm-bench
+> node test/t_mzm_bench.js
+
+PASS lossless matched line: no reflection and unit transmitted power
+PASS matched lossy line gives exp(-alpha L) field attenuation
+PASS zero-length network is identity even with complex Zc
+PASS velocity match integral has stable analytic limit
+PASS one-cycle velocity mismatch cancels EO integral
+PASS invalid fractional probe rejected
+PASS si1310: analysis never changes input design
+PASS si1310: complete finite sweep
+PASS si1310: default EO equals existing engine at every frequency
+PASS si1310: DC electrode voltage respects source/load divider
+PASS si1310: passive two-port power bound
+PASS si1310: optical output power conservation including loss
+PASS si1310: quadrature has equal output powers at zero RF voltage
+PASS si1310: zero phase directs all surviving light to main
+PASS si1310: source voltage differs from electrode voltage and does not redefine S parameters
+PASS si1310: optical velocity mismatch affects EO, not electrical S21
+PASS si1310: terminated reflection distinguished from two-port S11
+PASS si1310: EO and electrical S21 are distinct
+PASS si1310: uncalibrated reference never marked verified
+PASS si1550: analysis never changes input design
+PASS si1550: complete finite sweep
+PASS si1550: default EO equals existing engine at every frequency
+PASS si1550: DC electrode voltage respects source/load divider
+PASS si1550: passive two-port power bound
+PASS si1550: optical output power conservation including loss
+PASS si1550: quadrature has equal output powers at zero RF voltage
+PASS si1550: zero phase directs all surviving light to main
+PASS si1550: source voltage differs from electrode voltage and does not redefine S parameters
+PASS si1550: optical velocity mismatch affects EO, not electrical S21
+PASS si1550: terminated reflection distinguished from two-port S11
+PASS si1550: EO and electrical S21 are distinct
+PASS si1550: uncalibrated reference never marked verified
+PASS sin1310: analysis never changes input design
+PASS sin1310: complete finite sweep
+PASS sin1310: default EO equals existing engine at every frequency
+PASS sin1310: DC electrode voltage respects source/load divider
+PASS sin1310: passive two-port power bound
+PASS sin1310: optical output power conservation including loss
+PASS sin1310: quadrature has equal output powers at zero RF voltage
+PASS sin1310: zero phase directs all surviving light to main
+PASS sin1310: source voltage differs from electrode voltage and does not redefine S parameters
+PASS sin1310: optical velocity mismatch affects EO, not electrical S21
+PASS sin1310: terminated reflection distinguished from two-port S11
+PASS sin1310: EO and electrical S21 are distinct
+PASS sin1310: uncalibrated reference never marked verified
+PASS sin1550: analysis never changes input design
+PASS sin1550: complete finite sweep
+PASS sin1550: default EO equals existing engine at every frequency
+PASS sin1550: DC electrode voltage respects source/load divider
+PASS sin1550: passive two-port power bound
+PASS sin1550: optical output power conservation including loss
+PASS sin1550: quadrature has equal output powers at zero RF voltage
+PASS sin1550: zero phase directs all surviving light to main
+PASS sin1550: source voltage differs from electrode voltage and does not redefine S parameters
+PASS sin1550: optical velocity mismatch affects EO, not electrical S21
+PASS sin1550: terminated reflection distinguished from two-port S11
+PASS sin1550: EO and electrical S21 are distinct
+PASS sin1550: uncalibrated reference never marked verified
+58 MZM bench model checks passed
