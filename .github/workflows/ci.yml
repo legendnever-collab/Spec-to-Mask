@@ -61,6 +61,8 @@ jobs:
           { echo '### Identity checks run'; echo; echo '```'; grep -E 'BASELINE|IDENTITY|checks passed' identity.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
           test "$(grep -c '^  IDENTITY test:' identity.log)" -eq 4
           grep -E '^  (BASELINE|IDENTITY) ' identity.log | sed 's/^  /::notice title=identity evidence::/'
+      - name: Sequential curriculum state and migration
+        run: npm run test:journey && npm run test:tutorial
       - name: MZM bench analytical limits and legacy EO parity
         run: npm run test:mzm-bench
       - name: Missing-baseline regression (no history → fail, never a silent skip)
@@ -127,7 +129,8 @@ jobs:
   release-artifacts:
     name: Release artifacts
     needs: release-matrix
-    if: (github.event_name == 'workflow_dispatch' && inputs.release) || startsWith(github.ref, 'refs/tags/v') || github.event_name == 'pull_request'
+    # B/C is a preview checkpoint; canonical release packaging resumes after D/E/F.
+    if: ((github.event_name == 'workflow_dispatch' && inputs.release) || startsWith(github.ref, 'refs/tags/v') || github.event_name == 'pull_request') && github.head_ref != 'feature/v1.3-learning-journey' && github.ref_name != 'feature/v1.3-learning-journey'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -165,6 +168,7 @@ jobs:
         run: |
           RC="dist/spec-to-mask-v$(node -p "require('./package.json').version").html"
           if [ -f "$RC" ]; then node tools/check_rc.js; export SMQ_HTML="$RC"; else export SMQ_HTML=dist/index-offline.html; fi
+          SMQ_QA_OUT=artifacts/studio-ci-browser/tutorial npm run test:browser:tutorial
           npm run test:browser
           SMQ_QA_OUT=artifacts/studio-ci-browser/mzm npm run test:browser:mzm
         env:

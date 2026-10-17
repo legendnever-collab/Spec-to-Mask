@@ -1,0 +1,155 @@
+{
+  "htmlSha256": "580c0d4387e9bf573f21f56c77db0020f56f2d0898ac0ceb96a9a916147871ab",
+  "checks": [
+    {
+      "ok": true,
+      "message": "MZM level exposes simultaneous Tune controls and Inspect bench"
+    },
+    {
+      "ok": true,
+      "message": "live analysis includes complete sweep and honest reference status"
+    },
+    {
+      "ok": true,
+      "message": "bench setting changes its own current identity synchronously"
+    },
+    {
+      "ok": true,
+      "message": "source experiment preserves original Mission design"
+    },
+    {
+      "ok": true,
+      "message": "blank bench field invalidates export and result immediately"
+    },
+    {
+      "ok": true,
+      "message": "refresh preserves invalid draft after blur and hides stale plots"
+    },
+    {
+      "ok": true,
+      "message": "out-of-range bench condition cannot export stale analysis"
+    },
+    {
+      "ok": true,
+      "message": "device edit invalidates analysis before animation-frame evaluation"
+    },
+    {
+      "ok": true,
+      "message": "refreshed analysis belongs to current device identity"
+    },
+    {
+      "ok": true,
+      "message": "Reference Apply refreshes device analysis and preserves independent experiment settings"
+    },
+    {
+      "ok": true,
+      "message": "Original Restore recomputes protected device"
+    },
+    {
+      "ok": true,
+      "message": "Solution button immediately exposes example parameter values and comparison"
+    },
+    {
+      "ok": true,
+      "message": "Solution preview does not apply values or complete levels"
+    },
+    {
+      "ok": true,
+      "message": "explicit Bench Solution links saved PN geometry to 28 GBd NRZ eye"
+    },
+    {
+      "ok": true,
+      "message": "Restore Bench Original restores protected experiment conditions"
+    },
+    {
+      "ok": true,
+      "message": "actual bias input updates dynamic eye and exported operating point"
+    },
+    {
+      "ok": true,
+      "message": "PN domain violation hides invalid eye without a false pass"
+    },
+    {
+      "ok": true,
+      "message": "PN geometry changes invalidate eye identity before render"
+    },
+    {
+      "ok": true,
+      "message": "live report recomputes changed upstream PN geometry"
+    },
+    {
+      "ok": true,
+      "message": "non-MZM Track hides and clears previous analysis"
+    },
+    {
+      "ok": true,
+      "message": "Track resume restores device and experiment identity"
+    },
+    {
+      "ok": true,
+      "message": "reload resumes current MZM bench settings"
+    },
+    {
+      "ok": true,
+      "message": "full backup restores Track including bench settings"
+    },
+    {
+      "ok": true,
+      "message": "backup / reload recomputes exact saved analysis"
+    },
+    {
+      "ok": true,
+      "message": "Snapshot Restore recomputes saved bench conditions in same workspace"
+    },
+    {
+      "ok": true,
+      "message": "download binds design, model, conditions and port conventions"
+    },
+    {
+      "ok": true,
+      "message": "bench fits viewport 1440x900"
+    },
+    {
+      "ok": true,
+      "message": "Solution / Next remain reachable without overlap at 1440"
+    },
+    {
+      "ok": true,
+      "message": "bench fits viewport 390x844"
+    },
+    {
+      "ok": true,
+      "message": "Solution / Next remain reachable without overlap at 390"
+    },
+    {
+      "ok": true,
+      "message": "bench fits viewport 320x720"
+    },
+    {
+      "ok": true,
+      "message": "Solution / Next remain reachable without overlap at 320"
+    },
+    {
+      "ok": true,
+      "message": "bench supports shared dark theme"
+    },
+    {
+      "ok": true,
+      "message": "Dynamic Eye shortcut opens the linked result beside Tune"
+    },
+    {
+      "ok": true,
+      "message": "Lab Solution provides mission steps without changing layout or verification"
+    },
+    {
+      "ok": true,
+      "message": "no browser page errors"
+    },
+    {
+      "ok": true,
+      "message": "offline executable makes no external HTTP requests"
+    }
+  ],
+  "errors": [],
+  "requests": []
+}

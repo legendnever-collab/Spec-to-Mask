@@ -32,7 +32,7 @@ if (!Array.isArray(DB)) DB = [];
 DES = DES || {};
 let studioScope = null;
 const legacyPP = () => (P.by[state.plat] = P.by[state.plat] || emptyNS());
-const PP = () => { if (!studioScope) return legacyPP(); const n = studioScope.progress || (studioScope.progress = emptyNS()); n.stars = legacyPP().stars; n.cards = legacyPP().cards; return n; };
+const PP = () => { if (!studioScope) return legacyPP(); const n = studioScope.progress || (studioScope.progress = emptyNS()); if (!studioScope.privateHistory) { n.stars = legacyPP().stars; n.cards = legacyPP().cards; } return n; };
 const DESP = () => studioScope ? (studioScope.designs || (studioScope.designs = {})) : (DES[state.plat] = DES[state.plat] || {});
 
 const state = {
@@ -348,6 +348,8 @@ $('#xp-body').addEventListener('click', (e) => { const b = e.target.closest('[da
 let commitT = null;
 function scheduleCommit() { clearTimeout(commitT); commitT = setTimeout(commit, 450); }
 function commit() {
+  // Curriculum owns its learning evidence; delayed Legacy awards must not mutate its progress or global DB.
+  if (studioScope?.privateHistory) { persist(); return; }
   const c = state.cur; if (!c) return;
   persist();
   if (c.S || c.pr || (c.res.drc && c.res.drc.length) || state.fromAI[state.id]) return;

@@ -29,6 +29,9 @@ const SMQ_STORE = (() => {
   function checkKey(k, v, ctx) {
     const errors = [], warnings = [], plats = (ctx && ctx.platforms) || null, levels = (ctx && ctx.levels) || null;
     if (k === 'smq3-studio' && (!isObj(v) || v.schema !== 'smq-studio/1' || !isObj(v.by) || Object.values(v.by).some(p => !isObj(p) || Object.values(p).some(w => !isObj(w) || !isObj(w.designs) || !isObj(w.lab) || !Number.isInteger(w.level) || w.level < 0 || w.level > 5 || (w.sub != null && (!Number.isInteger(w.sub) || w.sub < 0 || w.sub > 3)))))) errors.push('smq3-studio 구조가 올바르지 않습니다.');
+    if (k === 'smq3-studio' && isObj(v) && v.journey != null) {
+      if (!SMQ_JOURNEY_SCHEMA.valid(v.journey)) errors.push('smq3-studio Curriculum 구조가 올바르지 않습니다.');
+    }
     if (k === 'smq3-progress') {
       if (!isObj(v) || !isObj(v.by)) errors.push('smq3-progress 구조가 올바르지 않습니다 (by 없음).');
       else Object.entries(v.by).forEach(([pid, ns]) => {
@@ -199,6 +202,6 @@ const SMQ_STORE = (() => {
     catch (e) { Object.entries(now).forEach(([k, v]) => { try { if (v == null) LS().removeItem(k); else LS().setItem(k, v); } catch (e2) { /* best effort */ } }); return { ok: false, err: String((e && e.name) || e) }; }
   }
   scan();
-  return { get, set, isLocked: () => locked, pending, status, usage, backupAdvice, makeBackup, markBackup, validate, restore, undo, undoInfo, quarantine, clearQuarantine, subscribe: (f) => subs.push(f), KEYS, UI_KEYS, SCHEMA, QUAR, fnv };
+  return { get, set, isLocked: () => locked, pending, status, usage, backupAdvice, makeBackup, markBackup, validate, restore, undo, undoInfo, quarantine, clearQuarantine, subscribe: (f) => subs.push(f), KEYS, UI_KEYS, SCHEMA, QUAR, fnv, checkKey };
 })();
 if (typeof window !== 'undefined') { window.SMQ_STORE = SMQ_STORE; window.SMQ_BUILD_INFO = BUILD; }

@@ -4,6 +4,10 @@ set -e
 cd "$(dirname "$0")/.."
 python3 tools/build_data.py
 OUT=${1:-dist/index.html}
+# Publish only a complete, syntax-checked file; browser reloads must never read an assembly in progress.
+TMP_OUT=$(mktemp "${OUT}.tmp.XXXXXX")
+CHK=$(mktemp --suffix=.js)
+trap 'rm -f "$TMP_OUT" "$CHK"' EXIT HUP INT TERM
 # SMQ_RELEASE=1 stamps the commit and its date (tools/release.sh); a normal build is a 'dev' build so dist/ does not churn.
 # SMQ_OFFLINE=1 drops the Google Fonts links: no external request at all (system fonts from the CSS fallbacks).
 VER=$(node -p "require('./package.json').version")
@@ -22,12 +26,23 @@ PYHEAD
   echo '<script>'
   echo "$BUILD_JS"
   echo 'const KINDS = {};'
-  for f in src/util.js src/palette.js src/ui_util.js src/persist.js src/engine_mmi.js src/data/tables.js src/platforms.js src/kinds/wg.js src/kinds/dc.js src/kinds/mmi.js src/kinds/ssc.js src/kinds/cwdm.js src/kinds/to.js src/kinds/pn.js src/kinds/mzm.js src/bench/mzm.js src/kinds/mrr.js src/kinds/pd.js src/kinds/els.js src/kinds/xcvr.js src/kinds/wdm.js src/kinds/spiral.js src/kinds/ttd.js src/kinds/chirp.js src/kinds/fpsa.js src/kinds/lidar.js src/lab/engine.js src/data/pspec.js src/levels.js src/shell.js src/guide.js src/lab/ui.js src/learn.js src/bench/mzm_ui.js src/studio.js; do
+  python3 - <<'PYMODEL'
+from pathlib import Path
+import hashlib
+files = sorted([*Path('src/kinds').glob('*.js'), *Path('src/bench').glob('*.js'), Path('src/platforms.js'), Path('src/levels.js'), Path('src/data/tables.js')])
+h = hashlib.sha256()
+for p in files:
+    h.update(str(p).encode()); h.update(p.read_bytes())
+print("const SMQ_JOURNEY_MODEL_SIGNATURE = '" + h.hexdigest() + "';")
+PYMODEL
+  for f in src/util.js src/palette.js src/ui_util.js src/journey/schema.js src/persist.js src/engine_mmi.js src/data/tables.js src/platforms.js src/kinds/wg.js src/kinds/dc.js src/kinds/mmi.js src/kinds/ssc.js src/kinds/cwdm.js src/kinds/to.js src/kinds/pn.js src/kinds/mzm.js src/bench/mzm.js src/kinds/mrr.js src/kinds/pd.js src/kinds/els.js src/kinds/xcvr.js src/kinds/wdm.js src/kinds/spiral.js src/kinds/ttd.js src/kinds/chirp.js src/kinds/fpsa.js src/kinds/lidar.js src/lab/engine.js src/data/pspec.js src/levels.js src/shell.js src/guide.js src/lab/ui.js src/learn.js src/bench/mzm_ui.js src/studio.js src/journey/core.js src/journey/tutorial.js src/journey/ui.js; do
     sed "/^if (typeof module !== 'undefined')/d" "$f"; echo
   done
   echo '</script>'
   echo '</body></html>'
-} > "$OUT"
-CHK=$(mktemp --suffix=.js)
-sed -n '/<script>/,/<\/script>/p' "$OUT" | sed '1d;$d' > "$CHK"
-node --check "$CHK"; rm -f "$CHK" && echo "BUILD OK $(wc -c < "$OUT") bytes -> $OUT"
+} > "$TMP_OUT"
+sed -n '/<script>/,/<\/script>/p' "$TMP_OUT" | sed '1d;$d' > "$CHK"
+node --check "$CHK"
+mv "$TMP_OUT" "$OUT"
+rm -f "$CHK"
+echo "BUILD OK $(wc -c < "$OUT") bytes -> $OUT"

@@ -1,0 +1,37 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@1.3.0-alpha.1 test:journey
+> node test/e2e/journey.js
+
+PASS beta.2 backup without journey validates
+PASS new curriculum starts Chapter 0 Step 1 despite legacy stars
+PASS Chapter 1 and future Tutorial steps are locked
+PASS future navigation blocked
+PASS legacy completion and automatic calculation grant no curriculum PASS
+PASS Solution Preview changes no design, progress or verification
+PASS Common Knowledge does not change mission state
+PASS controller uses real existing Laser and MZM solvers
+PASS unverified current design cannot complete
+PASS explicit current model evaluation produces valid evidence
+PASS parameter revision invalidates previous PASS
+PASS stale PASS cannot unlock Next
+PASS current evidence and practice unlock Step 2
+PASS completed step revisit preserves exact designs
+PASS reload resumes current Step 2
+PASS reload never trusts saved numeric PASS
+PASS new additive curriculum backup validates
+PASS malformed curriculum rejected despite valid checksum
+PASS Advanced content remains accessible
+PASS Advanced return resumes exact curriculum design and step
+PASS si1550 has isolated tutorial and MZM workspaces
+PASS sin1310 has isolated tutorial and MZM workspaces
+PASS sin1550 has isolated tutorial and MZM workspaces
+PASS unknown Legacy root fields preserved
+PASS Legacy Lab and stars preserved
+PASS actual beta.2 backup Restore succeeds
+PASS old backup loads Legacy and grants no curriculum progress
+PASS Restore Undo retains original state
+PASS corrupt additive journey recovery preserves existing Track and unknown fields
+PASS original malformed save is quarantined before recovery
+PASS zero application errors in controller run
+31 curriculum controller checks passed

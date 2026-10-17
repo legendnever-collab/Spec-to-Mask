@@ -1,0 +1,50 @@
+[
+  {
+    "name": "install",
+    "command": "npm ci",
+    "returncode": 0,
+    "seconds": 1.91
+  },
+  {
+    "name": "build",
+    "command": "npm run build",
+    "returncode": 0,
+    "seconds": 0.85
+  },
+  {
+    "name": "syntax",
+    "command": "npm run test:syntax",
+    "returncode": 0,
+    "seconds": 8.6
+  },
+  {
+    "name": "studio",
+    "command": "npm run test:studio",
+    "returncode": 0,
+    "seconds": 24.71
+  },
+  {
+    "name": "lab",
+    "command": "npm run test:lab",
+    "returncode": 0,
+    "seconds": 107.32
+  },
+  {
+    "name": "mzm",
+    "command": "npm run test:mzm-bench",
+    "returncode": 0,
+    "seconds": 6.55
+  },
+  {
+    "name": "journey",
+    "command": "npm run test:journey",
+    "returncode": 0,
+    "seconds": 17.55
+  },
+  {
+    "name": "tutorial",
+    "command": "npm run test:tutorial",
+    "returncode": 0,
+    "seconds": 25.32
+  }
+]

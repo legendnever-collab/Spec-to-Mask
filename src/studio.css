@@ -60,3 +60,43 @@ body.studio-ready{height:var(--app-height,100dvh);overflow:hidden}.studio-ready 
 
 #studioSolution{min-height:44px}#studioRefTable{overflow-x:auto}#studioReference table{width:100%;font-size:12px}#studioReference th,#studioReference td{padding:6px;text-align:left}
 #mzmDynamicEye{scroll-margin-top:44px}
+/* Sequential journey leaves the original Advanced shell intact. */
+[hidden]{display:none!important}
+#journeyNav{display:flex;align-items:center;gap:8px;padding:5px 16px;border-bottom:1px solid var(--line);background:var(--panel);flex:none;min-height:48px}
+#journeyNav b{flex:1;font-size:15px}#journeyNav button{font-size:13px}
+.journey-ready #studioNav{display:none}.journey-ready #view .hud{display:none}.journey-ready #studioGoalLine{font-size:13px}
+.journey-ready #studioGoal{height:66px}.journey-ready #studioTitle{font-size:17px}.journey-ready #studioStatus{font-size:12px}
+.journey-ready #studioReplay,.journey-ready #btn-wipe,.journey-ready #minibar{display:none!important}
+#journeyMission{font-size:15px;line-height:1.6}#journeyMission h2{font-size:20px;line-height:1.35;margin:8px 0}#journeyMission p{margin:8px 0}#journeyMission label{display:block;font-size:14px}#journeyMission select,#journeyMission textarea{display:block;width:100%;margin:6px 0;box-sizing:border-box;font-size:15px}#journeyMission .row-btns{display:flex;flex-wrap:wrap}#journeyMission .row-btns button{flex:1;font-size:14px}
+.journey-eyebrow{font-size:12px;color:var(--cyan)}#journeyGateReason{padding:8px;background:var(--panel-2);border-radius:8px}
+#journeyLive{margin:0 0 8px;line-height:1.5}#journeyLive>b{font-size:14px}.journey-kpis{display:flex;flex-wrap:wrap;gap:8px;font-size:14px}.journey-kpis strong{font-size:18px;color:var(--cyan)}#journeyLive small{font-size:12px;color:var(--fg-2)}
+#journeyReview{grid-column:1/-1;line-height:1.6;font-size:15px}#journeyReview table{width:100%;border-collapse:collapse;font-size:14px}#journeyReview th,#journeyReview td{padding:8px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+#journeyDialog{color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:16px;width:min(650px,calc(100vw - 36px));max-height:85dvh;padding:18px;box-sizing:border-box;font-size:16px;line-height:1.6}#journeyDialog::backdrop{background:#10203399}.journey-dialog-head{position:sticky;top:-18px;background:var(--panel);display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding:8px 0;z-index:2}.journey-steps{display:grid;gap:6px}.journey-steps button{text-align:left}#journeyDialog pre{font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere}.journey-steps [aria-current=step]{border:2px solid var(--cyan)}
+#welcomeAdvanced summary{cursor:pointer;padding:14px 0;font-size:14px}#journeyWelcome{width:100%;font-size:17px}
+@media(max-width:900px){
+ #journeyNav{min-height:44px;padding:2px 8px;gap:5px}#journeyNav b{font-size:12px;line-height:1.3}#journeyNav button{font-size:11px;padding:5px;max-width:95px}
+ .journey-ready .top{height:44px}.journey-ready #studioGoal{height:66px;padding:3px 8px;gap:4px}.journey-ready #studioTitle{font-size:14px;white-space:normal;line-height:1.25}.journey-ready #studioGoalLine{display:none}.journey-ready #studioStatus{font-size:10px;max-width:48px}.journey-ready #studioSolution{font-size:11px;padding:4px;min-width:48px}.journey-ready #studioNext{font-size:12px;padding:4px;min-width:46px}
+ .journey-ready #gamewrap{grid-template-rows:minmax(150px,1fr) 92px minmax(140px,.85fr)}.journey-ready #gamewrap:has(#studioInspect.expanded){grid-template-rows:minmax(145px,1fr) minmax(150px,.9fr) minmax(140px,.8fr)}
+ .journey-ready #studioInspect{grid-template-columns:58px minmax(0,1fr)}#journeyLive{min-width:0;margin:0;padding:5px;overflow:auto;font-size:11px;border:0}.journey-kpis{gap:1px 9px;font-size:11px}.journey-kpis strong{font-size:14px}#journeyLive>b{font-size:11px}#journeyLive small{font-size:10px}
+ .journey-ready #studioTune{padding:8px}.journey-ready #studioMetrics span{font-size:10px}.journey-ready #studioMetrics>span:first-child{display:none}#journeyMission h2{font-size:18px}#journeyMission{font-size:15px}
+}
+/* Tutorial presents only the controls needed now; full Studio remains in Advanced. */
+.journey-ready #params>.hint-ctl,.journey-ready #params>.row-btns,.journey-ready #params>#valid,.journey-ready #params>h2,.journey-ready #mzmBenchControls>button,.journey-ready #mzmBenchControls>.note{display:none!important}
+.journey-ready #params,.journey-ready #mzmBenchControls{margin-bottom:8px;padding:8px 12px}
+.journey-ready #mzmBenchControls h2{font-size:14px;margin:0 0 8px}
+.journey-ready #journeyMission{padding:10px 12px}.journey-ready #journeyMission .note{font-size:14px;line-height:1.55}
+#journeyPrompt{font-size:15px;line-height:1.5;margin:8px 0 12px;color:var(--fg)}
+#journeyMission .row-btns{margin:10px 0}.journey-step{display:block;width:100%;margin:5px 0;text-align:left;white-space:normal}
+.journey-preview #pcol,.journey-preview #mzmBenchControls,.journey-preview #field,.journey-preview #studioFit{display:none!important}
+.journey-preview #studioGoalLine{display:block}.journey-preview #journeyMission{border:2px solid var(--pass)}
+#studioWelcome section{box-sizing:border-box}#journeyWelcomeMission{font-size:19px;line-height:1.35}
+@media(max-width:900px){
+ .journey-ready .top{height:42px}.journey-ready #journeyNav{min-height:44px;height:44px;box-sizing:border-box}
+ .journey-ready #studioGoal{height:56px}.journey-ready #studioTitle{font-size:13px}.journey-ready #studioStatus{font-size:10px;max-width:40px}
+ .journey-ready #studioGoal button{min-height:44px}.journey-ready #gamewrap{grid-template-rows:minmax(155px,1.35fr) 82px minmax(135px,1fr)}
+ .journey-ready #gamewrap:has(#studioInspect.expanded){grid-template-rows:minmax(145px,1.2fr) minmax(115px,.7fr) minmax(125px,.9fr)}
+ .journey-ready #journeyLive{padding:3px 2px;font-size:11px;line-height:1.3;overflow:auto}.journey-ready #journeyLive small{font-size:10px}
+ #journeyPrompt{font-size:14px;margin:4px 0 8px}.journey-ready #studioTune{scroll-padding-top:45px}
+ #journeyNav b{font-size:11px}#journeyNav button{max-width:88px;font-size:10px}
+ #studioWelcome>section{padding:16px;max-height:94dvh}#studioWelcome h2{font-size:22px}
+}
