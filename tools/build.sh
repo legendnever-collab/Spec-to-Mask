@@ -8,21 +8,21 @@ OUT=${1:-dist/index.html}
 # SMQ_OFFLINE=1 drops the Google Fonts links: no external request at all (system fonts from the CSS fallbacks).
 VER=$(node -p "require('./package.json').version")
 if [ "${SMQ_RELEASE:-0}" = 1 ]; then
-  BUILD_JS="const SMQ_BUILD = { version: '$VER', channel: 'release', commit: '$(git rev-parse HEAD)', date: '$(git log -1 --format=%cI)', offline: ${SMQ_OFFLINE:-0} === 1 };"
+  BUILD_JS="const SMQ_BUILD = { version: '$VER', channel: 'release', commit: '$(git rev-parse HEAD)', date: '$(git log -1 --format=%cI)', offline: ${SMQ_OFFLINE:-1} === 1 };"
 else
-  BUILD_JS="const SMQ_BUILD = { version: '$VER', channel: 'dev', commit: null, date: null, offline: ${SMQ_OFFLINE:-0} === 1 };"
+  BUILD_JS="const SMQ_BUILD = { version: '$VER', channel: 'dev', commit: null, date: null, offline: ${SMQ_OFFLINE:-1} === 1 };"
 fi
 {
   python3 - <<'PYHEAD'
 from pathlib import Path
 head = Path('src/head.html').read_text(encoding='utf-8')
-style = '<style>\n' + Path('src/studio.css').read_text(encoding='utf-8') + '\n</style>\n'
+style = '<style>\n' + Path('src/studio.css').read_text(encoding='utf-8') + '\n' + Path('src/v2/workbench.css').read_text(encoding='utf-8') + '\n' + Path('src/v2/font.css').read_text(encoding='utf-8') + '\n</style>\n'
 print(head.replace('</head>', style + '</head>', 1))
 PYHEAD
   echo '<script>'
   echo "$BUILD_JS"
   echo 'const KINDS = {};'
-  for f in src/util.js src/palette.js src/ui_util.js src/persist.js src/engine_mmi.js src/data/tables.js src/platforms.js src/kinds/wg.js src/kinds/dc.js src/kinds/mmi.js src/kinds/ssc.js src/kinds/cwdm.js src/kinds/to.js src/kinds/pn.js src/kinds/mzm.js src/bench/mzm.js src/kinds/mrr.js src/kinds/pd.js src/kinds/els.js src/kinds/xcvr.js src/kinds/wdm.js src/kinds/spiral.js src/kinds/ttd.js src/kinds/chirp.js src/kinds/fpsa.js src/kinds/lidar.js src/lab/engine.js src/data/pspec.js src/levels.js src/shell.js src/guide.js src/lab/ui.js src/learn.js src/bench/mzm_ui.js src/studio.js; do
+  for f in src/util.js src/palette.js src/ui_util.js src/v2/schema.js src/persist.js src/engine_mmi.js src/data/tables.js src/platforms.js src/kinds/wg.js src/kinds/dc.js src/kinds/mmi.js src/kinds/ssc.js src/kinds/cwdm.js src/kinds/to.js src/kinds/pn.js src/kinds/mzm.js src/bench/mzm.js src/kinds/mrr.js src/kinds/pd.js src/kinds/els.js src/kinds/xcvr.js src/kinds/wdm.js src/kinds/spiral.js src/kinds/ttd.js src/kinds/chirp.js src/kinds/fpsa.js src/kinds/lidar.js src/lab/engine.js src/data/pspec.js src/levels.js src/shell.js src/guide.js src/lab/ui.js src/learn.js src/bench/mzm_ui.js src/studio.js src/v2/core.js src/v2/ui.js; do
     sed "/^if (typeof module !== 'undefined')/d" "$f"; echo
   done
   echo '</script>'
