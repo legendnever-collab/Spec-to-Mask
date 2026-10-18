@@ -214,3 +214,7 @@ Implementation commit, artifact SHA256 and latest CI receipt are appended after 
 - [P2 Screenshot / Test Artifact](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39085439139/artifacts/12121095268)는 실제로 생성됐습니다. 이름은 `v2-p2-mzm-evidence`이며 Artifact Digest는 `sha256:7b8e73d43555c556ee41050823e066343d89b0369abbf57ca1d1a4145a49411f`입니다.
 - Production CI / Four-Platform Matrix / Release Artifact는 Receipt 작성 시 진행 중입니다. 최종 상태는 [PR #25 Checks](https://github.com/legendnever-collab/Spec-to-Mask/pull/25/checks)의 최신 HEAD와 최종 인수인계에서 확인합니다. 문서 저장으로 새 CI가 생성돼도 같은 Source / HTML의 완료된 Evidence를 잃지 않습니다.
 - Local Release Packaging / Source ZIP 검사도 PASS입니다. P2의 main Merge나 P3 진행을 승인한 것은 아닙니다.
+
+## P2.1 Checkpoint A — Audit / Plan
+
+2026-10-18 · 사용자 P2.1 전체 A–E 작업 지시를 수신했습니다. Recovery HEAD `68d5c9b60f9967f6273c9637fce4bb480bae9e0e`와 기존 HTML SHA256 / 4개 CI SUCCESS를 확인했습니다. 새 Clone은 Clean입니다. V2_P21_LEARNING_REDESIGN / VISUAL_SYSTEM / ACCEPTANCE에 Curriculum / Model 지원 범위 / Typography / 검증 계약을 확정했습니다. P3 / main 병합은 진행하지 않습니다.
