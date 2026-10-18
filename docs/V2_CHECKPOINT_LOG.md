@@ -292,3 +292,9 @@ D Remote 67e432256433178e3afe4bcf0c87002a5ec1dad7 이후 최종 Integration을 �
 새 Model-State 208 / P1 93 / P2 154 / P2.1 135 / MZM 111 / Studio 56 PASS입니다. Browser는 Navigation 50 / Passive·Active 322 / Formats 79 / 전체 Journey 16 / 기존 P1 121 / P2 511 / P2.1 391 PASS입니다. 실제 4 Viewport × Light/Dark에서 Label Collision / Control·KPI 가림을 검사했습니다. Font 503 Glyph / Korean·Greek 누락 0입니다. 기존 Kernel / 계수 / Persistence Source는 ac33fbd와 Byte 변경이 없습니다.
 
 Legacy Browser / Python GDS의 최종 결과와 Source Freeze SHA / Canonical SHA256 / Source Manifest는 artifacts/v2-p21-learning/QA.md 및 verification.json에 기록합니다. 아직 게시하지 않은 Commit의 CI를 성공으로 기록하지 않습니다. Source를 먼저 저장하고 동일 Build Artifact를 다음 Commit으로 게시합니다. main 병합 / P3 시작 없이 최종 Play Review에서 중단합니다.
+
+## P2.2 A / B — Physics Audit / Navigation / Signed Mode Library
+
+A Remote `8b6833a`를 먼저 저장했습니다. B는 기존 modes2.py에서 TE0–3 / TM0–2 Signed Numeric Field를 생성했습니다. Exact sample width만 표시하며 arbitrary fine width는 Unsupported입니다. 기존 Table과 Si는 5e-7 이내 재현됩니다. SiN guided n_eff 차이는 최대 0.00147이며 sin1550 w=2.7 µm TE3의 Cutoff disagreement는 NOT VERIFIED로 표시합니다. Si TM refinement sensitivity는 최대 0.0252이므로 Mesh convergence / full-vector accuracy를 PASS로 주장하지 않습니다.
+
+Home / Session / 종료를 구현하고 Theme / Settings / Backup을 Session으로 이동했습니다. 종료는 Save 성공 후 안전한 안내 화면으로 이동하고 Resume를 제공합니다. 기존 Browser test는 Theme 접근 경로만 Session으로 갱신했습니다. 수치 assertion은 유지합니다. B physics/state 3469 / 기존 P2.1 state 135 / Navigation browser 50 / 기존 course browser 322 PASS(Chrome 134)입니다. 최종 Build에서 다시 검증합니다. CI는 Source-only Commit 이후 Artifact parity 갱신 전까지 완료로 주장하지 않습니다.

@@ -8,7 +8,7 @@ try{
   for(const scene of ['overview','waveguide']){
    if(scene==='waveguide'){await p.click('#v2Start');await p.waitForFunction(()=>SMQ_V2.current());}
    for(const theme of ['light','dark']){
-    if(await p.locator('html').getAttribute('data-theme')!==theme)await p.click('#v2Theme');
+    if(await p.locator('html').getAttribute('data-theme')!==theme){await p.click('#v2More');await p.click('#v2Theme');await p.click('#v2SettingsClose');}
     const m=await p.evaluate(()=>{const rect=s=>{const e=document.querySelector(s);return e?e.getBoundingClientRect().toJSON():null;};return {width:innerWidth,height:innerHeight,scrollWidth:document.documentElement.scrollWidth,scrollHeight:document.documentElement.scrollHeight,knob:rect('#v2Radius'),kpis:rect('#v2Root .kpis'),physical:rect('#v2Root .physical'),plot:rect('#v2Root .plot'),actions:rect('#v2Root .actions'),aside:rect('#v2Root .aside'),asideOverflow:(()=>{const e=document.querySelector('#v2Root .aside');return e?e.scrollHeight-e.clientHeight:0;})(),buttons:[...document.querySelectorAll('#v2Root button')].filter(e=>e.getBoundingClientRect().width>0).map(e=>e.getBoundingClientRect().height)};});bounds.push({scene,theme,...m});
     ok(m.scrollWidth<=width,`${scene}/${theme}/${width}: horizontal overflow absent`);
     ok(m.buttons.every(h=>h>=44),`${scene}/${theme}/${width}: visible buttons at least44px`);
