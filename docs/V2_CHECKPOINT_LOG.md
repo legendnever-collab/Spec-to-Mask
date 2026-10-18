@@ -276,3 +276,7 @@ Recovery ac33fbd / main 0537a71 / 5 CI SUCCESS를 확인했습니다. 기존 Sou
 ### Additional Feedback Checkpoint B — Passive Foundations
 
 A Remote 7e42678190fde3d9b9c57e4fb93679260ba0c841를 저장한 후 진행했습니다. Width의 TE0 / TE1 Conceptual Profile과 실제 Table Cutoff, LAB.routeLoss Bend·Index 비교, Conceptual Y-branch Shape Comparison, 기존 DC / MMI Kernel을 연결했습니다. 1×2 Y-branch와 2×2 Unitary MZI의 Port를 구분했습니다. 새 Course State 41 / 기존 Foundation 135 / Browser 391 / 새 Passive Browser 130 PASS입니다. 4 Viewport × Light/Dark에서 Control과 KPI가 첫 화면에 있고, Source Identity / Offline HTTP 0을 확인했습니다. Mobile Mode Profile은 두 개를 가로 배치해 글자를 읽을 수 있게 수정했습니다. 기존 Alpha.3 Artifact는 보존합니다.
+
+### Additional Feedback Checkpoint C — Active Foundations
+
+B Remote 0ee63e99f7a90758ac5239331b1cea2653045acb를 저장한 후 진행했습니다. Passive MZI / PN / Single-arm·Push-pull / Transfer / Active Summary를 구현했습니다. 기존 PN Nonlinear Kernel을 직접 사용하고 같은 Differential Phase가 되도록 Push-pull Drive를 구했습니다. 신규 Active Model-State 107 / 기존 Foundation 135 / Navigation 11 / 기존 P2.1 Browser 391 / Passive·Active Browser 258 PASS입니다. 4 Viewport × Light/Dark에서 Control·KPI가 하단 고정 Navigation에 가리지 않음을 검사했습니다. 실제 Chirp / 2D Carrier·Optical Field / Voltage-dependent Arm Loss는 NOT VERIFIED입니다. Source / Test / Documentation을 먼저 저장하며 새 Canonical은 E에서 최종 게시합니다. C Source Checkpoint CI는 의도적으로 건너뛰고 최종 Source / HTML 일치 Commit에서 전체 CI를 수행합니다.
