@@ -104,3 +104,19 @@ Add a v2-owned key/schema only in authorized P1; extend persistence allowlist, b
 ### P0 isolation
 
 `prototypes/v2-p0/index.html` uses an in-memory object and a read-only test hook, with **zero storage writes**, no production imports, no exportable game PASS. Its revision demonstrates rendering behavior only. Its main/complement fractions refer to an ideal normalized illustration, not actual Pin/through; footprint is geometry-only. Real adapter race handling, schema migration and backups are specifications/tests for P1/P2, not delivered production code.
+
+
+## P2 Checkpoint A — 확정된 연결 (2026-10-18)
+
+P1은 PR #24 / main `0537a71`에서 병합됐습니다. P2는 별도 Branch로 진행하며 [P2 Model / UX / Test Plan](V2_P2_MZM_WORKBENCH.md)을 따릅니다.
+
+| 연결 | 결정 |
+|---|---|
+| PN | 기존 Platform 2-2 Geometry를 복사하고 MZM_BENCH.pnAt의 Local Slope / Loss / Cp / Rp를 사용합니다. |
+| MZM | 기존 Platform 2-3 Geometry와 명시적인 Live PN Context를 MZM_BENCH.analyse에 전달합니다. useCard:0으로 Global Card 영향을 제거합니다. |
+| Length / Voltage | 동일 Bench의 Vπ / VπL / IL / through와 동일 Linearized Transfer를 사용합니다. Active Length는 ηL입니다. |
+| RF/EO / Eye | 동일 Bench의 samples / eye를 사용합니다. NRZ / PAM4, Raw Rate / Gap / Domain을 그대로 보존합니다. |
+| UI / Save | P1 Layout / Font / Theme / More / Backup를 재사용하고, P2 Controller / Adapter와 Additive Workspace만 추가합니다. |
+| Unsupported | Receiver / Noise / Jitter / BER / FEC / Net 200G / Link Closure를 새로 계산하지 않습니다. |
+
+MZM Bench를 4개 L 값에서 조사한 Local 계산은 약165–201ms였습니다. UI는 Input 즉시 무효화하고 요청을 Coalesce하며 Voltage-only 결과는 같은 Bench Context 캐시를 사용합니다. <100ms 응답을 보장한다고 주장하지 않습니다.

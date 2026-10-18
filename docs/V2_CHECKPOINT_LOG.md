@@ -4,15 +4,15 @@
 > Original P0 execution order: [V2_P0_SOL_WORK_ORDER.md](V2_P0_SOL_WORK_ORDER.md)
 > Owner approval and playable review required after each checkpoint. Update this file **at every new Work** before stopping.
 
-Current handoff: **P1 진행을 사용자에게 승인받았습니다 (2026-10-18 01:06 KST). 기술 용어는 English, 설명과 서술어는 한글로 작성합니다. P2/merge 승인은 없습니다.** See the P0 record and commit/CI receipt at the end.
+Current handoff: **2026-10-18 사용자 P1 Play / Merge 승인과 P2 개발 승인을 받았습니다. P2는 별도 Branch / Draft PR에서 Play Review까지만 진행합니다. P2 main Merge / P3는 승인되지 않았습니다.** 최신 기록은 문서 하단을 확인합니다.
 
 ## Status as of 2026-10-18 (KST)
 
 | Checkpoint | State | User approved? | Evidence |
 |---|---|---|---|
 | P0 UX Architecture & Wireframes | BLUEPRINT / MOCK DELIVERED, REVIEW PENDING | No | Four design documents + isolated HTML +29 screenshots +164 browser checks |
-| P1 Waveguide Tutorial | IMPLEMENTED / PLAY REVIEW PENDING | Implementation authorized; play acceptance pending | User: “P1 진행하는데 대전제가 기술적 용어는 영어 서술어는 한글로 해줘.” |
-| P2 MZM Physics Workbench | NOT STARTED | No | — |
+| P1 Waveguide Tutorial | MERGED / PLAY ACCEPTED | Yes | PR #24 / 0537a71 / CI 39083108046 SUCCESS |
+| P2 MZM Physics Workbench | CHECKPOINT A / IMPLEMENTATION AUTHORIZED | 개발 승인, Play / Merge 승인 전 | docs/V2_P2_MZM_WORKBENCH.md |
 | P3 200G-class MZM Lane | NOT STARTED | No | — |
 | P4 1.6T MZM Engine | NOT STARTED | No | — |
 | P5 1.6T MRM Engine | NOT STARTED | No | — |
@@ -141,3 +141,25 @@ Implementation commit, artifact SHA256 and latest CI receipt are appended after 
 - 실행 HTML: `dist/spec-to-mask-v2.0.0-alpha.1-p1.html`, SHA256 **`9e4be1bd32fe6a5b61f53b2357d923a20ffefd45e580aa238b4d73d4e560c487`**. `dist/index.html`과 Byte 단위로 같고 Recovery 재빌드 전후에도 동일합니다.
 - Known Issue: Terminal HTTPS Push는 Credential 부재로 사용할 수 없어 GitHub Connector를 사용했습니다. Screenshot은 Git 등록 대신 CI Artifact로 전달합니다. 외부 Physics Accuracy / 사용자 학습 효율 검증은 수행하지 않았습니다.
 - 사용자 지시대로 English 기술 용어 + 한글 설명/서술어를 유지합니다. **P1 사용자 검토에서 중단하며 P2 / main Merge는 금지합니다.** PR #24는 Draft로 유지합니다.
+
+
+## P1 Finalization / P2 Work Order 수신 (2026-10-18)
+
+- 사용자 P1 플레이 완료 / 정상 동작 확인 / PR #24 main 병합 승인을 확인했습니다. P2 세 Experiment 구현도 승인했으며 P2 병합과 P3 진행은 금지합니다.
+- Recovery HEAD: `3a0d2fd0b30b2006a9321db8c27a01cced31f6fc`, main `289523340dedb04866a07151614c521654c16bc3`; PR #23 HEAD `25ab11edeeb0af1f66dae8f32d4ae92f6bd43071`은 보존합니다.
+- 새 Workspace에서 기존 Branch를 Clone했습니다. 이전 Work의 미Commit Source는 이 Workspace에 없으며 접근했다고 주장하지 않습니다. Recovery 때 Clone은 Clean이었습니다. 새 Local Screenshot / 검증 결과는 보존합니다.
+- 누락됐던 `docs/release/*-v2.0.md` 4개가 HEAD에 모두 있습니다. `00183a8..3a0d2fd`는 이 문서 4개만 변경했으며 P1 Runtime은 같습니다.
+- Local 재실행: P1 State / Model 93 PASS; P1 Browser 121 PASS (Chromium 134와 151 각각); MZM Bench 111 PASS; Studio State 56 PASS; Backup PASS; Syntax 80 files / Assembled Script PASS; Build / Canonical Parity PASS.
+- P1 실행 HTML / Source Build SHA256은 `9e4be1bd32fe6a5b61f53b2357d923a20ffefd45e580aa238b4d73d4e560c487`로 같습니다.
+- P1 CI 39083108067의 최초 Numeric-clear Browser Assertion 실패는 Local에서 재현되지 않았습니다. Source / Test를 수정하지 않고 실패 Job만 한 번 재실행해 **SUCCESS**를 확인했습니다. Flaky 가능성을 기록하며 원인이 확정됐다고 주장하지 않습니다.
+- Production CI 39083108046의 Quick / GDS / Offline Studio Browser는 SUCCESS이며 4-Platform Matrix와 Release Artifact 완료 후 병합합니다.
+- P1 Merge SHA / 최신 main / Main CI는 실제 병합 뒤 아래에 기록합니다.
+
+### P1 Merge 완료 / P2 Checkpoint A
+
+- PR #24를 사용자 승인에 따라 병합했습니다. P1 HEAD `3a0d2fd0b30b2006a9321db8c27a01cced31f6fc`, Merge / main HEAD **`0537a71a3f05670edc4887a2be21f0a7563f227c`**입니다.
+- P0 CI 39083108099, P1 CI 39083108067, Production CI 39083108046 및 Push CI 39083104854는 모두 **SUCCESS**입니다. Production은 4 Platform Bot Gate와 Release Artifact까지 성공했습니다.
+- Merge Tree의 Runtime / dist는 검증한 P1과 같습니다. main Push CI **39084136359**는 Branch 생성 시 IN PROGRESS였으며 최종 상태는 이후 기록합니다.
+- P2 Branch `feature/v2-p2-mzm-workbench`는 이 검증된 main에서 생성했습니다. Local QA / 문서 변경은 Stash로 보관한 뒤 새 Branch에 그대로 복원했습니다. Source Reset / Force Push를 하지 않았습니다.
+- `docs/V2_P2_MZM_WORKBENCH.md`에 Model Interface / UX / Domain / Test Plan을 확정했습니다. `AGENTS.md`에 기존 CLAUDE 규칙과 공통 GitHub Development Policy를 연결했습니다.
+- Checkpoint A는 문서 / Reuse 조사만 포함합니다. Solver 계수 / 기존 Physics Source / P0 / P1 실행 파일은 변경하지 않았습니다.
