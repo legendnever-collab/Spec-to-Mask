@@ -227,3 +227,13 @@ Implementation commit, artifact SHA256 and latest CI receipt are appended after 
 - 중간 Build에서 기존 P2 Model / State 154 및 Browser 511을 실제 통과했습니다. 기존 Browser Assertion은 모두 보존했고 MZM Entry만 More Navigation에 맞췄습니다.
 - Playwright 기본 다운로드가 손상된 응답을 반환해 중단했고, 공식 Chrome for Testing Headless Shell 134를 사용했습니다. 이후 Screenshot / QA는 해당 Browser Version을 명시합니다. 향후 CI는 기존 Playwright Browser도 검사합니다.
 - 중간 HTML은 Local `p21-checkpoint-b.html`로 보존하며 최종 Canonical은 E에서 게시합니다. 최종 Font 비교 / Passive / MZM 인과 Visualization은 이어서 진행합니다.
+
+### P2.1 Checkpoint C — Passive Foundations
+
+- Checkpoint B Remote: `d07f08242f6022347d949d25c15b520e8922364a`입니다.
+- Tutorial → Roadmap 한 페이지 → Width / Mode → Splitter / Combiner → Path / Interference를 연결했습니다. More 재방문 / Skip / Resume를 제공합니다.
+- 기존 KINDS.wg Table과 명시적 Ideal Unitary Coupler를 분리했습니다. Field / Power를 구분하고 Unsupported Field Profile을 수치 결과로 만들지 않았습니다. 자세한 가정은 V2_P21_PASSIVE_PHYSICS.md에 기록합니다.
+- 새 Foundations Model / State 135 PASS입니다. 4 Platform Cutoff / Power Conservation / Phase / Migration / Original / Comparison / Backup / Restore / Undo / Legacy / Read-only Learn을 확인했습니다.
+- 실제 4 Viewport × 2 Theme의 Passive / Roadmap / Intro Screenshot Matrix를 실행했습니다. 마지막 Contrast 계산에서 #fff 단축 Hex를 읽지 못한 Test Helper를 수정했습니다. 구현 색상이나 기존 기준은 완화하지 않았습니다. 완전한 최종 Browser 결과는 E에 기록합니다.
+- 이전 P2 완료 기록을 유지하고 optional foundations Workspace를 추가했습니다. 새 Font는 실제 Light/Dark 비교와 Greek Glyph 검사를 통해 Pretendard OFL Subset / Rename으로 선택했습니다. Runtime 외부 Font 요청은 없습니다.
+- 중간 HTML은 Source Build로 생성했으며 기존 alpha.1 / alpha.2 Artifact는 그대로 보존합니다. Intro / MZM 인과 표현을 D에서 마무리합니다.
