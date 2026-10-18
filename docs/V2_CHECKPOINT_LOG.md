@@ -129,3 +129,15 @@ Implementation commit, artifact SHA256 and latest CI receipt are appended after 
 - Python GDS 검사는 Local klayout 부재로 중단됐습니다. 사용자 학습 효율 / 외부 Physics Accuracy는 검증하지 않았습니다. P1 CI는 게시 후 별도로 확인합니다.
 - SHA256 / 상세 QA: `artifacts/v2-p1/SHA256SUMS`, `artifacts/v2-p1/QA.md`, `browser-report.json`에서 확인할 수 있습니다.
 - P1 구현 승인은 있으나 Play Acceptance / P2 / main Merge 승인은 없습니다. P1 검토에서 중단합니다.
+
+## P1 Interrupted Work Recovery (2026-10-18)
+
+- 이전 Workspace `/workspace/scratch/414323827069/Spec-to-Mask`에서 Staged 54개 변경과 기존 QA / HTML / PNG를 복구했습니다. 이전 Work의 실행 중 프로세스는 발견되지 않았습니다. 다른 v1.3 Workspace의 미Commit 변경은 그대로 보존했습니다.
+- 복구 Local Checkpoint는 `f81161e`입니다. Source / Test / Documentation / HTML을 먼저 게시한 Remote Checkpoint는 **`cf33cf09ec9e7d736b648c5137fc1b224d2af797`**입니다. Parent는 기존 P0 `c231bc982ce693f2b93f7e66c6d5014b8266d6cf`이며 Force Push를 하지 않았습니다.
+- 이전 Source / Test / HTML을 재사용했습니다. 기존 Solver / Platform / Level / Data / beta.2 HTML / P0의 Diff는 없습니다. 새 Source 기능이나 P2를 추가하지 않았습니다.
+- Screenshot은 핵심 Source와 분리했습니다. 기존 PNG와 새 Browser 검증 화면은 Local에 보존하며 GitHub P1 CI의 `v2-p1-waveguide-evidence` Artifact로 제공합니다. 반복 Base64 / Blob 생성은 하지 않았습니다. 이미지의 Git 등록은 선택적인 후속 항목입니다.
+- Recovery에서 실제 재실행: Build + Canonical Parity + Syntax 80개/Assembled Script, P1 Model 93개, P1 Browser 121개, Studio State 56개, MZM Model 111개, Backup, Lab 440개 + Si/SiN e2e/state, Legacy Studio Browser 168개, Legacy MZM Browser 37개가 통과했습니다. Local GDS는 klayout 부재로 실행하지 못했습니다.
+- P1 CI [39080990864](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39080990864)는 **SUCCESS**입니다. 실제 실행한 npm ci / Build / Parity / State-Model / Browser / Screenshot Artifact Upload가 모두 통과했습니다. 전체 Production CI의 최종 결과는 별도 Receipt에 기록합니다.
+- 실행 HTML: `dist/spec-to-mask-v2.0.0-alpha.1-p1.html`, SHA256 **`9e4be1bd32fe6a5b61f53b2357d923a20ffefd45e580aa238b4d73d4e560c487`**. `dist/index.html`과 Byte 단위로 같고 Recovery 재빌드 전후에도 동일합니다.
+- Known Issue: Terminal HTTPS Push는 Credential 부재로 사용할 수 없어 GitHub Connector를 사용했습니다. Screenshot은 Git 등록 대신 CI Artifact로 전달합니다. 외부 Physics Accuracy / 사용자 학습 효율 검증은 수행하지 않았습니다.
+- 사용자 지시대로 English 기술 용어 + 한글 설명/서술어를 유지합니다. **P1 사용자 검토에서 중단하며 P2 / main Merge는 금지합니다.** PR #24는 Draft로 유지합니다.

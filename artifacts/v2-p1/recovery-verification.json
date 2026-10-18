@@ -1,0 +1,24 @@
+{
+  "checkpoint": "cf33cf09ec9e7d736b648c5137fc1b224d2af797",
+  "html_sha256": "9e4be1bd32fe6a5b61f53b2357d923a20ffefd45e580aa238b4d73d4e560c487",
+  "results": {
+    "p1_state_model": 93,
+    "p1_browser": 121,
+    "studio_state": 56,
+    "mzm_model": 111,
+    "lab_model": 440,
+    "studio_browser": 168,
+    "mzm_browser": 37,
+    "backup": "PASS",
+    "lab_si1310_sin1550_e2e_state": "PASS",
+    "source_html_parity": "PASS",
+    "syntax": "80 files + assembled script PASS",
+    "local_gds": "BLOCKED: klayout missing"
+  },
+  "p1_ci": {
+    "run_id": 39080990864,
+    "conclusion": "success"
+  },
+  "human_learning_acceptance": "NOT RUN",
+  "scope": "P1 only; no main merge; no P2"
+}
