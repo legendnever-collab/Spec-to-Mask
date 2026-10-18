@@ -11,11 +11,18 @@
 - 현재 새 Clone은 Clean이며 이전 Workspace의 미Commit 변경에 접근했다고 주장하지 않습니다. 기존 Artifact를 보존합니다.
 - 기존 154 / 511 / 93 / 121 / 111 PASS는 역사적 Baseline이며 새 Build 결과로 승격하지 않습니다.
 
-## 학습 흐름
+## 현재 학습 흐름 — 추가 Feedback 정본
 
-Overview → Waveguide Tutorial → Learning Roadmap 한 페이지 → Passive 3개 → MZM Intro → 기존 MZM 3개 → P2 Summary에서 중단합니다.
+Overview → Waveguide Tutorial → Tutorial Summary의 세 선택으로 진행합니다. 기본 순서는 Passive Basics → MZM Introduction → MZM Workbench이며 건너뛰기는 완료로 기록하지 않습니다.
 
-신규 사용자는 Tutorial부터 시작합니다. 기존 사용자는 마지막 학습 위치를 Resume하고 모든 완료 기록을 유지합니다. Overview의 하나의 주요 CTA 외에 More에서 단계 재방문 / Skip / Legacy를 제공합니다. Discover Continue는 최적화 Gate가 없으며 실제 조작 관측 / skipped / unobserved를 분리합니다.
+- Passive: Width / TE0·TE1 → Bend / Index Contrast → Y-branch / Conceptual Shape Comparison → Directional Coupler / MMI → Passive Summary입니다.
+- Active: Passive MZI / Field·Power → PN / Carrier Depletion → Single-arm / Dual-arm Push-pull → Transfer → Active Summary입니다.
+- Workbench: 기존 Length → Voltage → NRZ/PAM4/PAM8 Formats → 기존 RF/EO Dynamic Eye → MZM Summary입니다.
+- More는 Tutorial / Passive / MZM Introduction / MZM Workbench 순서이며 Platform / Advanced·Legacy / 접이식 Full Backup은 Workspace Settings에 둡니다.
+
+Stage별 마지막 위치를 Resume하며 기존 완료 기록은 보존합니다. 새 Chapter 기록은 실제 조작 / unobserved / skipped를 구분합니다. 원래 Roadmap / Split Ratio / Passive Path 실험도 보존합니다.
+
+자세한 추가 Work Order와 Model 범위는 V2_P21_ADDITIONAL_FEEDBACK / ACTIVE_PHYSICS / MODULATION_FORMATS를 함께 읽습니다. 아래 기존 설계와 Checkpoint는 역사적 P2.1 Baseline입니다.
 
 ## Reuse / Model Support
 

@@ -14,3 +14,13 @@
 | AR01 | Canonical / index / Source rebuild Byte 일치, SHA256, 외부 Runtime HTTP 0, GitHub CI와 Screenshot Artifact를 확인합니다. |
 
 Human Learning Acceptance / Field solver accuracy / BER / FEC / Net 200G / P3 Link Closure는 NOT VERIFIED입니다. 모든 PASS는 실제 새 Build의 실행 결과로만 기록합니다.
+
+## Additional Feedback Acceptance
+
+- A: More의 네 순서 / 같은 Typography / 접이식 Backup / Tutorial의 정확히 세 목적지 / Skip·Resume를 검사합니다.
+- B: 기존 Mode / Bend / DC / MMI 수치와의 일치, Y-branch Port / Conceptual 표시, Passive Summary를 검사합니다.
+- C: Nonlinear PN의 같은 Differential Phase / Arm Voltage / Domain / Loss 보존 / Demo·Workbench 분리 / Active Summary를 검사합니다.
+- D: Same Baud·Same Raw / Levels·Bits / Level Gap / 공통 Time Axis / Conceptual Eye / RF·EO 연결을 검사합니다.
+- E: 실제 전체 Journey와 Full Backup Restore Reload / Stage Resume / 4 Viewport × Light·Dark / Label bbox / Offline / Parity / CI / Kernel Identity를 검사합니다.
+
+새 자동 검사는 test/t_v2_learning.js / t_v2_course.js / t_v2_active.js / t_v2_formats.js와 test/browser/v2_learning.js / v2_course.js / v2_formats.js / v2_journey.js입니다. 기존 검사는 삭제하거나 수치 기준을 완화하지 않습니다. 바뀐 Summary·접이식 Backup 경로에만 Selector를 맞춥니다.

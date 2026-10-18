@@ -64,3 +64,5 @@ html[data-theme=dark] #v2Root{--passive:#e0e5eb;--sin:#a2c5ed;--active:#ffc16a;-
 @media(min-width:761px) and (max-height:800px){#v2Root .format-waveforms svg{max-height:80px}#v2Root .format-table :is(th,td){padding:3px}#v2Root .format-panel{padding:8px 16px}#v2Root .format-bottom p{margin:3px 0}}
 @media(min-width:761px){#v2Root .format-panel .baud-definition{display:none}}
 @media(min-width:761px) and (max-height:800px){#v2Root .format-waveforms svg{max-height:76px}#v2Root .format-panel svg text{font-size:22px}#v2Root .format-panel svg .minor{font-size:20px}#v2Root .format-bottom>p{display:none}}
+
+@media(max-width:760px){#v2Root .course-bench .drawing svg text{font-size:18px}}

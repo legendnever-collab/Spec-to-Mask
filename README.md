@@ -1,10 +1,12 @@
-# v2.0.0-alpha.3 — P2.1 플레이 검토
+# v2.0.0-alpha.3 — P2.1 추가 Learning Experience
 
-[Offline 실행 HTML](dist/spec-to-mask-v2.0.0-alpha.3-p2-ux.html) · [Learning Redesign](docs/V2_P21_LEARNING_REDESIGN.md) · [Visual / Typography](docs/V2_P21_VISUAL_SYSTEM.md) · [Passive Physics](docs/V2_P21_PASSIVE_PHYSICS.md) · [QA](artifacts/v2-p21/QA.md) · [Checkpoint](docs/V2_CHECKPOINT_LOG.md)
+[Offline 실행 HTML](dist/spec-to-mask-v2.0.0-alpha.3-p21-learning.html) · [추가 Feedback / Checkpoint 계획](docs/V2_P21_ADDITIONAL_FEEDBACK.md) · [Learning Redesign](docs/V2_P21_LEARNING_REDESIGN.md) · [Passive Physics](docs/V2_P21_PASSIVE_PHYSICS.md) · [Active Physics](docs/V2_P21_ACTIVE_PHYSICS.md) · [Modulation Formats](docs/V2_P21_MODULATION_FORMATS.md) · [QA](artifacts/v2-p21-learning/QA.md) · [Checkpoint](docs/V2_CHECKPOINT_LOG.md)
 
-Overview → Waveguide Tutorial → 한 페이지 Roadmap → Width / Mode → Splitter / Combiner → Path / Interference → PN / MZM Intro → 기존 MZM 3개 Experiment를 연결합니다. 기존 Solver / Level / 4 Platform / Lab / Backup을 유지합니다. 기술 용어는 English, 설명은 한글입니다.
+Waveguide Tutorial의 Summary에서 Passive Basics / MZM Introduction / Engine Overview를 선택합니다. More는 Learning Navigation 4개와 Workspace Settings를 분리합니다. Passive는 Width & Mode → Bend → Y-branch → DC / MMI, Active는 Passive MZI → PN → Single-arm / Push-pull → Transfer입니다. 기존 MZM Workbench의 Length / Voltage 다음에 Modulation Formats를 살펴보고 RF/EO / Dynamic Eye로 이어갑니다. 각 Chapter는 Take-home Summary로 마무리합니다.
 
-Draft PR #25에서 사용자 Play Review를 기다립니다. main 병합 / P3 진행은 하지 않습니다. 기존 P1은 사용자 승인 후 병합됐으며 P0 / P1 / P2 alpha.2 Artifact와 PR #23은 보존합니다. 아래는 당시 Baseline 설명을 보존한 Historical Documentation입니다.
+기존 Physics Kernel / 계수 / Level / 4 Platform / Lab / Advanced·Legacy / Save를 보존합니다. TE0/TE1 Profile과 Y-branch Optimization Comparison, NRZ/PAM4/PAM8 Waveform·Eye는 Conceptual Illustration입니다. Active의 정량 Phase 비교는 기존 PN Nonlinear Kernel을 사용합니다. 기술 용어는 English, 설명은 한글입니다.
+
+Draft PR #25에서 사용자 Play Review를 기다립니다. main 병합 / P3 진행은 하지 않습니다. 이전 P0/P1/P2 및 alpha.3-p2-ux 실행 파일은 보존합니다. 아래는 Historical Documentation입니다.
 
 ---
 

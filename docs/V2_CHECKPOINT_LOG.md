@@ -284,3 +284,11 @@ B Remote 0ee63e99f7a90758ac5239331b1cea2653045acb를 저장한 후 진행했습�
 ### Additional Feedback Checkpoint D — Modulation Formats
 
 C Remote 388c07871fe4f274bdea21e536fd22624f69d8d9를 저장한 후 진행했습니다. NRZ / PAM4 / PAM8의 Same Baud / Same Raw / Level Gap / Conceptual RC·Noise Waveform·Eye를 구현하고 기존 RF/EO 앞에 연결했습니다. Format Model-State 49 / Format Browser 79 / 기존 P2 State 154 / P2 Browser 511 PASS입니다. 1366×768에서도 Next가 보이도록 배치를 검증했습니다. BER / FEC / Net Rate는 NOT VERIFIED입니다. 새 State와 Checkpoint Source / Test / Documentation을 먼저 저장합니다. E에서 최종 Font / HTML을 동결하고 전체 CI를 실행합니다.
+
+### Additional Feedback Checkpoint E — Final Integration / Source Freeze
+
+D Remote 67e432256433178e3afe4bcf0c87002a5ec1dad7 이후 최종 Integration을 수행합니다. Tutorial → Passive 4개 → Active 4개 → Length / Voltage → Formats → RF/EO → Summary 전체 Browser Journey와 Full Backup → 실제 Restore Reload → 모든 Chapter State Byte 일치 / 독립 Stage Resume를 검증했습니다. 기존 P1 Summary의 삭제된 Repeat Button을 찾던 Test는 More → Tutorial 경로로 갱신했습니다. 기존 모든 물리 Assertion을 유지합니다.
+
+새 Model-State 208 / P1 93 / P2 154 / P2.1 135 / MZM 111 / Studio 56 PASS입니다. Browser는 Navigation 50 / Passive·Active 322 / Formats 79 / 전체 Journey 16 / 기존 P1 121 / P2 511 / P2.1 391 PASS입니다. 실제 4 Viewport × Light/Dark에서 Label Collision / Control·KPI 가림을 검사했습니다. Font 503 Glyph / Korean·Greek 누락 0입니다. 기존 Kernel / 계수 / Persistence Source는 ac33fbd와 Byte 변경이 없습니다.
+
+Legacy Browser / Python GDS의 최종 결과와 Source Freeze SHA / Canonical SHA256 / Source Manifest는 artifacts/v2-p21-learning/QA.md 및 verification.json에 기록합니다. 아직 게시하지 않은 Commit의 CI를 성공으로 기록하지 않습니다. Source를 먼저 저장하고 동일 Build Artifact를 다음 Commit으로 게시합니다. main 병합 / P3 시작 없이 최종 Play Review에서 중단합니다.

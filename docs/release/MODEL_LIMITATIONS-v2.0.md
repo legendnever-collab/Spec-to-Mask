@@ -17,3 +17,11 @@ Passive Splitter / Combiner는 명시적 Ideal Unitary Model입니다. H_r Split
 - P1은 기존 LAB.routeLoss의 90° Strip Arc Model을 유지하며 Footprint는 Lead / Clearance를 제외한 Bounding Square입니다.
 
 Human Learning / 2–3분 효율, 200% Zoom / Screen Reader / 정식 Accessibility Audit는 NOT VERIFIED입니다.
+
+## Additional Course의 범위
+
+- Width의 Table은 TE0–TE3 / TM0–TM2를 포함합니다. Count는 이 Table의 Guided Mode 수이며 임의 폭에서 모든 Higher-order Mode를 완전하게 찾는 Eigenmode Solver 실행이 아닙니다. Field Profile / Confinement Factor는 Conceptual입니다.
+- Y-branch Shape Comparison은 Optimizer를 실행하지 않습니다. 실제 Shape의 Loss / Reflection 개선은 NOT VERIFIED입니다. Ideal 1×2 Port IL 3.01 dB와 Excess Loss를 구분합니다.
+- DC / MMI는 기존 Kernel입니다. Generic Port Diagram / MMI Self-imaging Path는 Schematic입니다. Bandwidth / Fabrication Tolerance의 일반 순위를 주장하지 않습니다.
+- Active Course만 기존 PN Nonlinear Optical Kernel로 정적 Phase를 계산합니다. 기존 P2 Workbench의 Local Linear Adapter는 그대로입니다. Drive 비교는 공통 Reverse Bias 1.5 V를 고정하며 두 Arm Loss는 같다고 가정합니다. PN Step의 Bias Sweep과 고정 Bias 비교를 구분합니다. Common Phase가 Dynamic Chirp α 검증을 뜻하지 않습니다.
+- NRZ / PAM4 / PAM8 비교는 Generic Normalized RC + Synthetic Uniform Noise의 Conceptual Model입니다. 실제 MZM Transfer / BER / FEC / Net Rate / PAM8 Engineering Solver는 포함하지 않습니다.
