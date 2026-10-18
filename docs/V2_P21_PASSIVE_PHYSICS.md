@@ -21,3 +21,10 @@ KINDS.wg.evaluate를 같은 Platform / Width로 호출합니다. WGP의 Semi-vec
 ## Intro / Existing MZM
 
 기존 MZM Adapter / Live PN Geometry / Local Slope / Reverse Bias를 사용합니다. Intro는 별도 Input이며 기존 P2 Design이나 완료 기록을 덮어쓰지 않습니다. PN 활성화 시 Fixed Optical Loss와 PN Loss도 포함하므로 Ideal Passive 대비 효율 개선 / 악화로 주장하지 않습니다. SiN Platform에서는 Heterogeneous Si PN을 가정합니다. 전기 인가의 Δn_eff,diff는 두 Arm의 Differential Index Change이고 Δφ_drive=2π Δn_eff,diff ηL/λ=πVdiff/Vπ입니다.
+
+## Additional Feedback — Component Course
+
+Width는 기존 Mode Count와 n_eff를 사용하고 TE0 단일 Lobe / TE1 반대 부호 Lobe를 Conceptual Illustration으로 표시합니다. Field 색은 Carrier가 아닙니다. Confinement Factor / Effective Area는 계산하지 않습니다.
+Bend는 LAB.routeLoss를 재사용하며 비교 Platform의 Width / Thickness / 유효 Radius를 모두 명시합니다. Index Contrast만 바꾼 독립 실험이 아닙니다.
+Y-branch Shape Slider는 Optimizer가 아닙니다. Ideal 50:50의 Port IL 3.0103 dB와 Excess Loss 0을 설명하되 실제 Shape에 대한 IL / Excess / Reflection은 NOT VERIFIED입니다. 점선 Initial과 실선 Candidate를 비교합니다.
+DC는 기존 KINDS.dc의 Supermode Table, MMI는 기존 KINDS.mmi의 EIM / Eigenmode Expansion을 사용합니다. MMI 호출 전후 PQ Platform을 try/finally로 복원합니다. Path 그림은 Conceptual이며 수치 Loss와 구분합니다. Footprint / Bandwidth / Tolerance에 대한 일반 우열을 주장하지 않습니다.

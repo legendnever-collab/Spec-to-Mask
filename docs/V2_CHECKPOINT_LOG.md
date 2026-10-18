@@ -272,3 +272,7 @@ Implementation commit, artifact SHA256 and latest CI receipt are appended after 
 ## P2.1 Additional Feedback — Checkpoint A
 
 Recovery ac33fbd / main 0537a71 / 5 CI SUCCESS를 확인했습니다. 기존 Source와 untracked Evidence는 보존했습니다. Learning Navigation 4개 / Workspace Settings / 접이식 Backup / Tutorial 하단 3개 선택 / 공통 Chapter Summary를 구현했습니다. Passive Resume가 Intro 방문 후에도 보존됩니다. 기존 Model-State 135 / 신규 Navigation-State 11 PASS입니다. 건너뛴 Tutorial은 observed로 승격하지 않습니다. 새 Canonical은 alpha.3-p21-learning이며 기존 alpha.3-p2-ux는 보존합니다. Terminal Push의 Credential 부재로 GitHub API의 Parent 유지·비강제 Ref Update를 사용합니다. B 구현 전 A를 저장합니다.
+
+### Additional Feedback Checkpoint B — Passive Foundations
+
+A Remote 7e42678190fde3d9b9c57e4fb93679260ba0c841를 저장한 후 진행했습니다. Width의 TE0 / TE1 Conceptual Profile과 실제 Table Cutoff, LAB.routeLoss Bend·Index 비교, Conceptual Y-branch Shape Comparison, 기존 DC / MMI Kernel을 연결했습니다. 1×2 Y-branch와 2×2 Unitary MZI의 Port를 구분했습니다. 새 Course State 41 / 기존 Foundation 135 / Browser 391 / 새 Passive Browser 130 PASS입니다. 4 Viewport × Light/Dark에서 Control과 KPI가 첫 화면에 있고, Source Identity / Offline HTTP 0을 확인했습니다. Mobile Mode Profile은 두 개를 가로 배치해 글자를 읽을 수 있게 수정했습니다. 기존 Alpha.3 Artifact는 보존합니다.
