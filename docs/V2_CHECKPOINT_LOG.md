@@ -237,3 +237,13 @@ Implementation commit, artifact SHA256 and latest CI receipt are appended after 
 - 실제 4 Viewport × 2 Theme의 Passive / Roadmap / Intro Screenshot Matrix를 실행했습니다. 마지막 Contrast 계산에서 #fff 단축 Hex를 읽지 못한 Test Helper를 수정했습니다. 구현 색상이나 기존 기준은 완화하지 않았습니다. 완전한 최종 Browser 결과는 E에 기록합니다.
 - 이전 P2 완료 기록을 유지하고 optional foundations Workspace를 추가했습니다. 새 Font는 실제 Light/Dark 비교와 Greek Glyph 검사를 통해 Pretendard OFL Subset / Rename으로 선택했습니다. Runtime 외부 Font 요청은 없습니다.
 - 중간 HTML은 Source Build로 생성했으며 기존 alpha.1 / alpha.2 Artifact는 그대로 보존합니다. Intro / MZM 인과 표현을 D에서 마무리합니다.
+
+### P2.1 Checkpoint D — MZM Causal Visualization
+
+- Checkpoint C Remote: `74d0f4813bef6a25d3c721f664bdfdc2ea9e19d6`입니다.
+- Passive MZI에 PN Active를 추가하고 Vdiff로 Phase를 바꾸는 Intro를 연결했습니다. 기존 P2 Design은 Intro에서 변경하지 않습니다.
+- Length의 핵심 KPI를 Accumulated Voltage-induced Phase / Vπ로 재구성했습니다. Passive Charcoal / Active Amber, 실제 ηL에 비례한 Active 구간, Bias를 포함한 Total Phase Vector, π 기준 Phase Bar를 사용합니다. Optical Loss는 같은 조건의 Plot / 현재 Footnote / Before-Current Table에 연결합니다.
+- Voltage의 Electrode Vdiff / Source Vpp 구분과 Eye의 Electrical → PN/MZM → Optical Eye 인과 설명을 연결했습니다. 기존 3개 Experiment / Model / 계수는 보존합니다.
+- Quick Glossary는 Learn Physics 안에서 선택적으로 열며 Design / Progress를 변경하지 않습니다. 112 GBd = 224 Gb/s raw / BER-FEC 미검증을 유지합니다.
+- 320px Screenshot을 확인하고 Diagram의 세로 비율을 조정해 Label을 확대했습니다. Passive Path Length의 Schematic에도 끊기지 않는 실제 단일 경로를 사용합니다.
+- 기존 P2 Browser 511, Foundations Browser 383 / State 135를 수정 중간 Build에서 통과했습니다. E에서 최종 Source / Font / HTML의 같은 Bytes로 재검증합니다.
