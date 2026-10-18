@@ -163,3 +163,13 @@ Implementation commit, artifact SHA256 and latest CI receipt are appended after 
 - P2 Branch `feature/v2-p2-mzm-workbench`는 이 검증된 main에서 생성했습니다. Local QA / 문서 변경은 Stash로 보관한 뒤 새 Branch에 그대로 복원했습니다. Source Reset / Force Push를 하지 않았습니다.
 - `docs/V2_P2_MZM_WORKBENCH.md`에 Model Interface / UX / Domain / Test Plan을 확정했습니다. `AGENTS.md`에 기존 CLAUDE 규칙과 공통 GitHub Development Policy를 연결했습니다.
 - Checkpoint A는 문서 / Reuse 조사만 포함합니다. Solver 계수 / 기존 Physics Source / P0 / P1 실행 파일은 변경하지 않았습니다.
+
+### P2 Checkpoint B — Interaction Length
+
+- Checkpoint A Source 저장: `cdfaafd60a0d9e7cfd6d8c0c026b610b24bd7660`입니다.
+- 기존 Live PN / MZM Bench Adapter, Additive P2 Schema, Length Physical View / Vπ / Optical Loss / Comparison / Original / Discover / Engineer / Learn을 구현했습니다. 기존 Solver와 계수는 변경하지 않았습니다.
+- Model / State 136 PASS (4 Platform의 Length / PN / Transfer / RF / Eye / Identity / Save 경계 포함), 새 HTML에서 P1 State 93 PASS입니다.
+- Length Browser 179 PASS: 4 Viewport × Light/Dark × Discover/Engineer, 같은 Identity, Blank Input / Comparison / Original / Learn / Reference / Platform / Backup / Reload를 확인했습니다.
+- 최초 1366×768 Engineer Sidebar Overflow를 확인해 설명을 Learn으로 옮기고 Control / Constraint 간격을 조정했습니다. 44px Input / Button을 유지합니다.
+- 기존 Font가 P1 문자만 포함해 P2 한글 일부가 보이지 않는 문제를 발견했습니다. 같은 원본 TTF / SHA256과 기존 Font Builder로 P1+P2 Glyph를 확장했습니다. 별도 이미지나 Binary Blob 업로드를 반복하지 않았습니다.
+- P2 Package: `2.0.0-alpha.2-p2`; 기존 P1 / beta.2 HTML과 P0는 보존합니다. Voltage / Eye Model은 같은 Adapter에 연결돼 있고 UI는 다음 Checkpoint에서 순차 공개합니다.

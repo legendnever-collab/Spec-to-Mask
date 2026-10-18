@@ -22,7 +22,7 @@ P3 Link Budget Closure, P4 8-Lane Engine, MRM / EAM / 400G는 이번 구현 범�
 
 - `KINDS.pn._x.optical`, `MZM_BENCH.pnAt`의 Live PN Geometry / Local Bias Slope를 사용합니다.
 - `KINDS.mzm._x.build`와 `MZM_BENCH.analyse`를 변경하지 않습니다.
-- PN Geometry는 Platform의 기존 2-2 Reference, MZM Geometry는 기존 2-3 Reference에서 복사합니다. `useCard:0`과 명시적인 PN Context로 Global Card 오염을 방지합니다.
+- PN Geometry는 Platform의 기존 2-2 Reference, MZM Geometry는 기존 2-3 Reference에서 복사하되 최초 Discover는 L=4.5 mm / 20 GBd / Vdiff=1 V로 시작합니다. 이는 조작과 Interference / 저속 Eye를 보기 위한 Educational Initial Design이며 Reference Solution이나 새 Physics 계수는 아닙니다. `useCard:0`과 명시적인 PN Context로 Global Card 오염을 방지합니다.
 - SiN Platform에서도 Active Layer는 Heterogeneous Si PN 가정입니다. Pure SiN Carrier-Depletion Model이라고 표시하지 않습니다.
 - `MZM_BENCH` 결과의 `vpi / il / through / pn / samples / transfer / eye`를 같은 Design Identity로 연결합니다.
 

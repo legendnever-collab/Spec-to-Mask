@@ -32,11 +32,13 @@
     "test:mzm-bench": "node test/t_mzm_bench.js",
     "test:browser:mzm": "node test/browser/mzm_bench.js",
     "test:v2": "node test/t_v2.js",
-    "test:browser:v2": "node test/browser/v2.js"
+    "test:browser:v2": "node test/browser/v2.js",
+    "test:v2:p2": "node test/t_v2_p2.js",
+    "test:browser:v2:p2": "node test/browser/v2_p2.js"
   },
   "devDependencies": {
     "jsdom": "^24.1.3",
     "playwright": "^1.62.1"
   },
-  "version": "2.0.0-alpha.1-p1"
+  "version": "2.0.0-alpha.2-p2"
 }
