@@ -296,7 +296,14 @@
     "run": 39084136359,
     "status": "SUCCESS"
   },
-  "P2CI": "NOT VERIFIED at local freeze; current final result is published in Draft PR checks and review handoff",
+  "P2CI": {
+    "status": "SUCCESS",
+    "run": 39085439139,
+    "verifiedRuntimeHead": "c2fea1adf32c74f953eb56e45a379e194373adf0",
+    "draftPR": 25,
+    "screenshotArtifact": 12121095268,
+    "production": "IN PROGRESS at receipt; final latest-head status: PR #25 Checks"
+  },
   "externalAccuracy": "NOT VERIFIED",
   "learnerAcceptance": "NOT VERIFIED / pending user play",
   "stop": "P2 review only. No P2 main merge. No P3.",
@@ -304,5 +311,6 @@
     "mode changes preserve invalid drafts without reviving results",
     "unsupported PN phase vectors / index perturbations display N/A",
     "source resistance discrete-domain validation matches Bench"
-  ]
+  ],
+  "artifactCommit": "c2fea1adf32c74f953eb56e45a379e194373adf0"
 }

@@ -264,3 +264,5 @@ P1 Waveguide는 사용자 승인 후 PR #24로 병합했습니다. P2는 별도 
 - Discover는 조작·관찰로 진행하고 Engineer는 Model Constraint를 추가합니다. Learn Physics는 선택이며 Comparison / Original / Full Backup을 제공합니다.
 - [Physics / UX / Save 설계](docs/V2_P2_MZM_WORKBENCH.md), [QA](artifacts/v2-p2/QA.md), [Checkpoint](docs/V2_CHECKPOINT_LOG.md)를 확인합니다. Screenshot은 `v2-p2-mzm-evidence` Actions Artifact로 제공합니다.
 - 기존 PN / MZM Bench / Eye를 재사용합니다. Eye Gap은 측정 BER이 아니며 112 GBd PAM4는 224 Gb/s raw입니다. Net 200G / FEC / Receiver / External Validation은 NOT VERIFIED입니다. P3는 자동 시작하지 않습니다.
+
+P2 Play Review / 최종 CI는 [Draft PR #25](https://github.com/legendnever-collab/Spec-to-Mask/pull/25)에서 확인합니다. 실행 HTML의 Artifact Commit은 `c2fea1a`이며 이후 Documentation Receipt는 Runtime Bytes를 변경하지 않습니다.

@@ -38,3 +38,14 @@ Local Linearized PN / Fixed Loss / Equal-arm 50:50 MZI를 가정합니다. PN Do
 [Model·State Log](state-model.log), [Browser Report](browser-report.json), [Verification / Input Hashes](verification.json), [SHA256SUMS](SHA256SUMS)를 확인합니다. Screenshot은 `v2-p2-mzm-evidence` Actions Artifact로 제공합니다. 최초 Source가 Artifact보다 먼저 게시됐으며 PNG의 반복 Base64 / Blob 업로드는 하지 않았습니다.
 
 **P2 Play Review에서 중단합니다. P2 main Merge와 P3 시작은 하지 않습니다.**
+
+
+## GitHub Publication Receipt — 같은 Runtime의 검증
+
+- Draft PR: [#25](https://github.com/legendnever-collab/Spec-to-Mask/pull/25)입니다. P2는 main에 병합하지 않았습니다.
+- Source Freeze: `16a03211d8d4c77e0925db90c1ba556a592dd2b6` / Playable Artifact Commit: `c2fea1adf32c74f953eb56e45a379e194373adf0`입니다.
+- 이 Receipt는 Documentation / Evidence만 추가하며 Source / Test / HTML Bytes를 변경하지 않습니다.
+- Artifact HEAD의 [P0 CI 39085439140](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39085439140), [P1 CI 39085439141](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39085439141), [P2 CI 39085439139](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39085439139)는 **SUCCESS**입니다.
+- [P2 Screenshot / Test Artifact](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39085439139/artifacts/12121095268)는 실제로 생성됐습니다. 이름은 `v2-p2-mzm-evidence`이며 Artifact Digest는 `sha256:7b8e73d43555c556ee41050823e066343d89b0369abbf57ca1d1a4145a49411f`입니다.
+- Production CI / Four-Platform Matrix / Release Artifact는 Receipt 작성 시 진행 중입니다. 최종 상태는 [PR #25 Checks](https://github.com/legendnever-collab/Spec-to-Mask/pull/25/checks)의 최신 HEAD와 최종 인수인계에서 확인합니다. 문서 저장으로 새 CI가 생성돼도 같은 Source / HTML의 완료된 Evidence를 잃지 않습니다.
+- Local Release Packaging / Source ZIP 검사도 PASS입니다. P2의 main Merge나 P3 진행을 승인한 것은 아닙니다.
