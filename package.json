@@ -36,7 +36,9 @@
     "test:v2:p2": "node test/t_v2_p2.js",
     "test:browser:v2:p2": "node test/browser/v2_p2.js",
     "test:v2:p21": "node test/t_v2_p21.js",
-    "test:browser:v2:p21": "node test/browser/v2_p21.js"
+    "test:browser:v2:p21": "node test/browser/v2_p21.js",
+    "test:v2:learning": "node test/t_v2_learning.js && node test/t_v2_course.js && node test/t_v2_active.js && node test/t_v2_formats.js",
+    "test:browser:v2:learning": "SMQ_QA_OUT=artifacts/v2-p21-learning/navigation node test/browser/v2_learning.js && SMQ_QA_OUT=artifacts/v2-p21-learning/course node test/browser/v2_course.js && SMQ_QA_OUT=artifacts/v2-p21-learning/formats node test/browser/v2_formats.js"
   },
   "devDependencies": {
     "jsdom": "^24.1.3",

@@ -280,3 +280,7 @@ A Remote 7e42678190fde3d9b9c57e4fb93679260ba0c841를 저장한 후 진행했습�
 ### Additional Feedback Checkpoint C — Active Foundations
 
 B Remote 0ee63e99f7a90758ac5239331b1cea2653045acb를 저장한 후 진행했습니다. Passive MZI / PN / Single-arm·Push-pull / Transfer / Active Summary를 구현했습니다. 기존 PN Nonlinear Kernel을 직접 사용하고 같은 Differential Phase가 되도록 Push-pull Drive를 구했습니다. 신규 Active Model-State 107 / 기존 Foundation 135 / Navigation 11 / 기존 P2.1 Browser 391 / Passive·Active Browser 258 PASS입니다. 4 Viewport × Light/Dark에서 Control·KPI가 하단 고정 Navigation에 가리지 않음을 검사했습니다. 실제 Chirp / 2D Carrier·Optical Field / Voltage-dependent Arm Loss는 NOT VERIFIED입니다. Source / Test / Documentation을 먼저 저장하며 새 Canonical은 E에서 최종 게시합니다. C Source Checkpoint CI는 의도적으로 건너뛰고 최종 Source / HTML 일치 Commit에서 전체 CI를 수행합니다.
+
+### Additional Feedback Checkpoint D — Modulation Formats
+
+C Remote 388c07871fe4f274bdea21e536fd22624f69d8d9를 저장한 후 진행했습니다. NRZ / PAM4 / PAM8의 Same Baud / Same Raw / Level Gap / Conceptual RC·Noise Waveform·Eye를 구현하고 기존 RF/EO 앞에 연결했습니다. Format Model-State 49 / Format Browser 79 / 기존 P2 State 154 / P2 Browser 511 PASS입니다. 1366×768에서도 Next가 보이도록 배치를 검증했습니다. BER / FEC / Net Rate는 NOT VERIFIED입니다. 새 State와 Checkpoint Source / Test / Documentation을 먼저 저장합니다. E에서 최종 Font / HTML을 동결하고 전체 CI를 실행합니다.
