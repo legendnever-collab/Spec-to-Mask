@@ -1,0 +1,26 @@
+[
+  {
+    "family": "Nanum",
+    "originalBytes": 2054744,
+    "specimenSubsetBytes": 9800,
+    "missing": [
+      "Δ",
+      "η",
+      "λ",
+      "π",
+      "φ"
+    ]
+  },
+  {
+    "family": "Pretendard",
+    "originalBytes": 2057688,
+    "specimenSubsetBytes": 16332,
+    "missing": []
+  },
+  {
+    "family": "Noto",
+    "originalBytes": 10414588,
+    "specimenSubsetBytes": 11212,
+    "missing": []
+  }
+]

@@ -1,0 +1,115 @@
+{
+  "date": "2026-10-18",
+  "baselineCommit": "68d5c9b60f9967f6273c9637fce4bb480bae9e0e",
+  "currentRemoteBeforeFreeze": "50da9cdf215f46a102844c3be5c24c54c199207d",
+  "canonicalHTML": "dist/spec-to-mask-v2.0.0-alpha.3-p2-ux.html",
+  "htmlSHA256": "a2f21b11a9bac77ccc39626746d140bb648b3669e14161521ad29140ce6e247e",
+  "sourceManifestSHA256": "69506b62e134881b8272ead85dbbd0262d3e0883ed4ff280bee1d75b689b56dc",
+  "sourceFiles": 170,
+  "parity": "Canonical / index bytes equal; fresh source rebuild verified separately",
+  "modelChecks": {
+    "P1": 93,
+    "P2": 154,
+    "P21": 135,
+    "MZM": 111,
+    "Studio": 56,
+    "Lab": 440
+  },
+  "browser": {
+    "p21-final": {
+      "file": "artifacts/v2-p21/p21-final/browser-report.json",
+      "checks": 390,
+      "allPass": true,
+      "browser": "151.0.7922.34",
+      "htmlSHA256": "a2f21b11a9bac77ccc39626746d140bb648b3669e14161521ad29140ce6e247e",
+      "errors": [],
+      "requests": []
+    },
+    "p2-final": {
+      "file": "artifacts/v2-p21/p2-final/browser-report.json",
+      "checks": 511,
+      "allPass": true,
+      "browser": "151.0.7922.34",
+      "htmlSHA256": "a2f21b11a9bac77ccc39626746d140bb648b3669e14161521ad29140ce6e247e",
+      "errors": [],
+      "requests": []
+    },
+    "p1-final": {
+      "file": "artifacts/v2-p21/p1-final/browser-report.json",
+      "checks": 121,
+      "allPass": true,
+      "browser": "151.0.7922.34",
+      "htmlSHA256": "a2f21b11a9bac77ccc39626746d140bb648b3669e14161521ad29140ce6e247e",
+      "errors": [],
+      "requests": []
+    },
+    "studio-browser-151": {
+      "file": "artifacts/v2-p21/studio-browser-151/results.json",
+      "checks": 168,
+      "allPass": true,
+      "browser": null,
+      "htmlSHA256": null,
+      "errors": [],
+      "requests": []
+    },
+    "legacy-mzm-browser-151": {
+      "file": "artifacts/v2-p21/legacy-mzm-browser-151/acceptance.json",
+      "checks": 37,
+      "allPass": true,
+      "browser": null,
+      "htmlSHA256": null,
+      "errors": [],
+      "requests": []
+    }
+  },
+  "regression": [
+    {
+      "name": "legacy-state",
+      "exitCode": 0
+    },
+    {
+      "name": "backup",
+      "exitCode": 0
+    },
+    {
+      "name": "lab",
+      "exitCode": 0
+    },
+    {
+      "name": "smoke",
+      "exitCode": 0
+    },
+    {
+      "name": "identity-upgrade",
+      "exitCode": 0
+    },
+    {
+      "name": "identity-mrr",
+      "exitCode": 0
+    },
+    {
+      "name": "identity-dr8",
+      "exitCode": 0
+    },
+    {
+      "name": "identity-wdm",
+      "exitCode": 0
+    }
+  ],
+  "GDS": "Python smq2gds / circuit tests PASS",
+  "font": {
+    "glyphs": 463,
+    "woff2Bytes": 100768,
+    "missingSourceCharacters": []
+  },
+  "CI": "pending publication; read exact final HEAD separately",
+  "notVerified": [
+    "Human Learning Acceptance",
+    "External Field / RF measurement accuracy",
+    "BER / FEC / Net 200G",
+    "P3 Link Closure",
+    "full WCAG certification",
+    "native browser UI 200% zoom"
+  ],
+  "sourceFreezeCommit": "f72f59408764029f3615ac2b0eb85405e166f345"
+}
