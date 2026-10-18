@@ -24,3 +24,7 @@ Overview는 Laser cavity → Tx PIC의 8개 병렬 Waveguide / PN 구간 → Cou
 Workbench Desktop는 Physical / Live Plot + Tune / KPI / Discovery / Continue를 같은 Viewport에 표시합니다. Mobile는 Physical → KPI → Knob 순서이며 상세 Plot과 설명은 아래로 둡니다. Label은 별도 Row / Anchor에 놓습니다.
 
 Contrast는 https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html 의 Normal Text 4.5:1을 기준으로 주요 Text pair를 자동 계산합니다. 이는 전체 WCAG Audit 인증이 아닙니다. 최종 100% Screenshot을 직접 확인하고 200% Browser Zoom에 대응하는 Reflow도 검사합니다.
+
+## 최종 Font 선택 / 검토
+
+세 Font의 실제 18 px Specimen을 Light/Dark Browser에서 비교했습니다. Nanum의 Greek Glyph 누락을 확인했고, Pretendard의 Mixed UI / Glyph Coverage / Variable Weight를 선택했습니다. 원본을 Subset / Rename한 Offline WOFF2는 100,768 bytes입니다. 최종 Corpus의 Font Coverage는 QA JSON에 기록합니다. 공식 Source / SHA256 / OFL은 assets/v2/FONT_NOTICE.md와 PRETENDARD-OFL.txt에 보관합니다. 다른 Font가 나쁘다는 일반적 판정이 아닌 이 UI의 개발 선택입니다.

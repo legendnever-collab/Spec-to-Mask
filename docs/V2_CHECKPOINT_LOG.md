@@ -247,3 +247,13 @@ Implementation commit, artifact SHA256 and latest CI receipt are appended after 
 - Quick Glossary는 Learn Physics 안에서 선택적으로 열며 Design / Progress를 변경하지 않습니다. 112 GBd = 224 Gb/s raw / BER-FEC 미검증을 유지합니다.
 - 320px Screenshot을 확인하고 Diagram의 세로 비율을 조정해 Label을 확대했습니다. Passive Path Length의 Schematic에도 끊기지 않는 실제 단일 경로를 사용합니다.
 - 기존 P2 Browser 511, Foundations Browser 383 / State 135를 수정 중간 Build에서 통과했습니다. E에서 최종 Source / Font / HTML의 같은 Bytes로 재검증합니다.
+
+### P2.1 Checkpoint E — Local Freeze
+
+- D Remote: `50da9cdf215f46a102844c3be5c24c54c199207d`입니다. 최종 Source / Test / Documentation을 먼저 저장하고 HTML은 별도 Commit으로 게시합니다.
+- 최종 Canonical에서 P1 Model 93 / Browser 121, P2 Model 154 / Browser 511, P2.1 Model 135 / Browser 390, MZM Model 111 / Legacy MZM Browser 37, Legacy Studio Browser 168이 PASS입니다.
+- Studio 56 / Lab 440 + e2e/state / Backup / Smoke / 4종 Engine Identity / Python GDS / Circuit / Syntax 90 Files + Assembled Script를 통과했습니다. 새 Browser는 Chromium 151.0.7922.34이며 초기 134의 Legacy 환경 종료를 이 결과로 대체합니다.
+- 최종 실행 파일: `dist/spec-to-mask-v2.0.0-alpha.3-p2-ux.html`입니다. HTML SHA256은 `a2f21b11a9bac77ccc39626746d140bb648b3669e14161521ad29140ce6e247e`입니다. 상세 결과 / Source Manifest는 artifacts/v2-p21/에 기록합니다.
+- 기존 P0 / P1 / P2 alpha.2 HTML과 Solver는 보존했습니다. P2 완료 기록을 Additive Migration으로 유지하며 Skip / Resume / Original / Comparison을 검사했습니다.
+- Screenshot은 최종 Actions Artifact로 제공합니다. 같은 Binary의 반복 Base64 / Blob 생성은 하지 않습니다. Font Coverage 463 Glyph / 누락 0, 주요 Text AA Contrast를 확인했습니다.
+- GitHub 최종 CI는 게시 후 실제 HEAD에서 확인합니다. User Play / External Physics Accuracy / BER / FEC / Net 200G는 NOT VERIFIED입니다. P3 / main 병합 없이 Play Review에서 중단합니다.

@@ -120,3 +120,7 @@ P1은 PR #24 / main `0537a71`에서 병합됐습니다. P2는 별도 Branch로 �
 | Unsupported | Receiver / Noise / Jitter / BER / FEC / Net 200G / Link Closure를 새로 계산하지 않습니다. |
 
 MZM Bench를 4개 L 값에서 조사한 Local 계산은 약165–201ms였습니다. UI는 Input 즉시 무효화하고 요청을 Coalesce하며 Voltage-only 결과는 같은 Bench Context 캐시를 사용합니다. <100ms 응답을 보장한다고 주장하지 않습니다.
+
+## P2.1 Additive Reuse
+
+KINDS.wg.evaluate를 src/v2/foundations.js에서 직접 호출합니다. Splitter / Path는 같은 Adapter의 명시적 Ideal Unitary Model이며 기존 dc / Production Solver 결과로 가장하지 않습니다. 기존 PN / MZM Adapter와 Coefficient는 그대로입니다. Save는 optional foundations를 추가하고 by / mzm 완료 기록을 보존합니다. 새 UI Module은 foundations_ui.js / visual.js이며 기존 P1 Shell을 확장합니다.

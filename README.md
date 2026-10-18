@@ -1,3 +1,13 @@
+# v2.0.0-alpha.3 — P2.1 플레이 검토
+
+[Offline 실행 HTML](dist/spec-to-mask-v2.0.0-alpha.3-p2-ux.html) · [Learning Redesign](docs/V2_P21_LEARNING_REDESIGN.md) · [Visual / Typography](docs/V2_P21_VISUAL_SYSTEM.md) · [Passive Physics](docs/V2_P21_PASSIVE_PHYSICS.md) · [QA](artifacts/v2-p21/QA.md) · [Checkpoint](docs/V2_CHECKPOINT_LOG.md)
+
+Overview → Waveguide Tutorial → 한 페이지 Roadmap → Width / Mode → Splitter / Combiner → Path / Interference → PN / MZM Intro → 기존 MZM 3개 Experiment를 연결합니다. 기존 Solver / Level / 4 Platform / Lab / Backup을 유지합니다. 기술 용어는 English, 설명은 한글입니다.
+
+Draft PR #25에서 사용자 Play Review를 기다립니다. main 병합 / P3 진행은 하지 않습니다. 기존 P1은 사용자 승인 후 병합됐으며 P0 / P1 / P2 alpha.2 Artifact와 PR #23은 보존합니다. 아래는 당시 Baseline 설명을 보존한 Historical Documentation입니다.
+
+---
+
 > **v2.0 Learning Experience Redesign — Draft plan (not released)**: [Master Plan](docs/V2_MASTER_PLAN.md) · [GPT-6.1 Sol P0 Work Order](docs/V2_P0_SOL_WORK_ORDER.md) · [Checkpoint / Handoff Log](docs/V2_CHECKPOINT_LOG.md). P0–P8 are proposed development checkpoints, **not implemented features**. This v2 branch must not be merged into main before user approval. Historical v1.2.0-beta.2 content below remains the stable baseline.
 
 ## v2 P1 — Waveguide Tutorial 검토

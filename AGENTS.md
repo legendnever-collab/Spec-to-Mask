@@ -6,7 +6,7 @@
 
 - 작업 시작 시 Remote HEAD, PR/CI, Local Status, 미Commit 변경, 기존 Artifact와 마지막 성공 Checkpoint를 확인합니다.
 - 기존 Source와 미Commit 변경은 보존합니다. Reset / Force Push / 재개발로 이전 작업을 제거하지 않습니다.
-- 현재 사용자 승인 범위만 구현합니다. P1은 사용자 Play/Merge 승인이 있으며, P2는 별도 Branch/Draft PR에서 Play Review까지 진행합니다. P2 main 병합과 P3 시작은 승인되지 않았습니다.
+- 현재 사용자 승인 범위만 구현합니다. P1은 사용자 Play/Merge 승인이 있으며, P2 / P2.1은 별도 Branch/Draft PR #25에서 Play Review까지 진행합니다. P2.1 정본은 docs/V2_P21_LEARNING_REDESIGN.md / VISUAL_SYSTEM / ACCEPTANCE입니다. P2 main 병합과 P3 시작은 승인되지 않았습니다.
 - `docs/V2_MASTER_PLAN.md`, `docs/V2_CHECKPOINT_LOG.md`, `docs/V2_LANGUAGE_POLICY.md`, 현재 Work Order를 정본으로 사용합니다.
 - Technical Term / Parameter / Unit / Equation은 English, 설명과 서술어는 한글로 작성합니다.
 

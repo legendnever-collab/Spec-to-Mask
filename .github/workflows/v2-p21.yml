@@ -1,0 +1,32 @@
+name: v2 P2.1 learning foundations
+on:
+  push:
+    branches: [feature/v2-p2-mzm-workbench]
+    paths: ['src/**', 'tools/**', 'test/**', 'dist/**', 'package*.json', '.github/workflows/v2-p21.yml']
+  pull_request:
+    paths: ['src/**', 'tools/**', 'test/**', 'dist/**', 'package*.json', '.github/workflows/v2-p21.yml']
+permissions:
+  contents: read
+jobs:
+  foundations:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SMQ_HTML: dist/index.html
+      SMQ_QA_OUT: artifacts/v2-p21
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci && npm run build
+      - run: git diff --exit-code -- dist/index.html && node tools/check_rc.js
+      - run: npm run test:v2:p21 && npm run test:v2 && npm run test:v2:p2 && npm run test:mzm-bench
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser:v2:p21
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v2-p21-foundations-evidence
+          path: artifacts/v2-p21/

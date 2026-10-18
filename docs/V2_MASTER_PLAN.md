@@ -6,6 +6,10 @@
 > Current status: **P1은 사용자 Play 승인 후 PR #24로 병합했습니다. P2 MZM Workbench는 별도 Branch에서 구현하며 Play Review 전 main 병합을 금지합니다.** ([architecture](V2_UX_ARCHITECTURE.md), [wireframes](V2_WIREFRAMES.md), [reuse map](V2_REUSE_MAP.md), [acceptance tests](V2_ACCEPTANCE_TESTS.md)). P1 구현 범위는 [V2_P1_WAVEGUIDE.md](V2_P1_WAVEGUIDE.md)에 기록합니다. P2 범위 / Model / Test Plan은 [V2_P2_MZM_WORKBENCH.md](V2_P2_MZM_WORKBENCH.md)을 따릅니다. 사용자 학습 효율과 P2 Play 승인은 아직 검증하지 않았습니다.
 > Release policy: each checkpoint requires an offline playable review artifact; **do not merge main without explicit user approval**.
 
+## P2.1 현재 범위 — 2026-10-18
+
+사용자 Feedback에 따라 P2.1 Learning Foundations / Visual Redesign을 같은 PR #25 / Branch에서 진행합니다. Tutorial → Roadmap → Passive 3개 → MZM Intro → 기존 MZM 3개 흐름이며 [P2.1 설계](V2_P21_LEARNING_REDESIGN.md) / [Visual System](V2_P21_VISUAL_SYSTEM.md) / [Acceptance](V2_P21_ACCEPTANCE.md)을 현재 정본으로 사용합니다. 아래 P0–P8의 역사적 설계와 Baseline은 보존합니다. 이번 사용자 지시는 P2.1 내부 Checkpoint A–E 전체 구현을 승인하지만 P3 / main 병합은 승인하지 않습니다.
+
 ## Language policy — 사용자 확정 (2026-10-18)
 
 기술 용어와 Parameter/KPI 이름은 English로 유지하고, 설명·질문·서술어는 한글로 작성한다. 예: “Bend Radius를 늘리면 Bend Radiation Loss가 감소하지만 Footprint는 증가합니다.” 신규 UI, Learn Physics, Discovery, 오류 안내와 인수인계에 적용한다. 기존 Legacy 문구와 Historical Artifact의 일괄 번역은 이번 P1 범위에 포함하지 않는다.

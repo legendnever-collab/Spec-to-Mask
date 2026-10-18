@@ -34,7 +34,9 @@
     "test:v2": "node test/t_v2.js",
     "test:browser:v2": "node test/browser/v2.js",
     "test:v2:p2": "node test/t_v2_p2.js",
-    "test:browser:v2:p2": "node test/browser/v2_p2.js"
+    "test:browser:v2:p2": "node test/browser/v2_p2.js",
+    "test:v2:p21": "node test/t_v2_p21.js",
+    "test:browser:v2:p21": "node test/browser/v2_p21.js"
   },
   "devDependencies": {
     "jsdom": "^24.1.3",
