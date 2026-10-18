@@ -6,7 +6,7 @@ const checks=[],bounds=[],errors=[],requests=[],ok=(v,m)=>{checks.push({ok:!!v,m
  try{
   let available;
   for(const [width,height]of [[1440,900],[1366,768],[390,844],[320,568]]){
-   await p.setViewportSize({width,height});await p.goto(url);await p.evaluate(()=>localStorage.clear());await p.reload();await p.evaluate(()=>document.fonts.ready);await p.click('#v2StartMzm');await ready();available=await p.evaluate(()=>[...SMQ_V2_MZM_UI.available]);
+   await p.setViewportSize({width,height});await p.goto(url);await p.evaluate(()=>localStorage.clear());await p.reload();await p.evaluate(()=>document.fonts.ready);await p.click('#v2More');await p.click('#v2StartMzm');await ready();available=await p.evaluate(()=>[...SMQ_V2_MZM_UI.available]);
    for(const experiment of available){await p.selectOption('#p2Experiment',experiment);await ready();
     for(const mode of ['discover','engineer']){if((await state()).mzm.si1310.mode!==mode){await p.click('#p2Mode');await ready();}
      for(const theme of ['light','dark']){if(await p.locator('html').getAttribute('data-theme')!==theme)await p.click('#v2Theme');
@@ -20,7 +20,7 @@ const checks=[],bounds=[],errors=[],requests=[],ok=(v,m)=>{checks.push({ok:!!v,m
     }
    }
   }
-  await p.setViewportSize({width:1440,height:900});await p.goto(url);await p.evaluate(()=>localStorage.clear());await p.reload();await p.click('#v2StartMzm');await ready();
+  await p.setViewportSize({width:1440,height:900});await p.goto(url);await p.evaluate(()=>localStorage.clear());await p.reload();await p.click('#v2More');await p.click('#v2StartMzm');await ready();
   let r=await p.evaluate(()=>SMQ_V2.mzm().result());const orig=r,legacy=await p.evaluate(()=>Object.fromEntries(['smq3-progress','smq3-designs','smq3-db','smq3-lab','smq3-studio'].map(k=>[k,localStorage.getItem(k)])));
   await p.locator('#p2Primary').fill('3');await p.waitForFunction(()=>SMQ_V2.mzm().result()?.inputs.design.L===3);r=await p.evaluate(()=>SMQ_V2.mzm().result());ok(r.bench.vpi>orig.bench.vpi&&r.bench.il<orig.bench.il,'shorter length trades higher Vpi for lower optical loss');ok((await state()).mzm.si1310.progress.length.observed,'actual tune + observation recorded');
   await p.click('#p2Capture');await p.locator('#p2Primary').fill('4');await p.waitForFunction(()=>SMQ_V2.mzm().result()?.inputs.design.L===4);await p.click('#p2Restore');await p.waitForFunction(()=>SMQ_V2.mzm().result()?.inputs.design.L===3);ok((await state()).mzm.si1310.design.L===3,'Comparison restores inputs and recomputes');await p.click('#p2Original');await ready();ok((await state()).mzm.si1310.original.design.L===4.5,'Original protected');

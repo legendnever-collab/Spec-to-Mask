@@ -218,3 +218,12 @@ Implementation commit, artifact SHA256 and latest CI receipt are appended after 
 ## P2.1 Checkpoint A — Audit / Plan
 
 2026-10-18 · 사용자 P2.1 전체 A–E 작업 지시를 수신했습니다. Recovery HEAD `68d5c9b60f9967f6273c9637fce4bb480bae9e0e`와 기존 HTML SHA256 / 4개 CI SUCCESS를 확인했습니다. 새 Clone은 Clean입니다. V2_P21_LEARNING_REDESIGN / VISUAL_SYSTEM / ACCEPTANCE에 Curriculum / Model 지원 범위 / Typography / 검증 계약을 확정했습니다. P3 / main 병합은 진행하지 않습니다.
+
+### P2.1 Checkpoint B — Overview / Typography
+
+- Checkpoint A Remote Commit: `6cc1ff26b4d7531298106fb98045fdcc29499646`입니다.
+- Laser cavity / Tx PIC 8 Lane / PN / Coupling / Fiber / PD와 연속 Port를 SVG로 구현했습니다. 주요 CTA는 하나이며 More에서 직접 MZM / Tutorial 재방문이 가능합니다.
+- 공통 Typography Token / Charcoal Passive / Amber Active / Material·Focus 분리를 추가했습니다. 한글 Offline Font의 Glyph를 확장했습니다.
+- 중간 Build에서 기존 P2 Model / State 154 및 Browser 511을 실제 통과했습니다. 기존 Browser Assertion은 모두 보존했고 MZM Entry만 More Navigation에 맞췄습니다.
+- Playwright 기본 다운로드가 손상된 응답을 반환해 중단했고, 공식 Chrome for Testing Headless Shell 134를 사용했습니다. 이후 Screenshot / QA는 해당 Browser Version을 명시합니다. 향후 CI는 기존 Playwright Browser도 검사합니다.
+- 중간 HTML은 Local `p21-checkpoint-b.html`로 보존하며 최종 Canonical은 E에서 게시합니다. 최종 Font 비교 / Passive / MZM 인과 Visualization은 이어서 진행합니다.
