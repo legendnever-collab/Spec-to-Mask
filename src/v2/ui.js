@@ -50,7 +50,7 @@ function render(){mzmUI?.dispose();mzmUI=null;root.classList.toggle('p2',state.s
 $('#v2OverviewTop').onclick=()=>nav('overview');$('#v2Theme').onclick=()=>{const b=$('#themeToggle');if(b)b.click();$('#v2Theme').textContent=document.documentElement.dataset.theme==='dark'?'Light로 전환':'Dark로 전환';};
 $('#v2LearnClose').onclick=()=>$('#v2Learn').close();$('#v2Learn').addEventListener('close',()=>{window.scrollTo(0,learnScroll);learnFocus?.focus({preventScroll:true});});
 let settingsFocus=null,checkedBackup=null;
-$('#v2More').onclick=()=>{settingsFocus=document.activeElement;$('#v2Platform').value=state.platform;$('#v2ModelContext').textContent=`기본 Width는 ${PLATFORMS[state.platform].w0} µm이며 Platform별로 고정합니다.`;$('#v2Settings').showModal();};
+$('#v2More').onclick=()=>{settingsFocus=document.activeElement;$('#v2Platform').value=state.platform;$('#v2ModelContext').textContent=state.scene.startsWith('mzm')?`MZM의 Active Layer는 Si PN이며 SiN Platform에서는 Heterogeneous Si를 가정합니다.`:`기본 Width는 ${PLATFORMS[state.platform].w0} µm이며 Platform별로 고정합니다.`;$('#v2Settings').showModal();};
 $('#v2SettingsClose').onclick=()=>$('#v2Settings').close();$('#v2Settings').addEventListener('close',()=>settingsFocus?.focus());
 $('#v2Platform').onchange=e=>{const p=e.target.value;if(!Object.hasOwn(S.domains,p))return;cancelAnimationFrame(scheduled);serial++;state.platform=p;state.by[p]=state.by[p]||C.fresh(p);$('#v2Settings').close();render();save();};
 $('#v2Legacy').onclick=()=>{$('#v2Settings').close();hide();};

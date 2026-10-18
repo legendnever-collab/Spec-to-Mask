@@ -173,3 +173,12 @@ Implementation commit, artifact SHA256 and latest CI receipt are appended after 
 - 최초 1366×768 Engineer Sidebar Overflow를 확인해 설명을 Learn으로 옮기고 Control / Constraint 간격을 조정했습니다. 44px Input / Button을 유지합니다.
 - 기존 Font가 P1 문자만 포함해 P2 한글 일부가 보이지 않는 문제를 발견했습니다. 같은 원본 TTF / SHA256과 기존 Font Builder로 P1+P2 Glyph를 확장했습니다. 별도 이미지나 Binary Blob 업로드를 반복하지 않았습니다.
 - P2 Package: `2.0.0-alpha.2-p2`; 기존 P1 / beta.2 HTML과 P0는 보존합니다. Voltage / Eye Model은 같은 Adapter에 연결돼 있고 UI는 다음 Checkpoint에서 순차 공개합니다.
+
+### P2 Checkpoint C — Voltage & Interference
+
+- Checkpoint B Source `d128854607415671d2a3cf49f862e9d5c173b163`, Offline HTML `68c86ff2269c72f356ebb4771582409e42519b97`을 저장했습니다.
+- Source / Font / HTML Tree를 대조했고 Build Script 실행 권한을 보존하는 Receipt `a35e5ce42a31ac11aa24ef73ae39d11a80e8f3e0`도 저장했습니다.
+- Applied Electrode Differential Voltage / Phase / Main Transmission / Transfer Curve / Operating Point를 공개했습니다. 두 Arm의 Field Vector 크기는 같고 Phase가 달라지며 Power 변화는 Combiner 뒤에서 표시합니다.
+- Length / Voltage Browser 341 PASS입니다. 4 Viewport / Light-Dark / Discover-Engineer와 동일 Length의 Voltage 변경 / 실제 Transfer / Power Conservation을 확인했습니다.
+- Static PN Domain 위반은 N/A, Comparison Domain / EO Crossing 미지원은 숫자 차분으로 바꾸지 않습니다. Engineer Target은 현재 Model로 계산하고 PASS Token을 저장하지 않습니다.
+- main Push CI 39084136359 SUCCESS를 확인했습니다. P2 main Merge는 하지 않습니다.

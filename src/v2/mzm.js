@@ -28,7 +28,7 @@ const SMQ_V2_MZM = (() => {
   function targets(r,e){if(!r)return {status:'NOT VERIFIED',text:'현재 Design으로 다시 계산해야 합니다.'};let checks;
     if(e==='length')checks=[['Vπ ≤ 10 V',r.bench.vpi<=10],['Optical Loss ≤ 4 dB',r.bench.il<=4]];
     else if(e==='voltage'){if(!r.static.valid)return {status:'NOT VERIFIED',text:'PN Reverse Bias의 지원 범위를 벗어났습니다.'};checks=[['|Vdiff| ≤ 2 V',Math.abs(r.static.voltage)<=2],['Static Main ≥ 10% Pin',r.static.main>=.1]];}
-    else{if(!supported(r,e))return {status:'NOT VERIFIED',text:'이 조건에서는 유효한 Raw Eye Gap을 계산하지 못했습니다.'};checks=[['EO BW ≥ 40 GHz',r.bench.bandwidth!==null&&r.bench.bandwidth>=40],['Peak Vdiff ≤ 1.5 V',Math.max(Math.abs(r.bench.eye.voltageMin),Math.abs(r.bench.eye.voltageMax))<=1.5]];}
-    return {status:checks.every(x=>x[1])?'MODEL TARGET MET':'TARGET NOT MET',checks,text:checks.map(x=>x[0]+(x[1]?' ✓':' · 조정 필요')).join(' / ')};}
+    else{if(!supported(r,e))return {status:'NOT VERIFIED',text:'이 조건에서는 유효한 Raw Eye Gap을 계산하지 못했습니다.'};checks=[['EO BW ≥ 40 GHz',r.bench.bandwidth!==null&&r.bench.bandwidth>=40],['Peak Vdiff ≤ 1.5 V',Math.max(Math.abs(r.bench.eye.voltageMin),Math.abs(r.bench.eye.voltageMax))<=1.5],['Raw Gap > 0',r.bench.eye.opening!==null&&r.bench.eye.opening>0]];}
+    return {status:checks.every(x=>x[1])?'MODEL TARGET MET':'TARGET NOT MET',checks,text:checks.map(x=>x[0]+(x[1]?' ✓':' ×')).join(' / ')};}
   return {signature,canonical,snapshot,reference,fresh,ensure,payload,identity,evaluate,matches,edit,restore,finish,supported,targets,point,level};
 })();
