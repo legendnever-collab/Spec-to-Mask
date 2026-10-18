@@ -1,4 +1,8 @@
-# P2 — Model Limitations
+# P2.1 — Model Limitations
+
+Passive Basics의 Width는 기존 KINDS.wg의 Semi-vectorial 2D Table을 사용합니다. Count / Effective Index만 실제 계산값이며 Mode Shape은 Conceptual Illustration입니다. Field Profile / Effective Area는 NOT VERIFIED입니다.
+
+Passive Splitter / Combiner는 명시적 Ideal Unitary Model입니다. H_r Splitter / H_0.5 Combiner의 Port Reference Phase를 정의하고 Main + Complement = 1을 만족합니다. 실제 Device Loss / Geometry / Bandwidth는 계산하지 않습니다. Path Difference는 같은 Mode와 Wavelength에서 Δφ = 2π n_eff ΔL/λ를 사용합니다.
 
 기존 `KINDS.pn`, `KINDS.mzm`, `MZM_BENCH`를 변경하지 않고 Adapter로 재사용합니다. Si1310 / Si1550과 SiN1310 / SiN1550 Workspace를 지원하며 SiN에서도 Active PN은 Heterogeneous Si Layer 가정입니다.
 

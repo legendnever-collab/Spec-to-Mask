@@ -257,3 +257,13 @@ Implementation commit, artifact SHA256 and latest CI receipt are appended after 
 - 기존 P0 / P1 / P2 alpha.2 HTML과 Solver는 보존했습니다. P2 완료 기록을 Additive Migration으로 유지하며 Skip / Resume / Original / Comparison을 검사했습니다.
 - Screenshot은 최종 Actions Artifact로 제공합니다. 같은 Binary의 반복 Base64 / Blob 생성은 하지 않습니다. Font Coverage 463 Glyph / 누락 0, 주요 Text AA Contrast를 확인했습니다.
 - GitHub 최종 CI는 게시 후 실제 HEAD에서 확인합니다. User Play / External Physics Accuracy / BER / FEC / Net 200G는 NOT VERIFIED입니다. P3 / main 병합 없이 Play Review에서 중단합니다.
+
+### P2.1 Publication / Recovery Receipt
+
+- Source Freeze Remote: `f72f59408764029f3615ac2b0eb85405e166f345`입니다. Source / Test / Documentation을 먼저 Push했습니다.
+- Playable Artifact Remote: `9c2f5b45cec4f606cada04fc3e06c3c1269178e8`입니다. Git Tree는 Local 검증 Tree `b39604b38f08aa176673a7969cd9462ee99cc853`과 정확히 같습니다. HTML Blob `2926820d4a3ee96539f7968b4613b1b0cfd953d3`은 한 번만 생성해 Canonical / index에 재사용했습니다.
+- HTML / Source Manifest / QA Hash를 검증했습니다. Source Rebuild / Canonical / index가 같고 alpha.2 SHA256은 기존 `06ba8d52…`를 유지합니다.
+- 이 Receipt와 v2.0 Handoff 문서 갱신은 Runtime / Test / HTML Bytes를 변경하지 않습니다. 실제 최종 Remote HEAD는 PR #25와 Git Ref에서 읽습니다.
+- Artifact HEAD CI: Production 39090924995 / P2.1 39090925204 / P2 39090925015 / P1 39090924984 / P0 39090925032가 게시 후 실행됐습니다. 이 문서 작성 시 진행 중이며 최종 결과는 PR #25의 CI Receipt에 기록합니다. 새 문서 Commit의 CI도 별도로 확인합니다.
+- 모든 구현 Checkpoint A–E를 저장했습니다. 사용자 Play Review에서 중단하며 Draft / main 병합 금지 / P3 미시작을 유지합니다.
+- P2.1 / P2 / P0 CI는 Artifact HEAD에서 SUCCESS입니다. P1 CI의 첫 Browser 실행은 기존 `blank numeric input invalidates old result`에서 실패했으나 같은 Source / Test / HTML로 해당 Job만 한 번 재실행해 SUCCESS를 확인했습니다. Local 같은 Browser에서도 통과했습니다. 이전 P1 인수인계에도 같은 간헐 실패가 있어 Flaky 가능성을 기록하며 원인을 확정하거나 Test 기준을 완화하지 않았습니다.
