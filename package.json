@@ -42,5 +42,5 @@
     "jsdom": "^24.1.3",
     "playwright": "^1.62.1"
   },
-  "version": "2.0.0-alpha.3-p2-ux"
+  "version": "2.0.0-alpha.3-p21-learning"
 }

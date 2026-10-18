@@ -267,3 +267,8 @@ Implementation commit, artifact SHA256 and latest CI receipt are appended after 
 - Artifact HEAD CI: Production 39090924995 / P2.1 39090925204 / P2 39090925015 / P1 39090924984 / P0 39090925032가 게시 후 실행됐습니다. 이 문서 작성 시 진행 중이며 최종 결과는 PR #25의 CI Receipt에 기록합니다. 새 문서 Commit의 CI도 별도로 확인합니다.
 - 모든 구현 Checkpoint A–E를 저장했습니다. 사용자 Play Review에서 중단하며 Draft / main 병합 금지 / P3 미시작을 유지합니다.
 - P2.1 / P2 / P0 CI는 Artifact HEAD에서 SUCCESS입니다. P1 CI의 첫 Browser 실행은 기존 `blank numeric input invalidates old result`에서 실패했으나 같은 Source / Test / HTML로 해당 Job만 한 번 재실행해 SUCCESS를 확인했습니다. Local 같은 Browser에서도 통과했습니다. 이전 P1 인수인계에도 같은 간헐 실패가 있어 Flaky 가능성을 기록하며 원인을 확정하거나 Test 기준을 완화하지 않았습니다.
+
+
+## P2.1 Additional Feedback — Checkpoint A
+
+Recovery ac33fbd / main 0537a71 / 5 CI SUCCESS를 확인했습니다. 기존 Source와 untracked Evidence는 보존했습니다. Learning Navigation 4개 / Workspace Settings / 접이식 Backup / Tutorial 하단 3개 선택 / 공통 Chapter Summary를 구현했습니다. Passive Resume가 Intro 방문 후에도 보존됩니다. 기존 Model-State 135 / 신규 Navigation-State 11 PASS입니다. 건너뛴 Tutorial은 observed로 승격하지 않습니다. 새 Canonical은 alpha.3-p21-learning이며 기존 alpha.3-p2-ux는 보존합니다. Terminal Push의 Credential 부재로 GitHub API의 Parent 유지·비강제 Ref Update를 사용합니다. B 구현 전 A를 저장합니다.
