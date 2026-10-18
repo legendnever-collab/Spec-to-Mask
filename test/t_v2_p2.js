@@ -25,14 +25,14 @@ try{
   const folded=JSON.parse(before);folded.bench.bias=0;const fold=M.evaluate(folded,p,7);ok(fold.bench.eye.opening===null&&M.targets(fold,'eye').status==='NOT VERIFIED',p+': folded levels cannot receive a model target');
   ok(Object.values(r.unsupported).every(x=>x===null)&&!r.externalVerified,p+': no fabricated BER/FEC/receiver/measurement result');
  }
- for(const [k,v]of [['L',NaN],['L',.1],['voltage',3],['baud',112.5],['driver',0],['bias',Infinity]])ok(!S.scalar(k,v),'invalid input rejected: '+k+' '+v);
+ for(const [k,v]of [['L',NaN],['L',.1],['voltage',3],['baud',112.5],['driver',0],['source',50.5],['bias',Infinity]])ok(!S.scalar(k,v),'invalid input rejected: '+k+' '+v);
  // P1 migration preserves its data exactly. MZM workspace is an additive independent field.
  const old=C.create();old.by.si1310.observed=true;C.finish(old.by.si1310,'observed');const original=JSON.stringify(old.by);ok(S.valid(old),'P1 save remains valid without MZM data');M.ensure(old);ok(S.valid(old)&&JSON.stringify(old.by)===original,'P1 completion and Original preserved during additive migration');
  const legacy={'smq3-studio':JSON.stringify({schema:'smq-studio/1',by:{},active:null,journey:{schema:'smq-journey/1',active:true,by:{}}}),'smq3-designs':JSON.stringify({si1310:{'1-1':{w:.67}}})};
  const U=boot({...legacy,[S.KEY]:old}),uw=U.w,u=U.$,ui=()=>uw.SMQ_V2.mzm();uw.SMQ_V2.startMzm();ui().flush();ok(ui().current(),'Length starts without Verify');
  const orig=ui().state();ui().edit('3','L');ok(!ui().current()&&u('#p2K1').textContent==='—','input synchronously invalidates all current KPIs');ui().flush();ok(ui().result().inputs.design.L===3,'new result uses current input');
  let snap=JSON.stringify(uw.SMQ_V2.state());u('#p2Learn').click();u('#v2LearnClose').click();ok(JSON.stringify(uw.SMQ_V2.state())===snap,'Learn open / close is byte-equivalent for design and progress');
- ui().edit('','L');ok(!ui().current()&&!ui().flush(),'blank numeric draft cannot borrow earlier result');ui().edit('3','L');ui().flush();
+ ui().edit('','L');ok(!ui().current()&&!ui().flush(),'blank numeric draft cannot borrow earlier result');u('#p2Mode').click();ok(!ui().current()&&!ui().flush()&&u('#p2Fine').value==='','mode switch preserves invalid draft and cannot revive a target');u('#p2Mode').click();ui().edit('3','L');ui().flush();
  const r0=ui().result(),rev=ui().state().revision;u('#p2Mode').click();ui().flush();ok(ui().state().revision===rev&&ui().result().identity===r0.identity,'Engineer mode keeps physical identity unchanged');
  u('#p2Capture').click();ui().edit('4','L');ui().flush();u('#p2Restore').click();ui().flush();ok(ui().state().design.L===3&&ui().state().revision>rev,'Comparison restore creates new revision and recalculates');u('#p2Original').click();ui().flush();ok(JSON.stringify(ui().state().original)===JSON.stringify(orig.original)&&ui().state().design.L===orig.original.design.L,'Original stays protected across captures and restores');
  const preview=JSON.stringify(uw.SMQ_V2.state());u('#p2Solution').click();ok(JSON.stringify(uw.SMQ_V2.state())===preview,'Reference preview creates no completion');u('#p2ApplyReference').click();ui().flush();ok(ui().state().revision>rev&&JSON.stringify(ui().state().original)===JSON.stringify(orig.original),'explicit Reference Apply recalculates and protects Original');

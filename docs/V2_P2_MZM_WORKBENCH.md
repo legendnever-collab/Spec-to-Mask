@@ -76,3 +76,18 @@ Original은 보호된 최초 Input Snapshot, Comparison은 명시적으로 Captu
 Model Test에는 4 Platform, L=.5/2/3/6 mm, PN Slope, Phase / Power Conservation, Source와 Electrode 구분, Seed 재현성, Invalid / Late Result / Design Collision / Restore / Migration / Backup를 포함합니다. Browser는 1440×900 / 1366×768 / 390×844 / 320×568 × Light/Dark와 Discover / Engineer, Numeric / Keyboard / Learn / Backup / Reload를 검사합니다.
 
 Human Learning Acceptance와 2–3분 학습 효율은 자동 검증할 수 없으며 사용자 Play Review까지 NOT VERIFIED입니다.
+
+## 최종 구현 / Checkpoint E
+
+| 역할 | 실제 Source |
+|---|---|
+| Validation / Migration | `src/v2/schema.js`에서 P1 Save를 허용하고 P2 Input / Snapshot / History를 추가 검사합니다. |
+| Adapter | `src/v2/mzm.js`에서 기존 Bench를 호출하고 같은 Local PN / Static Transfer / Loss를 연결합니다. |
+| Workbench / Plot / Learn | `src/v2/mzm_ui.js`, `src/v2/mzm.css`에서 세 Experiment를 제공합니다. |
+| P1 Shell / Backup / Theme | `src/v2/ui.js`의 기존 Shell을 확장합니다. |
+| Tests / CI | `test/t_v2_p2.js`, `test/browser/v2_p2.js`, `.github/workflows/v2-p2.yml`에서 검증합니다. |
+| Delivery | `dist/spec-to-mask-v2.0.0-alpha.2-p2.html`, `artifacts/v2-p2/QA.md`, `verification.json`, `SHA256SUMS`를 제공합니다. |
+
+Input 변경 시 이전 View / Target을 즉시 무효화하고, Blank Draft는 Mode를 바꿔도 유지합니다. Original / Comparison 복원과 Reference Apply는 명시적인 새 Revision으로 처리합니다. Unsupported PN의 Phase Vector / Effective Index Change는 유효 수치로 표시하지 않습니다.
+
+최종 Local 검증은 Model / State 154, Browser 511 PASS입니다. 실제 Touch Event를 390×844 / 320×568에서 확인했습니다. External Accuracy / Net 200G / Human Play Acceptance는 NOT VERIFIED입니다. CI의 최종 상태는 Draft PR에서 같은 HEAD를 기준으로 확인합니다.

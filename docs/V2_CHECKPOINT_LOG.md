@@ -12,7 +12,7 @@ Current handoff: **2026-10-18 사용자 P1 Play / Merge 승인과 P2 개발 승�
 |---|---|---|---|
 | P0 UX Architecture & Wireframes | BLUEPRINT / MOCK DELIVERED, REVIEW PENDING | No | Four design documents + isolated HTML +29 screenshots +164 browser checks |
 | P1 Waveguide Tutorial | MERGED / PLAY ACCEPTED | Yes | PR #24 / 0537a71 / CI 39083108046 SUCCESS |
-| P2 MZM Physics Workbench | CHECKPOINT A / IMPLEMENTATION AUTHORIZED | 개발 승인, Play / Merge 승인 전 | docs/V2_P2_MZM_WORKBENCH.md |
+| P2 MZM Physics Workbench | IMPLEMENTED / PLAY REVIEW PENDING | 개발 승인, Play / Merge 승인 전 | docs/V2_P2_MZM_WORKBENCH.md / artifacts/v2-p2/QA.md |
 | P3 200G-class MZM Lane | NOT STARTED | No | — |
 | P4 1.6T MZM Engine | NOT STARTED | No | — |
 | P5 1.6T MRM Engine | NOT STARTED | No | — |
@@ -192,3 +192,14 @@ Implementation commit, artifact SHA256 and latest CI receipt are appended after 
 - Eye Gap / Source Voltage / PN Domain을 구분하고 Unsupported / Folded Level을 N/A로 표시합니다. 112 GBd PAM4는 224 Gb/s raw이며 BER / FEC / Net 200G는 NOT VERIFIED입니다.
 - P2 Summary에서 중단하며 P3로 자동 진행하지 않습니다. P1 CI도 이제 새 P2 Build를 검사하도록 명시했고 P2 전용 CI / Screenshot Artifact를 추가했습니다.
 - 마지막 시각 검토에서 Plot Legend의 Font Family를 Embedded Korean Font로 통일하고 Upper / Lower Arm 이름을 추가했습니다. 최종 E에서 새 Bytes로 다시 검증합니다.
+
+### P2 Checkpoint E — Local Freeze / Play Review Candidate
+
+- Checkpoint D Source: `27f149302b06bd3f2d7710eb28f61266bdf1c12d`입니다.
+- 최종 Model / State **154 PASS**, P2 Browser **511 PASS**입니다. 실제 Touch Event / Keyboard / Same Result Identity / Blank Numeric / Compare / Original / Reference / Optional Learn / Platform / Backup / Reload를 확인했습니다.
+- P1 State 93 / Browser 121, Legacy Studio Browser 168 / MZM Browser 37, Studio State 56, MZM Model 111, Lab 440 + Si1310 / SiN1550 e2e / State, Backup / Restore / Undo, Syntax 85 files / Assembled Script를 통과했습니다. 변경하지 않은 Legacy 영역의 유효한 Pre-freeze 검증은 재사용하고 최종 CI에서도 최신 HTML로 다시 검사합니다.
+- Blank Draft를 Mode 변경으로 되살리는 경로와 Bench의 Source Resistance Discrete Domain을 강화했습니다. Unsupported PN에서는 Phase Vector / Δn을 N/A로 표시합니다. 기존 Test 기준을 삭제 / 완화하지 않았습니다.
+- Canonical HTML / dist/index.html / Source Build는 Byte 단위로 같으며 SHA256은 **`06ba8d5219598ac36949ac2c1be6a6033c07277b795396cc1947d7732858f99b`**입니다. 실행 파일은 `dist/spec-to-mask-v2.0.0-alpha.2-p2.html`입니다.
+- P2 Source / Test / Documentation을 먼저 저장하고 이 검증 HTML을 별도 Artifact Commit으로 게시합니다. PNG는 Git Blob으로 올리지 않고 `v2-p2-mzm-evidence` Actions Artifact로 제공합니다.
+- 이 Freeze 시점의 P2 GitHub CI는 **NOT VERIFIED / pending**입니다. 최종 Source / Artifact SHA, 실제 CI / Four-Platform / Release Artifact Run과 결과는 Draft PR의 최종 인수인계에 기록합니다. Source에 CI 성공을 미리 적지 않습니다.
+- **P2 Play Review에서 중단합니다. P2 main 병합 / P3 시작은 하지 않습니다.**

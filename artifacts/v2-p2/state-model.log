@@ -1,0 +1,160 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@2.0.0-alpha.2-p2 test:v2:p2
+> node test/t_v2_p2.js
+
+PASS si1310: valid additive MZM workspace
+PASS si1310: model never mutates inputs
+PASS si1310: exact unchanged Bench Vpi / optical loss
+PASS si1310: RF / EO / eye are the exact same Bench result
+PASS si1310: index / length phase equals Bench differential convention
+PASS si1310: same local PN slope sets effective-index perturbation
+PASS si1310: active-length VpiL invariant at 0.5
+PASS si1310: declared active/passive/1dB loss at 0.5
+PASS si1310: active-length VpiL invariant at 2
+PASS si1310: declared active/passive/1dB loss at 2
+PASS si1310: active-length VpiL invariant at 3
+PASS si1310: declared active/passive/1dB loss at 3
+PASS si1310: active-length VpiL invariant at 6
+PASS si1310: declared active/passive/1dB loss at 6
+PASS si1310: extended static sweep equals all original Bench transfer samples
+PASS si1310: main + complement conserve surviving power
+PASS si1310: constructive / destructive analytical limits
+PASS si1310: late request rejected
+PASS si1310: revision rejects stale evidence
+PASS si1310: equal revision on different design cannot borrow evidence
+PASS si1310: out-of-domain eye stays unavailable
+PASS si1310: static PN domain boundary explicitly unavailable
+PASS si1310: same current design loses raw gap at high symbol rate
+PASS si1310: 112 GBd PAM4 equals 224 Gb/s raw
+PASS si1310: driver bandwidth changes actual eye
+PASS si1310: same seed and design reproduce exact eye
+PASS si1310: PN geometry alone invalidates same-revision evidence
+PASS si1310: changed model signature rejected
+PASS si1310: folded levels cannot receive a model target
+PASS si1310: no fabricated BER/FEC/receiver/measurement result
+PASS si1550: valid additive MZM workspace
+PASS si1550: model never mutates inputs
+PASS si1550: exact unchanged Bench Vpi / optical loss
+PASS si1550: RF / EO / eye are the exact same Bench result
+PASS si1550: index / length phase equals Bench differential convention
+PASS si1550: same local PN slope sets effective-index perturbation
+PASS si1550: active-length VpiL invariant at 0.5
+PASS si1550: declared active/passive/1dB loss at 0.5
+PASS si1550: active-length VpiL invariant at 2
+PASS si1550: declared active/passive/1dB loss at 2
+PASS si1550: active-length VpiL invariant at 3
+PASS si1550: declared active/passive/1dB loss at 3
+PASS si1550: active-length VpiL invariant at 6
+PASS si1550: declared active/passive/1dB loss at 6
+PASS si1550: extended static sweep equals all original Bench transfer samples
+PASS si1550: main + complement conserve surviving power
+PASS si1550: constructive / destructive analytical limits
+PASS si1550: late request rejected
+PASS si1550: revision rejects stale evidence
+PASS si1550: equal revision on different design cannot borrow evidence
+PASS si1550: out-of-domain eye stays unavailable
+PASS si1550: static PN domain boundary explicitly unavailable
+PASS si1550: same current design loses raw gap at high symbol rate
+PASS si1550: 112 GBd PAM4 equals 224 Gb/s raw
+PASS si1550: driver bandwidth changes actual eye
+PASS si1550: same seed and design reproduce exact eye
+PASS si1550: PN geometry alone invalidates same-revision evidence
+PASS si1550: changed model signature rejected
+PASS si1550: folded levels cannot receive a model target
+PASS si1550: no fabricated BER/FEC/receiver/measurement result
+PASS sin1310: valid additive MZM workspace
+PASS sin1310: model never mutates inputs
+PASS sin1310: exact unchanged Bench Vpi / optical loss
+PASS sin1310: RF / EO / eye are the exact same Bench result
+PASS sin1310: index / length phase equals Bench differential convention
+PASS sin1310: same local PN slope sets effective-index perturbation
+PASS sin1310: active-length VpiL invariant at 0.5
+PASS sin1310: declared active/passive/1dB loss at 0.5
+PASS sin1310: active-length VpiL invariant at 2
+PASS sin1310: declared active/passive/1dB loss at 2
+PASS sin1310: active-length VpiL invariant at 3
+PASS sin1310: declared active/passive/1dB loss at 3
+PASS sin1310: active-length VpiL invariant at 6
+PASS sin1310: declared active/passive/1dB loss at 6
+PASS sin1310: extended static sweep equals all original Bench transfer samples
+PASS sin1310: main + complement conserve surviving power
+PASS sin1310: constructive / destructive analytical limits
+PASS sin1310: late request rejected
+PASS sin1310: revision rejects stale evidence
+PASS sin1310: equal revision on different design cannot borrow evidence
+PASS sin1310: out-of-domain eye stays unavailable
+PASS sin1310: static PN domain boundary explicitly unavailable
+PASS sin1310: same current design loses raw gap at high symbol rate
+PASS sin1310: 112 GBd PAM4 equals 224 Gb/s raw
+PASS sin1310: driver bandwidth changes actual eye
+PASS sin1310: same seed and design reproduce exact eye
+PASS sin1310: PN geometry alone invalidates same-revision evidence
+PASS sin1310: changed model signature rejected
+PASS sin1310: folded levels cannot receive a model target
+PASS sin1310: no fabricated BER/FEC/receiver/measurement result
+PASS sin1550: valid additive MZM workspace
+PASS sin1550: model never mutates inputs
+PASS sin1550: exact unchanged Bench Vpi / optical loss
+PASS sin1550: RF / EO / eye are the exact same Bench result
+PASS sin1550: index / length phase equals Bench differential convention
+PASS sin1550: same local PN slope sets effective-index perturbation
+PASS sin1550: active-length VpiL invariant at 0.5
+PASS sin1550: declared active/passive/1dB loss at 0.5
+PASS sin1550: active-length VpiL invariant at 2
+PASS sin1550: declared active/passive/1dB loss at 2
+PASS sin1550: active-length VpiL invariant at 3
+PASS sin1550: declared active/passive/1dB loss at 3
+PASS sin1550: active-length VpiL invariant at 6
+PASS sin1550: declared active/passive/1dB loss at 6
+PASS sin1550: extended static sweep equals all original Bench transfer samples
+PASS sin1550: main + complement conserve surviving power
+PASS sin1550: constructive / destructive analytical limits
+PASS sin1550: late request rejected
+PASS sin1550: revision rejects stale evidence
+PASS sin1550: equal revision on different design cannot borrow evidence
+PASS sin1550: out-of-domain eye stays unavailable
+PASS sin1550: static PN domain boundary explicitly unavailable
+PASS sin1550: same current design loses raw gap at high symbol rate
+PASS sin1550: 112 GBd PAM4 equals 224 Gb/s raw
+PASS sin1550: driver bandwidth changes actual eye
+PASS sin1550: same seed and design reproduce exact eye
+PASS sin1550: PN geometry alone invalidates same-revision evidence
+PASS sin1550: changed model signature rejected
+PASS sin1550: folded levels cannot receive a model target
+PASS sin1550: no fabricated BER/FEC/receiver/measurement result
+PASS invalid input rejected: L NaN
+PASS invalid input rejected: L 0.1
+PASS invalid input rejected: voltage 3
+PASS invalid input rejected: baud 112.5
+PASS invalid input rejected: driver 0
+PASS invalid input rejected: source 50.5
+PASS invalid input rejected: bias Infinity
+PASS P1 save remains valid without MZM data
+PASS P1 completion and Original preserved during additive migration
+PASS Length starts without Verify
+PASS input synchronously invalidates all current KPIs
+PASS new result uses current input
+PASS Learn open / close is byte-equivalent for design and progress
+PASS blank numeric draft cannot borrow earlier result
+PASS mode switch preserves invalid draft and cannot revive a target
+PASS Engineer mode keeps physical identity unchanged
+PASS Comparison restore creates new revision and recalculates
+PASS Original stays protected across captures and restores
+PASS Reference preview creates no completion
+PASS explicit Reference Apply recalculates and protects Original
+PASS P2 preserves legacy bytes: smq3-studio
+PASS P2 preserves legacy bytes: smq3-designs
+PASS Full Backup carries validated P2 inputs / history
+PASS valid-checksum malformed P2 backup rejected
+PASS late previous result cannot replace current UI identity
+PASS reload does not trust saved current-result evidence
+PASS reload preserves exact MZM identity and recalculates
+PASS old P1-only backup remains restorable
+PASS Full Restore transaction applies exact P2 design
+PASS Undo Restore recovers prior P2 state bytes
+PASS Continue without tune never awards Discover
+PASS failed P2 write exposes Backup recovery message
+PASS no P2 integration runtime errors
+PASS no model boot errors
+154 P2 model/state checks passed

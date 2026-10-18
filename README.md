@@ -254,3 +254,13 @@ node test/e2e/bot.js std 2 B-1,B-2,B-3 si1550             # Track B 회귀
 ## 모델 범위
 
 모든 수치는 학습용 surrogate입니다. 2-3R 링 변조기의 단순화(3D 열 퍼짐 무시로 낙관적인 히터 효율, Si 리브 EIM, 결합 슬랩 κ, SiN 플랫폼은 이종 Si 가정, 주입·히터·패드는 GDS에서 주석 레이어)는 [docs/mrr_physics.md](docs/mrr_physics.md)의 "한계" 절에 정리했습니다. 직사각형 나선의 원호 코너 접합 모드 변환은 곡률 점프마다 가우시안 이동 a = convA/2를 비간섭으로 더한 공학적 추정이며, Euler 코너·U-turn은 곡률이 연속이라 접합 변환을 0으로 둡니다(방사 손실은 국소 반경으로 적분). 반사, 3D 방사, 벤드 구간 결합, 편광 혼합은 포함하지 않아 FDTD·벡터 솔버보다 낙관적입니다 (예: 500×220 nm Si @1550 TE0 n<sub>eff</sub> 2.49 vs 벡터 해 ≈ 2.44). 각 보스 레벨의 최종 검증은 Tidy3D FDTD, Ansys(CHARGE/HEAT/INTERCONNECT)로 넘기는 것을 전제로 합니다.
+
+## v2 P2 — MZM Physics Workbench (Play Review)
+
+P1 Waveguide는 사용자 승인 후 PR #24로 병합했습니다. P2는 별도 Branch / Draft PR에서 검토하며 main에는 병합하지 않습니다.
+
+- [Offline HTML](dist/spec-to-mask-v2.0.0-alpha.2-p2.html)을 다운로드해 Browser에서 엽니다. Engine Overview의 **MZM Workbench 열기** 또는 Waveguide Summary에서 시작합니다.
+- Interaction Length → Voltage & Interference → RF/EO & PAM4 Eye를 동일한 Platform별 MZM Design으로 살펴봅니다. Slider / KPI / Physical View / Plot을 함께 표시합니다.
+- Discover는 조작·관찰로 진행하고 Engineer는 Model Constraint를 추가합니다. Learn Physics는 선택이며 Comparison / Original / Full Backup을 제공합니다.
+- [Physics / UX / Save 설계](docs/V2_P2_MZM_WORKBENCH.md), [QA](artifacts/v2-p2/QA.md), [Checkpoint](docs/V2_CHECKPOINT_LOG.md)를 확인합니다. Screenshot은 `v2-p2-mzm-evidence` Actions Artifact로 제공합니다.
+- 기존 PN / MZM Bench / Eye를 재사용합니다. Eye Gap은 측정 BER이 아니며 112 GBd PAM4는 224 Gb/s raw입니다. Net 200G / FEC / Receiver / External Validation은 NOT VERIFIED입니다. P3는 자동 시작하지 않습니다.

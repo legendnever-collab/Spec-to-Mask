@@ -1,5 +1,7 @@
 # v2 P1 — Waveguide Tutorial
 
+> 이 문서는 P1 당시 범위를 보존합니다. P1은 이후 사용자 승인과 전체 CI 성공 후 PR #24로 병합됐습니다. 현재 P2 범위는 [V2_P2_MZM_WORKBENCH.md](V2_P2_MZM_WORKBENCH.md)에서 확인합니다.
+
 2026-10-18 · 사용자 지시에 따라 P1만 구현했습니다. 기술 용어는 English, 설명과 서술어는 한글로 작성합니다. P2 개발과 main 병합 승인은 없습니다.
 
 ## 실행과 학습 흐름
