@@ -1,7 +1,7 @@
 name: v2 P1 Waveguide acceptance
 on:
   push:
-    branches: [feature/v2-learning-experience]
+    branches: [feature/v2-learning-experience, feature/v2-p2-mzm-workbench]
     paths: ['src/**', 'tools/**', 'test/**', 'dist/**', 'package*.json', '.github/workflows/v2-p1.yml']
   pull_request:
     paths: ['src/**', 'tools/**', 'test/**', 'dist/**', 'package*.json', '.github/workflows/v2-p1.yml']
@@ -12,6 +12,8 @@ jobs:
     name: P1 model, Save and Korean UI
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      SMQ_HTML: dist/index.html
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

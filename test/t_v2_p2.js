@@ -21,6 +21,8 @@ try{
   z.bench.reverseBias=1.5;z.bench.baud=112;const fast=M.evaluate(z,p,9);ok(r.bench.eye.opening>fast.bench.eye.opening,p+': same current design loses raw gap at high symbol rate');ok(fast.bench.eye.rawGbps===224,p+': 112 GBd PAM4 equals 224 Gb/s raw');
   z.bench.driver=5;const narrow=M.evaluate(z,p,9);ok(narrow.bench.eye.opening<fast.bench.eye.opening,p+': driver bandwidth changes actual eye');
   const again=M.evaluate(JSON.parse(before),p,99);ok(JSON.stringify(again.bench.eye.traces)===JSON.stringify(r.bench.eye.traces),p+': same seed and design reproduce exact eye');
+  const dependency=JSON.parse(before);dependency.pn.geometry.xj+=.005;ok(!M.matches(r,dependency,p,7),p+': PN geometry alone invalidates same-revision evidence');ok(!M.matches({...r,modelSignature:'changed-model'},JSON.parse(before),p,7),p+': changed model signature rejected');
+  const folded=JSON.parse(before);folded.bench.bias=0;const fold=M.evaluate(folded,p,7);ok(fold.bench.eye.opening===null&&M.targets(fold,'eye').status==='NOT VERIFIED',p+': folded levels cannot receive a model target');
   ok(Object.values(r.unsupported).every(x=>x===null)&&!r.externalVerified,p+': no fabricated BER/FEC/receiver/measurement result');
  }
  for(const [k,v]of [['L',NaN],['L',.1],['voltage',3],['baud',112.5],['driver',0],['bias',Infinity]])ok(!S.scalar(k,v),'invalid input rejected: '+k+' '+v);
@@ -40,6 +42,9 @@ try{
  const fresh=ui().result();ui().edit('2.7','L');ui().flush();ok(!ui().accept(fresh,true),'late previous result cannot replace current UI identity');
  const saved=JSON.parse(uw.localStorage.getItem(S.KEY));const R=boot({[S.KEY]:saved});ok(R.w.SMQ_V2.mzm()&&!R.w.SMQ_V2.mzm().current(),'reload does not trust saved current-result evidence');R.w.SMQ_V2.mzm().flush();ok(R.w.SMQ_V2.mzm().state().designId===saved.mzm.si1310.designId,'reload preserves exact MZM identity and recalculates');R.dom.window.close();
  const oldBackup=JSON.parse(JSON.stringify(backup));delete oldBackup.data[S.KEY].mzm;oldBackup.data[S.KEY].scene='overview';oldBackup.checksum='fnv1a32:'+us.fnv(JSON.stringify(oldBackup.data));ok(us.validate(oldBackup).ok,'old P1-only backup remains restorable');
+ const preRestore=uw.localStorage.getItem(S.KEY);const restored=us.restore(backup,{ctx:{platforms:uw.eval('PLATFORMS')}});ok(restored.ok&&JSON.parse(uw.localStorage.getItem(S.KEY)).mzm.si1310.design.L===backup.data[S.KEY].mzm.si1310.design.L,'Full Restore transaction applies exact P2 design');const undone=us.undo({ctx:{platforms:uw.eval('PLATFORMS')}});ok(undone.ok&&uw.localStorage.getItem(S.KEY)===preRestore,'Undo Restore recovers prior P2 state bytes');
+ const N=boot();N.w.SMQ_V2.startMzm();N.w.SMQ_V2.mzm().flush();N.$('#p2Next').click();ok(N.w.SMQ_V2.state().mzm.si1310.progress.length.completion.kind==='unobserved','Continue without tune never awards Discover');N.dom.window.close();
+ const Q=boot();Q.w.SMQ_V2.startMzm();Q.w.SMQ_V2.mzm().flush();const setter=Q.w.Storage.prototype.setItem;Q.w.Storage.prototype.setItem=function(k,v){if(k===S.KEY)throw new Q.w.DOMException('quota','QuotaExceededError');return setter.call(this,k,v);};Q.w.SMQ_V2.mzm().edit('3','L');ok(Q.$('#v2SaveBanner').textContent.includes('실패'),'failed P2 write exposes Backup recovery message');Q.w.Storage.prototype.setItem=setter;Q.dom.window.close();
  ok(U.errors.length===0,'no P2 integration runtime errors');U.dom.window.close();ok(A.errors.length===0,'no model boot errors');
  console.log(count+' P2 model/state checks passed');
 }finally{A.dom.window.close();}

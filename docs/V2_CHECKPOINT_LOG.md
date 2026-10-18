@@ -182,3 +182,13 @@ Implementation commit, artifact SHA256 and latest CI receipt are appended after 
 - Length / Voltage Browser 341 PASS입니다. 4 Viewport / Light-Dark / Discover-Engineer와 동일 Length의 Voltage 변경 / 실제 Transfer / Power Conservation을 확인했습니다.
 - Static PN Domain 위반은 N/A, Comparison Domain / EO Crossing 미지원은 숫자 차분으로 바꾸지 않습니다. Engineer Target은 현재 Model로 계산하고 PASS Token을 저장하지 않습니다.
 - main Push CI 39084136359 SUCCESS를 확인했습니다. P2 main Merge는 하지 않습니다.
+
+### P2 Checkpoint D — RF/EO & Dynamic Eye
+
+- Checkpoint C Source `388130fbc470ce301aa8c1b21a236e86ebcdb2c2`입니다.
+- 세 번째 Experiment를 공개했습니다. 같은 PN / MZM / Bench 설정의 Electrical S21 / EO / Driver 포함 EO와 256-symbol Dynamic Eye Trace를 표시합니다. Symbol Rate가 첫 Control이며 Engineer에서 Driver / Open-circuit Drive Vpp / Optical Phase Bias를 조정합니다.
+- 152 Model / State PASS, 506 Browser PASS입니다. 새 HTML의 P1 State 93 / P1 Browser 121 / 기존 MZM Model 111도 통과했습니다.
+- 실제 Full Backup / Restore / Undo의 P2 Input 일치, P1 Migration, Legacy Byte 보존, PN Geometry / Model Signature / Late Request 무효화, Quota Failure 안내를 검증했습니다.
+- Eye Gap / Source Voltage / PN Domain을 구분하고 Unsupported / Folded Level을 N/A로 표시합니다. 112 GBd PAM4는 224 Gb/s raw이며 BER / FEC / Net 200G는 NOT VERIFIED입니다.
+- P2 Summary에서 중단하며 P3로 자동 진행하지 않습니다. P1 CI도 이제 새 P2 Build를 검사하도록 명시했고 P2 전용 CI / Screenshot Artifact를 추가했습니다.
+- 마지막 시각 검토에서 Plot Legend의 Font Family를 Embedded Korean Font로 통일하고 Upper / Lower Arm 이름을 추가했습니다. 최종 E에서 새 Bytes로 다시 검증합니다.
