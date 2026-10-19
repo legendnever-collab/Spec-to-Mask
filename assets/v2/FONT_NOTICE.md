@@ -22,3 +22,7 @@ Nanum / Pretendard / Noto Sans KR를 같은 18 px Specimen으로 Light/Dark에�
 ## P3.1 — 동일 Source의 Glyph 확장
 
 위와 동일한 Pretendard Variable Source SHA256을 NPM `pretendard@1.3.9`의 WOFF2에서 확인했습니다. 기존 Generator / Rename / OFL을 유지하고 Lane 문구의 Glyph만 확장했습니다. 현재 Hangul 352개 / 누락 0, Subset 111,148 bytes입니다. Font는 Runtime Data URL에 포함하며 외부 요청이 없습니다.
+
+## P3.2 Glyph Extension — 2026-10-20 KST
+
+동일 Pretendard Source SHA256 / Generator / Rename / OFL을 유지했습니다. 새 문구의 실제 Missing Glyph를 확인해 필요한 Glyph만 확장했습니다. WOFF2 112,368 bytes로 P3.1보다 1,220 bytes 증가했습니다. Font Family / Layout / 외부 요청 정책은 바꾸지 않았습니다.

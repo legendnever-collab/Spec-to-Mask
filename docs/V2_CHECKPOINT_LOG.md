@@ -408,3 +408,10 @@ Local C01–C05 172, 기존 P3.1 Browser 142, 새 Rendering Browser 8 checks PAS
 Checkpoint A Remote `f52cdf9af5dcf729a4e367b835e6c10611b1176d`를 먼저 저장했습니다. `optical.js`는 기존 Bench의 정착 Symbol Level에 Plane B mW를 곱하고 A–F의 각 Passive Owner를 한 번씩 적용합니다. A/B CW, C–F Equal-probability Settled Average / OMA_outer, 별도 Raw Gap을 구분합니다. MZM IL은 Transfer에 이미 포함되며 다시 빼지 않습니다. PN Domain 밖 Modulated Evidence / Non-monotonic OMA는 N/A, Zero Log는 null입니다. Defaults 10 dBm Laser / Input 1 dB / TxOut 1 dB / Channel 3 dB / RxIn 1 dB는 교육용 가정이며 측정값이 아닙니다.
 
 Optional source / passive, Optical Revision / Signature와 Snapshot / Old P3.1 Migration을 확장했습니다. 같은 Tx Input은 수치 결과를 재사용하고 기존 MZM Identity API로 현재 Revision / Request를 다시 연결합니다. Optical Edit은 Tx Geometry / PN / CPW / FFT를 바꾸지 않습니다. 신규 C06–C07 Model-State 324 checks PASS입니다. Receiver Sensitivity / Margin / Dynamic OMA·Average / BER·FEC는 null입니다. 중간 Source-only Checkpoint이며 HTML / CI는 Final에서 게시합니다.
+
+
+### Checkpoint C — Optical Budget UI
+
+Checkpoint B Remote `8aa5f7799bc6f4dbd47c79f0d07473d6811faed6`를 먼저 저장했습니다. 같은 Mounted Lane의 Tx / Optical Budget을 Hidden View 전환으로 연결하고 SVG / Plot Root를 유지합니다. A–F Flow, MZM IL Owner, 별도 CW / Settled Average / OMA Plot, 실제 Before/After, Laser → Channel Discovery와 Summary를 구현했습니다. Flow의 Laser / Channel / MZM을 눌러 해당 관찰로 이동합니다. Coupling 3개와 mW 상세는 선택 창입니다. P3.3 Receiver는 미구현입니다.
+
+Local P3.2 Browser 74 checks PASS: 6 Viewport(1440×900 / 1366×768 / 390×844 / 320×568 / 1280×800 / 400×860) × Light/Dark, Flow Text·Tile Clipping / Control·KPI / Desktop Page / Save·Backup 실제 Restore·Exit·4 Platform·원본 Tx 재사용을 검사했습니다. 320 px의 Flow Clipping / KPI 가림을 실제 Screenshot으로 확인해 수정하고 Test에 Tile Bounds를 추가했습니다. 첫 ARIA Locator와 Pseudo-arrow ScrollWidth 검사는 대상 요소 / 실제 Text Range 기준으로 바로잡았습니다. 수치 Assertion은 유지했습니다. 새 문구의 Missing Glyph만 동일 Pretendard로 보완했으며 WOFF2 +1,220 bytes입니다. Render Trace / Screenshot은 최종 Actions Artifact를 우선합니다. Final Integration에서 Version / Canonical / Regression / CI를 동결합니다.
