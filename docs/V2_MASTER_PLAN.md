@@ -1,5 +1,7 @@
 # SPEC-to-MASK Quest v2.0 — Master Development Plan
 
+> **P3.1 현재 실행 — 2026-10-20 KST:** 사용자 승인으로 Single Lane Assembly를 구현했습니다. 기존 PN / MZM Bench를 연결하며 [P3.1 QA](../artifacts/v2-p31/QA.md)를 확인합니다. Play Review에서 중단하고 P3.2 / main Merge / P4를 자동 진행하지 않습니다. 아래 P3.0 정본은 변경 없이 기준으로 보존합니다.
+
 > **최신 상태 — 2026-10-20 KST:** P2.2는 PR #25 / `c98998c7d7586716a34cd8386180b6b76580a2c3`로 main 병합이 확인됐습니다. 현재 Branch는 `feature/v2-p3-200g-lane`이며 승인 범위는 **P3.0 문서 설계 / Commit·Push / Draft PR까지만**입니다. [Architecture](V2_P3_ARCHITECTURE.md), [Model Contract](V2_P3_MODEL_CONTRACT.md), [Checkpoint Plan](V2_P3_CHECKPOINT_PLAN.md), [P3.1 Next Task](V2_P3_NEXT_TASK.md)를 새 정본으로 사용합니다. 아래 기존 Work Order / 승인 상태는 Historical Record로 보존하며 최신 지시가 우선합니다. P3.1 구현 / P3 main 병합 / P4 자동 시작은 금지합니다.
 
 > **Authoritative project brief** — 2026-10-18 (Asia/Seoul)  

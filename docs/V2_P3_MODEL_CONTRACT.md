@@ -1,5 +1,8 @@
 # P3.0 — Physics Model Contract
 
+> **P3.1 실행 승인 — 2026-10-20 KST:** 사용자가 P3.1 Single Lane Assembly의 구현 / 검증 / Offline HTML / PR #26 갱신을 승인했습니다. P3.1 구현은 [QA](../artifacts/v2-p31/QA.md)와 Checkpoint Log에서 추적합니다. 아래 P3.0 Audit / 설계 기록은 보존하며 최신 사용자 지시가 우선합니다. P3.2–P3.4 / main Merge / P4는 승인되지 않았습니다.
+
+
 Contract ID: `p3-lane-contract/1` · Audited Source: `c98998c7d7586716a34cd8386180b6b76580a2c3` · 2026-10-20 KST.
 
 **이 문서는 제안 Interface와 구현 전 Acceptance Contract입니다. 아래 Lane Type / Function은 Source에 아직 없습니다.** Existing Entry Point와 Proposed Adapter를 구분합니다. P3.1–P3.4 개발은 각각 별도 사용자 승인이 필요합니다.

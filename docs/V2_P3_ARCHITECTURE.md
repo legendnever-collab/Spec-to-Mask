@@ -1,5 +1,8 @@
 # P3.0 — Architecture & Model Reuse Audit
 
+> **P3.1 실행 승인 — 2026-10-20 KST:** 사용자가 P3.1 Single Lane Assembly의 구현 / 검증 / Offline HTML / PR #26 갱신을 승인했습니다. P3.1 구현은 [QA](../artifacts/v2-p31/QA.md)와 Checkpoint Log에서 추적합니다. 아래 P3.0 Audit / 설계 기록은 보존하며 최신 사용자 지시가 우선합니다. P3.2–P3.4 / main Merge / P4는 승인되지 않았습니다.
+
+
 2026-10-20 KST · **P3.0 문서 설계만 승인됐습니다. P3.1–P3.4는 미구현 / 승인 대기입니다.**
 
 정본: [Model Contract](V2_P3_MODEL_CONTRACT.md) · [Checkpoint Plan](V2_P3_CHECKPOINT_PLAN.md) · [P3.1 Next Task](V2_P3_NEXT_TASK.md) · [Checkpoint Log](V2_CHECKPOINT_LOG.md).

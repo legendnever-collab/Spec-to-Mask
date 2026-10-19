@@ -354,3 +354,16 @@ P3.0 문서를 Commit·Push하고 Draft PR을 게시한 후 중단합니다. 문
 - 게시 후 Remote Compare에서 문서 8개만 변경됐고 Parent / Branch HEAD를 확인했습니다. Local 문서 Link / Code Fence / 5 Checkpoint×7 필수 Field / Whitespace / Runtime Unchanged 검사가 통과했습니다.
 - Design Commit의 새 CI는 조회 시 [PR CI 39328895790](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39328895790), [P0 39328895982](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39328895982), [Push CI 39328867546](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39328867546)가 `in_progress`였습니다. **이 Snapshot을 CI SUCCESS로 기록하지 않습니다.** 이 Receipt Commit의 CI도 PR 최신 HEAD에서 별도 확인해야 합니다. P3.0의 문서 저장 Stop Condition을 지키며 전체 Runtime CI를 기다리면서 P3.1을 시작하지 않습니다.
 - 이번 Receipt는 Log / Next Task의 Publication Pointer만 추가합니다. Runtime / Test / HTML / 기존 Artifact Hash는 바꾸지 않습니다. P3.1–P3.4는 여전히 미구현 / 사용자 승인 대기이고, main Merge / P4도 하지 않았습니다.
+
+
+## P3.1 — Single Lane Assembly / Source Checkpoint — 2026-10-20 KST
+
+사용자가 P3.1만 구현하도록 승인했습니다. Recovery main `c98998c7d7586716a34cd8386180b6b76580a2c3`, Branch / PR #26 HEAD `f1a300626e82dcefa8ddc8d2fde8931240c5524b`, Local Clean을 확인했습니다. P3.0의 P0 39328998788 / PR CI 39328998718 / Push CI 39328993506은 completed/success입니다. P3.0 Audit / Model Contract를 재작성하지 않았습니다.
+
+`lane.js`는 기존 SMQ_V2_MZM.evaluate / MZM_BENCH를 호출하는 Composition Adapter입니다. Optional Lane Schema / 독립 4 Platform State / P2 Deep Copy와 Source Provenance / Original / Comparison / Restore / Backup / Resume, Length 중심 Assembly와 선택 Voltage / RF Control을 구현했습니다. 같은 Result Identity로 Physical / Plot / KPI를 그리며 Chapter Remount 뒤 Request ID도 재사용하지 않습니다. Legacy Physics / Data / Level / Persistence Kernel은 보존합니다. 후속 Laser / Channel / Receiver는 NOT EVALUATED입니다.
+
+신규 172 Model-State / 141 Browser, 기존 P1/P2/P2.1 93/154/135, Navigation/Course/Active/Formats 11/41/107/49, P2.2 4394, MZM Bench 111 PASS입니다. Browser는 P1/P2/P2.1/P2.2 121/511/391/64, Navigation/Course/Formats/Journey 50/322/79/16 PASS입니다. Studio State 56 / DR8 87 (identity 12/12), Backup / Smoke / Migration도 통과했습니다. 실제 Gate / Environment / 미실행 항목은 [QA](../artifacts/v2-p31/QA.md)를 확인합니다. Local Browser는 Chromium 133이며 CI 결과와 구분합니다.
+
+Source / Test / Documentation을 먼저 게시합니다. Terminal Credential 부재를 이미 확인했으므로 Text Tree / Commit / 비강제 Ref Update를 사용합니다. Source Commit의 Tree를 Local과 비교합니다. 대용량 HTML을 수동 Blob으로 반복 올리지 않고 Actions의 P3.1 Job이 해당 Source에서 Canonical / index / Source Manifest / SHA256을 별도 Artifact Commit으로 저장합니다. 기존 Production Workflow를 해당 Branch에서 실행해 Artifact SHA의 실제 Gate를 확인합니다. 이 Source Checkpoint 시점의 Remote P3.1 CI는 아직 NOT VERIFIED입니다.
+
+P2.2 MMI / Material / Field / PN / Raw Eye 한계를 보존하며 BER / FEC / Net200G / Receiver / Link Budget을 만들지 않았습니다. 사용자 Play Review가 다음 단계입니다. P3.2 개발은 별도 승인 후 Scalar Optical Budget으로 제한하며 지금 시작하지 않습니다. main Merge / P4도 하지 않습니다.

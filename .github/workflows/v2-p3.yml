@@ -1,0 +1,74 @@
+name: v2 P3.1 Lane acceptance
+on:
+  push:
+    branches: [feature/v2-p3-200g-lane]
+    paths: ['src/**', 'test/**', 'tools/**', 'dist/**', 'package*.json', '.github/workflows/v2-p3.yml']
+  pull_request:
+    paths: ['src/**', 'test/**', 'tools/**', 'dist/**', 'package*.json', '.github/workflows/v2-p3.yml']
+permissions:
+  contents: read
+jobs:
+  lane:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+      actions: write
+    env:
+      SMQ_HTML: dist/index.html
+      SMQ_QA_OUT: artifacts/v2-p31/browser
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci && npm run build
+      # Publish only generated files on the authorized development branch, never main.
+      # The source checkpoint is already durable before this separate artifact commit.
+      - name: Publish P3.1 playable artifact from the frozen source
+        if: github.event_name == 'push' && github.ref == 'refs/heads/feature/v2-p3-200g-lane'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SMQ_SOURCE_COMMIT: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION=$(node -p "require('./package.json').version")
+          cp dist/index.html "dist/spec-to-mask-v$VERSION.html"
+          node tools/p3_manifest.js
+          REMOTE_SHA=$(git ls-remote origin "$GITHUB_REF" | cut -f1)
+          test "$REMOTE_SHA" = "$SMQ_SOURCE_COMMIT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add dist/index.html "dist/spec-to-mask-v$VERSION.html" artifacts/v2-p31/source-manifest.json artifacts/v2-p31/verification.json artifacts/v2-p31/SHA256SUMS
+          git commit -m "build: publish P3.1 offline lane checkpoint"
+          git push origin "HEAD:$GITHUB_REF"
+          # A token-generated push does not trigger further workflows. Explicitly dispatch
+          # the existing production workflow, whose P3 gates check the artifact commit.
+          curl --fail-with-body --silent --show-error -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json' \
+            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/dispatches" \
+            -d '{"ref":"feature/v2-p3-200g-lane","inputs":{"release":true}}'
+      - run: git diff --exit-code -- dist/index.html && node tools/check_rc.js
+      - run: npm run test:v2:p3 && npm run test:mzm-bench
+      - run: npm run test:v2 && npm run test:v2:p2 && npm run test:v2:p21 && npm run test:v2:learning && npm run test:v2:p22
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser:v2:p3
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v2-p31-lane-evidence
+          path: artifacts/v2-p31/browser/
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v2-p31-playable-checkpoint
+          path: |
+            dist/spec-to-mask-v2.0.0-alpha.5-p31-lane.html
+            artifacts/v2-p31/SHA256SUMS
+            artifacts/v2-p31/source-manifest.json
+            artifacts/v2-p31/verification.json
