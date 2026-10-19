@@ -1,0 +1,18 @@
+{
+  "schema": "smq-p31-build/1",
+  "version": "2.0.0-alpha.5-p31-lane",
+  "sourceCommit": "13f2a38415853f299d3be49b42563da73e7d4d95",
+  "sourceManifestSHA256": "372dbc40c407b3367eaca2f3f8bbb9657bdb65269ed09bd9a806f242208a309c",
+  "canonical": "dist/spec-to-mask-v2.0.0-alpha.5-p31-lane.html",
+  "htmlSHA256": "9a6e9f4a9e5c8e9f7a62cda4ef5834b00c0c929803bd795b8819dedfdf9ce6d9",
+  "bytes": 6749414,
+  "canonicalIndexIdentical": true,
+  "modelContract": "p3-lane-contract/1",
+  "scope": "P3.1 Tx Assembly only",
+  "externalVerified": false,
+  "BER": null,
+  "FEC": null,
+  "net200G": null,
+  "receiverSensitivity": null,
+  "linkBudget": null
+}
