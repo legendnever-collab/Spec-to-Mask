@@ -42,7 +42,9 @@
     "test:v2:p22": "node test/t_v2_p22.js",
     "test:browser:v2:p22": "node test/browser/v2_p22.js",
     "test:v2:p3": "node test/t_v2_p3.js",
-    "test:browser:v2:p3": "node test/browser/v2_p3.js"
+    "test:browser:v2:p3": "node test/browser/v2_p3.js",
+    "test:v2:p32": "node test/t_v2_p32.js",
+    "test:browser:v2:render": "node test/browser/v2_lane_render.js"
   },
   "devDependencies": {
     "jsdom": "^24.1.3",

@@ -401,3 +401,10 @@ Recovery main `c98998c7d7586716a34cd8386180b6b76580a2c3`, Branch / PR #26 `b46a9
 입력마다 replaceChildren / SVG innerHTML로 그림을 삭제하던 경로를 Stable DOM Patch로 바꿨습니다. Physical / Plot / Eye의 Attribute·Text·Trace를 기존 Node에 반영합니다. Invalidation은 Previous Preview / Previous Revision을 표시하고 Current Identity와 Capture를 즉시 무효화합니다. rAF에서 최신 Snapshot만 계산하고 Release에서 마지막 값을 확정합니다. Persistence는 180 ms 묶음 저장하며 Release / Navigation / Pagehide / Exit / Backup은 마지막 Design을 저장합니다. Comparison Tx는 Snapshot이 같으면 재사용합니다. Physics / Model Signature / Identity 수식은 변경하지 않았습니다.
 
 Local C01–C05 172, 기존 P3.1 Browser 142, 새 Rendering Browser 8 checks PASS입니다. 50회 개별 rAF Update + 80회 Burst 후 Release에서 SVG / Path Reference 유지, Blank 0, Node / Listener 누적 0, 최종 Input / Revision / KPI / Save 일치와 Late Result 거절을 확인했습니다. 실제 Trace / Frame Screenshot을 생성했으며 FPS / Latency 수치는 주장하지 않습니다. Source / Test / Docs를 먼저 저장하고 P3.2로 진행합니다. 이 중간 Source Commit은 [skip ci]이며 Final Source 동결 뒤 새 HTML / 전체 CI를 수행합니다.
+
+
+### Checkpoint B — Scalar Optical Ledger Model
+
+Checkpoint A Remote `f52cdf9af5dcf729a4e367b835e6c10611b1176d`를 먼저 저장했습니다. `optical.js`는 기존 Bench의 정착 Symbol Level에 Plane B mW를 곱하고 A–F의 각 Passive Owner를 한 번씩 적용합니다. A/B CW, C–F Equal-probability Settled Average / OMA_outer, 별도 Raw Gap을 구분합니다. MZM IL은 Transfer에 이미 포함되며 다시 빼지 않습니다. PN Domain 밖 Modulated Evidence / Non-monotonic OMA는 N/A, Zero Log는 null입니다. Defaults 10 dBm Laser / Input 1 dB / TxOut 1 dB / Channel 3 dB / RxIn 1 dB는 교육용 가정이며 측정값이 아닙니다.
+
+Optional source / passive, Optical Revision / Signature와 Snapshot / Old P3.1 Migration을 확장했습니다. 같은 Tx Input은 수치 결과를 재사용하고 기존 MZM Identity API로 현재 Revision / Request를 다시 연결합니다. Optical Edit은 Tx Geometry / PN / CPW / FFT를 바꾸지 않습니다. 신규 C06–C07 Model-State 324 checks PASS입니다. Receiver Sensitivity / Margin / Dynamic OMA·Average / BER·FEC는 null입니다. 중간 Source-only Checkpoint이며 HTML / CI는 Final에서 게시합니다.
