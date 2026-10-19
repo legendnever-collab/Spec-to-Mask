@@ -4,7 +4,7 @@
 > Original P0 execution order: [V2_P0_SOL_WORK_ORDER.md](V2_P0_SOL_WORK_ORDER.md)
 > Owner approval and playable review required after each checkpoint. Update this file **at every new Work** before stopping.
 
-Current handoff — **2026-10-20 KST: P2.2는 PR #25 / `c98998c7d7586716a34cd8386180b6b76580a2c3`로 main 병합이 확인됐습니다. 현재 승인은 P3.0 Architecture / Model Contract 문서와 Draft PR 저장까지만입니다. P3.1–P3.4 구현 / P3 main 병합 / P4 시작은 승인되지 않았습니다.** [P3 설계](V2_P3_ARCHITECTURE.md)와 문서 하단 최신 Receipt를 확인합니다. 아래 이전 승인 상태 / QA는 당시 기록으로 보존합니다.
+Current handoff — **2026-10-20 KST: P3.1 Single Lane Assembly 구현·Playable 게시를 완료했으며 사용자 Play Review를 기다립니다.** 기존 Draft PR #26을 유지합니다. Source Freeze `d499f4a45387b47f258e15155a6406b500d6f060`, Artifact `a55a53eedef9fd94f23ba0ec49fd37c0a73edc2c`입니다. [Play Review Handoff](HANDOFF_V2_P31.md), [QA](../artifacts/v2-p31/QA.md)와 하단 최신 Receipt를 확인합니다. P3.2 개발 / main 병합 / P4 시작은 승인되지 않았습니다. 아래 이전 승인 상태와 CI Snapshot은 당시 기록으로 보존합니다.
 
 ## Status as of 2026-10-18 (KST)
 
@@ -383,3 +383,12 @@ Remote Run 39331789357은 Model / State / Parity를 통과했으나 Browser Home
 - 최종 Local 신규 Browser 142 checks, 추가 1280×800 / 400×860 Light-Dark Screenshot도 통과했습니다. 기존 4 Viewport / Keyboard / Touch / Import / Backup / Restore / Scope Assertion을 유지합니다. Physics Kernel / Coefficient / 기존 Numerical Target 변경은 없습니다.
 - Run 39332515900은 조회 당시 Model / MZM / Parity 통과 후 기존 State Gate 실행 중, Dispatch 39332557834는 pending이었습니다. Bot Artifact Commit의 PR Checks는 action_required로 표시됐습니다. 이를 CI 성공으로 기록하지 않으며 이 문서 게시 후 최신 PR HEAD의 실제 Checks를 확인합니다. Remote CI 최종 결론은 별도 Receipt에 이어 기록합니다.
 - [QA](../artifacts/v2-p31/QA.md), [Build Receipt](../artifacts/v2-p31/verification.json), [Play Review / 짧은 Handoff](HANDOFF_V2_P31.md)를 제공합니다. P3.1 완료 / 사용자 Play Review 대기입니다. P3.2 / main Merge / P4는 진행하지 않습니다.
+
+
+### P3.1 Final CI / Stop Receipt — 2026-10-20 KST
+
+검증 HEAD `d9fe2ece171fe59a8f0ade673dd229e33b979e6d`의 P0 / P1 / P2 / P2.1 / P2.2 / P3.1 Acceptance, [PR Production CI 39332793523](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332793523), [Push CI 39332787712](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332787712)가 모두 completed/success입니다. Production Build / Identity / Legacy Browser / Save·Backup·Migration / Python GDS / 4 Platform Regression·Bot / Release Artifact까지 통과했습니다. 신규 Model-State 172 / Browser 142, 기존 MZM Bench 111입니다. [최종 QA](../artifacts/v2-p31/QA.md#final-ci-receipt--2026-10-20-kst) / [실제 CI JSON](../artifacts/v2-p31/ci-evidence.json)에 Run / Job / Artifact URL과 SHA256을 보존합니다.
+
+Source Freeze `d499f4a45387b47f258e15155a6406b500d6f060`, Artifact `a55a53eedef9fd94f23ba0ec49fd37c0a73edc2c` 및 HTML / Source Manifest SHA256은 위 Receipt와 같습니다. 최종 문서 Commit은 Log 상단을 현재 P3.1 Play Review로 정리하고 QA / Handoff / CI Evidence만 저장합니다. 검증 HEAD 이후 Runtime / Test / Workflow / HTML Diff가 없음을 확인했으며 `[skip ci]`로 같은 CI의 반복 실행을 피합니다. 문서 Commit 자체의 CI를 성공으로 주장하지 않습니다.
+
+기존 Draft PR #26은 Open / Unmerged, main은 `c98998c7d7586716a34cd8386180b6b76580a2c3`입니다. P2.2와 PN / Raw Eye Known Limitations를 보존합니다. **사용자 P3.1 Play Review 대기에서 중단합니다. P3.2 개발 / main 병합 / P4 시작은 하지 않았습니다.**

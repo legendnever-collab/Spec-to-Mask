@@ -74,3 +74,17 @@ Voltage / RF 창의 제목이 다음 P1 Learn 창에 남지 않도록 Close 시 
 - 추가 1280×800 / 400×860 × Light/Dark도 실제 Screenshot / Overflow / KPI 가림을 확인했습니다. 신규 Browser Report는 [browser/browser-report.json](browser/browser-report.json)에 보존합니다. Screenshot은 Actions Artifact를 우선합니다.
 - Source Follow-up Run [39332515900](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332515900)은 조회 당시 Model / MZM / Parity를 통과하고 기존 State Gate를 실행 중이었습니다. Artifact SHA의 Dispatch CI [39332557834](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332557834)는 pending, Bot Commit의 PR Checks는 action_required였습니다. 이것을 SUCCESS로 기록하지 않습니다. 이 Publication Receipt에서 실제 저장된 최종 Source / Artifact를 유지하고 PR HEAD의 CI를 다시 확인합니다.
 - Local Code / Runtime은 Source Freeze와 일치합니다. 이 Receipt는 문서·검증 Evidence만 추가하며 새 HTML / Physics를 생성하지 않습니다. [짧은 Handoff](../../docs/HANDOFF_V2_P31.md)를 확인하고 사용자 Play Review에서 중단합니다.
+
+
+## Final CI Receipt — 2026-10-20 KST
+
+검증 대상 Branch HEAD는 `d9fe2ece171fe59a8f0ade673dd229e33b979e6d`입니다. [CI Evidence](ci-evidence.json)에 실제 조회 시각 / Run / Job / Artifact를 저장했습니다. 아래 결론은 이전 Pending Snapshot을 대체하며 과거 기록은 보존합니다.
+
+- [P3.1 Source CI 39332515900](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332515900) **SUCCESS**: Model-State 172 / Browser 142 / MZM Bench 111, Parity 및 기존 State Gate가 통과했습니다.
+- 이 HEAD의 P0 / P1 / P2 / P2.1 / P2.2 / P3.1 Acceptance Run 6개가 모두 completed/success입니다. [PR Production CI 39332793523](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332793523)와 [Push CI 39332787712](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332787712)도 **SUCCESS**입니다.
+- Production은 Build / Canonical Parity / Syntax / Engine Identity / MZM / P3 / 기존 State / Design Lab / Smoke / Flow / Guide / Migration / Backup / Fab / Learning / Python GDS를 통과했습니다. GDS Re-read / Hierarchy / Port / Connectivity 및 의도적으로 잘못된 Geometry의 Negative Checks도 확인했습니다.
+- Legacy Studio Browser 168 / MZM Browser 37 / P3.1 Browser 142가 CI Chromium에서도 통과했습니다. 기존 Local 미실행 Legacy Browser / Python GDS 항목은 이 Remote 결과로 검증했습니다.
+- 4 Platform Release Regression / Bot Gate와 Release Artifact 생성도 모두 **SUCCESS**입니다. [Release Artifact](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332793523/artifacts/12225169755) / [Production Browser Evidence](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332793523/artifacts/12225456462)를 제공합니다.
+- [P3.1 Screenshots](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332515900/artifacts/12224349388) / [P3.1 Playable + Manifest](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332515900/artifacts/12224414126)를 Actions에 보존했습니다.
+
+이 최종 Receipt는 QA / Log / Handoff / CI JSON만 바꿉니다. Runtime / Test / Workflow / HTML은 검증 HEAD와 Byte 일치하며 Source / HTML Hash도 같습니다. 동일 Runtime의 전체 CI를 반복하지 않기 위해 문서 Commit은 `[skip ci]`로 저장합니다. 이 Commit 자체에서 CI를 다시 실행했다고 주장하지 않습니다. 사용자 Play Acceptance는 여전히 **PENDING**이며 P3.2 / main Merge / P4는 시작하지 않습니다.

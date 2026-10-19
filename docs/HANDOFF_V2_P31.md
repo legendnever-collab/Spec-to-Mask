@@ -21,3 +21,5 @@
 Astra A1은 P3.3의 Receiver Sensitivity 조건 검토, A2는 별도 승인을 받은 Cascaded Quality 설계 시에만 사용합니다. P3.1에서 Model 불일치는 발견되지 않았으며 PN / CPW / FFT를 다시 만들지 않습니다. P2.2 MMI / Material / Field 제한을 보존합니다.
 
 다음 Session은 최신 Remote main / P3 Branch / PR #26 / CI / Local Status와 이 Handoff의 Source Diff만 짧게 확인합니다. P3.0 Audit를 반복하지 않습니다. 최신 CI / 문서 Receipt SHA는 Checkpoint Log와 PR HEAD에서 읽습니다. **P3.2 자동 시작 / main Merge / P4 시작은 금지합니다.**
+
+최종 CI: 검증 HEAD `d9fe2ece171fe59a8f0ade673dd229e33b979e6d`의 Acceptance 6개 / PR·Push Production / 4 Platform Release 모두 SUCCESS입니다. [CI Receipt](../artifacts/v2-p31/ci-evidence.json)를 확인합니다. 이후 문서만 저장했으며 Runtime / HTML은 같습니다.
