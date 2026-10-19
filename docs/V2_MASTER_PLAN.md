@@ -6,7 +6,11 @@
 > Current status: **P1은 사용자 Play 승인 후 PR #24로 병합했습니다. P2 MZM Workbench는 별도 Branch에서 구현하며 Play Review 전 main 병합을 금지합니다.** ([architecture](V2_UX_ARCHITECTURE.md), [wireframes](V2_WIREFRAMES.md), [reuse map](V2_REUSE_MAP.md), [acceptance tests](V2_ACCEPTANCE_TESTS.md)). P1 구현 범위는 [V2_P1_WAVEGUIDE.md](V2_P1_WAVEGUIDE.md)에 기록합니다. P2 범위 / Model / Test Plan은 [V2_P2_MZM_WORKBENCH.md](V2_P2_MZM_WORKBENCH.md)을 따릅니다. 사용자 학습 효율과 P2 Play 승인은 아직 검증하지 않았습니다.
 > Release policy: each checkpoint requires an offline playable review artifact; **do not merge main without explicit user approval**.
 
-## P2.1 현재 범위 — 2026-10-18
+## P2.2 현재 범위 — 2026-10-20
+
+사용자 Physics Fidelity Work Order의 A–F를 같은 PR #25에서 진행합니다. [Scientific Specification](V2_P22_SCIENTIFIC_SPECIFICATION.md), [Material Matrix](V2_P22_MATERIAL_DOMAIN_MATRIX.md), [Mode Provenance](V2_P22_MODE_PROVENANCE.md), [QA](../artifacts/v2-p22/QA.md)가 현재 정본입니다. 기존 Solver와 계수는 보존하며, B/C/D 분류와 Unsupported를 노출합니다. UI·모델 일치 검증과 외부 물리 정확도는 별도입니다. Full Parameter Set이 없는 Material의 임의 Loss Curve를 만들지 않습니다. 최종 Play Review 전 main 병합 / P3 시작은 금지합니다.
+
+## P2.1 이전 범위 — 2026-10-18
 
 사용자 Feedback에 따라 P2.1 Learning Foundations / Visual Redesign을 같은 PR #25 / Branch에서 진행합니다. Tutorial → Roadmap → Passive 3개 → MZM Intro → 기존 MZM 3개 흐름이며 [P2.1 설계](V2_P21_LEARNING_REDESIGN.md) / [Visual System](V2_P21_VISUAL_SYSTEM.md) / [Acceptance](V2_P21_ACCEPTANCE.md)을 현재 정본으로 사용합니다. 아래 P0–P8의 역사적 설계와 Baseline은 보존합니다. 이번 사용자 지시는 P2.1 내부 Checkpoint A–E 전체 구현을 승인하지만 P3 / main 병합은 승인하지 않습니다.
 

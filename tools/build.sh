@@ -4,6 +4,9 @@ set -e
 cd "$(dirname "$0")/.."
 python3 tools/build_data.py
 OUT=${1:-dist/index.html}
+# Readers must never observe a partially assembled executable.
+TMP_OUT=$(mktemp "${OUT}.build.XXXXXX")
+trap 'rm -f "$TMP_OUT"' EXIT HUP INT TERM
 # SMQ_RELEASE=1 stamps the commit and its date (tools/release.sh); a normal build is a 'dev' build so dist/ does not churn.
 # SMQ_OFFLINE=1 drops the Google Fonts links: no external request at all (system fonts from the CSS fallbacks).
 VER=$(node -p "require('./package.json').version")
@@ -31,7 +34,10 @@ PYFIELDS
   done
   echo '</script>'
   echo '</body></html>'
-} > "$OUT"
+} > "$TMP_OUT"
 CHK=$(mktemp --suffix=.js)
-sed -n '/<script>/,/<\/script>/p' "$OUT" | sed '1d;$d' > "$CHK"
-node --check "$CHK"; rm -f "$CHK" && echo "BUILD OK $(wc -c < "$OUT") bytes -> $OUT"
+sed -n '/<script>/,/<\/script>/p' "$TMP_OUT" | sed '1d;$d' > "$CHK"
+node --check "$CHK"; rm -f "$CHK"
+mv "$TMP_OUT" "$OUT"
+trap - EXIT HUP INT TERM
+echo "BUILD OK $(wc -c < "$OUT") bytes -> $OUT"

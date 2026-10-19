@@ -1,7 +1,7 @@
 const fs=require('fs'),path=require('path'),assert=require('assert'),crypto=require('crypto'),{chromium}=require('playwright');
 const html=path.resolve(process.env.SMQ_HTML||'dist/spec-to-mask-v2.0.0-alpha.2-p2.html'),out=path.resolve(process.env.SMQ_QA_OUT||'artifacts/v2-p2');fs.mkdirSync(out,{recursive:true});
 const checks=[],bounds=[],errors=[],requests=[],ok=(v,m)=>{checks.push({ok:!!v,message:m});assert(v,m);};
-(async()=>{const browser=await chromium.launch({executablePath:process.env.SMQ_BROWSER||undefined,headless:true,args:process.env.SMQ_BROWSER?['--no-sandbox','--disable-gpu','--disable-software-rasterizer','--no-zygote','--single-process','--disable-dev-shm-usage']:['--no-sandbox']}),ctx=await browser.newContext({reducedMotion:'reduce',hasTouch:true}),p=await ctx.newPage();p.on('pageerror',e=>errors.push(e.message));p.on('request',r=>{if(/^https?:/.test(r.url()))requests.push(r.url());});
+(async()=>{const browser=await chromium.launch({executablePath:process.env.SMQ_BROWSER||undefined,headless:true,args:['--no-sandbox','--disable-dev-shm-usage']}),ctx=await browser.newContext({reducedMotion:'reduce',hasTouch:true}),p=await ctx.newPage();p.on('pageerror',e=>errors.push(e.message));p.on('request',r=>{if(/^https?:/.test(r.url()))requests.push(r.url());});
  const url='file://'+html+'?experience=v2',ready=async()=>{if(await p.locator('#formatNext').count())await p.click('#formatNext');await p.waitForFunction(()=>SMQ_V2.mzm()?.current());},state=()=>p.evaluate(()=>SMQ_V2.state());
  try{
   let available;

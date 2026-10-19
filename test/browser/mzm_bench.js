@@ -4,7 +4,7 @@ const html=path.resolve(process.env.SMQ_HTML||'dist/index.html'),out=path.resolv
 const checks=[],errors=[],requests=[];
 const ok=(v,m)=>{checks.push({ok:!!v,message:m});console.log(v?'PASS':'FAIL',m);assert(v,m);};
 (async()=>{
- const browser=await chromium.launch({executablePath:process.env.SMQ_BROWSER||undefined,args:process.env.SMQ_BROWSER?['--no-sandbox','--disable-gpu','--disable-software-rasterizer','--no-zygote','--single-process','--disable-dev-shm-usage']:['--no-sandbox']});
+ const browser=await chromium.launch({executablePath:process.env.SMQ_BROWSER||undefined,args:['--no-sandbox','--disable-dev-shm-usage']});
  try {
  const page=await browser.newPage({viewport:{width:1440,height:900}});page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(/^https?:/.test(r.url()))requests.push(r.url());});page.on('dialog',d=>d.accept());
  await page.goto('file://'+html+'?experience=legacy');await page.click('[data-lam="1.31"]');await page.click('[data-mat="si"]');await page.click('#btn-start');await page.click('[data-welcome-track="mzm-dr8"]');

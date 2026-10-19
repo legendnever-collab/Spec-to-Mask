@@ -1,3 +1,15 @@
+# v2.0.0-alpha.4 — P2.2 Physics Fidelity & Scientific Visualization
+
+[Offline 실행 HTML](dist/spec-to-mask-v2.0.0-alpha.4-p22-physics.html) · [Physics / Visualization Specification](docs/V2_P22_SCIENTIFIC_SPECIFICATION.md) · [Material Domain Matrix](docs/V2_P22_MATERIAL_DOMAIN_MATRIX.md) · [Mode Provenance](docs/V2_P22_MODE_PROVENANCE.md) · [QA / Acceptance](artifacts/v2-p22/QA.md) · [Handoff](docs/HANDOFF_V2_P22.md)
+
+Home / Session / 종료, TE0–TE3 / TM0–TM2 Signed Numeric Field와 n_eff Curve, Radius에 연동한 Bend Geometry, 실제 DC / MMI Topology와 기존 EIM Field, MZI 두 Complex Output, PN Carrier / Depletion / Optical Overlap을 제공합니다. 기존 Physics Kernel·계수·Save·Lab·GDS·4 Platform을 보존합니다.
+
+Mode Field는 정확한 Dataset Width에서만 표시합니다. Arbitrary Width는 Unsupported이며 Sample 적용을 제공합니다. SiN Table mismatch / Si TM Mesh sensitivity를 표시합니다. IOX / LDW / Polymer의 Full Parameter Set와 정량 Bend Curve, MMI의 완전한 Energy / Symmetry, Full-vector / 2D CHARGE 외부 정확도는 NOT VERIFIED입니다. UI 구현 통과와 물리 정확도 검증을 구분합니다.
+
+Draft PR #25 · 사용자 Play Review 전 main 병합 금지 · P3 미시작. 이전 실행 파일과 QA는 아래에 보존합니다.
+
+---
+
 # v2.0.0-alpha.3 — P2.1 추가 Learning Experience
 
 [Offline 실행 HTML](dist/spec-to-mask-v2.0.0-alpha.3-p21-learning.html) · [추가 Feedback / Checkpoint 계획](docs/V2_P21_ADDITIONAL_FEEDBACK.md) · [Learning Redesign](docs/V2_P21_LEARNING_REDESIGN.md) · [Passive Physics](docs/V2_P21_PASSIVE_PHYSICS.md) · [Active Physics](docs/V2_P21_ACTIVE_PHYSICS.md) · [Modulation Formats](docs/V2_P21_MODULATION_FORMATS.md) · [QA](artifacts/v2-p21-learning/QA.md) · [Checkpoint](docs/V2_CHECKPOINT_LOG.md)

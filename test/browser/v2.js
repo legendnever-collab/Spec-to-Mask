@@ -1,7 +1,7 @@
 const fs=require('fs'),path=require('path'),assert=require('assert'),crypto=require('crypto'),{chromium}=require('playwright');
 const html=path.resolve(process.env.SMQ_HTML||'dist/spec-to-mask-v2.0.0-alpha.1-p1.html'),out=path.resolve(process.env.SMQ_QA_OUT||'artifacts/v2-p1');fs.mkdirSync(out,{recursive:true});
 const checks=[],errors=[],requests=[],bounds=[];function ok(v,m){checks.push({ok:!!v,message:m});assert(v,m);}
-(async()=>{const browser=await chromium.launch({executablePath:process.env.SMQ_BROWSER||undefined,args:process.env.SMQ_BROWSER?['--no-sandbox','--disable-gpu','--disable-software-rasterizer','--no-zygote','--single-process','--disable-dev-shm-usage']:['--no-sandbox'],headless:true});const context=await browser.newContext({reducedMotion:'reduce'}),p=await context.newPage();p.on('pageerror',e=>errors.push(e.message));p.on('request',r=>{if(/^https?:/.test(r.url()))requests.push(r.url());});const url='file://'+html+'?experience=v2';
+(async()=>{const browser=await chromium.launch({executablePath:process.env.SMQ_BROWSER||undefined,args:['--no-sandbox','--disable-dev-shm-usage'],headless:true});const context=await browser.newContext({reducedMotion:'reduce'}),p=await context.newPage();p.on('pageerror',e=>errors.push(e.message));p.on('request',r=>{if(/^https?:/.test(r.url()))requests.push(r.url());});const url='file://'+html+'?experience=v2';
 try{
  for(const [width,height]of [[1440,900],[1366,768],[390,844],[320,568]]){
   await p.setViewportSize({width,height});await p.goto(url);await p.evaluate(()=>localStorage.clear());await p.reload();await p.evaluate(()=>document.fonts.ready);

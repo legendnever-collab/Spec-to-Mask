@@ -1,3 +1,4 @@
+process.env.SMQ_HTML ||= 'dist/index.html';
 const assert=require('assert'),boot=require('./v2_boot');const b=boot(),w=b.w,S=w.eval('SMQ_V2_SCIENCE'),F=w.eval('SMQ_V2_FOUNDATIONS');let count=0;const ok=(v,m)=>{assert(v,m);count++;};
 try{
  for(const p of ['si1310','si1550','sin1310','sin1550']){
@@ -10,7 +11,7 @@ try{
     ok(a.field.E.every(Number.isFinite),p+' finite field');
     ok(a.sample.width===sample.width,p+' exact geometry');
     if(w.eval('WGP')[p].ws.includes(sample.width))ok(Math.abs(a.field.neff-a.neff)<.002,p+' field/table discretization agreement');
-    ok(Math.abs(a.field.parity)>.99,p+' parity');
+    ok(Math.abs(a.field.parity)>.99,p+' parity');const row=a.field.E.slice(20*64,21*64).filter(v=>Math.abs(v)>3);ok(row.slice(1).filter((v,i)=>v*row[i]<0).length===Number(a.name.slice(2)),p+' actual signed field nodes');
    }
   }
   ok(!S.mode(p,.457123,'TE0').supported,p+' off-grid unsupported');
@@ -39,5 +40,6 @@ try{
  const before=JSON.stringify(w.SMQ_V2.state());b.$('#scienceField').value='intensity';b.$('#scienceField').dispatchEvent(new w.Event('change'));ok(before===JSON.stringify(w.SMQ_V2.state()),'view selection read only');
  ok([...w.document.querySelectorAll('.topnav button')].map(e=>e.textContent).join('|')==='Home|Session|종료','exact navigation');
  ok(w.SMQ_V2.exit(),'exit saved');ok(b.$('#v2ResumeExit'),'safe exit screen');b.$('#v2ResumeExit').click();ok(w.SMQ_V2.state().foundations.si1310.width===2,'exit resume design');
+ const oldSet=w.Storage.prototype.setItem;const key=w.eval('SMQ_V2_SCHEMA').KEY;w.Storage.prototype.setItem=function(k,v){if(k===key)throw new w.DOMException('quota','QuotaExceededError');return oldSet.call(this,k,v);};ok(!w.SMQ_V2.exit()&&!b.$('#v2ResumeExit'),'failed save prevents false successful exit');w.Storage.prototype.setItem=oldSet;
  ok(b.errors.length===0,'no runtime errors');console.log(count+' P2.2 checks PASS');
 }finally{b.dom.window.close();}

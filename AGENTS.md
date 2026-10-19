@@ -6,7 +6,7 @@
 
 - 작업 시작 시 Remote HEAD, PR/CI, Local Status, 미Commit 변경, 기존 Artifact와 마지막 성공 Checkpoint를 확인합니다.
 - 기존 Source와 미Commit 변경은 보존합니다. Reset / Force Push / 재개발로 이전 작업을 제거하지 않습니다.
-- 현재 사용자 승인 범위만 구현합니다. P1은 사용자 Play/Merge 승인이 있으며, P2 / P2.1은 별도 Branch/Draft PR #25에서 Play Review까지 진행합니다. P2.1 정본은 docs/V2_P21_ADDITIONAL_FEEDBACK.md / LEARNING_REDESIGN / VISUAL_SYSTEM / ACCEPTANCE / ACTIVE_PHYSICS / MODULATION_FORMATS입니다. P2 main 병합과 P3 시작은 승인되지 않았습니다.
+- 현재 사용자 승인 범위만 구현합니다. P1은 사용자 Play/Merge 승인이 있으며, P2 / P2.1 / P2.2는 별도 Branch/Draft PR #25에서 Play Review까지 진행합니다. P2.1 정본은 docs/V2_P21_ADDITIONAL_FEEDBACK.md / LEARNING_REDESIGN / VISUAL_SYSTEM / ACCEPTANCE / ACTIVE_PHYSICS / MODULATION_FORMATS입니다. P2 main 병합과 P3 시작은 승인되지 않았습니다.
 - `docs/V2_MASTER_PLAN.md`, `docs/V2_CHECKPOINT_LOG.md`, `docs/V2_LANGUAGE_POLICY.md`, 현재 Work Order를 정본으로 사용합니다.
 - Technical Term / Parameter / Unit / Equation은 English, 설명과 서술어는 한글로 작성합니다.
 
@@ -31,3 +31,7 @@
 5. 도구가 멈추면 마지막 출력 / 실행 Process / 원인을 확인합니다. 동일 명령의 무한 반복과 무기한 대기를 피하고 완료한 변경부터 Checkpoint로 보존합니다.
 6. Terminal Push에 Credential이 없으면 연결된 GitHub API로 Text Tree / Commit / Ref를 게시할 수 있습니다. 기존 Parent를 유지하고 예상 HEAD를 확인하며 Force Push를 하지 않습니다.
 7. 최종 Report에 Source SHA, 실행 HTML SHA256 / Parity, CI Evidence, 미검증 항목과 중단 지점을 남깁니다.
+
+## P2.2 정본
+
+`docs/V2_P22_SCIENTIFIC_SPECIFICATION.md`, `docs/V2_P22_MATERIAL_DOMAIN_MATRIX.md`, `docs/V2_P22_MODE_PROVENANCE.md`, `artifacts/v2-p22/QA.md`를 따릅니다. Numerical provenance와 Unsupported를 보존하고 기존 Regression을 완화하지 않습니다. `tools/build.sh`는 temporary output 검증 후 atomic rename으로 실행 HTML을 게시합니다. Browser Test는 immutable canonical을 사용하며 Build와 같은 파일을 동시 읽지 않습니다.
