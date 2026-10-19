@@ -1,0 +1,179 @@
+{
+  "artifact_head": "e826849c1d0b8b098019a29698b4539249cf1406",
+  "jobs": [
+    {
+      "id": 118161187242,
+      "name": "Production build / identity / Lab / GDS",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034512/job/118161187242",
+      "error_annotations": [],
+      "cleanup": true,
+      "bot_errors_empty": true,
+      "evidence": [
+        "2026-10-19T16:08:38.8439244Z RC source parity PASS 2.0.0-alpha.4-p22-physics b1f9bfa1b49abb9000b279f224dd80e0c66413f9511fd4f5bb9e45b030631351",
+        "2026-10-19T16:08:41.9806436Z { echo '### Identity checks run'; echo; echo '```'; grep -E 'BASELINE|IDENTITY|checks passed' identity.log; echo '```'; } >> \"$GITHUB_STEP_SUMMARY\"",
+        "2026-10-19T16:08:44.6936739Z 357/357 checks passed",
+        "2026-10-19T16:09:03.0054054Z 182/182 checks passed",
+        "2026-10-19T16:09:07.4922929Z 87/87 checks passed",
+        "2026-10-19T16:09:16.7704953Z 81/81 checks passed",
+        "2026-10-19T16:09:21.4068200Z 111 MZM bench model checks passed",
+        "2026-10-19T16:09:37.9191392Z 11/11 checks passed",
+        "2026-10-19T16:09:53.9841862Z 440/440 checks passed",
+        "2026-10-19T16:10:17.9545361Z lab checks passed",
+        "2026-10-19T16:10:42.4262724Z lab checks passed",
+        "2026-10-19T16:10:57.2971837Z lab state checks passed",
+        "2026-10-19T16:11:12.8130281Z lab state checks passed",
+        "2026-10-19T16:11:54.5560662Z flow checks passed",
+        "2026-10-19T16:12:34.7613594Z guide checks passed errors []",
+        "2026-10-19T16:13:14.6975370Z guide checks passed errors []",
+        "2026-10-19T16:13:30.7234107Z backup checks passed",
+        "2026-10-19T16:14:33.9074513Z fab checks passed",
+        "2026-10-19T16:14:45.7467490Z learning checks passed",
+        "2026-10-19T16:15:31.5377092Z test_circuit: OK"
+      ]
+    },
+    {
+      "id": 118161185555,
+      "name": "P2.2 physics/browser",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034431/job/118161185555",
+      "error_annotations": [],
+      "cleanup": true,
+      "bot_errors_empty": false,
+      "evidence": [
+        "2026-10-19T16:08:02.6998508Z RC source parity PASS 2.0.0-alpha.4-p22-physics b1f9bfa1b49abb9000b279f224dd80e0c66413f9511fd4f5bb9e45b030631351",
+        "2026-10-19T16:08:10.1622348Z 4394 P2.2 checks PASS",
+        "2026-10-19T16:08:31.9357361Z 64 P2.2 browser checks PASS",
+        "2026-10-19T16:08:33.1371969Z Artifact v2-p22-scientific-evidence.zip successfully finalized. Artifact ID 12202545939"
+      ]
+    },
+    {
+      "id": 118161185970,
+      "name": "P1",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034456/job/118161185970",
+      "error_annotations": [],
+      "cleanup": true,
+      "bot_errors_empty": false,
+      "evidence": [
+        "2026-10-19T16:08:03.6941607Z RC source parity PASS 2.0.0-alpha.4-p22-physics b1f9bfa1b49abb9000b279f224dd80e0c66413f9511fd4f5bb9e45b030631351",
+        "2026-10-19T16:08:11.3410735Z 93 P1 state/model checks passed",
+        "2026-10-19T16:08:38.2823981Z 121 P1 browser checks passed",
+        "2026-10-19T16:08:39.6335006Z Artifact v2-p1-waveguide-evidence.zip successfully finalized. Artifact ID 12201706867"
+      ]
+    },
+    {
+      "id": 118161185949,
+      "name": "P2.1 / full journey",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034428/job/118161185949",
+      "error_annotations": [],
+      "cleanup": true,
+      "bot_errors_empty": false,
+      "evidence": [
+        "2026-10-19T16:08:06.8000454Z RC source parity PASS 2.0.0-alpha.4-p22-physics b1f9bfa1b49abb9000b279f224dd80e0c66413f9511fd4f5bb9e45b030631351",
+        "2026-10-19T16:08:12.0192466Z 135 P2.1 model/state checks passed",
+        "2026-10-19T16:08:16.8072010Z 93 P1 state/model checks passed",
+        "2026-10-19T16:08:27.3936914Z 154 P2 model/state checks passed",
+        "2026-10-19T16:08:31.0316975Z 111 MZM bench model checks passed",
+        "2026-10-19T16:08:32.8350085Z 11 learning navigation checks passed",
+        "2026-10-19T16:08:35.3752234Z 41 course model/state checks passed",
+        "2026-10-19T16:08:44.9608510Z 107 active checks passed",
+        "2026-10-19T16:08:46.5052887Z 49 format checks passed",
+        "2026-10-19T16:09:16.3646723Z 391 P2.1 browser checks passed",
+        "2026-10-19T16:09:19.5511615Z 50 learning browser checks passed",
+        "2026-10-19T16:09:30.3563329Z 322 course browser checks passed",
+        "2026-10-19T16:09:39.3340978Z 79 format browser checks passed",
+        "2026-10-19T16:09:42.3942499Z 16 full journey browser checks passed",
+        "2026-10-19T16:09:44.0702498Z Artifact v2-p21-foundations-evidence.zip successfully finalized. Artifact ID 12202317032"
+      ]
+    },
+    {
+      "id": 118161186878,
+      "name": "Legacy Studio / MZM browser",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034512/job/118161186878",
+      "error_annotations": [],
+      "cleanup": true,
+      "bot_errors_empty": false,
+      "evidence": [
+        "2026-10-19T16:08:47.9036233Z 56 studio state checks passed",
+        "2026-10-19T16:08:48.1504398Z RC source parity PASS 2.0.0-alpha.4-p22-physics b1f9bfa1b49abb9000b279f224dd80e0c66413f9511fd4f5bb9e45b030631351",
+        "2026-10-19T16:09:41.0678662Z Browser checks: 168 PASS",
+        "2026-10-19T16:09:46.2574495Z 37 MZM bench browser checks passed",
+        "2026-10-19T16:09:48.0216674Z Artifact studio-browser-evidence.zip successfully finalized. Artifact ID 12202870380"
+      ]
+    },
+    {
+      "id": 118164831751,
+      "name": "Release si1310",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034512/job/118164831751",
+      "error_annotations": [],
+      "cleanup": true,
+      "bot_errors_empty": true,
+      "evidence": [
+        "2026-10-19T16:15:45.0535667Z RC source parity PASS 2.0.0-alpha.4-p22-physics b1f9bfa1b49abb9000b279f224dd80e0c66413f9511fd4f5bb9e45b030631351",
+        "2026-10-19T16:16:21.1735032Z flow checks passed",
+        "2026-10-19T16:16:57.0672229Z guide checks passed errors []",
+        "2026-10-19T16:17:17.9629496Z lab checks passed",
+        "2026-10-19T16:17:30.8582540Z lab state checks passed",
+        "2026-10-19T16:18:30.8669097Z fab checks passed"
+      ]
+    },
+    {
+      "id": 118164831762,
+      "name": "Release sin1310",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034512/job/118164831762",
+      "error_annotations": [],
+      "cleanup": true,
+      "bot_errors_empty": true,
+      "evidence": [
+        "2026-10-19T16:15:49.1180090Z RC source parity PASS 2.0.0-alpha.4-p22-physics b1f9bfa1b49abb9000b279f224dd80e0c66413f9511fd4f5bb9e45b030631351",
+        "2026-10-19T16:16:33.5635512Z flow checks passed",
+        "2026-10-19T16:17:15.7174303Z guide checks passed errors []",
+        "2026-10-19T16:17:41.3605473Z lab checks passed",
+        "2026-10-19T16:17:57.9436791Z lab state checks passed",
+        "2026-10-19T16:19:01.7222065Z fab checks passed"
+      ]
+    },
+    {
+      "id": 118164831826,
+      "name": "Release sin1550",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034512/job/118164831826",
+      "error_annotations": [],
+      "cleanup": true,
+      "bot_errors_empty": true,
+      "evidence": [
+        "2026-10-19T16:15:48.1772833Z RC source parity PASS 2.0.0-alpha.4-p22-physics b1f9bfa1b49abb9000b279f224dd80e0c66413f9511fd4f5bb9e45b030631351",
+        "2026-10-19T16:16:33.2580264Z flow checks passed",
+        "2026-10-19T16:17:15.8652635Z guide checks passed errors []",
+        "2026-10-19T16:17:42.5115025Z lab checks passed",
+        "2026-10-19T16:17:59.8223939Z lab state checks passed",
+        "2026-10-19T16:19:04.6869155Z fab checks passed"
+      ]
+    },
+    {
+      "id": 118164831940,
+      "name": "Release si1550",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034512/job/118164831940",
+      "error_annotations": [],
+      "cleanup": true,
+      "bot_errors_empty": true,
+      "evidence": [
+        "2026-10-19T16:15:43.9657657Z RC source parity PASS 2.0.0-alpha.4-p22-physics b1f9bfa1b49abb9000b279f224dd80e0c66413f9511fd4f5bb9e45b030631351",
+        "2026-10-19T16:16:28.9124045Z flow checks passed",
+        "2026-10-19T16:17:10.5615074Z guide checks passed errors []",
+        "2026-10-19T16:17:35.5124259Z lab checks passed",
+        "2026-10-19T16:17:51.3011491Z lab state checks passed",
+        "2026-10-19T16:18:55.6560155Z fab checks passed"
+      ]
+    },
+    {
+      "id": 118167381116,
+      "name": "Release packaging",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034512/job/118167381116",
+      "error_annotations": [],
+      "cleanup": true,
+      "bot_errors_empty": false,
+      "evidence": [
+        "2026-10-19T16:21:14.4893345Z RC source parity PASS 2.0.0-alpha.4-p22-physics b1f9bfa1b49abb9000b279f224dd80e0c66413f9511fd4f5bb9e45b030631351",
+        "2026-10-19T16:21:18.7141267Z Artifact spec-to-mask-release.zip successfully finalized. Artifact ID 12201874179"
+      ]
+    }
+  ]
+}

@@ -16,3 +16,5 @@ Known scientific limits: exact sampled mode width only; SiN historical table mis
 Recovery commits: A `8b6833a`, B `b8f5d22`, C `9270f0c`, D `3e4c9ac`, E `c319544`. Source-only checkpoints used [skip ci]. The final artifact commit and actual CI receipt are recorded in QA / PR; earlier P2.1 green CI is not evidence for P2.2.
 
 Run `SMQ_HTML=dist/index.html npm run test:v2:p22`; `npm run test:browser:v2:p22` uses installed Playwright Chromium (or SMQ_BROWSER). Existing tests remain. Build uses atomic rename; avoid modifying the executable under active regression. Large numeric JSON Field data are separate source files; no raster Field images or uploaded screenshot binaries are required in git.
+
+Final Artifact: `e826849c1d0b8b098019a29698b4539249cf1406`. Source/HTML parity and local+remote test logs confirmed. P2/P2.1/P2.2 SUCCESS; P0 job SUCCESS. P1/Production log and Release Artifact complete, but aggregate status API reconciliation remains NOT VERIFIED. See final QA receipt before interpreting pending badges. No rerun of passed jobs is necessary merely to change the displayed status.

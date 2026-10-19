@@ -59,3 +59,22 @@ Source-only A–E commits precede artifact publication. Main stays `0537a71a3f05
 | Python GDS (local) | NOT RUN: missing klayout. Remote pinned CI required. |
 
 Source Freeze `3e7f6f5827560f64fb4b52ffda9b7dd8a6867b0f`, exact tree `016045e787f7d585786a8ddc56c5a0e595751b81`. HTML SHA256 `b1f9bfa1b49abb9000b279f224dd80e0c66413f9511fd4f5bb9e45b030631351`. Final artifact CI is pending at this document's initial publication; subsequent receipt is authoritative.
+
+## Final remote evidence receipt — 2026-10-20 KST
+
+Artifact commit `e826849c1d0b8b098019a29698b4539249cf1406`. P2, P2.1 and P2.2 workflow APIs return **completed / success**. P0 job 118161187046 also returns success. P1 / Production job logs have finished, all requested test gates passed, and Release packaging finalized. However some run/check APIs still return queued/in_progress with null conclusions. **Aggregate status reconciliation is NOT VERIFIED**; this report does not fabricate a green aggregate status or retry successful jobs.
+
+| Remote gate / receipt | Evidence |
+|---|---|
+| P2.2 | [Run 39283034431](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034431): 4394 Physics / 64 Browser PASS |
+| P2 / P2.1 | [P2](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034404) / [P2.1](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034428): SUCCESS; prior curriculum and full Restore Journey preserved |
+| P1 | [Job 118161185970](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034456/job/118161185970): 93 Model / 121 Browser PASS in completed log |
+| Production / GDS | [Job 118161187242](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034512/job/118161187242): pinned Python dependencies, GDS examples, test_circuit OK, Lab 440/440, identity and e2e gates pass |
+| Four-platform Release | Jobs 118164831751 / 118164831762 / 118164831826 / 118164831940: completed smoke / flow / Lab / Fab / Bot logs, no error annotations |
+| Packaging | [Job 118167381116](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034512/job/118167381116): canonical/source parity PASS and release ZIP finalized |
+
+[Scientific Screenshot / Test Artifact](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034431/artifacts/12202545939), SHA256 `e7eb04d3fb1997da66321429941c55957a10b02fa1dc567ce52171fb61b5f53b`.
+
+[Release Artifact — HTML / Source ZIP / Python Handoff / SHA256](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034512/artifacts/12201874179), SHA256 `a10afb5add5593c26453e1b5d30bd5acfac929d7205c85a5b329046774b59162`.
+
+Job excerpts are preserved in `ci-job-evidence.json`; raw API conclusions in `ci-all-runs.json` and `remote-check-runs.json`. No new executable Blob was generated for this receipt. main remains `0537a71a3f05670edc4887a2be21f0a7563f227c`. Stop at Play Review with the scientific limitations above; do not merge or start P3.

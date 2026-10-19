@@ -216,7 +216,111 @@
       "exit": 0
     }
   ],
-  "CI": "PENDING: final artifact commit not yet run",
+  "CI": {
+    "workflow_status_receipt": [
+      {
+        "id": 39283034512,
+        "name": "CI",
+        "event": "pull_request",
+        "status": "queued",
+        "conclusion": null,
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034512"
+      },
+      {
+        "id": 39283034456,
+        "name": "v2 P1 Waveguide acceptance",
+        "event": "pull_request",
+        "status": "queued",
+        "conclusion": null,
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034456"
+      },
+      {
+        "id": 39283034417,
+        "name": "v2 P0 UX prototype",
+        "event": "pull_request",
+        "status": "in_progress",
+        "conclusion": null,
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034417"
+      },
+      {
+        "id": 39283034431,
+        "name": "v2 P2.2 scientific visualization",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034431"
+      },
+      {
+        "id": 39283034404,
+        "name": "v2 P2 MZM acceptance",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034404"
+      },
+      {
+        "id": 39283034428,
+        "name": "v2 P2.1 learning foundations",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034428"
+      },
+      {
+        "id": 39283024679,
+        "name": "v2 P2 MZM acceptance",
+        "event": "push",
+        "status": "queued",
+        "conclusion": null,
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283024679"
+      },
+      {
+        "id": 39283024792,
+        "name": "v2 P2.2 scientific visualization",
+        "event": "push",
+        "status": "in_progress",
+        "conclusion": null,
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283024792"
+      },
+      {
+        "id": 39283024765,
+        "name": "v2 P1 Waveguide acceptance",
+        "event": "push",
+        "status": "in_progress",
+        "conclusion": null,
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283024765"
+      },
+      {
+        "id": 39283024824,
+        "name": "v2 P2.1 learning foundations",
+        "event": "push",
+        "status": "in_progress",
+        "conclusion": null,
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283024824"
+      },
+      {
+        "id": 39283024803,
+        "name": "CI",
+        "event": "push",
+        "status": "in_progress",
+        "conclusion": null,
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283024803"
+      }
+    ],
+    "job_evidence": "ci-job-evidence.json",
+    "production_gds": "PASS in job 118161187242 logs; local klayout unavailable",
+    "release_artifact": {
+      "run": 39283034512,
+      "id": 12201874179,
+      "sha256": "a10afb5add5593c26453e1b5d30bd5acfac929d7205c85a5b329046774b59162"
+    },
+    "scientific_artifact": {
+      "run": 39283034431,
+      "id": 12202545939,
+      "sha256": "e7eb04d3fb1997da66321429941c55957a10b02fa1dc567ce52171fb61b5f53b"
+    },
+    "status_discrepancy": "P2 / P2.1 / P2.2 workflow conclusions SUCCESS. P0 job SUCCESS. P1 / Production completed passing logs and finalized artifacts exist, but some run/check API states still queued/in_progress. Aggregate conclusion NOT VERIFIED; do not rewrite remote state."
+  },
   "human_play": "NOT VERIFIED",
   "source_tree": "016045e787f7d585786a8ddc56c5a0e595751b81",
   "local_browser_counts": {
@@ -243,5 +347,6 @@
     "studio": 56,
     "P22": 4394
   },
-  "local_gds": "NOT RUN: klayout unavailable; remote pinned CI required"
+  "local_gds": "NOT RUN: klayout unavailable; remote pinned CI required",
+  "artifact_commit": "e826849c1d0b8b098019a29698b4539249cf1406"
 }

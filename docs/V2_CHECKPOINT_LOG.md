@@ -314,3 +314,5 @@ D Remote `3e4c9ac` 이후 기존 PN profile / fractional carrier cell / EIM mode
 ### P2.2 Checkpoint F — Integration / Source Freeze
 
 E Remote `c319544` 이후 Scientific Browser / Source Parity / 기존 Regression을 통합합니다. Course / Active 재렌더링 직후 이전 결과가 유효하게 남는 문제를 무효화했습니다. PN 모바일 도표와 Scientific Plot의 스크롤을 보완했습니다. Build는 temporary output syntax check 후 atomic rename하며 Test는 immutable canonical을 사용합니다. 기존 Chrome single-process 실행 옵션을 제거하고 Restore의 새 문서 로드를 기다립니다. 기존 수치 Assertion은 보존합니다. Full calibrated material set / MMI physical conservation / 외부 Full-vector 정확도는 완료로 주장하지 않습니다. 최종 Counts·SHA·실제 CI는 artifacts/v2-p22/QA.md, verification.json 및 PR Receipt에 기록합니다.
+
+F Artifact `e826849`와 Source `3e7f6f5`를 게시했습니다. 신규 4394/64, 기존 P1/P2/P2.1 및 Legacy/GDS/4-Platform 실제 로그를 확인했습니다. P2/P2.1/P2.2 Workflow SUCCESS, P0 Job SUCCESS입니다. 일부 P1/Production 상태 API는 완료 로그/Artifact와 달리 queued로 남아 aggregate 결론은 NOT VERIFIED로 기록합니다. QA/CI receipt를 보존하고 사용자 Play Review에서 중단합니다. main/P3 변경 없음.

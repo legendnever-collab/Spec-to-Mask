@@ -1,0 +1,146 @@
+[
+  {
+    "id": 118167381116,
+    "name": "Release artifacts",
+    "status": "queued",
+    "conclusion": null,
+    "completed_at": null,
+    "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034512/job/118167381116"
+  },
+  {
+    "id": 118164831940,
+    "name": "Release regression (si1550)",
+    "status": "queued",
+    "conclusion": null,
+    "completed_at": null,
+    "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034512/job/118164831940"
+  },
+  {
+    "id": 118164831826,
+    "name": "Release regression (sin1550)",
+    "status": "queued",
+    "conclusion": null,
+    "completed_at": null,
+    "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034512/job/118164831826"
+  },
+  {
+    "id": 118164831762,
+    "name": "Release regression (sin1310)",
+    "status": "queued",
+    "conclusion": null,
+    "completed_at": null,
+    "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034512/job/118164831762"
+  },
+  {
+    "id": 118164831751,
+    "name": "Release regression (si1310)",
+    "status": "queued",
+    "conclusion": null,
+    "completed_at": null,
+    "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034512/job/118164831751"
+  },
+  {
+    "id": 118161187242,
+    "name": "Build + regression (si1310) + GDS",
+    "status": "queued",
+    "conclusion": null,
+    "completed_at": null,
+    "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034512/job/118161187242"
+  },
+  {
+    "id": 118161187046,
+    "name": "P0 isolated layout and interaction",
+    "status": "completed",
+    "conclusion": "success",
+    "completed_at": "2026-10-19T16:08:32Z",
+    "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034417/job/118161187046"
+  },
+  {
+    "id": 118161186878,
+    "name": "Offline Studio browser acceptance",
+    "status": "queued",
+    "conclusion": null,
+    "completed_at": null,
+    "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034512/job/118161186878"
+  },
+  {
+    "id": 118161185970,
+    "name": "P1 model, Save and Korean UI",
+    "status": "queued",
+    "conclusion": null,
+    "completed_at": null,
+    "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034456/job/118161185970"
+  },
+  {
+    "id": 118161185949,
+    "name": "foundations",
+    "status": "queued",
+    "conclusion": null,
+    "completed_at": null,
+    "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034428/job/118161185949"
+  },
+  {
+    "id": 118161185555,
+    "name": "physics",
+    "status": "queued",
+    "conclusion": null,
+    "completed_at": null,
+    "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034431/job/118161185555"
+  },
+  {
+    "id": 118161185524,
+    "name": "P2 physics, learning, Save and viewport",
+    "status": "queued",
+    "conclusion": null,
+    "completed_at": null,
+    "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034404/job/118161185524"
+  },
+  {
+    "id": 118161153615,
+    "name": "P2 physics, learning, Save and viewport",
+    "status": "queued",
+    "conclusion": null,
+    "completed_at": null,
+    "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283024679/job/118161153615"
+  },
+  {
+    "id": 118161151159,
+    "name": "Build + regression (si1310) + GDS",
+    "status": "queued",
+    "conclusion": null,
+    "completed_at": null,
+    "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283024803/job/118161151159"
+  },
+  {
+    "id": 118161150904,
+    "name": "Offline Studio browser acceptance",
+    "status": "completed",
+    "conclusion": "success",
+    "completed_at": "2026-10-19T16:09:40Z",
+    "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283024803/job/118161150904"
+  },
+  {
+    "id": 118161150670,
+    "name": "foundations",
+    "status": "in_progress",
+    "conclusion": null,
+    "completed_at": null,
+    "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283024824/job/118161150670"
+  },
+  {
+    "id": 118161150033,
+    "name": "P1 model, Save and Korean UI",
+    "status": "in_progress",
+    "conclusion": null,
+    "completed_at": null,
+    "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283024765/job/118161150033"
+  },
+  {
+    "id": 118161149841,
+    "name": "physics",
+    "status": "in_progress",
+    "conclusion": null,
+    "completed_at": null,
+    "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283024792/job/118161149841"
+  }
+]
