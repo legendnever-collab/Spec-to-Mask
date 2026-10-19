@@ -1,5 +1,8 @@
 # P3.1 — Single Lane Assembly QA
 
+> **Playable Publication Receipt:** Source Freeze `d499f4a45387b47f258e15155a6406b500d6f060` → Artifact Commit `a55a53eedef9fd94f23ba0ec49fd37c0a73edc2c`입니다. HTML SHA256 `b927884eea8a7331df70bae5f35a77b57f20f85dfc6327cb7d1aba4dc7b10a89`, Source Manifest SHA256 `2b76fb28e23af844a56074d97cb58928b51e5af2fe85067e113ec9fbf3c27d82`입니다. Canonical / index / 독립 Local Source Rebuild가 같은 6,749,461 bytes이며 Manifest의 249개 Source Hash를 확인했습니다. 아래 초기 Source / CI Snapshot은 보존합니다. 최신 Remote CI 결과는 PR #26의 실제 Checks와 최종 Remote Receipt를 확인합니다.
+
+
 Version: `2.0.0-alpha.5-p31-lane` · Recovery: `f1a300626e82dcefa8ddc8d2fde8931240c5524b` · PR #26 · 2026-10-20 KST.
 
 **P3.1만 구현했습니다. Human Play Acceptance / main Merge / P3.2 / P4는 대기입니다.** Source / Test / Documentation을 먼저 게시하고 동일 Source에서 생성한 HTML은 별도 Artifact Commit으로 저장합니다. 실제 Source SHA / Source Manifest SHA256 / Canonical HTML SHA256은 [verification.json](verification.json), [source-manifest.json](source-manifest.json), [SHA256SUMS](SHA256SUMS)에 기록합니다. 이 문서의 초기 Source Checkpoint에서는 해당 생성 Receipt와 Remote CI가 아직 게시 전입니다. Source CI의 Build 단계가 생성하고 최종 Remote Receipt로 상태를 구분합니다.
@@ -63,3 +66,11 @@ P3.0 최종 HEAD의 P0 / PR CI / Push CI는 모두 SUCCESS를 실제 조회했�
 첫 Remote Source Run [39331789357](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39331789357)은 Keyboard Endpoint Wait에서 실패했습니다. Model / State / Parity 단계는 통과했습니다. 실제 Range Value / Focus를 별도 조사했고, Test는 Dialog 종료·Focus 복원을 기다린 뒤 Range Locator에 Home / End를 직접 보냅니다. Endpoint 값과 현재 Model Result의 Assertion은 유지합니다. 후속 Local Browser는 142 checks PASS이며 실패 Run을 성공으로 계산하지 않습니다.
 
 Voltage / RF 창의 제목이 다음 P1 Learn 창에 남지 않도록 Close 시 제목을 복원했습니다. 추가 Browser Check가 이 교차 Navigation을 검사합니다. 이 수정은 Physics / Coefficient / 기존 Test Target을 바꾸지 않습니다. 후속 Source / Artifact / 최종 CI는 아래 Publication Receipt에서 기록합니다.
+
+
+### Final artifact integrity / Review handoff
+
+- [Playable HTML](https://github.com/legendnever-collab/Spec-to-Mask/blob/a55a53eedef9fd94f23ba0ec49fd37c0a73edc2c/dist/spec-to-mask-v2.0.0-alpha.5-p31-lane.html)은 Source 저장 후 Actions가 생성한 별도 Commit입니다. `node tools/check_rc.js`, `sha256sum -c artifacts/v2-p31/SHA256SUMS`, 독립 Local Rebuild의 Byte Compare가 PASS입니다.
+- 추가 1280×800 / 400×860 × Light/Dark도 실제 Screenshot / Overflow / KPI 가림을 확인했습니다. 신규 Browser Report는 [browser/browser-report.json](browser/browser-report.json)에 보존합니다. Screenshot은 Actions Artifact를 우선합니다.
+- Source Follow-up Run [39332515900](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332515900)은 조회 당시 Model / MZM / Parity를 통과하고 기존 State Gate를 실행 중이었습니다. Artifact SHA의 Dispatch CI [39332557834](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332557834)는 pending, Bot Commit의 PR Checks는 action_required였습니다. 이것을 SUCCESS로 기록하지 않습니다. 이 Publication Receipt에서 실제 저장된 최종 Source / Artifact를 유지하고 PR HEAD의 CI를 다시 확인합니다.
+- Local Code / Runtime은 Source Freeze와 일치합니다. 이 Receipt는 문서·검증 Evidence만 추가하며 새 HTML / Physics를 생성하지 않습니다. [짧은 Handoff](../../docs/HANDOFF_V2_P31.md)를 확인하고 사용자 Play Review에서 중단합니다.

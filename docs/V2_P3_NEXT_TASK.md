@@ -1,5 +1,7 @@
 # P3.1 — Sol Work용 다음 지시문
 
+> **P3.1 구현 후 Handoff:** 이 Work Order의 구현을 완료했습니다. [Play Review / 다음 Work](HANDOFF_V2_P31.md)를 확인합니다. 아래 상세 지시문은 구현에 사용한 기록이며 P3.2 시작 승인으로 해석하지 않습니다.
+
 > **P3.1 실행 승인 — 2026-10-20 KST:** 사용자가 P3.1 Single Lane Assembly의 구현 / 검증 / Offline HTML / PR #26 갱신을 승인했습니다. P3.1 구현은 [QA](../artifacts/v2-p31/QA.md)와 Checkpoint Log에서 추적합니다. 아래 P3.0 Audit / 설계 기록은 보존하며 최신 사용자 지시가 우선합니다. P3.2–P3.4 / main Merge / P4는 승인되지 않았습니다.
 
 

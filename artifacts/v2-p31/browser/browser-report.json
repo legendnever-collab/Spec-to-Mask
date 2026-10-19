@@ -1,0 +1,1140 @@
+{
+  "html": "/workspace/scratch/2a7162e81701/Spec-to-Mask/dist/index.html",
+  "htmlSHA256": "b927884eea8a7331df70bae5f35a77b57f20f85dfc6327cb7d1aba4dc7b10a89",
+  "browser": "133.0.6943.0",
+  "checks": [
+    {
+      "ok": true,
+      "message": "1440x900/light no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/light visible button hit heights >=44px"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/light primary control hit height"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/light physical observation area retained"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/light desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/light all sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/light physical in same viewport"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/light knob in same viewport"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/light kpis in same viewport"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/light plots in same viewport"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/light actions in same viewport"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/light one identity drives physical/plots/KPIs"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/light exact top navigation"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/light downstream blocks not evaluated"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/dark no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/dark visible button hit heights >=44px"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/dark primary control hit height"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/dark physical observation area retained"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/dark desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/dark all sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/dark physical in same viewport"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/dark knob in same viewport"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/dark kpis in same viewport"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/dark plots in same viewport"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/dark actions in same viewport"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/dark one identity drives physical/plots/KPIs"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/dark exact top navigation"
+    },
+    {
+      "ok": true,
+      "message": "1440x900/dark downstream blocks not evaluated"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/light no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/light visible button hit heights >=44px"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/light primary control hit height"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/light physical observation area retained"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/light desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/light all sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/light physical in same viewport"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/light knob in same viewport"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/light kpis in same viewport"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/light plots in same viewport"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/light actions in same viewport"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/light one identity drives physical/plots/KPIs"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/light exact top navigation"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/light downstream blocks not evaluated"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/dark no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/dark visible button hit heights >=44px"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/dark primary control hit height"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/dark physical observation area retained"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/dark desktop no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/dark all sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/dark physical in same viewport"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/dark knob in same viewport"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/dark kpis in same viewport"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/dark plots in same viewport"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/dark actions in same viewport"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/dark one identity drives physical/plots/KPIs"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/dark exact top navigation"
+    },
+    {
+      "ok": true,
+      "message": "1366x768/dark downstream blocks not evaluated"
+    },
+    {
+      "ok": true,
+      "message": "390x844/light no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "390x844/light visible button hit heights >=44px"
+    },
+    {
+      "ok": true,
+      "message": "390x844/light primary control hit height"
+    },
+    {
+      "ok": true,
+      "message": "390x844/light physical observation area retained"
+    },
+    {
+      "ok": true,
+      "message": "390x844/light control visible above actions"
+    },
+    {
+      "ok": true,
+      "message": "390x844/light live KPIs visible above actions"
+    },
+    {
+      "ok": true,
+      "message": "390x844/light one identity drives physical/plots/KPIs"
+    },
+    {
+      "ok": true,
+      "message": "390x844/light exact top navigation"
+    },
+    {
+      "ok": true,
+      "message": "390x844/light downstream blocks not evaluated"
+    },
+    {
+      "ok": true,
+      "message": "390x844/dark no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "390x844/dark visible button hit heights >=44px"
+    },
+    {
+      "ok": true,
+      "message": "390x844/dark primary control hit height"
+    },
+    {
+      "ok": true,
+      "message": "390x844/dark physical observation area retained"
+    },
+    {
+      "ok": true,
+      "message": "390x844/dark control visible above actions"
+    },
+    {
+      "ok": true,
+      "message": "390x844/dark live KPIs visible above actions"
+    },
+    {
+      "ok": true,
+      "message": "390x844/dark one identity drives physical/plots/KPIs"
+    },
+    {
+      "ok": true,
+      "message": "390x844/dark exact top navigation"
+    },
+    {
+      "ok": true,
+      "message": "390x844/dark downstream blocks not evaluated"
+    },
+    {
+      "ok": true,
+      "message": "320x568/light no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "320x568/light visible button hit heights >=44px"
+    },
+    {
+      "ok": true,
+      "message": "320x568/light primary control hit height"
+    },
+    {
+      "ok": true,
+      "message": "320x568/light physical observation area retained"
+    },
+    {
+      "ok": true,
+      "message": "320x568/light control visible above actions"
+    },
+    {
+      "ok": true,
+      "message": "320x568/light live KPIs visible above actions"
+    },
+    {
+      "ok": true,
+      "message": "320x568/light one identity drives physical/plots/KPIs"
+    },
+    {
+      "ok": true,
+      "message": "320x568/light exact top navigation"
+    },
+    {
+      "ok": true,
+      "message": "320x568/light downstream blocks not evaluated"
+    },
+    {
+      "ok": true,
+      "message": "320x568/dark no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "320x568/dark visible button hit heights >=44px"
+    },
+    {
+      "ok": true,
+      "message": "320x568/dark primary control hit height"
+    },
+    {
+      "ok": true,
+      "message": "320x568/dark physical observation area retained"
+    },
+    {
+      "ok": true,
+      "message": "320x568/dark control visible above actions"
+    },
+    {
+      "ok": true,
+      "message": "320x568/dark live KPIs visible above actions"
+    },
+    {
+      "ok": true,
+      "message": "320x568/dark one identity drives physical/plots/KPIs"
+    },
+    {
+      "ok": true,
+      "message": "320x568/dark exact top navigation"
+    },
+    {
+      "ok": true,
+      "message": "320x568/dark downstream blocks not evaluated"
+    },
+    {
+      "ok": true,
+      "message": "P2 import preserves 20 GBd"
+    },
+    {
+      "ok": true,
+      "message": "P2 import preserves source state bytes"
+    },
+    {
+      "ok": true,
+      "message": "imported rate shown honestly"
+    },
+    {
+      "ok": true,
+      "message": "Length changes actual Vpi/loss/phase trade-off"
+    },
+    {
+      "ok": true,
+      "message": "Length changes calculated raw eye"
+    },
+    {
+      "ok": true,
+      "message": "actual tune plus result marks independent observation"
+    },
+    {
+      "ok": true,
+      "message": "P3 tuning never mutates P2"
+    },
+    {
+      "ok": true,
+      "message": "Comparison restored and recalculated"
+    },
+    {
+      "ok": true,
+      "message": "Original remains protected"
+    },
+    {
+      "ok": true,
+      "message": "Learn explains current voltages, raw rate and scope"
+    },
+    {
+      "ok": true,
+      "message": "Learn/Escape preserves exact state"
+    },
+    {
+      "ok": true,
+      "message": "Learn focus restored"
+    },
+    {
+      "ok": true,
+      "message": "blank input invalidates result immediately"
+    },
+    {
+      "ok": true,
+      "message": "Target cannot revive blank Length"
+    },
+    {
+      "ok": true,
+      "message": "late previous result cannot replace current result"
+    },
+    {
+      "ok": true,
+      "message": "numeric edit retains focus"
+    },
+    {
+      "ok": true,
+      "message": "blank source voltage invalidates all result views"
+    },
+    {
+      "ok": true,
+      "message": "closing options does not restore stale result"
+    },
+    {
+      "ok": true,
+      "message": "blank source draft retained"
+    },
+    {
+      "ok": true,
+      "message": "2.5 Vpp open source gives 1.25 Vpp electrode"
+    },
+    {
+      "ok": true,
+      "message": "explicit 112 GBd Target keeps raw/net separation"
+    },
+    {
+      "ok": true,
+      "message": "out-of-domain PN eye unavailable"
+    },
+    {
+      "ok": true,
+      "message": "folded optical levels unavailable"
+    },
+    {
+      "ok": true,
+      "message": "keyboard Home reaches endpoint"
+    },
+    {
+      "ok": true,
+      "message": "keyboard End reaches endpoint"
+    },
+    {
+      "ok": true,
+      "message": "native touch updates actual Lane at 390"
+    },
+    {
+      "ok": true,
+      "message": "native touch updates actual Lane at 320"
+    },
+    {
+      "ok": true,
+      "message": "current Platform identity si1550"
+    },
+    {
+      "ok": true,
+      "message": "independent Platform state si1550"
+    },
+    {
+      "ok": true,
+      "message": "current Platform identity sin1310"
+    },
+    {
+      "ok": true,
+      "message": "independent Platform state sin1310"
+    },
+    {
+      "ok": true,
+      "message": "current Platform identity sin1550"
+    },
+    {
+      "ok": true,
+      "message": "independent Platform state sin1550"
+    },
+    {
+      "ok": true,
+      "message": "current Platform identity si1310"
+    },
+    {
+      "ok": true,
+      "message": "independent Platform state si1310"
+    },
+    {
+      "ok": true,
+      "message": "result before Platform remount cannot return as current"
+    },
+    {
+      "ok": true,
+      "message": "reload resumes Lane identity"
+    },
+    {
+      "ok": true,
+      "message": "Full Backup includes all Lane inputs/history"
+    },
+    {
+      "ok": true,
+      "message": "Lane backup validates"
+    },
+    {
+      "ok": true,
+      "message": "actual Full Restore reload preserves all Platform Lane state"
+    },
+    {
+      "ok": true,
+      "message": "Legacy storage bytes preserved"
+    },
+    {
+      "ok": true,
+      "message": "P2 state remains unchanged after all Lane actions"
+    },
+    {
+      "ok": true,
+      "message": "exit saves Lane session"
+    },
+    {
+      "ok": true,
+      "message": "P3.1 stops at Lane Summary"
+    },
+    {
+      "ok": true,
+      "message": "P3.2 explicitly awaits user review"
+    },
+    {
+      "ok": true,
+      "message": "Home returns to Engine Overview"
+    },
+    {
+      "ok": true,
+      "message": "Home Resume preserves Lane Summary"
+    },
+    {
+      "ok": true,
+      "message": "P1 Learn title restored after Lane Voltage/RF dialog"
+    },
+    {
+      "ok": true,
+      "message": "zero browser runtime errors"
+    },
+    {
+      "ok": true,
+      "message": "zero external runtime HTTP"
+    }
+  ],
+  "bounds": [
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "physical": {
+        "x": 24,
+        "y": 199.296875,
+        "width": 815.546875,
+        "height": 365.828125,
+        "top": 199.296875,
+        "right": 839.546875,
+        "bottom": 565.125,
+        "left": 24
+      },
+      "knob": {
+        "x": 870.546875,
+        "y": 243.296875,
+        "width": 528.453125,
+        "height": 44,
+        "top": 243.296875,
+        "right": 1399,
+        "bottom": 287.296875,
+        "left": 870.546875
+      },
+      "kpis": {
+        "x": 870.546875,
+        "y": 348.796875,
+        "width": 528.453125,
+        "height": 117.1875,
+        "top": 348.796875,
+        "right": 1399,
+        "bottom": 465.984375,
+        "left": 870.546875
+      },
+      "plots": {
+        "x": 24,
+        "y": 579.125,
+        "width": 815.546875,
+        "height": 304.875,
+        "top": 579.125,
+        "right": 839.546875,
+        "bottom": 884,
+        "left": 24
+      },
+      "actions": {
+        "x": 870.546875,
+        "y": 823,
+        "width": 528.453125,
+        "height": 44,
+        "top": 823,
+        "right": 1399,
+        "bottom": 867,
+        "left": 870.546875
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "physical": {
+        "x": 24,
+        "y": 199.296875,
+        "width": 815.546875,
+        "height": 365.828125,
+        "top": 199.296875,
+        "right": 839.546875,
+        "bottom": 565.125,
+        "left": 24
+      },
+      "knob": {
+        "x": 870.546875,
+        "y": 243.296875,
+        "width": 528.453125,
+        "height": 44,
+        "top": 243.296875,
+        "right": 1399,
+        "bottom": 287.296875,
+        "left": 870.546875
+      },
+      "kpis": {
+        "x": 870.546875,
+        "y": 348.796875,
+        "width": 528.453125,
+        "height": 117.1875,
+        "top": 348.796875,
+        "right": 1399,
+        "bottom": 465.984375,
+        "left": 870.546875
+      },
+      "plots": {
+        "x": 24,
+        "y": 579.125,
+        "width": 815.546875,
+        "height": 304.875,
+        "top": 579.125,
+        "right": 839.546875,
+        "bottom": 884,
+        "left": 24
+      },
+      "actions": {
+        "x": 870.546875,
+        "y": 823,
+        "width": 528.453125,
+        "height": 44,
+        "top": 823,
+        "right": 1399,
+        "bottom": 867,
+        "left": 870.546875
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "theme": "light",
+      "scrollWidth": 1366,
+      "scrollHeight": 768,
+      "physical": {
+        "x": 24,
+        "y": 188.796875,
+        "width": 774.109375,
+        "height": 331.921875,
+        "top": 188.796875,
+        "right": 798.109375,
+        "bottom": 520.71875,
+        "left": 24
+      },
+      "knob": {
+        "x": 821.109375,
+        "y": 228.796875,
+        "width": 507.890625,
+        "height": 44,
+        "top": 228.796875,
+        "right": 1329,
+        "bottom": 272.796875,
+        "left": 821.109375
+      },
+      "kpis": {
+        "x": 821.109375,
+        "y": 332.296875,
+        "width": 507.890625,
+        "height": 111.1875,
+        "top": 332.296875,
+        "right": 1329,
+        "bottom": 443.484375,
+        "left": 821.109375
+      },
+      "plots": {
+        "x": 24,
+        "y": 530.71875,
+        "width": 774.109375,
+        "height": 221.28125,
+        "top": 530.71875,
+        "right": 798.109375,
+        "bottom": 752,
+        "left": 24
+      },
+      "actions": {
+        "x": 821.109375,
+        "y": 698.234375,
+        "width": 507.890625,
+        "height": 44,
+        "top": 698.234375,
+        "right": 1329,
+        "bottom": 742.234375,
+        "left": 821.109375
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "theme": "dark",
+      "scrollWidth": 1366,
+      "scrollHeight": 768,
+      "physical": {
+        "x": 24,
+        "y": 188.796875,
+        "width": 774.109375,
+        "height": 331.921875,
+        "top": 188.796875,
+        "right": 798.109375,
+        "bottom": 520.71875,
+        "left": 24
+      },
+      "knob": {
+        "x": 821.109375,
+        "y": 228.796875,
+        "width": 507.890625,
+        "height": 44,
+        "top": 228.796875,
+        "right": 1329,
+        "bottom": 272.796875,
+        "left": 821.109375
+      },
+      "kpis": {
+        "x": 821.109375,
+        "y": 332.296875,
+        "width": 507.890625,
+        "height": 111.1875,
+        "top": 332.296875,
+        "right": 1329,
+        "bottom": 443.484375,
+        "left": 821.109375
+      },
+      "plots": {
+        "x": 24,
+        "y": 530.71875,
+        "width": 774.109375,
+        "height": 221.28125,
+        "top": 530.71875,
+        "right": 798.109375,
+        "bottom": 752,
+        "left": 24
+      },
+      "actions": {
+        "x": 821.109375,
+        "y": 698.234375,
+        "width": 507.890625,
+        "height": 44,
+        "top": 698.234375,
+        "right": 1329,
+        "bottom": 742.234375,
+        "left": 821.109375
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "scrollWidth": 390,
+      "scrollHeight": 1533,
+      "physical": {
+        "x": 10,
+        "y": 188.1875,
+        "width": 370,
+        "height": 250,
+        "top": 188.1875,
+        "right": 380,
+        "bottom": 438.1875,
+        "left": 10
+      },
+      "knob": {
+        "x": 21,
+        "y": 482.6875,
+        "width": 348,
+        "height": 44,
+        "top": 482.6875,
+        "right": 369,
+        "bottom": 526.6875,
+        "left": 21
+      },
+      "kpis": {
+        "x": 21,
+        "y": 541.6875,
+        "width": 348,
+        "height": 96.84375,
+        "top": 541.6875,
+        "right": 369,
+        "bottom": 638.53125,
+        "left": 21
+      },
+      "plots": {
+        "x": 10,
+        "y": 979.71875,
+        "width": 370,
+        "height": 465,
+        "top": 979.71875,
+        "right": 380,
+        "bottom": 1444.71875,
+        "left": 10
+      },
+      "actions": {
+        "x": 0,
+        "y": 783,
+        "width": 390,
+        "height": 61,
+        "top": 783,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "scrollWidth": 390,
+      "scrollHeight": 1533,
+      "physical": {
+        "x": 10,
+        "y": 188.1875,
+        "width": 370,
+        "height": 250,
+        "top": 188.1875,
+        "right": 380,
+        "bottom": 438.1875,
+        "left": 10
+      },
+      "knob": {
+        "x": 21,
+        "y": 482.6875,
+        "width": 348,
+        "height": 44,
+        "top": 482.6875,
+        "right": 369,
+        "bottom": 526.6875,
+        "left": 21
+      },
+      "kpis": {
+        "x": 21,
+        "y": 541.6875,
+        "width": 348,
+        "height": 96.84375,
+        "top": 541.6875,
+        "right": 369,
+        "bottom": 638.53125,
+        "left": 21
+      },
+      "plots": {
+        "x": 10,
+        "y": 979.71875,
+        "width": 370,
+        "height": 465,
+        "top": 979.71875,
+        "right": 380,
+        "bottom": 1444.71875,
+        "left": 10
+      },
+      "actions": {
+        "x": 0,
+        "y": 783,
+        "width": 390,
+        "height": 61,
+        "top": 783,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "theme": "light",
+      "scrollWidth": 320,
+      "scrollHeight": 1384,
+      "physical": {
+        "x": 10,
+        "y": 148.890625,
+        "width": 300,
+        "height": 168,
+        "top": 148.890625,
+        "right": 310,
+        "bottom": 316.890625,
+        "left": 10
+      },
+      "knob": {
+        "x": 18,
+        "y": 354.890625,
+        "width": 284,
+        "height": 44,
+        "top": 354.890625,
+        "right": 302,
+        "bottom": 398.890625,
+        "left": 18
+      },
+      "kpis": {
+        "x": 18,
+        "y": 410.890625,
+        "width": 284,
+        "height": 77.546875,
+        "top": 410.890625,
+        "right": 302,
+        "bottom": 488.4375,
+        "left": 18
+      },
+      "plots": {
+        "x": 10,
+        "y": 831.375,
+        "width": 300,
+        "height": 465,
+        "top": 831.375,
+        "right": 310,
+        "bottom": 1296.375,
+        "left": 10
+      },
+      "actions": {
+        "x": 0,
+        "y": 495,
+        "width": 320,
+        "height": 73,
+        "top": 495,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        56,
+        56,
+        56
+      ]
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "theme": "dark",
+      "scrollWidth": 320,
+      "scrollHeight": 1384,
+      "physical": {
+        "x": 10,
+        "y": 148.890625,
+        "width": 300,
+        "height": 168,
+        "top": 148.890625,
+        "right": 310,
+        "bottom": 316.890625,
+        "left": 10
+      },
+      "knob": {
+        "x": 18,
+        "y": 354.890625,
+        "width": 284,
+        "height": 44,
+        "top": 354.890625,
+        "right": 302,
+        "bottom": 398.890625,
+        "left": 18
+      },
+      "kpis": {
+        "x": 18,
+        "y": 410.890625,
+        "width": 284,
+        "height": 77.546875,
+        "top": 410.890625,
+        "right": 302,
+        "bottom": 488.4375,
+        "left": 18
+      },
+      "plots": {
+        "x": 10,
+        "y": 831.375,
+        "width": 300,
+        "height": 465,
+        "top": 831.375,
+        "right": 310,
+        "bottom": 1296.375,
+        "left": 10
+      },
+      "actions": {
+        "x": 0,
+        "y": 495,
+        "width": 320,
+        "height": 73,
+        "top": 495,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        56,
+        56,
+        56
+      ]
+    }
+  ],
+  "errors": [],
+  "requests": [],
+  "scope": "P3.1 Assembly / unchanged existing Tx model. External Physics and Human Play Acceptance NOT VERIFIED"
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "width": 1280,
+    "height": 800,
+    "theme": "light",
+    "scroll": 1280,
+    "physical": 539.90625,
+    "kpi": 443.484375,
+    "actions": 727
+  },
+  {
+    "width": 1280,
+    "height": 800,
+    "theme": "dark",
+    "scroll": 1280,
+    "physical": 539.90625,
+    "kpi": 443.484375,
+    "actions": 727
+  },
+  {
+    "width": 400,
+    "height": 860,
+    "theme": "light",
+    "scroll": 400,
+    "physical": 438.1875,
+    "kpi": 638.53125,
+    "actions": 799
+  },
+  {
+    "width": 400,
+    "height": 860,
+    "theme": "dark",
+    "scroll": 400,
+    "physical": 438.1875,
+    "kpi": 638.53125,
+    "actions": 799
+  }
+]

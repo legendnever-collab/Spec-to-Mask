@@ -374,3 +374,12 @@ P2.2 MMI / Material / Field / PN / Raw Eye 한계를 보존하며 BER / FEC / Ne
 첫 Source `13f2a38415853f299d3be49b42563da73e7d4d95` → Actions Artifact `2de1c037cbea0b0c669e118741e336e7e05ad566`를 실제 확인했습니다. 첫 HTML SHA256은 `9a6e9f4a9e5c8e9f7a62cda4ef5834b00c0c929803bd795b8819dedfdf9ce6d9`이며 기존 P2.2 HTML은 보존했습니다.
 
 Remote Run 39331789357은 Model / State / Parity를 통과했으나 Browser Home/End Wait에서 실패했습니다. 같은 Test를 무한 재시도하지 않고 실제 Range / Focus 상태를 조사했습니다. Dialog Close / Focus 대기와 Locator 대상 Key 입력으로 보강했으며 수치 Assertion은 유지합니다. Voltage / RF 제목도 Close 시 복원해 이후 P1 Learn에 남지 않도록 했습니다. 후속 Local Browser 142 checks PASS입니다. 후속 Source를 먼저 저장하고 Artifact를 재생성합니다. Physics Source / 기존 수치 기준은 변경하지 않았습니다.
+
+
+### P3.1 Publication / Source–Artifact Receipt
+
+- Source Freeze `d499f4a45387b47f258e15155a6406b500d6f060` / Artifact `a55a53eedef9fd94f23ba0ec49fd37c0a73edc2c`를 실제 Remote Branch에서 확인하고 Local로 Fast-forward했습니다. 최초 Source `13f2a38` / Artifact `2de1c03`도 Commit History에 보존합니다. Local 원래 Source Commit은 `recovery/p31-local-source-7d63dba`, Follow-up은 `recovery/p31-local-fix-abd0c85`에 보존했으며 Reset / Force Push하지 않았습니다.
+- 최종 HTML SHA256 `b927884eea8a7331df70bae5f35a77b57f20f85dfc6327cb7d1aba4dc7b10a89`, Source Manifest SHA256 `2b76fb28e23af844a56074d97cb58928b51e5af2fe85067e113ec9fbf3c27d82`입니다. Canonical / index / 독립 Local Source Rebuild가 Byte 일치하고 249개 Source Hash를 검증했습니다.
+- 최종 Local 신규 Browser 142 checks, 추가 1280×800 / 400×860 Light-Dark Screenshot도 통과했습니다. 기존 4 Viewport / Keyboard / Touch / Import / Backup / Restore / Scope Assertion을 유지합니다. Physics Kernel / Coefficient / 기존 Numerical Target 변경은 없습니다.
+- Run 39332515900은 조회 당시 Model / MZM / Parity 통과 후 기존 State Gate 실행 중, Dispatch 39332557834는 pending이었습니다. Bot Artifact Commit의 PR Checks는 action_required로 표시됐습니다. 이를 CI 성공으로 기록하지 않으며 이 문서 게시 후 최신 PR HEAD의 실제 Checks를 확인합니다. Remote CI 최종 결론은 별도 Receipt에 이어 기록합니다.
+- [QA](../artifacts/v2-p31/QA.md), [Build Receipt](../artifacts/v2-p31/verification.json), [Play Review / 짧은 Handoff](HANDOFF_V2_P31.md)를 제공합니다. P3.1 완료 / 사용자 Play Review 대기입니다. P3.2 / main Merge / P4는 진행하지 않습니다.
