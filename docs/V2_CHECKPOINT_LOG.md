@@ -298,3 +298,7 @@ Legacy Browser / Python GDS의 최종 결과와 Source Freeze SHA / Canonical SH
 A Remote `8b6833a`를 먼저 저장했습니다. B는 기존 modes2.py에서 TE0–3 / TM0–2 Signed Numeric Field를 생성했습니다. Exact sample width만 표시하며 arbitrary fine width는 Unsupported입니다. 기존 Table과 Si는 5e-7 이내 재현됩니다. SiN guided n_eff 차이는 최대 0.00147이며 sin1550 w=2.7 µm TE3의 Cutoff disagreement는 NOT VERIFIED로 표시합니다. Si TM refinement sensitivity는 최대 0.0252이므로 Mesh convergence / full-vector accuracy를 PASS로 주장하지 않습니다.
 
 Home / Session / 종료를 구현하고 Theme / Settings / Backup을 Session으로 이동했습니다. 종료는 Save 성공 후 안전한 안내 화면으로 이동하고 Resume를 제공합니다. 기존 Browser test는 Theme 접근 경로만 Session으로 갱신했습니다. 수치 assertion은 유지합니다. B physics/state 3469 / 기존 P2.1 state 135 / Navigation browser 50 / 기존 course browser 322 PASS(Chrome 134)입니다. 최종 Build에서 다시 검증합니다. CI는 Source-only Commit 이후 Artifact parity 갱신 전까지 완료로 주장하지 않습니다.
+
+### P2.2 Checkpoint C — Multi-material Bend
+
+B Remote `b8f5d22`를 저장한 뒤 C를 진행했습니다. 5 Family와 Current Platform 선택, Representative / Fixed Geometry 분리, Radius에 연동한 90° Arc, µm/mm/cm 표시, 동일 Input identity / Backup에 additive science 설정을 추가했습니다. Si/SiN은 기존 Model을 그대로 호출합니다. IOX/LDW/Polymer의 전체 Index/Field/Bend dataset은 미확보이므로 NOT VERIFIED입니다. LDW의 single literature point와 Polymer의 propagation reference를 Bend Curve로 일반화하지 않습니다. Fixed Geometry의 loss도 재검증 전 Unsupported입니다. 기존 Course state 41 / Mode+Navigation physics 3469 PASS. Intermediate HTML은 artifacts/v2-p22/checkpoint-c.html로 생성합니다. 최종 CI / User Play는 아직 미검증입니다.

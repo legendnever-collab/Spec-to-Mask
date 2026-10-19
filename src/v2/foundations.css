@@ -82,3 +82,7 @@ html[data-theme=dark] #v2Root{--passive:#e0e5eb;--sin:#a2c5ed;--active:#ffc16a;-
 #v2Root .foundation-bench:has(.mode-physical) .plotbody svg{height:auto;flex:1;min-height:70px}
 #v2Root .foundation-bench:has(.mode-physical) #fLegend{display:none}
 #v2Root .science-caption{line-height:1.3}
+
+#v2Root .science-options{display:flex;gap:8px;flex-wrap:wrap}#v2Root .science-options label{flex:1;min-width:110px;font-size:14px}#v2Root .science-options select{display:block;width:100%;min-height:36px;font-size:14px;padding:4px}
+#v2Root .course-bench:has(#scienceMaterial) .plotbody{overflow:auto;display:block}#v2Root .course-bench:has(#scienceMaterial) .plotbody svg{height:140px;min-height:100px}
+@media(max-width:760px){#v2Root .science-options{order:4}#v2Root .course-bench:has(#scienceMaterial) .science-caption p{margin:6px 0}}

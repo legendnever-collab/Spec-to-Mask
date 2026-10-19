@@ -15,6 +15,10 @@ try{
   }
   ok(!S.mode(p,.457123,'TE0').supported,p+' off-grid unsupported');
  }
+ const M=w.eval('SMQ_V2_MATERIALS'),state=w.SMQ_V2.state(),fw=F.ensure(state);M.ensure(fw,'si1310');
+ for(const family of ['si','sin','iox','ldw','polymer']){M.edit(fw,'material',family);M.edit(fw,'materialRadius',M.profiles[family].domain[0]);const r=M.result(fw,'si1310');ok(r.family===family,'material identity '+family);ok(['si','sin'].includes(family)?r.valid&&!Number.isNaN(r.a.total):!r.valid&&r.a===null,'supported numerical domain '+family);}
+ M.edit(fw,'comparison','fixed');ok(!M.result(fw,'si1310').valid,'fixed geometry not promoted to calibrated result');
+ M.edit(fw,'material','si');M.edit(fw,'comparison','representative');M.edit(fw,'materialRadius',1);const shape1=M.view(fw,'si1310').physical;M.edit(fw,'materialRadius',8);ok(shape1!==M.view(fw,'si1310').physical,'radius updates geometry');ok(M.radiusLabel(4000)==='4.00 mm'&&M.radiusLabel(20000)==='2.00 cm','material scale units');
  w.SMQ_V2.navigate('passive');let ui=w.SMQ_V2.foundations();ui.flush();ui.edit('2');ui.flush();
  ok(b.$('#scienceMode').options.length===7,'all TE/TM selectors');
  for(const mode of ['TE0','TE1','TE2','TE3']){b.$('#scienceMode').value=mode;b.$('#scienceMode').dispatchEvent(new w.Event('change'));ok(b.$('.science-field').dataset.mode===mode,'selected '+mode);}

@@ -1,8 +1,8 @@
 // Passive foundations adapter. Existing wg table + explicit lossless two-port teaching model.
 const SMQ_V2_FOUNDATIONS = (() => {
- const S=SMQ_V2_SCHEMA,C=SMQ_V2_CORE,clone=C.clone,steps=['width','bend','ybranch','couplers','splitter','path','intro'],signature='foundations/2;wg@28952334;ideal-unitary-coupler/1;pn-nonlinear/1;course/1';
+ const S=SMQ_V2_SCHEMA,C=SMQ_V2_CORE,clone=C.clone,steps=['width','bend','ybranch','couplers','splitter','path','intro'],signature='foundations/2;wg@28952334;ideal-unitary-coupler/1;pn-nonlinear/1;course/1;p22/1';
  const limits=(p,k)=>k==='width'?(p.startsWith('sin')?[.4,3]:[.2,2]):k==='ratio'?[0,1]:k==='deltaL'?[0,2]:[-2.5,2.5];
- const snapshot=w=>clone({width:w.width,ratio:w.ratio,deltaL:w.deltaL,introVoltage:w.introVoltage,active:w.active,...(w.course?{course:w.course}:{}),...(w.activeDemo?{activeDemo:w.activeDemo}:{})});
+ const snapshot=w=>clone({width:w.width,ratio:w.ratio,deltaL:w.deltaL,introVoltage:w.introVoltage,active:w.active,...(w.course?{course:w.course}:{}),...(w.activeDemo?{activeDemo:w.activeDemo}:{}),...(w.science?{science:w.science}:{})});
  function fresh(p){const a={width:PLATFORMS[p].w0,ratio:.5,deltaL:0,introVoltage:0,active:false};return {...a,designId:'passive-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10),revision:0,step:'width',original:clone(a),comparison:null,progress:Object.fromEntries(steps.map(k=>[k,{observed:false,lastOutcome:'none',completion:null}]))};}
  function ensure(state){state.foundations??={};const a=state.foundations[state.platform]??=fresh(state.platform);SMQ_V2_COURSE.ensure(a,state.platform);return a;}
  function level(p){return {...LEVELS.find(l=>l.kind==='wg'),...PSPEC[p]['1-1'],pf:PLATFORMS[p]};}
