@@ -4,7 +4,7 @@
 > Original P0 execution order: [V2_P0_SOL_WORK_ORDER.md](V2_P0_SOL_WORK_ORDER.md)
 > Owner approval and playable review required after each checkpoint. Update this file **at every new Work** before stopping.
 
-Current handoff — **2026-10-20 KST: P3.1 Single Lane Assembly 구현·Playable 게시를 완료했으며 사용자 Play Review를 기다립니다.** 기존 Draft PR #26을 유지합니다. Source Freeze `d499f4a45387b47f258e15155a6406b500d6f060`, Artifact `a55a53eedef9fd94f23ba0ec49fd37c0a73edc2c`입니다. [Play Review Handoff](HANDOFF_V2_P31.md), [QA](../artifacts/v2-p31/QA.md)와 하단 최신 Receipt를 확인합니다. P3.2 개발 / main 병합 / P4 시작은 승인되지 않았습니다. 아래 이전 승인 상태와 CI Snapshot은 당시 기록으로 보존합니다.
+Current handoff — **2026-10-20 KST: 사용자 P3.1 Play 후 Rendering 수정 + P3.2 Optical Ledger 개발을 승인했습니다.** 기존 Draft PR #26 / Branch를 유지하며 Checkpoint A → B → C → D로 진행합니다. P3.3 / main 병합 / P4는 승인되지 않았습니다. 아래 과거 기록과 SHA는 보존합니다.
 
 ## Status as of 2026-10-18 (KST)
 
@@ -392,3 +392,12 @@ Remote Run 39331789357은 Model / State / Parity를 통과했으나 Browser Home
 Source Freeze `d499f4a45387b47f258e15155a6406b500d6f060`, Artifact `a55a53eedef9fd94f23ba0ec49fd37c0a73edc2c` 및 HTML / Source Manifest SHA256은 위 Receipt와 같습니다. 최종 문서 Commit은 Log 상단을 현재 P3.1 Play Review로 정리하고 QA / Handoff / CI Evidence만 저장합니다. 검증 HEAD 이후 Runtime / Test / Workflow / HTML Diff가 없음을 확인했으며 `[skip ci]`로 같은 CI의 반복 실행을 피합니다. 문서 Commit 자체의 CI를 성공으로 주장하지 않습니다.
 
 기존 Draft PR #26은 Open / Unmerged, main은 `c98998c7d7586716a34cd8386180b6b76580a2c3`입니다. P2.2와 PN / Raw Eye Known Limitations를 보존합니다. **사용자 P3.1 Play Review 대기에서 중단합니다. P3.2 개발 / main 병합 / P4 시작은 하지 않았습니다.**
+
+
+## P3.1 Rendering + P3.2 — Checkpoint A
+
+Recovery main `c98998c7d7586716a34cd8386180b6b76580a2c3`, Branch / PR #26 `b46a91906db8705de17f72b1a79ec0d9816806e4`, tracked Local Clean을 확인했습니다. 기존 Untracked QA 자료를 보존합니다. 해당 문서 HEAD는 [skip ci]이며 직전 Runtime의 성공 CI는 P3.1 Receipt에 있습니다. P3.1 Canonical SHA256 `b927884eea8a7331df70bae5f35a77b57f20f85dfc6327cb7d1aba4dc7b10a89`를 재확인하고 변경하지 않았습니다.
+
+입력마다 replaceChildren / SVG innerHTML로 그림을 삭제하던 경로를 Stable DOM Patch로 바꿨습니다. Physical / Plot / Eye의 Attribute·Text·Trace를 기존 Node에 반영합니다. Invalidation은 Previous Preview / Previous Revision을 표시하고 Current Identity와 Capture를 즉시 무효화합니다. rAF에서 최신 Snapshot만 계산하고 Release에서 마지막 값을 확정합니다. Persistence는 180 ms 묶음 저장하며 Release / Navigation / Pagehide / Exit / Backup은 마지막 Design을 저장합니다. Comparison Tx는 Snapshot이 같으면 재사용합니다. Physics / Model Signature / Identity 수식은 변경하지 않았습니다.
+
+Local C01–C05 172, 기존 P3.1 Browser 142, 새 Rendering Browser 8 checks PASS입니다. 50회 개별 rAF Update + 80회 Burst 후 Release에서 SVG / Path Reference 유지, Blank 0, Node / Listener 누적 0, 최종 Input / Revision / KPI / Save 일치와 Late Result 거절을 확인했습니다. 실제 Trace / Frame Screenshot을 생성했으며 FPS / Latency 수치는 주장하지 않습니다. Source / Test / Docs를 먼저 저장하고 P3.2로 진행합니다. 이 중간 Source Commit은 [skip ci]이며 Final Source 동결 뒤 새 HTML / 전체 CI를 수행합니다.

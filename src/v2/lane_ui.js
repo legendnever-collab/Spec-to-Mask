@@ -8,7 +8,7 @@ const SMQ_V2_LANE_UI = (() => {
   let requestSerial=0;
   function mount(app,ctx){
     const w=L.ensure(ctx.state),p=ctx.state.platform,$=s=>app.querySelector(s);
-    let result=null,serial=0,timer=0,raf=0,alive=true,invalid=new Set(),drafts=new Map();
+    let result=null,displayed=null,serial=0,raf=0,saveTimer=0,alive=true,refKey=null,refResult=null,invalid=new Set(),drafts=new Map();
     const current=()=>alive&&!invalid.size&&ctx.state.platform===p&&L.matches(result,w,serial);
     const value=k=>k==='voltage'?w.tx.voltage:['L','g','eta','RT'].includes(k)?w.tx.design[k]:w.tx.bench[k];
     app.innerHTML=`<section class="intro lane-intro"><div><p class="eyebrow">P3.1 · 200G-class Single Lane</p><h1>Length를 바꾸면 이 Lane은 어떻게 달라질까요?</h1><p class="context">${PLATFORMS[p].short}${p.startsWith('sin')?' · Heterogeneous Si PN':''} · 하나의 Tx Design을 연결합니다.</p></div><span id="laneStatus" class="status" role="status">현재 Design을 계산합니다.</span></section>
@@ -19,31 +19,35 @@ const SMQ_V2_LANE_UI = (() => {
       <p id="laneObservation" class="lane-observation"></p><div class="lane-tools"><button id="laneCapture">Comparison 저장</button><button id="laneRestore" ${w.comparison?'':'disabled'}>Comparison 복원</button><button id="laneOriginal">Original 복원</button><button id="laneImport" ${S.mzmWorkspace(ctx.state.mzm?.[p])?'':'disabled'}>P2 Design 가져오기</button></div><p id="laneProvenance" class="lane-provenance"></p>
       <div class="lane-actions"><button id="laneLearn">Learn Physics</button><button id="laneOptions">Voltage / RF</button><button id="laneNext" class="primary">관찰 마무리 →</button></div></aside>
       <article class="panel lane-plots" data-lane-view="plots"><div class="lane-plot"><h2>Length · Vπ / Loss</h2><div id="laneLengthPlot"></div><p>Solid: Vπ (V) · Dashed: Loss (dB)</p></div><div class="lane-plot"><h2>Raw Optical Eye · Tx</h2><div id="laneEye"></div><p>Noise / FFE / Receiver는 미포함입니다.</p></div></article></section>`;
-    function cancel(){clearTimeout(timer);cancelAnimationFrame(raf);serial=++requestSerial;result=null;}
+    function cancel(){cancelAnimationFrame(raf);raf=0;serial=++requestSerial;result=null;}
+    function persist(){clearTimeout(saveTimer);saveTimer=0;return ctx.save();}
+    function saveSoon(){clearTimeout(saveTimer);saveTimer=setTimeout(persist,180);}
     function invalidate(message='현재 Design을 계산합니다.'){
       cancel();$('#laneStatus').textContent=message;$('#laneError').textContent=invalid.size?message:'';
       for(const e of app.querySelectorAll('[data-lane-view]')){e.dataset.current='false';delete e.dataset.identity;e.setAttribute('aria-busy','true');}
-      for(const id of ['laneVpi','laneLoss','laneGap']){$('#'+id).textContent='—';$('#'+id+'Delta').textContent='';}
-      $('#lanePhysical').replaceChildren();$('#laneLengthPlot').replaceChildren();$('#laneEye').replaceChildren();$('#lanePhase').textContent='현재 Phase는 N/A입니다.';$('#laneRate').textContent='현재 결과는 Pending / Invalid입니다.';
+      if(displayed){$('#laneStatus').textContent=invalid.size?'Invalid Input · Previous Preview':'Updating · Previous Preview';$('#laneRevision').textContent=`Previous Revision ${displayed.revision}`;}
+      else for(const id of ['laneVpi','laneLoss','laneGap'])$('#'+id).textContent='—';
+      for(const id of ['laneVpi','laneLoss','laneGap'])$('#'+id+'Delta').textContent=displayed?'Previous Preview · 현재 KPI 아님':'';
+      $('#laneRate').textContent=displayed?'Previous Preview입니다. 현재 Revision의 결과는 Pending / Invalid입니다.':'현재 결과는 Pending / Invalid입니다.';
       $('#laneCapture').disabled=true;$('#laneObservation').textContent='현재 Revision의 관찰은 아직 확인하지 못했습니다.';
     }
-    function accept(r,handsOn=false){if(!alive||invalid.size||ctx.state.platform!==p||!L.matches(r,w,serial))return false;result=r;if(handsOn&&L.observe(w,r,serial)){result={...r,discovery:'observed'};ctx.save();}paint();return true;}
-    function schedule(handsOn=false){const input=clone(w),q=serial;timer=setTimeout(()=>{raf=requestAnimationFrame(()=>{if(!alive||invalid.size)return;try{accept(L.evaluate(input,q),handsOn);}catch(e){invalidate('Model Evaluation을 완료하지 못했습니다.');$('#laneError').textContent=e.message;}});},handsOn?80:0);}
+    function accept(r,handsOn=false){if(!alive||invalid.size||ctx.state.platform!==p||!L.matches(r,w,serial))return false;result=r;if(handsOn&&L.observe(w,r,serial)){result={...r,discovery:'observed'};saveSoon();}paint();return true;}
+    function schedule(handsOn=false){cancelAnimationFrame(raf);const input=clone(w),q=serial;raf=requestAnimationFrame(()=>{raf=0;if(!alive||invalid.size||q!==serial)return;try{accept(L.evaluate(input,q),handsOn);}catch(e){invalidate('Model Evaluation을 완료하지 못했습니다.');$('#laneError').textContent=e.message;}});}
     function sync(){const k='L';$('#laneLengthValue').textContent=f(value(k))+' mm';$('#laneLength').value=value(k);if(document.activeElement!==$('#laneFine'))$('#laneFine').value=drafts.get(k)??value(k);}
     function edit(raw,k='L'){
       invalidate();if(String(raw).trim()===''||!S.scalar(k,Number(raw))){invalid.add(k);drafts.set(k,String(raw));invalidate('지원 범위의 Parameter를 입력하거나 Original로 복원하세요.');return false;}
-      invalid.delete(k);drafts.delete(k);const changed=L.edit(w,k,Number(raw));sync();ctx.save();if(invalid.size){invalidate('다른 Parameter의 입력도 확인하세요.');return false;}schedule(changed);return changed;
+      invalid.delete(k);drafts.delete(k);const changed=L.edit(w,k,Number(raw));sync();saveSoon();if(invalid.size){invalidate('다른 Parameter의 입력도 확인하세요.');return false;}schedule(changed);return changed;
     }
     function restore(a){L.restore(w,a);invalid.clear();drafts.clear();invalidate();sync();ctx.save();schedule();}
-    function paint(){if(!current())return;const r=result,tx=r.tx,b=tx.bench,ref=M.evaluate(L.workspace({...clone(w),tx:clone((w.comparison||w.original).tx)}),p,-1);
+    function paint(){if(!current())return;const r=result,tx=r.tx,b=tx.bench,key=JSON.stringify((w.comparison||w.original).tx);if(key!==refKey){refKey=key;refResult=M.evaluate(L.workspace({...clone(w),tx:clone((w.comparison||w.original).tx)}),p,-1);}const ref=refResult;displayed=r;
       for(const e of app.querySelectorAll('[data-lane-view]')){e.dataset.current='true';e.dataset.identity=r.identity;e.dataset.revision=r.revision;e.setAttribute('aria-busy','false');}
       $('#laneStatus').textContent=L.supported(r)?'현재 Tx Model로 계산했습니다.':'일부 관찰은 NOT VERIFIED입니다.';
       $('#laneRevision').textContent=`Revision ${r.revision}`;sync();
       const rows=[['laneVpi',b.vpi,ref.bench.vpi],['laneLoss',b.il,ref.bench.il],['laneGap',r.metrics.rawGap.value===null?null:r.metrics.rawGap.value*100,ref.bench.eye.opening===null?null:ref.bench.eye.opening*100]];
       for(const [id,a,z]of rows){$('#'+id).textContent=a===null?'N/A':f(a,id==='laneGap'?1:2);$('#'+id+'Delta').textContent=a===null||z===null?'NOT VERIFIED':`Δ ${a-z>=0?'+':''}${f(a-z,id==='laneGap'?1:2)}${id==='laneGap'?' pp':''}`;}
-      $('#lanePhysical').innerHTML=V.physical(tx,p,'length',true);
+      SMQ_V2_RENDER.update($('#lanePhysical'),V.physical(tx,p,'length',true));
       $('#lanePhase').textContent=tx.static.valid?`Drive Δφ ${f(tx.static.phaseDrive/Math.PI)}π · Vdiff ${f(w.tx.voltage)} V · Active ηL ${f(tx.activeLength)} mm`:'Static PN Domain을 벗어났습니다. Phase / Power는 N/A입니다.';
-      $('#laneLengthPlot').innerHTML=V.plot(tx,'length');$('#laneEye').innerHTML=V.eye(tx);
+      SMQ_V2_RENDER.update($('#laneLengthPlot'),V.plot(tx,'length'));SMQ_V2_RENDER.update($('#laneEye'),V.eye(tx));
       $('#laneRate').textContent=`${r.rate.baudGBd} GBd ${r.rate.modulation} = ${r.rate.rawGbps} Gb/s raw · Net200G / BER / FEC는 NOT VERIFIED입니다.`;
       $('#laneError').textContent=r.metrics.rawGap.reason||(!tx.static.valid?'Static PN Domain을 벗어났습니다.':'');
       $('#laneObservation').textContent=w.progress.observed?'Discovery 관찰 기록이 있습니다. Engineering Closure: NOT EVALUATED':'Length를 움직여 관찰하세요. Engineering Closure: NOT EVALUATED';
@@ -51,7 +55,7 @@ const SMQ_V2_LANE_UI = (() => {
       $('#laneProvenance').textContent=w.provenance.kind==='p2'?`P2 Snapshot · Revision ${w.provenance.revision} · Import한 Symbol Rate를 유지합니다.`:'Platform Reference · P2에서 가져오기는 저장된 P2 Design이 있을 때 가능합니다.';
     }
     function announce(){if(current())document.querySelector('#v2Announce').textContent=`Length ${f(w.tx.design.L)} mm, Vπ ${f(result.tx.bench.vpi)} V, Optical Loss ${f(result.tx.bench.il)} dB입니다.`;}
-    $('#laneLength').oninput=e=>edit(e.target.value);$('#laneFine').oninput=e=>edit(e.target.value);$('#laneLength').onchange=announce;$('#laneFine').onchange=announce;
+    $('#laneLength').oninput=e=>edit(e.target.value);$('#laneFine').oninput=e=>edit(e.target.value);$('#laneLength').onchange=()=>{flush(true);announce();};$('#laneFine').onchange=()=>{flush(true);announce();};
     $('#laneCapture').onclick=()=>{if(!current())return;w.comparison=L.snapshot(w);ctx.save();paint();};$('#laneRestore').onclick=()=>{if(w.comparison)restore(w.comparison);};$('#laneOriginal').onclick=()=>restore(w.original);
     $('#laneImport').onclick=()=>{if(!S.mzmWorkspace(ctx.state.mzm?.[p]))return;L.importP2(w,ctx.state.mzm[p],p);invalid.clear();drafts.clear();invalidate();sync();ctx.save();schedule();};
     $('#laneNext').onclick=()=>{L.finish(w,current()&&L.supported(result)&&w.progress.observed?'observed':'unobserved');ctx.nav('lane-summary');};
@@ -62,10 +66,12 @@ const SMQ_V2_LANE_UI = (() => {
       ctx.read(`<p>같은 Lane의 Voltage / RF Input을 조정합니다. Source Vpp와 Applied Vdiff는 서로 다른 값입니다.</p><div class="lane-option-grid">${fields.map(([k,label,unit,min,max,step])=>`<label>${label} (${unit})<input type="number" data-lane-param="${k}" aria-label="${label}" min="${min}" max="${max}" step="${step}" value="${esc(drafts.get(k)??value(k))}"></label>`).join('')}<label>Modulation<select id="laneModulation" aria-label="Lane Modulation"><option value="1" ${w.tx.bench.modulation===1?'selected':''}>PAM4</option><option value="0" ${w.tx.bench.modulation===0?'selected':''}>NRZ</option></select></label></div><p id="laneOptionStatus" role="status">지원 범위 밖 또는 Blank Input에서는 Result가 무효화됩니다.</p><button id="laneTarget">112 GBd PAM4 Target 적용</button><p>Net200G / FEC를 검증하지 않습니다. 적용 후 새 Revision에서 계산합니다.</p>`, 'Voltage / RF');
       const body=document.querySelector('#v2LearnBody');body.querySelectorAll('[data-lane-param]').forEach(e=>e.oninput=()=>{edit(e.value,e.dataset.laneParam);body.querySelector('#laneOptionStatus').textContent=invalid.size?'Parameter를 확인하세요. 현재 Result는 N/A입니다.':'현재 Lane으로 다시 계산합니다.';});
       body.querySelector('#laneModulation').onchange=e=>edit(e.target.value,'modulation');
-      body.querySelector('#laneTarget').onclick=()=>{L.target(w);for(const k of ['baud','modulation']){invalid.delete(k);drafts.delete(k);}invalidate();sync();ctx.save();if(invalid.size){invalidate('다른 Parameter의 Blank / Invalid Input을 확인하세요.');body.querySelector('#laneOptionStatus').textContent='다른 Parameter를 확인하세요.';}else{schedule();document.querySelector('#v2Learn').close();}};
+      body.querySelector('#laneTarget').onclick=()=>{L.target(w);for(const k of ['baud','modulation']){invalid.delete(k);drafts.delete(k);}invalidate();sync();saveSoon();if(invalid.size){invalidate('다른 Parameter의 Blank / Invalid Input을 확인하세요.');body.querySelector('#laneOptionStatus').textContent='다른 Parameter를 확인하세요.';}else{schedule();document.querySelector('#v2Learn').close();}};
     };
+    function flush(handsOn=false){cancelAnimationFrame(raf);raf=0;const ok=alive&&!invalid.size&&(current()||accept(L.evaluate(clone(w),serial),handsOn));persist();return ok;}
+    const leave=()=>persist();window.addEventListener('pagehide',leave);
     invalidate();sync();schedule();
-    return {current,state:()=>clone(w),result:()=>current()?clone(result):null,edit,accept,paint,flush:()=>{clearTimeout(timer);cancelAnimationFrame(raf);return alive&&!invalid.size&&accept(L.evaluate(clone(w),serial),false);},dispose:()=>{alive=false;cancel();}};
+    return {current,state:()=>clone(w),result:()=>current()?clone(result):null,edit,accept,paint,flush,dispose:()=>{persist();window.removeEventListener('pagehide',leave);alive=false;cancel();}};
   }
   return {mount,summary,assembly};
 })();

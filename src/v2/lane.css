@@ -124,3 +124,7 @@
  #v2Root .lane-flow{padding-top:4px}
  #v2Root .lane-flow>div{padding:4px 2px}
 }
+
+/* Retained results are explicitly a previous revision, never current evidence. */
+#v2Root [data-lane-view][data-current="false"] :is(.lane-mzi,.lane-plot,.lane-kpis b){opacity:.58}
+#v2Root .lane-kpis b{min-height:1.25em}
