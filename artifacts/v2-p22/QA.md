@@ -40,3 +40,22 @@ Local Python GDS was blocked by missing klayout; GitHub CI installs pinned requi
 Canonical: `dist/spec-to-mask-v2.0.0-alpha.4-p22-physics.html`; same bytes as `dist/index.html`. SHA256SUMS and verification.json record the frozen build. B–E playable intermediates were generated locally from each checkpoint; final source and numeric datasets are in git, screenshots are CI artifacts.
 
 Source-only A–E commits precede artifact publication. Main stays `0537a71a3f05670edc4887a2be21f0a7563f227c`. Draft PR #25 is updated at final verification. No merge and no P3.
+
+## Local frozen-build results
+
+| Gate | Result |
+|---|---|
+| P2.2 Physics / State | 4,394 PASS |
+| P2.2 Scientific Browser | 64 PASS |
+| P1 / P2 / P2.1 Model-State | 93 / 154 / 135 PASS |
+| Learning Navigation / Course / Active / Format Model-State | 11 / 41 / 107 / 49 PASS |
+| MZM / Studio State | 111 / 56 PASS |
+| P1 / P2 / P2.1 Browser | 121 / 511 / 391 PASS |
+| Navigation / Course / Formats / full Journey Browser | 50 / 322 / 79 / 16 PASS |
+| Legacy Studio / MZM Browser | 168 / 37 PASS |
+| Lab / Full Backup / Smoke / Migration | PASS after frozen-build rerun |
+| Upgrade / MRR / DR8 / WDM / missing-baseline gate | PASS, unchanged kernels |
+| Syntax / Offline / Source parity | 112 source/test files + assembled script PASS; no external HTTP in browser; canonical=index |
+| Python GDS (local) | NOT RUN: missing klayout. Remote pinned CI required. |
+
+Source Freeze `3e7f6f5827560f64fb4b52ffda9b7dd8a6867b0f`, exact tree `016045e787f7d585786a8ddc56c5a0e595751b81`. HTML SHA256 `b1f9bfa1b49abb9000b279f224dd80e0c66413f9511fd4f5bb9e45b030631351`. Final artifact CI is pending at this document's initial publication; subsequent receipt is authoritative.
