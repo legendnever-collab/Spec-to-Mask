@@ -4,7 +4,7 @@
 > Original P0 execution order: [V2_P0_SOL_WORK_ORDER.md](V2_P0_SOL_WORK_ORDER.md)
 > Owner approval and playable review required after each checkpoint. Update this file **at every new Work** before stopping.
 
-Current handoff: **2026-10-18 사용자 P1 Play / Merge 승인과 P2 개발 승인을 받았습니다. P2는 별도 Branch / Draft PR에서 Play Review까지만 진행합니다. P2 main Merge / P3는 승인되지 않았습니다.** 최신 기록은 문서 하단을 확인합니다.
+Current handoff — **2026-10-20 KST: P2.2는 PR #25 / `c98998c7d7586716a34cd8386180b6b76580a2c3`로 main 병합이 확인됐습니다. 현재 승인은 P3.0 Architecture / Model Contract 문서와 Draft PR 저장까지만입니다. P3.1–P3.4 구현 / P3 main 병합 / P4 시작은 승인되지 않았습니다.** [P3 설계](V2_P3_ARCHITECTURE.md)와 문서 하단 최신 Receipt를 확인합니다. 아래 이전 승인 상태 / QA는 당시 기록으로 보존합니다.
 
 ## Status as of 2026-10-18 (KST)
 
@@ -316,3 +316,31 @@ D Remote `3e4c9ac` 이후 기존 PN profile / fractional carrier cell / EIM mode
 E Remote `c319544` 이후 Scientific Browser / Source Parity / 기존 Regression을 통합합니다. Course / Active 재렌더링 직후 이전 결과가 유효하게 남는 문제를 무효화했습니다. PN 모바일 도표와 Scientific Plot의 스크롤을 보완했습니다. Build는 temporary output syntax check 후 atomic rename하며 Test는 immutable canonical을 사용합니다. 기존 Chrome single-process 실행 옵션을 제거하고 Restore의 새 문서 로드를 기다립니다. 기존 수치 Assertion은 보존합니다. Full calibrated material set / MMI physical conservation / 외부 Full-vector 정확도는 완료로 주장하지 않습니다. 최종 Counts·SHA·실제 CI는 artifacts/v2-p22/QA.md, verification.json 및 PR Receipt에 기록합니다.
 
 F Artifact `e826849`와 Source `3e7f6f5`를 게시했습니다. 신규 4394/64, 기존 P1/P2/P2.1 및 Legacy/GDS/4-Platform 실제 로그를 확인했습니다. P2/P2.1/P2.2 Workflow SUCCESS, P0 Job SUCCESS입니다. 일부 P1/Production 상태 API는 완료 로그/Artifact와 달리 queued로 남아 aggregate 결론은 NOT VERIFIED로 기록합니다. QA/CI receipt를 보존하고 사용자 Play Review에서 중단합니다. main/P3 변경 없음.
+
+
+## P3.0 — Architecture / Model Contract — 2026-10-20 KST
+
+### Recovery / 실제 확인
+
+- main과 PR #25 Merge Commit은 `c98998c7d7586716a34cd8386180b6b76580a2c3`이며 `merged=true`입니다. P2.2 병합 승인은 최신 사용자 지시와 실제 GitHub 상태를 따릅니다.
+- 이번 Scratch에 기존 Checkout이 없어 Clone했습니다. 최초 Local Status는 Clean, 이전 Session의 미저장 변경은 확인하지 못했습니다. Reset / 삭제 / Force Push는 하지 않았습니다. Remote에 없던 `feature/v2-p3-200g-lane`을 이 Baseline에서 만들었습니다.
+- main [CI 39326037439](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39326037439)는 completed/success입니다. Build + Regression + GDS / Offline Studio Browser가 SUCCESS이고 main push의 Release Matrix / Artifact는 SKIPPED입니다. 과거 Artifact HEAD 상태 불일치는 당시 QA에 보존합니다.
+- 기존 Canonical / index는 같은 Blob `ce30c94e4cafa89c18074e4eb8d7a6d0351c6a74`, HTML SHA256 `b1f9bfa1b49abb9000b279f224dd80e0c66413f9511fd4f5bb9e45b030631351`입니다.
+
+### Model Audit / Deliverables
+
+[Architecture](V2_P3_ARCHITECTURE.md), [Model Contract](V2_P3_MODEL_CONTRACT.md), [Checkpoint Plan](V2_P3_CHECKPOINT_PLAN.md), [P3.1 지시문](V2_P3_NEXT_TASK.md)을 작성했습니다. AGENTS / Master Plan / README에 최신 승인 상태를 추가하고 과거 기록을 보존합니다. 이 기록의 구현 계획 / Interface는 아직 Source에 없습니다.
+
+기존 PN / Loaded CPW / MZM Bench / Raw Eye를 재사용할 수 있습니다. ELS의 닫힌 WDM Budget / XCVR의 8-Lane 전력 / PD의 Worst-channel λ·112 GBd·FFE·Noise 조건을 Single Lane과 혼용하지 않습니다. 특히 Legacy Tx Penalty + Rx Sensitivity의 이중 FFE를 End-to-end 검증으로 승격하지 않습니다. P3.3 Receiver Reference와 별도 승인이 필요한 Cascaded Quality를 분리했습니다.
+
+P2.2 MMI Conservation / Symmetry FAIL / UI NOT VERIFIED, Mode Sample Domain / SiN Mismatch / TM Sensitivity, 새 Material Bend 미검증, PN / Raw Eye / BER-FEC 한계는 그대로입니다. 이를 해결했다고 기록하지 않습니다.
+
+### 이번 검증 / 미실행 항목
+
+- Local Node v24.19.0: `npm run test:mzm-bench` 111 checks PASS, `npm run build` PASS(6,715,746 bytes), `node tools/check_rc.js` PASS, `npm run test:syntax` 112 files + dist script PASS입니다. Build 후 tracked Source / Runtime / HTML 변경은 없습니다.
+- 4 Platform의 기존 Entry Point를 호출해 Legacy settled OMA와 Bench Normalized OMA의 정의를 대조하고 PD가 선택하는 lamW를 확인했습니다. 새 Model이나 Test를 구현하지 않았습니다. 구체 수치는 Contract §5–6입니다.
+- P3.0은 문서 전용입니다. 새 Browser / Screenshot / 전체 Regression / 외부 Physics 검증 / 새 Playable HTML은 수행·생성하지 않았습니다. 기존 P2.2 QA Counts를 신규 P3 결과로 재사용하지 않습니다.
+
+### 승인 / Stop
+
+P3.0 문서를 Commit·Push하고 Draft PR을 게시한 후 중단합니다. 문서의 P3.1 지시문은 저장된 다음 작업이며 실행 승인이 아닙니다. 사용자 P3.1 개발 승인을 기다립니다. P3.1 구현 / main 병합 / P4 자동 시작은 하지 않습니다. 실제 Source Commit / PR / Remote 상태는 아래 Publication Receipt에 이어 기록합니다.

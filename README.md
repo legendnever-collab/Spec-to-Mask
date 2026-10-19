@@ -1,3 +1,5 @@
+> **2026-10-20 KST / P3.0:** P2.2는 PR #25 / `c98998c7`로 main에 병합됐습니다. 현재 작업은 [P3 Architecture](docs/V2_P3_ARCHITECTURE.md) / [Model Contract](docs/V2_P3_MODEL_CONTRACT.md) / [Checkpoint Plan](docs/V2_P3_CHECKPOINT_PLAN.md) / [P3.1 Next Task](docs/V2_P3_NEXT_TASK.md)의 문서 설계만입니다. Runtime / 아래 P2.2 실행 HTML은 유지합니다. P3.1은 사용자 승인 대기이며 P3 Merge / P4 시작은 하지 않습니다. 아래 과거 Draft / 미병합 문구는 당시 기록입니다.
+
 # v2.0.0-alpha.4 — P2.2 Physics Fidelity & Scientific Visualization
 
 [Offline 실행 HTML](dist/spec-to-mask-v2.0.0-alpha.4-p22-physics.html) · [Physics / Visualization Specification](docs/V2_P22_SCIENTIFIC_SPECIFICATION.md) · [Material Domain Matrix](docs/V2_P22_MATERIAL_DOMAIN_MATRIX.md) · [Mode Provenance](docs/V2_P22_MODE_PROVENANCE.md) · [QA / Acceptance](artifacts/v2-p22/QA.md) · [Handoff](docs/HANDOFF_V2_P22.md)
