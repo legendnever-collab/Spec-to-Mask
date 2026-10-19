@@ -344,3 +344,13 @@ P2.2 MMI Conservation / Symmetry FAIL / UI NOT VERIFIED, Mode Sample Domain / Si
 ### 승인 / Stop
 
 P3.0 문서를 Commit·Push하고 Draft PR을 게시한 후 중단합니다. 문서의 P3.1 지시문은 저장된 다음 작업이며 실행 승인이 아닙니다. 사용자 P3.1 개발 승인을 기다립니다. P3.1 구현 / main 병합 / P4 자동 시작은 하지 않습니다. 실제 Source Commit / PR / Remote 상태는 아래 Publication Receipt에 이어 기록합니다.
+
+
+### P3.0 Publication Receipt — PR #26
+
+- Design / Contract Remote Commit: `b1e7c04771efd5bfb4fd20dabd57bdf0045c03c5`입니다. Parent는 확인한 main `c98998c7d7586716a34cd8386180b6b76580a2c3`, Tree는 `4557443ff49fffff3a3eb419e1c8772dbd2b9b81`입니다.
+- [Draft PR #26](https://github.com/legendnever-collab/Spec-to-Mask/pull/26)을 `feature/v2-p3-200g-lane` → `main`으로 생성했습니다. `draft=true`, `merged=false`를 실제 확인했습니다. P3.0 문서 8개만 변경합니다.
+- Terminal Push는 Credential이 없어 실패했습니다. AGENTS의 Text Tree / Commit / Ref 방식으로 게시했으며 Remote Tree는 Local Design Commit `6c1399789e9ebd1c36a5bd69ae07e3010148220e`의 Tree와 정확히 같습니다. 원래 Local Commit은 `recovery/p3-local-docs-6c13997`에 보존하고, P3 Local Branch는 Remote Commit에서 다시 연결했습니다. Reset / Force Push는 하지 않았습니다.
+- 게시 후 Remote Compare에서 문서 8개만 변경됐고 Parent / Branch HEAD를 확인했습니다. Local 문서 Link / Code Fence / 5 Checkpoint×7 필수 Field / Whitespace / Runtime Unchanged 검사가 통과했습니다.
+- Design Commit의 새 CI는 조회 시 [PR CI 39328895790](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39328895790), [P0 39328895982](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39328895982), [Push CI 39328867546](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39328867546)가 `in_progress`였습니다. **이 Snapshot을 CI SUCCESS로 기록하지 않습니다.** 이 Receipt Commit의 CI도 PR 최신 HEAD에서 별도 확인해야 합니다. P3.0의 문서 저장 Stop Condition을 지키며 전체 Runtime CI를 기다리면서 P3.1을 시작하지 않습니다.
+- 이번 Receipt는 Log / Next Task의 Publication Pointer만 추가합니다. Runtime / Test / HTML / 기존 Artifact Hash는 바꾸지 않습니다. P3.1–P3.4는 여전히 미구현 / 사용자 승인 대기이고, main Merge / P4도 하지 않았습니다.

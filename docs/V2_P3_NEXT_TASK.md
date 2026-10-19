@@ -12,6 +12,10 @@ Repository: https://github.com/legendnever-collab/Spec-to-Mask
 
 Branch: `feature/v2-p3-200g-lane`
 
+Existing Draft PR: [#26](https://github.com/legendnever-collab/Spec-to-Mask/pull/26)
+
+P3.0 Design Commit: `b1e7c04771efd5bfb4fd20dabd57bdf0045c03c5` (최신 Receipt Commit은 Branch에서 확인합니다.)
+
 P2.2 Merge Baseline: `c98998c7d7586716a34cd8386180b6b76580a2c3`
 
 P3.0 Documentation HEAD / Draft PR는 [Checkpoint Log](V2_CHECKPOINT_LOG.md)의 최신 Publication Receipt와 실제 Remote Branch에서 확인합니다. 아래 지시문을 수행하기 전에 사용자 P3.1 개발 승인이 있는지 확인합니다.
