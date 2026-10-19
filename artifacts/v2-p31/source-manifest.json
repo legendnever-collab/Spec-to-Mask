@@ -1,6 +1,6 @@
 {
   "schema": "smq-source-manifest/1",
-  "sourceCommit": "13f2a38415853f299d3be49b42563da73e7d4d95",
+  "sourceCommit": "d499f4a45387b47f258e15155a6406b500d6f060",
   "algorithm": "SHA256",
   "files": {
     ".github/workflows/ci.yml": "f90788186dfa11192fa3ea60b6c097e603f94f81e71b57641476438cdcb046ec",
@@ -92,7 +92,7 @@
     "src/v2/schema.js": "8b74182c627be4dda8b005bb296efb0d8472ef69bf169599f1e5bb4a8e88d672",
     "src/v2/science.js": "694347326531713b254abb95458e6f97385b9eb1abab6cd7d73d7aaaf5875b3c",
     "src/v2/science_ui.js": "0ecc20dfae3bd8e83f1b7d70ea04353ccbbc58513647d173b5b06f81bd145007",
-    "src/v2/ui.js": "5f2abe8dd5289f146fe4b102bdb5b764b58c01488134ed4102bb2e26a6de9e3d",
+    "src/v2/ui.js": "9ab1a945e9cf3d47169bb31472b614b4684fc775ce92d3619751bb596e4fb56f",
     "src/v2/visual.js": "071b3b6002f05e2a4ffb0ccf276496ec77eb55b2b91669b8faa7112a9fdf6e96",
     "src/v2/workbench.css": "dbf2b89fb9d5b67b6b70910e2135914f9b39b2154e27c538fa700950d2584593",
     "test/baseline.js": "8155c1176c2c09ad7b9e4c977af2a78d2ee5522d98991ffb4efb085e4b2de8ea",
@@ -106,7 +106,7 @@
     "test/browser/v2_p2.js": "f57d1fbf28039b02df0299f619bc48b80196a9b8c02cd44126b81d1d51bde4a5",
     "test/browser/v2_p21.js": "907ec9e10b7d34ed911e4607a902befe9a8474de4680554d6a3076b3de6359f9",
     "test/browser/v2_p22.js": "247da7c2d2d8c3c794862a9ce8904e2a0c819ab676069e3429a72509899733f0",
-    "test/browser/v2_p3.js": "a3ac65eccc76e7540b8417e93b5a26561d3785ffa655e68762095ba4ebf1cc60",
+    "test/browser/v2_p3.js": "d018d9ce4aa917fe750414674d42601b5b29af1627c991f71e24a35529b28e98",
     "test/e2e/backup.js": "917f498a33795abc6574fea3b600669d22067848c887aeebe1db0d684a3a7239",
     "test/e2e/bot.js": "b19a90494b70c2c01a3d1f0094d5fb220a46cad3a29980366f13d64cbd7f2e90",
     "test/e2e/bot_dir.js": "49aec9eaef4d5339dc32fdb212a6dc462ab56273cd06e3859481f1af487b2428",
