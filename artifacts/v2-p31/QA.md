@@ -30,7 +30,7 @@ Version: `2.0.0-alpha.5-p31-lane` · Recovery: `f1a300626e82dcefa8ddc8d2fde89312
 
 | Gate | 결과 |
 |---|---|
-| P3.1 Model-State / Browser | 172 / 141 PASS |
+| P3.1 Model-State / Browser | 172 / 142 PASS |
 | Existing MZM Bench | 111 PASS |
 | P1 / P2 / P2.1 Model-State | 93 / 154 / 135 PASS |
 | Navigation / Course / Active / Formats | 11 / 41 / 107 / 49 PASS |
@@ -56,3 +56,10 @@ P2.2 MMI Conservation / Symmetry의 문서화된 Cases는 FAIL / UI NOT VERIFIED
 P3.0 최종 HEAD의 P0 / PR CI / Push CI는 모두 SUCCESS를 실제 조회했습니다. P3.1 Source Commit의 첫 Runtime Check는 기존 HTML과 새 Source가 달라 아직 최종 Acceptance가 아닙니다. `v2-p3.yml`의 Push Job은 확인한 Source HEAD에서만 생성 HTML / Manifest를 별도 Commit으로 저장하고, 기존 Production Workflow를 해당 Branch에서 명시적으로 실행합니다. main / 다른 Branch에는 쓰지 않으며 Force Push하지 않습니다. Screenshot / Playable Evidence는 Actions Artifact를 우선합니다.
 
 최종 Source / Artifact SHA와 실제 CI Run / Conclusion은 Checkpoint Log의 Publication Receipt와 PR #26을 확인합니다. 다음은 사용자 P3.1 Play Review입니다. 승인 후 별도 Work에서 P3.2 Scalar Optical Budget만 진행하며 P3.3 Sensitivity / A1 검토는 그 이후입니다.
+
+
+### Keyboard / Dialog follow-up
+
+첫 Remote Source Run [39331789357](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39331789357)은 Keyboard Endpoint Wait에서 실패했습니다. Model / State / Parity 단계는 통과했습니다. 실제 Range Value / Focus를 별도 조사했고, Test는 Dialog 종료·Focus 복원을 기다린 뒤 Range Locator에 Home / End를 직접 보냅니다. Endpoint 값과 현재 Model Result의 Assertion은 유지합니다. 후속 Local Browser는 142 checks PASS이며 실패 Run을 성공으로 계산하지 않습니다.
+
+Voltage / RF 창의 제목이 다음 P1 Learn 창에 남지 않도록 Close 시 제목을 복원했습니다. 추가 Browser Check가 이 교차 Navigation을 검사합니다. 이 수정은 Physics / Coefficient / 기존 Test Target을 바꾸지 않습니다. 후속 Source / Artifact / 최종 CI는 아래 Publication Receipt에서 기록합니다.

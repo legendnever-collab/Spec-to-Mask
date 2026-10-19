@@ -367,3 +367,10 @@ P3.0 문서를 Commit·Push하고 Draft PR을 게시한 후 중단합니다. 문
 Source / Test / Documentation을 먼저 게시합니다. Terminal Credential 부재를 이미 확인했으므로 Text Tree / Commit / 비강제 Ref Update를 사용합니다. Source Commit의 Tree를 Local과 비교합니다. 대용량 HTML을 수동 Blob으로 반복 올리지 않고 Actions의 P3.1 Job이 해당 Source에서 Canonical / index / Source Manifest / SHA256을 별도 Artifact Commit으로 저장합니다. 기존 Production Workflow를 해당 Branch에서 실행해 Artifact SHA의 실제 Gate를 확인합니다. 이 Source Checkpoint 시점의 Remote P3.1 CI는 아직 NOT VERIFIED입니다.
 
 P2.2 MMI / Material / Field / PN / Raw Eye 한계를 보존하며 BER / FEC / Net200G / Receiver / Link Budget을 만들지 않았습니다. 사용자 Play Review가 다음 단계입니다. P3.2 개발은 별도 승인 후 Scalar Optical Budget으로 제한하며 지금 시작하지 않습니다. main Merge / P4도 하지 않습니다.
+
+
+### P3.1 — Keyboard / Dialog Source Follow-up
+
+첫 Source `13f2a38415853f299d3be49b42563da73e7d4d95` → Actions Artifact `2de1c037cbea0b0c669e118741e336e7e05ad566`를 실제 확인했습니다. 첫 HTML SHA256은 `9a6e9f4a9e5c8e9f7a62cda4ef5834b00c0c929803bd795b8819dedfdf9ce6d9`이며 기존 P2.2 HTML은 보존했습니다.
+
+Remote Run 39331789357은 Model / State / Parity를 통과했으나 Browser Home/End Wait에서 실패했습니다. 같은 Test를 무한 재시도하지 않고 실제 Range / Focus 상태를 조사했습니다. Dialog Close / Focus 대기와 Locator 대상 Key 입력으로 보강했으며 수치 Assertion은 유지합니다. Voltage / RF 제목도 Close 시 복원해 이후 P1 Learn에 남지 않도록 했습니다. 후속 Local Browser 142 checks PASS입니다. 후속 Source를 먼저 저장하고 Artifact를 재생성합니다. Physics Source / 기존 수치 기준은 변경하지 않았습니다.

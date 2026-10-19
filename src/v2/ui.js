@@ -59,7 +59,7 @@ function render(){exited=false;laneUI?.dispose();laneUI=null;root.classList.togg
  }
  $('#v2Theme').textContent=document.documentElement.dataset.theme==='dark'?'Light로 전환':'Dark로 전환';}
 $('#v2OverviewTop').onclick=()=>nav('overview');$('#v2Theme').onclick=()=>{const b=$('#themeToggle');if(b)b.click();$('#v2Theme').textContent=document.documentElement.dataset.theme==='dark'?'Light로 전환':'Dark로 전환';};
-$('#v2LearnClose').onclick=()=>$('#v2Learn').close();$('#v2Learn').addEventListener('close',()=>{window.scrollTo(0,learnScroll);learnFocus?.focus({preventScroll:true});});
+$('#v2LearnClose').onclick=()=>$('#v2Learn').close();$('#v2Learn').addEventListener('close',()=>{$('#v2LearnTitle').textContent='Learn Physics';window.scrollTo(0,learnScroll);learnFocus?.focus({preventScroll:true});});
 let settingsFocus=null,checkedBackup=null;
 function bindLearningNav(){SMQ_V2_LEARNING.stages.forEach(([scene,label,id])=>{$('#'+id).onclick=()=>{$('#v2Settings').close();nav(scene);};});}
 $('#v2More').onclick=()=>{settingsFocus=document.activeElement;$('#v2LearningNav').innerHTML=SMQ_V2_LEARNING.menu(state);bindLearningNav();$('#v2Platform').value=state.platform;$('#v2ModelContext').textContent=state.scene.startsWith('mzm')?`MZM의 Active Layer는 Si PN이며 SiN Platform에서는 Heterogeneous Si를 가정합니다.`:`기본 Width는 ${PLATFORMS[state.platform].w0} µm이며 Platform별로 고정합니다.`;$('#v2Settings').showModal();};
