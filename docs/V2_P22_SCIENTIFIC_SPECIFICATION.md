@@ -44,3 +44,7 @@ A Audit·Domain·Specification → B Home/Session/종료·Mode Library → C mul
 ## Kernel change decision
 
 기존 Solver / Coefficient / Level / Score / GDS는 변경하지 않습니다. 새 Scientific Adapter와 View만 추가합니다. 필요시 Kernel public diagnostic interface의 확장만 허용하며 기존 numerical output identity를 검증합니다. Unsupported를 임의의 Curve로 채우지 않습니다.
+
+## D Audit finding — existing MMI limitations
+
+PQ grid is not centered exactly for all W / DX values. Si1310 default 1×2 |P1−P2|=0.000920; SiN1550 raw port overlap sum=1.008418. Output basis is nonorthogonal and model omits radiation/reflection. These are NOT VERIFIED for physical conservation/symmetry. We retain coefficients and show raw overlap plus diagnostic. The new integration test checks honest detection; it does not silently renormalize or weaken existing tests. Direct field-to-port overlap and guided propagation norm remain separate verifiable contracts. No independent FDTD/EME full-vector result is claimed.

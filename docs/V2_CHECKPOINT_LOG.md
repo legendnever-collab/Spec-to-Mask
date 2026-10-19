@@ -302,3 +302,7 @@ Home / Session / 종료를 구현하고 Theme / Settings / Backup을 Session으�
 ### P2.2 Checkpoint C — Multi-material Bend
 
 B Remote `b8f5d22`를 저장한 뒤 C를 진행했습니다. 5 Family와 Current Platform 선택, Representative / Fixed Geometry 분리, Radius에 연동한 90° Arc, µm/mm/cm 표시, 동일 Input identity / Backup에 additive science 설정을 추가했습니다. Si/SiN은 기존 Model을 그대로 호출합니다. IOX/LDW/Polymer의 전체 Index/Field/Bend dataset은 미확보이므로 NOT VERIFIED입니다. LDW의 single literature point와 Polymer의 propagation reference를 Bend Curve로 일반화하지 않습니다. Fixed Geometry의 loss도 재검증 전 Unsupported입니다. 기존 Course state 41 / Mode+Navigation physics 3469 PASS. Intermediate HTML은 artifacts/v2-p22/checkpoint-c.html로 생성합니다. 최종 CI / User Play는 아직 미검증입니다.
+
+### P2.2 Checkpoint D — Passive Geometry / Calculated Field
+
+C Remote `9270f0c` 이후 DC의 독립된 4 Port / Coupling Region / CMT power, PQ Eigenmode Expansion MMI Field / 1×2·2×2 topology, physical Y Taper Length, MZI complex output amplitude × numeric TE0 cross-section을 구현했습니다. Existing kernel은 변경하지 않았습니다. MMI의 nonorthogonal output overlap 및 grid asymmetry는 그대로 노출하고 Energy / Symmetry를 NOT VERIFIED로 표시합니다. New diagnostic/model checks 3552, existing Course 41 / Active 107, Course Browser 322 PASS입니다. Browser는 4 Viewport × Light/Dark에서 검사했습니다. Physical accuracy의 전체 PASS를 뜻하지 않습니다. Intermediate checkpoint-d.html을 생성했습니다.
