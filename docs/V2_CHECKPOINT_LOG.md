@@ -306,3 +306,7 @@ B Remote `b8f5d22`를 저장한 뒤 C를 진행했습니다. 5 Family와 Current
 ### P2.2 Checkpoint D — Passive Geometry / Calculated Field
 
 C Remote `9270f0c` 이후 DC의 독립된 4 Port / Coupling Region / CMT power, PQ Eigenmode Expansion MMI Field / 1×2·2×2 topology, physical Y Taper Length, MZI complex output amplitude × numeric TE0 cross-section을 구현했습니다. Existing kernel은 변경하지 않았습니다. MMI의 nonorthogonal output overlap 및 grid asymmetry는 그대로 노출하고 Energy / Symmetry를 NOT VERIFIED로 표시합니다. New diagnostic/model checks 3552, existing Course 41 / Active 107, Course Browser 322 PASS입니다. Browser는 4 Viewport × Light/Dark에서 검사했습니다. Physical accuracy의 전체 PASS를 뜻하지 않습니다. Intermediate checkpoint-d.html을 생성했습니다.
+
+### P2.2 Checkpoint E — PN multiphysics view
+
+D Remote `3e4c9ac` 이후 기존 PN profile / fractional carrier cell / EIM mode를 같은 좌표로 시각화했습니다. Rib·Slab·Contact·Depletion, Electron·Hole Density, Optical Intensity, Overlap, Δn_eff / Phase / Bias-specific Loss / Capacitance를 연결했습니다. 1D / perturbation approximation과 0 V / 1.5 V reference를 명시합니다. Kernel 변경 없음. New physics/model checks 3728 / 기존 Active 107 PASS. Browser 및 전체 Integration 결과는 F에서 기록합니다. Checkpoint E source를 먼저 보존합니다.

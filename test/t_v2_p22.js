@@ -24,6 +24,15 @@ try{
  for(let k=0;k<2;k++){let re=0,im=0;for(let i=0;i<q.grid.n;i++){let er=0,ei=0;for(let j=0;j<q.beta.length;j++){const ph=-(q.beta[j]-q.beta[0])*z.mmi.d.L;er+=q.c[j]*q.mmi.v[j][i]*Math.cos(ph);ei+=q.c[j]*q.mmi.v[j][i]*Math.sin(ph);}re+=er*q.outs[k][i]*dx;im+=ei*q.outs[k][i]*dx;}ok(Math.abs(re*re+im*im-q.P[k])<1e-8,p+type+' direct exit-field port overlap '+k);}
  ok(Math.abs(Math.sin(Math.PI*z.dc.d.L/(2*z.dc.Lpi))**2-z.dc.k)<1e-12,p+' CMT consistent');}}
  for(const ratio of [0,.2,.5,1])for(const phase of [0,Math.PI/2,Math.PI,2*Math.PI]){const a=P.amplitudes(ratio,phase),ideal=F.ideal(ratio,phase);ok(Math.abs(a.p1+a.p2-1)<1e-12,'MZI complex power conservation');ok(Math.abs(a.p1-ideal.main)<1e-12,'MZI port convention');}
+ const PN=w.eval('SMQ_V2_PN_SCIENCE'),A=w.eval('SMQ_V2_ACTIVE');
+ for(const platform of ['si1310','si1550','sin1310','sin1550']){const ctx=A.context(platform);let prev=null;for(const bias of [0,.1,1,1.5,2,3]){const q=PN.calculate(ctx,bias),p=q.p;
+ ok(Math.abs(p.NA*p.xp-p.ND*p.xn)/(p.NA*p.xp)<1e-12,'PN charge neutrality');
+ ok(Math.abs(q.cells.reduce((sum,c)=>sum+c.I*q.m.dx,0)-1)<1e-10,'PN normalized optical mode');
+ ok(q.cells.every(c=>c.n>=0&&c.h>=0&&Number.isFinite(c.n+c.h)),'PN physical mobile density');
+ const fresh=F.fresh(platform);C.ensure(fresh,platform);A.ensure(fresh);fresh.step='pn';fresh.activeDemo.reverseBias=bias;const result=F.evaluate(fresh,platform,3).active;
+ ok(Math.abs(q.deltaN-result.pn.deltaN)<1e-14&&Math.abs(q.phase-result.pn.phase)<1e-12,'PN rendered input and KPI identity');
+ if(prev){ok(q.p.Wd>prev.p.Wd&&q.Cp<prev.Cp,'PN depletion / capacitance trend');ok(q.loss<prev.loss&&q.deltaN>prev.deltaN,'PN loss / index trend');ok(q.overlap.n<prev.overlap.n&&q.overlap.h<prev.overlap.h,'PN optical carrier overlap decreases');ok(Math.abs(q.p.Wd**2/prev.p.Wd**2-(q.p.vbi+bias)/(q.p.vbi+prev.bias))<1e-12,'PN governing equation');}prev=q;
+ }}
  w.SMQ_V2.navigate('passive');let ui=w.SMQ_V2.foundations();ui.flush();ui.edit('2');ui.flush();
  ok(b.$('#scienceMode').options.length===7,'all TE/TM selectors');
  for(const mode of ['TE0','TE1','TE2','TE3']){b.$('#scienceMode').value=mode;b.$('#scienceMode').dispatchEvent(new w.Event('change'));ok(b.$('.science-field').dataset.mode===mode,'selected '+mode);}
