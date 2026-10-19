@@ -1,0 +1,502 @@
+PASS si1310: unchanged LAB arc loss at 1
+PASS si1310: physical geometry uses declared radius and width
+PASS si1310: passive power and honest model confidence
+PASS si1310: unchanged LAB arc loss at 4.5
+PASS si1310: physical geometry uses declared radius and width
+PASS si1310: passive power and honest model confidence
+PASS si1310: unchanged LAB arc loss at 8
+PASS si1310: physical geometry uses declared radius and width
+PASS si1310: passive power and honest model confidence
+PASS si1310: previous request cannot be current
+PASS si1310: previous revision invalidated
+PASS si1310: same revision on another design rejected
+PASS si1310: invalid radius rejected
+PASS si1310: invalid radius rejected
+PASS si1310: invalid radius rejected
+PASS si1310: invalid radius rejected
+PASS si1550: unchanged LAB arc loss at 1
+PASS si1550: physical geometry uses declared radius and width
+PASS si1550: passive power and honest model confidence
+PASS si1550: unchanged LAB arc loss at 5.5
+PASS si1550: physical geometry uses declared radius and width
+PASS si1550: passive power and honest model confidence
+PASS si1550: unchanged LAB arc loss at 10
+PASS si1550: physical geometry uses declared radius and width
+PASS si1550: passive power and honest model confidence
+PASS si1550: previous request cannot be current
+PASS si1550: previous revision invalidated
+PASS si1550: same revision on another design rejected
+PASS si1550: invalid radius rejected
+PASS si1550: invalid radius rejected
+PASS si1550: invalid radius rejected
+PASS si1550: invalid radius rejected
+PASS sin1310: unchanged LAB arc loss at 10
+PASS sin1310: physical geometry uses declared radius and width
+PASS sin1310: passive power and honest model confidence
+PASS sin1310: unchanged LAB arc loss at 45
+PASS sin1310: physical geometry uses declared radius and width
+PASS sin1310: passive power and honest model confidence
+PASS sin1310: unchanged LAB arc loss at 80
+PASS sin1310: physical geometry uses declared radius and width
+PASS sin1310: passive power and honest model confidence
+PASS sin1310: previous request cannot be current
+PASS sin1310: previous revision invalidated
+PASS sin1310: same revision on another design rejected
+PASS sin1310: invalid radius rejected
+PASS sin1310: invalid radius rejected
+PASS sin1310: invalid radius rejected
+PASS sin1310: invalid radius rejected
+PASS sin1550: unchanged LAB arc loss at 10
+PASS sin1550: physical geometry uses declared radius and width
+PASS sin1550: passive power and honest model confidence
+PASS sin1550: unchanged LAB arc loss at 55
+PASS sin1550: physical geometry uses declared radius and width
+PASS sin1550: passive power and honest model confidence
+PASS sin1550: unchanged LAB arc loss at 100
+PASS sin1550: physical geometry uses declared radius and width
+PASS sin1550: passive power and honest model confidence
+PASS sin1550: previous request cannot be current
+PASS sin1550: previous revision invalidated
+PASS sin1550: same revision on another design rejected
+PASS sin1550: invalid radius rejected
+PASS sin1550: invalid radius rejected
+PASS sin1550: invalid radius rejected
+PASS sin1550: invalid radius rejected
+PASS initial state evaluated without Verify
+PASS edit synchronously invalidates prior result
+PASS edited value evaluates
+PASS larger radius reduces radiation and increases area
+PASS physical view / plot / KPI use same full identity
+PASS comparison restore uses captured design
+PASS Original protected independently
+PASS Learn is read only for complete state
+PASS blank numeric value cannot borrow old result
+PASS out-of-domain numeric input rejected
+PASS Skip remains available for invalid input
+PASS P1 preserves existing smq3-studio bytes
+PASS P1 preserves existing smq3-designs bytes
+PASS P1 preserves existing smq3-lab bytes
+PASS P1 preserves existing smq3-db bytes
+PASS seed fixture not mutated
+PASS PR23 nested Journey preserved in Full Backup without granting v2 completion
+PASS Full Backup includes validated v2 workspace
+PASS structurally bad v2 backup rejected with valid checksum
+PASS old backup without v2 namespace remains valid
+PASS Full Restore applies validated v2 data transactionally
+PASS Undo Restore recovers preceding v2 design
+PASS reload preserves design identity and history
+PASS reload does not load saved current-result evidence
+PASS corrupt v2 raw bytes quarantined before reset
+PASS Continue without manipulation does not award completion
+PASS Skip does not award observed completion
+PASS failed v2 write announces Save failure
+PASS no script errors
+93 P1 state/model checks passed
+PASS si1310: valid additive MZM workspace
+PASS si1310: model never mutates inputs
+PASS si1310: exact unchanged Bench Vpi / optical loss
+PASS si1310: RF / EO / eye are the exact same Bench result
+PASS si1310: index / length phase equals Bench differential convention
+PASS si1310: same local PN slope sets effective-index perturbation
+PASS si1310: active-length VpiL invariant at 0.5
+PASS si1310: declared active/passive/1dB loss at 0.5
+PASS si1310: active-length VpiL invariant at 2
+PASS si1310: declared active/passive/1dB loss at 2
+PASS si1310: active-length VpiL invariant at 3
+PASS si1310: declared active/passive/1dB loss at 3
+PASS si1310: active-length VpiL invariant at 6
+PASS si1310: declared active/passive/1dB loss at 6
+PASS si1310: extended static sweep equals all original Bench transfer samples
+PASS si1310: main + complement conserve surviving power
+PASS si1310: constructive / destructive analytical limits
+PASS si1310: late request rejected
+PASS si1310: revision rejects stale evidence
+PASS si1310: equal revision on different design cannot borrow evidence
+PASS si1310: out-of-domain eye stays unavailable
+PASS si1310: static PN domain boundary explicitly unavailable
+PASS si1310: same current design loses raw gap at high symbol rate
+PASS si1310: 112 GBd PAM4 equals 224 Gb/s raw
+PASS si1310: driver bandwidth changes actual eye
+PASS si1310: same seed and design reproduce exact eye
+PASS si1310: PN geometry alone invalidates same-revision evidence
+PASS si1310: changed model signature rejected
+PASS si1310: folded levels cannot receive a model target
+PASS si1310: no fabricated BER/FEC/receiver/measurement result
+PASS si1550: valid additive MZM workspace
+PASS si1550: model never mutates inputs
+PASS si1550: exact unchanged Bench Vpi / optical loss
+PASS si1550: RF / EO / eye are the exact same Bench result
+PASS si1550: index / length phase equals Bench differential convention
+PASS si1550: same local PN slope sets effective-index perturbation
+PASS si1550: active-length VpiL invariant at 0.5
+PASS si1550: declared active/passive/1dB loss at 0.5
+PASS si1550: active-length VpiL invariant at 2
+PASS si1550: declared active/passive/1dB loss at 2
+PASS si1550: active-length VpiL invariant at 3
+PASS si1550: declared active/passive/1dB loss at 3
+PASS si1550: active-length VpiL invariant at 6
+PASS si1550: declared active/passive/1dB loss at 6
+PASS si1550: extended static sweep equals all original Bench transfer samples
+PASS si1550: main + complement conserve surviving power
+PASS si1550: constructive / destructive analytical limits
+PASS si1550: late request rejected
+PASS si1550: revision rejects stale evidence
+PASS si1550: equal revision on different design cannot borrow evidence
+PASS si1550: out-of-domain eye stays unavailable
+PASS si1550: static PN domain boundary explicitly unavailable
+PASS si1550: same current design loses raw gap at high symbol rate
+PASS si1550: 112 GBd PAM4 equals 224 Gb/s raw
+PASS si1550: driver bandwidth changes actual eye
+PASS si1550: same seed and design reproduce exact eye
+PASS si1550: PN geometry alone invalidates same-revision evidence
+PASS si1550: changed model signature rejected
+PASS si1550: folded levels cannot receive a model target
+PASS si1550: no fabricated BER/FEC/receiver/measurement result
+PASS sin1310: valid additive MZM workspace
+PASS sin1310: model never mutates inputs
+PASS sin1310: exact unchanged Bench Vpi / optical loss
+PASS sin1310: RF / EO / eye are the exact same Bench result
+PASS sin1310: index / length phase equals Bench differential convention
+PASS sin1310: same local PN slope sets effective-index perturbation
+PASS sin1310: active-length VpiL invariant at 0.5
+PASS sin1310: declared active/passive/1dB loss at 0.5
+PASS sin1310: active-length VpiL invariant at 2
+PASS sin1310: declared active/passive/1dB loss at 2
+PASS sin1310: active-length VpiL invariant at 3
+PASS sin1310: declared active/passive/1dB loss at 3
+PASS sin1310: active-length VpiL invariant at 6
+PASS sin1310: declared active/passive/1dB loss at 6
+PASS sin1310: extended static sweep equals all original Bench transfer samples
+PASS sin1310: main + complement conserve surviving power
+PASS sin1310: constructive / destructive analytical limits
+PASS sin1310: late request rejected
+PASS sin1310: revision rejects stale evidence
+PASS sin1310: equal revision on different design cannot borrow evidence
+PASS sin1310: out-of-domain eye stays unavailable
+PASS sin1310: static PN domain boundary explicitly unavailable
+PASS sin1310: same current design loses raw gap at high symbol rate
+PASS sin1310: 112 GBd PAM4 equals 224 Gb/s raw
+PASS sin1310: driver bandwidth changes actual eye
+PASS sin1310: same seed and design reproduce exact eye
+PASS sin1310: PN geometry alone invalidates same-revision evidence
+PASS sin1310: changed model signature rejected
+PASS sin1310: folded levels cannot receive a model target
+PASS sin1310: no fabricated BER/FEC/receiver/measurement result
+PASS sin1550: valid additive MZM workspace
+PASS sin1550: model never mutates inputs
+PASS sin1550: exact unchanged Bench Vpi / optical loss
+PASS sin1550: RF / EO / eye are the exact same Bench result
+PASS sin1550: index / length phase equals Bench differential convention
+PASS sin1550: same local PN slope sets effective-index perturbation
+PASS sin1550: active-length VpiL invariant at 0.5
+PASS sin1550: declared active/passive/1dB loss at 0.5
+PASS sin1550: active-length VpiL invariant at 2
+PASS sin1550: declared active/passive/1dB loss at 2
+PASS sin1550: active-length VpiL invariant at 3
+PASS sin1550: declared active/passive/1dB loss at 3
+PASS sin1550: active-length VpiL invariant at 6
+PASS sin1550: declared active/passive/1dB loss at 6
+PASS sin1550: extended static sweep equals all original Bench transfer samples
+PASS sin1550: main + complement conserve surviving power
+PASS sin1550: constructive / destructive analytical limits
+PASS sin1550: late request rejected
+PASS sin1550: revision rejects stale evidence
+PASS sin1550: equal revision on different design cannot borrow evidence
+PASS sin1550: out-of-domain eye stays unavailable
+PASS sin1550: static PN domain boundary explicitly unavailable
+PASS sin1550: same current design loses raw gap at high symbol rate
+PASS sin1550: 112 GBd PAM4 equals 224 Gb/s raw
+PASS sin1550: driver bandwidth changes actual eye
+PASS sin1550: same seed and design reproduce exact eye
+PASS sin1550: PN geometry alone invalidates same-revision evidence
+PASS sin1550: changed model signature rejected
+PASS sin1550: folded levels cannot receive a model target
+PASS sin1550: no fabricated BER/FEC/receiver/measurement result
+PASS invalid input rejected: L NaN
+PASS invalid input rejected: L 0.1
+PASS invalid input rejected: voltage 3
+PASS invalid input rejected: baud 112.5
+PASS invalid input rejected: driver 0
+PASS invalid input rejected: source 50.5
+PASS invalid input rejected: bias Infinity
+PASS P1 save remains valid without MZM data
+PASS P1 completion and Original preserved during additive migration
+PASS Length starts without Verify
+PASS input synchronously invalidates all current KPIs
+PASS new result uses current input
+PASS Learn open / close is byte-equivalent for design and progress
+PASS blank numeric draft cannot borrow earlier result
+PASS mode switch preserves invalid draft and cannot revive a target
+PASS Engineer mode keeps physical identity unchanged
+PASS Comparison restore creates new revision and recalculates
+PASS Original stays protected across captures and restores
+PASS Reference preview creates no completion
+PASS explicit Reference Apply recalculates and protects Original
+PASS P2 preserves legacy bytes: smq3-studio
+PASS P2 preserves legacy bytes: smq3-designs
+PASS Full Backup carries validated P2 inputs / history
+PASS valid-checksum malformed P2 backup rejected
+PASS late previous result cannot replace current UI identity
+PASS reload does not trust saved current-result evidence
+PASS reload preserves exact MZM identity and recalculates
+PASS old P1-only backup remains restorable
+PASS Full Restore transaction applies exact P2 design
+PASS Undo Restore recovers prior P2 state bytes
+PASS Continue without tune never awards Discover
+PASS failed P2 write exposes Backup recovery message
+PASS no P2 integration runtime errors
+PASS no model boot errors
+154 P2 model/state checks passed
+PASS si1310 valid workspace
+PASS si1310 exact wg table at 0.2
+PASS si1310 exact wg table at 0.3912833588372633
+PASS si1310 exact wg table at 0.4012833588372633
+PASS si1310 exact wg table at 2
+PASS si1310 TE1 cutoff observable
+PASS si1310 unitary field/power 0/0
+PASS si1310 unitary field/power 0/1.5707963267948966
+PASS si1310 unitary field/power 0/3.141592653589793
+PASS si1310 unitary field/power 0/15.707963267948966
+PASS si1310 unitary field/power 0.2/0
+PASS si1310 unitary field/power 0.2/1.5707963267948966
+PASS si1310 unitary field/power 0.2/3.141592653589793
+PASS si1310 unitary field/power 0.2/15.707963267948966
+PASS si1310 unitary field/power 0.5/0
+PASS si1310 unitary field/power 0.5/1.5707963267948966
+PASS si1310 unitary field/power 0.5/3.141592653589793
+PASS si1310 unitary field/power 0.5/15.707963267948966
+PASS si1310 unitary field/power 1/0
+PASS si1310 unitary field/power 1/1.5707963267948966
+PASS si1310 unitary field/power 1/3.141592653589793
+PASS si1310 unitary field/power 1/15.707963267948966
+PASS si1310 constructive/destructive selected port
+PASS si1310 beta deltaL gives pi
+PASS si1310 intro reuses live PN convention
+PASS si1310 stale revision invalid
+PASS si1310 stale request invalid
+PASS si1310 width enters model identity
+PASS si1310 malformed inputs rejected
+PASS si1550 valid workspace
+PASS si1550 exact wg table at 0.2
+PASS si1550 exact wg table at 0.4960381680546744
+PASS si1550 exact wg table at 0.5060381680546744
+PASS si1550 exact wg table at 2
+PASS si1550 TE1 cutoff observable
+PASS si1550 unitary field/power 0/0
+PASS si1550 unitary field/power 0/1.5707963267948966
+PASS si1550 unitary field/power 0/3.141592653589793
+PASS si1550 unitary field/power 0/15.707963267948966
+PASS si1550 unitary field/power 0.2/0
+PASS si1550 unitary field/power 0.2/1.5707963267948966
+PASS si1550 unitary field/power 0.2/3.141592653589793
+PASS si1550 unitary field/power 0.2/15.707963267948966
+PASS si1550 unitary field/power 0.5/0
+PASS si1550 unitary field/power 0.5/1.5707963267948966
+PASS si1550 unitary field/power 0.5/3.141592653589793
+PASS si1550 unitary field/power 0.5/15.707963267948966
+PASS si1550 unitary field/power 1/0
+PASS si1550 unitary field/power 1/1.5707963267948966
+PASS si1550 unitary field/power 1/3.141592653589793
+PASS si1550 unitary field/power 1/15.707963267948966
+PASS si1550 constructive/destructive selected port
+PASS si1550 beta deltaL gives pi
+PASS si1550 intro reuses live PN convention
+PASS si1550 stale revision invalid
+PASS si1550 stale request invalid
+PASS si1550 width enters model identity
+PASS si1550 malformed inputs rejected
+PASS sin1310 valid workspace
+PASS sin1310 exact wg table at 0.4
+PASS sin1310 exact wg table at 0.850037956277829
+PASS sin1310 exact wg table at 0.860037956277829
+PASS sin1310 exact wg table at 3
+PASS sin1310 TE1 cutoff observable
+PASS sin1310 unitary field/power 0/0
+PASS sin1310 unitary field/power 0/1.5707963267948966
+PASS sin1310 unitary field/power 0/3.141592653589793
+PASS sin1310 unitary field/power 0/15.707963267948966
+PASS sin1310 unitary field/power 0.2/0
+PASS sin1310 unitary field/power 0.2/1.5707963267948966
+PASS sin1310 unitary field/power 0.2/3.141592653589793
+PASS sin1310 unitary field/power 0.2/15.707963267948966
+PASS sin1310 unitary field/power 0.5/0
+PASS sin1310 unitary field/power 0.5/1.5707963267948966
+PASS sin1310 unitary field/power 0.5/3.141592653589793
+PASS sin1310 unitary field/power 0.5/15.707963267948966
+PASS sin1310 unitary field/power 1/0
+PASS sin1310 unitary field/power 1/1.5707963267948966
+PASS sin1310 unitary field/power 1/3.141592653589793
+PASS sin1310 unitary field/power 1/15.707963267948966
+PASS sin1310 constructive/destructive selected port
+PASS sin1310 beta deltaL gives pi
+PASS sin1310 intro reuses live PN convention
+PASS sin1310 stale revision invalid
+PASS sin1310 stale request invalid
+PASS sin1310 width enters model identity
+PASS sin1310 malformed inputs rejected
+PASS sin1550 valid workspace
+PASS sin1550 exact wg table at 0.4
+PASS sin1550 exact wg table at 1.1064862261702915
+PASS sin1550 exact wg table at 1.1164862261702913
+PASS sin1550 exact wg table at 3
+PASS sin1550 TE1 cutoff observable
+PASS sin1550 unitary field/power 0/0
+PASS sin1550 unitary field/power 0/1.5707963267948966
+PASS sin1550 unitary field/power 0/3.141592653589793
+PASS sin1550 unitary field/power 0/15.707963267948966
+PASS sin1550 unitary field/power 0.2/0
+PASS sin1550 unitary field/power 0.2/1.5707963267948966
+PASS sin1550 unitary field/power 0.2/3.141592653589793
+PASS sin1550 unitary field/power 0.2/15.707963267948966
+PASS sin1550 unitary field/power 0.5/0
+PASS sin1550 unitary field/power 0.5/1.5707963267948966
+PASS sin1550 unitary field/power 0.5/3.141592653589793
+PASS sin1550 unitary field/power 0.5/15.707963267948966
+PASS sin1550 unitary field/power 1/0
+PASS sin1550 unitary field/power 1/1.5707963267948966
+PASS sin1550 unitary field/power 1/3.141592653589793
+PASS sin1550 unitary field/power 1/15.707963267948966
+PASS sin1550 constructive/destructive selected port
+PASS sin1550 beta deltaL gives pi
+PASS sin1550 intro reuses live PN convention
+PASS sin1550 stale revision invalid
+PASS sin1550 stale request invalid
+PASS sin1550 width enters model identity
+PASS sin1550 malformed inputs rejected
+PASS additive migration preserves P1/P2 bytes
+PASS edit invalidates synchronously
+PASS new width same identity result
+PASS comparison restores inputs/recalculates
+PASS original protected
+PASS quick glossary content
+PASS learn/glossary read-only
+PASS invalid blank never borrows result
+PASS nonblocking observed progression
+PASS skip records distinct evidence
+PASS unobserved continue does not fabricate practice
+PASS intro never overwrites P2 inputs/completion
+PASS full backup supports foundations
+PASS valid-checksum malformed foundation backup rejected
+PASS reload resumes exact foundation inputs and history
+PASS full restore transaction
+PASS undo restore transaction
+PASS legacy bytes protected
+PASS zero foundation runtime errors
+135 P2.1 model/state checks passed
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> spec-to-mask-quest@2.0.0-alpha.3-p2-ux test:mzm-bench
+> node test/t_mzm_bench.js
+
+PASS lossless matched line: no reflection and unit transmitted power
+PASS matched lossy line gives exp(-alpha L) field attenuation
+PASS zero-length network is identity even with complex Zc
+PASS velocity match integral has stable analytic limit
+PASS one-cycle velocity mismatch cancels EO integral
+PASS invalid fractional probe rejected
+PASS si1310: analysis never changes input design
+PASS si1310: complete finite sweep
+PASS si1310: default EO equals existing engine at every frequency
+PASS si1310: DC electrode voltage respects source/load divider
+PASS si1310: passive two-port power bound
+PASS si1310: optical output power conservation including loss
+PASS si1310: quadrature has equal output powers at zero RF voltage
+PASS si1310: zero phase directs all surviving light to main
+PASS si1310: source voltage differs from electrode voltage and does not redefine S parameters
+PASS si1310: optical velocity mismatch affects EO, not electrical S21
+PASS si1310: terminated reflection distinguished from two-port S11
+PASS si1310: EO and electrical S21 are distinct
+PASS si1310: uncalibrated reference never marked verified
+PASS si1550: analysis never changes input design
+PASS si1550: complete finite sweep
+PASS si1550: default EO equals existing engine at every frequency
+PASS si1550: DC electrode voltage respects source/load divider
+PASS si1550: passive two-port power bound
+PASS si1550: optical output power conservation including loss
+PASS si1550: quadrature has equal output powers at zero RF voltage
+PASS si1550: zero phase directs all surviving light to main
+PASS si1550: source voltage differs from electrode voltage and does not redefine S parameters
+PASS si1550: optical velocity mismatch affects EO, not electrical S21
+PASS si1550: terminated reflection distinguished from two-port S11
+PASS si1550: EO and electrical S21 are distinct
+PASS si1550: uncalibrated reference never marked verified
+PASS sin1310: analysis never changes input design
+PASS sin1310: complete finite sweep
+PASS sin1310: default EO equals existing engine at every frequency
+PASS sin1310: DC electrode voltage respects source/load divider
+PASS sin1310: passive two-port power bound
+PASS sin1310: optical output power conservation including loss
+PASS sin1310: quadrature has equal output powers at zero RF voltage
+PASS sin1310: zero phase directs all surviving light to main
+PASS sin1310: source voltage differs from electrode voltage and does not redefine S parameters
+PASS sin1310: optical velocity mismatch affects EO, not electrical S21
+PASS sin1310: terminated reflection distinguished from two-port S11
+PASS sin1310: EO and electrical S21 are distinct
+PASS sin1310: uncalibrated reference never marked verified
+PASS sin1550: analysis never changes input design
+PASS sin1550: complete finite sweep
+PASS sin1550: default EO equals existing engine at every frequency
+PASS sin1550: DC electrode voltage respects source/load divider
+PASS sin1550: passive two-port power bound
+PASS sin1550: optical output power conservation including loss
+PASS sin1550: quadrature has equal output powers at zero RF voltage
+PASS sin1550: zero phase directs all surviving light to main
+PASS sin1550: source voltage differs from electrode voltage and does not redefine S parameters
+PASS sin1550: optical velocity mismatch affects EO, not electrical S21
+PASS sin1550: terminated reflection distinguished from two-port S11
+PASS sin1550: EO and electrical S21 are distinct
+PASS sin1550: uncalibrated reference never marked verified
+PASS beta.1 settings migrate additively without changing existing source
+PASS discrete settings reject fractional values
+PASS flat channel NRZ: exact analytical cosine level spacing
+PASS flat channel NRZ: no source amplitude renormalization / optical power gain
+PASS seeded NRZ eye repeats exactly
+PASS flat channel PAM4: exact analytical cosine level spacing
+PASS flat channel PAM4: no source amplitude renormalization / optical power gain
+PASS seeded PAM4 eye repeats exactly
+PASS si1310: live PN calculation does not mutate workspace geometry
+PASS si1310: complete finite 0–3 V PN sweep
+PASS si1310: increased reverse bias widens depletion and reduces capacitance / absorption
+PASS si1310: reverse bias propagates through RF / EO and dynamic eye
+PASS si1310: dynamic power bound and valid junction reverse bias
+PASS si1310: slower PAM4 has less ISI with identical channel / seed
+PASS si1310: NRZ / PAM4 grouping and raw-rate accounting
+PASS si1310: narrow driver closes eye instead of rescaling it open
+PASS si1310: forward-bias excursion cannot produce a valid eye
+PASS si1310: fixed card does not invent PN bias dependence
+PASS si1310: folded optical levels cannot claim an open data eye
+PASS si1550: live PN calculation does not mutate workspace geometry
+PASS si1550: complete finite 0–3 V PN sweep
+PASS si1550: increased reverse bias widens depletion and reduces capacitance / absorption
+PASS si1550: reverse bias propagates through RF / EO and dynamic eye
+PASS si1550: dynamic power bound and valid junction reverse bias
+PASS si1550: slower PAM4 has less ISI with identical channel / seed
+PASS si1550: NRZ / PAM4 grouping and raw-rate accounting
+PASS si1550: narrow driver closes eye instead of rescaling it open
+PASS si1550: forward-bias excursion cannot produce a valid eye
+PASS si1550: fixed card does not invent PN bias dependence
+PASS si1550: folded optical levels cannot claim an open data eye
+PASS sin1310: live PN calculation does not mutate workspace geometry
+PASS sin1310: complete finite 0–3 V PN sweep
+PASS sin1310: increased reverse bias widens depletion and reduces capacitance / absorption
+PASS sin1310: reverse bias propagates through RF / EO and dynamic eye
+PASS sin1310: dynamic power bound and valid junction reverse bias
+PASS sin1310: slower PAM4 has less ISI with identical channel / seed
+PASS sin1310: NRZ / PAM4 grouping and raw-rate accounting
+PASS sin1310: narrow driver closes eye instead of rescaling it open
+PASS sin1310: forward-bias excursion cannot produce a valid eye
+PASS sin1310: fixed card does not invent PN bias dependence
+PASS sin1310: folded optical levels cannot claim an open data eye
+PASS sin1550: live PN calculation does not mutate workspace geometry
+PASS sin1550: complete finite 0–3 V PN sweep
+PASS sin1550: increased reverse bias widens depletion and reduces capacitance / absorption
+PASS sin1550: reverse bias propagates through RF / EO and dynamic eye
+PASS sin1550: dynamic power bound and valid junction reverse bias
+PASS sin1550: slower PAM4 has less ISI with identical channel / seed
+PASS sin1550: NRZ / PAM4 grouping and raw-rate accounting
+PASS sin1550: narrow driver closes eye instead of rescaling it open
+PASS sin1550: forward-bias excursion cannot produce a valid eye
+PASS sin1550: fixed card does not invent PN bias dependence
+PASS sin1550: folded optical levels cannot claim an open data eye
+PASS missing live PN geometry rejected
+111 MZM bench model checks passed

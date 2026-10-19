@@ -1,0 +1,5512 @@
+{
+  "html": "/workspace/scratch/566872f71656/Spec-to-Mask/dist/spec-to-mask-v2.0.0-alpha.2-p2.html",
+  "htmlSHA256": "06ba8d5219598ac36949ac2c1be6a6033c07277b795396cc1947d7732858f99b",
+  "browser": "151.0.7922.34",
+  "checks": [
+    {
+      "ok": true,
+      "message": "length/discover/light/1440: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1440: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1440: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1440: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1440: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1440: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1440: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1440: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1440: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1440: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1440: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1440: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1440: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1440: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1440: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1440: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1440: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1440: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1440: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1440: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1440: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1440: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1440: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1440: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1440: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1440: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1440: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1440: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1440: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1440: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1440: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1440: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1440: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1440: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1440: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1440: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1440: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1440: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1440: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1440: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1440: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1440: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1440: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1440: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1440: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1440: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1440: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1440: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1440: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1440: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1440: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1440: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1440: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1440: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1440: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1440: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1440: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1440: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1440: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1440: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1440: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1440: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1440: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1440: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1440: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1440: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1440: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1440: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1440: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1440: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1440: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1440: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1440: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1440: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1440: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1440: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1440: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1440: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1440: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1440: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1440: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1440: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1440: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1440: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1440: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1440: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1440: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1440: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1440: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1440: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1440: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1440: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1440: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1440: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1440: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1440: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1440: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1440: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1440: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1440: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1440: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1440: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1440: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1440: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1440: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1440: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1440: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1440: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1440: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1440: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1440: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1440: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1440: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1440: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1440: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1440: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1440: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1440: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1440: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1440: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1440: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1440: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1440: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1440: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1440: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1440: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1440: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1440: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1440: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1440: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1440: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1440: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1440: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1440: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1440: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1440: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1440: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1440: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1440: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1440: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1440: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1440: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1440: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1440: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1440: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1440: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1440: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1440: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1440: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1440: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1440: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1440: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1440: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1440: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1440: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1440: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1366: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1366: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1366: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1366: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1366: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1366: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1366: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1366: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1366: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1366: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1366: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1366: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/1366: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1366: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1366: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1366: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1366: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1366: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1366: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1366: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1366: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1366: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1366: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1366: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1366: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/1366: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1366: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1366: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1366: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1366: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1366: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1366: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1366: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1366: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1366: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1366: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1366: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1366: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/1366: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1366: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1366: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1366: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1366: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1366: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1366: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1366: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1366: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1366: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1366: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1366: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1366: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/1366: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1366: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1366: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1366: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1366: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1366: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1366: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1366: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1366: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1366: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1366: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1366: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1366: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/1366: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1366: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1366: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1366: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1366: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1366: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1366: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1366: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1366: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1366: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1366: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1366: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1366: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/1366: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1366: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1366: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1366: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1366: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1366: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1366: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1366: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1366: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1366: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1366: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1366: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1366: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/1366: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1366: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1366: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1366: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1366: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1366: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1366: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1366: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1366: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1366: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1366: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1366: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1366: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/1366: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1366: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1366: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1366: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1366: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1366: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1366: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1366: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1366: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1366: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1366: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1366: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1366: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/1366: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1366: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1366: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1366: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1366: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1366: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1366: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1366: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1366: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1366: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1366: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1366: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1366: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/1366: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1366: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1366: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1366: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1366: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1366: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1366: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1366: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1366: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1366: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1366: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1366: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1366: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/1366: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1366: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1366: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1366: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1366: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1366: desktop has no page scroll"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1366: sidebar content fits"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1366: knob in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1366: physical in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1366: plot in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1366: kpis in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1366: actions in viewport"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1366: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/1366: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/390: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/390: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/390: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/390: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/390: primary knob above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/390: key KPI above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/390: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/390: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/390: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/390: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/390: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/390: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/390: primary knob above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/390: key KPI above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/390: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/390: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/390: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/390: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/390: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/390: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/390: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/390: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/390: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/390: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/390: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/390: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/390: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/390: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/390: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/390: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/390: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/390: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/390: primary knob above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/390: key KPI above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/390: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/390: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/390: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/390: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/390: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/390: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/390: primary knob above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/390: key KPI above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/390: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/390: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/390: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/390: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/390: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/390: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/390: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/390: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/390: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/390: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/390: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/390: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/390: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/390: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/390: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/390: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/390: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/390: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/390: primary knob above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/390: key KPI above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/390: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/390: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/390: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/390: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/390: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/390: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/390: primary knob above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/390: key KPI above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/390: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/390: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/390: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/390: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/390: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/390: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/390: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/390: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/390: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/390: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/390: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/390: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/390: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/390: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/320: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/320: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/320: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/320: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/320: primary knob above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/320: key KPI above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/320: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/light/320: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/320: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/320: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/320: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/320: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/320: primary knob above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/320: key KPI above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/320: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "length/discover/dark/320: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/320: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/320: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/320: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/320: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/320: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/light/320: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/320: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/320: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/320: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/320: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/320: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "length/engineer/dark/320: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/320: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/320: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/320: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/320: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/320: primary knob above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/320: key KPI above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/320: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/light/320: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/320: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/320: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/320: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/320: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/320: primary knob above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/320: key KPI above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/320: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "voltage/discover/dark/320: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/320: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/320: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/320: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/320: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/320: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/light/320: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/320: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/320: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/320: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/320: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/320: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "voltage/engineer/dark/320: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/320: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/320: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/320: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/320: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/320: primary knob above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/320: key KPI above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/320: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/light/320: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/320: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/320: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/320: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/320: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/320: primary knob above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/320: key KPI above fixed actions"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/320: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "eye/discover/dark/320: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/320: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/320: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/320: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/320: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/320: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/light/320: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/320: no horizontal overflow"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/320: visible buttons have 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/320: physical observation retained"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/320: primary control has 44px hit height"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/320: Korean learning question"
+    },
+    {
+      "ok": true,
+      "message": "eye/engineer/dark/320: physical / plot / KPI share current identity"
+    },
+    {
+      "ok": true,
+      "message": "shorter length trades higher Vpi for lower optical loss"
+    },
+    {
+      "ok": true,
+      "message": "actual tune + observation recorded"
+    },
+    {
+      "ok": true,
+      "message": "Comparison restores inputs and recomputes"
+    },
+    {
+      "ok": true,
+      "message": "Original protected"
+    },
+    {
+      "ok": true,
+      "message": "Learn describes current equations / conventions / raw rate"
+    },
+    {
+      "ok": true,
+      "message": "Learn / Escape preserves exact saved design and evidence"
+    },
+    {
+      "ok": true,
+      "message": "Learn returns focus"
+    },
+    {
+      "ok": true,
+      "message": "blank numeric input invalidates old result"
+    },
+    {
+      "ok": true,
+      "message": "numeric live update retains focus"
+    },
+    {
+      "ok": true,
+      "message": "Engineer mode alone preserves physical revision"
+    },
+    {
+      "ok": true,
+      "message": "Solution Preview does not award completion"
+    },
+    {
+      "ok": true,
+      "message": "explicit Reference Apply triggers fresh revision"
+    },
+    {
+      "ok": true,
+      "message": "voltage changes actual interference at same current length"
+    },
+    {
+      "ok": true,
+      "message": "interference conserves surviving power"
+    },
+    {
+      "ok": true,
+      "message": "higher symbol rate reduces actual raw eye gap"
+    },
+    {
+      "ok": true,
+      "message": "112 GBd PAM4 raw-rate label exact"
+    },
+    {
+      "ok": true,
+      "message": "Driver control changes live eye"
+    },
+    {
+      "ok": true,
+      "message": "keyboard Home evaluates declared lower endpoint"
+    },
+    {
+      "ok": true,
+      "message": "keyboard End evaluates declared upper endpoint"
+    },
+    {
+      "ok": true,
+      "message": "keyboard adjustment retains focus"
+    },
+    {
+      "ok": true,
+      "message": "native touch produces current observation at 390"
+    },
+    {
+      "ok": true,
+      "message": "native touch produces current observation at 320"
+    },
+    {
+      "ok": true,
+      "message": "platform workspaces independent"
+    },
+    {
+      "ok": true,
+      "message": "reload resumes identity and recalculates"
+    },
+    {
+      "ok": true,
+      "message": "Full Backup includes P2 workspace"
+    },
+    {
+      "ok": true,
+      "message": "P2 backup validates"
+    },
+    {
+      "ok": true,
+      "message": "P2 preserves legacy storage bytes"
+    },
+    {
+      "ok": true,
+      "message": "P2 stops at Summary"
+    },
+    {
+      "ok": true,
+      "message": "no automatic P3 or engineering certification"
+    },
+    {
+      "ok": true,
+      "message": "zero browser runtime errors"
+    },
+    {
+      "ok": true,
+      "message": "zero external runtime HTTP"
+    }
+  ],
+  "bounds": [
+    {
+      "width": 1440,
+      "height": 900,
+      "experiment": "length",
+      "mode": "discover",
+      "theme": "light",
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "knob": {
+        "x": 879.796875,
+        "y": 318.78125,
+        "width": 517.203125,
+        "height": 44,
+        "top": 318.78125,
+        "right": 1397,
+        "bottom": 362.78125,
+        "left": 879.796875
+      },
+      "physical": {
+        "x": 28,
+        "y": 207.78125,
+        "width": 820.796875,
+        "height": 394.09375,
+        "top": 207.78125,
+        "right": 848.796875,
+        "bottom": 601.875,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 617.875,
+        "width": 820.796875,
+        "height": 260.125,
+        "top": 617.875,
+        "right": 848.796875,
+        "bottom": 878,
+        "left": 28
+      },
+      "kpis": {
+        "x": 879.796875,
+        "y": 376.96875,
+        "width": 517.203125,
+        "height": 85.921875,
+        "top": 376.96875,
+        "right": 1397,
+        "bottom": 462.890625,
+        "left": 879.796875
+      },
+      "actions": {
+        "x": 879.796875,
+        "y": 819,
+        "width": 517.203125,
+        "height": 44,
+        "top": 819,
+        "right": 1397,
+        "bottom": 863,
+        "left": 879.796875
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "experiment": "length",
+      "mode": "discover",
+      "theme": "dark",
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "knob": {
+        "x": 879.796875,
+        "y": 318.78125,
+        "width": 517.203125,
+        "height": 44,
+        "top": 318.78125,
+        "right": 1397,
+        "bottom": 362.78125,
+        "left": 879.796875
+      },
+      "physical": {
+        "x": 28,
+        "y": 207.78125,
+        "width": 820.796875,
+        "height": 394.09375,
+        "top": 207.78125,
+        "right": 848.796875,
+        "bottom": 601.875,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 617.875,
+        "width": 820.796875,
+        "height": 260.125,
+        "top": 617.875,
+        "right": 848.796875,
+        "bottom": 878,
+        "left": 28
+      },
+      "kpis": {
+        "x": 879.796875,
+        "y": 376.96875,
+        "width": 517.203125,
+        "height": 85.921875,
+        "top": 376.96875,
+        "right": 1397,
+        "bottom": 462.890625,
+        "left": 879.796875
+      },
+      "actions": {
+        "x": 879.796875,
+        "y": 819,
+        "width": 517.203125,
+        "height": 44,
+        "top": 819,
+        "right": 1397,
+        "bottom": 863,
+        "left": 879.796875
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "experiment": "length",
+      "mode": "engineer",
+      "theme": "light",
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "knob": {
+        "x": 879.796875,
+        "y": 318.78125,
+        "width": 517.203125,
+        "height": 44,
+        "top": 318.78125,
+        "right": 1397,
+        "bottom": 362.78125,
+        "left": 879.796875
+      },
+      "physical": {
+        "x": 28,
+        "y": 207.78125,
+        "width": 820.796875,
+        "height": 394.09375,
+        "top": 207.78125,
+        "right": 848.796875,
+        "bottom": 601.875,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 617.875,
+        "width": 820.796875,
+        "height": 260.125,
+        "top": 617.875,
+        "right": 848.796875,
+        "bottom": 878,
+        "left": 28
+      },
+      "kpis": {
+        "x": 879.796875,
+        "y": 376.96875,
+        "width": 517.203125,
+        "height": 85.921875,
+        "top": 376.96875,
+        "right": 1397,
+        "bottom": 462.890625,
+        "left": 879.796875
+      },
+      "actions": {
+        "x": 879.796875,
+        "y": 819,
+        "width": 517.203125,
+        "height": 44,
+        "top": 819,
+        "right": 1397,
+        "bottom": 863,
+        "left": 879.796875
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "experiment": "length",
+      "mode": "engineer",
+      "theme": "dark",
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "knob": {
+        "x": 879.796875,
+        "y": 318.78125,
+        "width": 517.203125,
+        "height": 44,
+        "top": 318.78125,
+        "right": 1397,
+        "bottom": 362.78125,
+        "left": 879.796875
+      },
+      "physical": {
+        "x": 28,
+        "y": 207.78125,
+        "width": 820.796875,
+        "height": 394.09375,
+        "top": 207.78125,
+        "right": 848.796875,
+        "bottom": 601.875,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 617.875,
+        "width": 820.796875,
+        "height": 260.125,
+        "top": 617.875,
+        "right": 848.796875,
+        "bottom": 878,
+        "left": 28
+      },
+      "kpis": {
+        "x": 879.796875,
+        "y": 376.96875,
+        "width": 517.203125,
+        "height": 85.921875,
+        "top": 376.96875,
+        "right": 1397,
+        "bottom": 462.890625,
+        "left": 879.796875
+      },
+      "actions": {
+        "x": 879.796875,
+        "y": 819,
+        "width": 517.203125,
+        "height": 44,
+        "top": 819,
+        "right": 1397,
+        "bottom": 863,
+        "left": 879.796875
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "experiment": "voltage",
+      "mode": "discover",
+      "theme": "light",
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "knob": {
+        "x": 879.796875,
+        "y": 318.78125,
+        "width": 517.203125,
+        "height": 44,
+        "top": 318.78125,
+        "right": 1397,
+        "bottom": 362.78125,
+        "left": 879.796875
+      },
+      "physical": {
+        "x": 28,
+        "y": 207.78125,
+        "width": 820.796875,
+        "height": 394.09375,
+        "top": 207.78125,
+        "right": 848.796875,
+        "bottom": 601.875,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 617.875,
+        "width": 820.796875,
+        "height": 260.125,
+        "top": 617.875,
+        "right": 848.796875,
+        "bottom": 878,
+        "left": 28
+      },
+      "kpis": {
+        "x": 879.796875,
+        "y": 376.96875,
+        "width": 517.203125,
+        "height": 85.921875,
+        "top": 376.96875,
+        "right": 1397,
+        "bottom": 462.890625,
+        "left": 879.796875
+      },
+      "actions": {
+        "x": 879.796875,
+        "y": 819,
+        "width": 517.203125,
+        "height": 44,
+        "top": 819,
+        "right": 1397,
+        "bottom": 863,
+        "left": 879.796875
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "experiment": "voltage",
+      "mode": "discover",
+      "theme": "dark",
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "knob": {
+        "x": 879.796875,
+        "y": 318.78125,
+        "width": 517.203125,
+        "height": 44,
+        "top": 318.78125,
+        "right": 1397,
+        "bottom": 362.78125,
+        "left": 879.796875
+      },
+      "physical": {
+        "x": 28,
+        "y": 207.78125,
+        "width": 820.796875,
+        "height": 394.09375,
+        "top": 207.78125,
+        "right": 848.796875,
+        "bottom": 601.875,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 617.875,
+        "width": 820.796875,
+        "height": 260.125,
+        "top": 617.875,
+        "right": 848.796875,
+        "bottom": 878,
+        "left": 28
+      },
+      "kpis": {
+        "x": 879.796875,
+        "y": 376.96875,
+        "width": 517.203125,
+        "height": 85.921875,
+        "top": 376.96875,
+        "right": 1397,
+        "bottom": 462.890625,
+        "left": 879.796875
+      },
+      "actions": {
+        "x": 879.796875,
+        "y": 819,
+        "width": 517.203125,
+        "height": 44,
+        "top": 819,
+        "right": 1397,
+        "bottom": 863,
+        "left": 879.796875
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "experiment": "voltage",
+      "mode": "engineer",
+      "theme": "light",
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "knob": {
+        "x": 879.796875,
+        "y": 318.78125,
+        "width": 517.203125,
+        "height": 44,
+        "top": 318.78125,
+        "right": 1397,
+        "bottom": 362.78125,
+        "left": 879.796875
+      },
+      "physical": {
+        "x": 28,
+        "y": 207.78125,
+        "width": 820.796875,
+        "height": 394.09375,
+        "top": 207.78125,
+        "right": 848.796875,
+        "bottom": 601.875,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 617.875,
+        "width": 820.796875,
+        "height": 260.125,
+        "top": 617.875,
+        "right": 848.796875,
+        "bottom": 878,
+        "left": 28
+      },
+      "kpis": {
+        "x": 879.796875,
+        "y": 376.96875,
+        "width": 517.203125,
+        "height": 85.921875,
+        "top": 376.96875,
+        "right": 1397,
+        "bottom": 462.890625,
+        "left": 879.796875
+      },
+      "actions": {
+        "x": 879.796875,
+        "y": 819,
+        "width": 517.203125,
+        "height": 44,
+        "top": 819,
+        "right": 1397,
+        "bottom": 863,
+        "left": 879.796875
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "experiment": "voltage",
+      "mode": "engineer",
+      "theme": "dark",
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "knob": {
+        "x": 879.796875,
+        "y": 318.78125,
+        "width": 517.203125,
+        "height": 44,
+        "top": 318.78125,
+        "right": 1397,
+        "bottom": 362.78125,
+        "left": 879.796875
+      },
+      "physical": {
+        "x": 28,
+        "y": 207.78125,
+        "width": 820.796875,
+        "height": 394.09375,
+        "top": 207.78125,
+        "right": 848.796875,
+        "bottom": 601.875,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 617.875,
+        "width": 820.796875,
+        "height": 260.125,
+        "top": 617.875,
+        "right": 848.796875,
+        "bottom": 878,
+        "left": 28
+      },
+      "kpis": {
+        "x": 879.796875,
+        "y": 376.96875,
+        "width": 517.203125,
+        "height": 85.921875,
+        "top": 376.96875,
+        "right": 1397,
+        "bottom": 462.890625,
+        "left": 879.796875
+      },
+      "actions": {
+        "x": 879.796875,
+        "y": 819,
+        "width": 517.203125,
+        "height": 44,
+        "top": 819,
+        "right": 1397,
+        "bottom": 863,
+        "left": 879.796875
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "experiment": "eye",
+      "mode": "discover",
+      "theme": "light",
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "knob": {
+        "x": 879.796875,
+        "y": 318.78125,
+        "width": 517.203125,
+        "height": 44,
+        "top": 318.78125,
+        "right": 1397,
+        "bottom": 362.78125,
+        "left": 879.796875
+      },
+      "physical": {
+        "x": 28,
+        "y": 207.78125,
+        "width": 820.796875,
+        "height": 394.09375,
+        "top": 207.78125,
+        "right": 848.796875,
+        "bottom": 601.875,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 617.875,
+        "width": 820.796875,
+        "height": 260.125,
+        "top": 617.875,
+        "right": 848.796875,
+        "bottom": 878,
+        "left": 28
+      },
+      "kpis": {
+        "x": 879.796875,
+        "y": 376.96875,
+        "width": 517.203125,
+        "height": 85.921875,
+        "top": 376.96875,
+        "right": 1397,
+        "bottom": 462.890625,
+        "left": 879.796875
+      },
+      "actions": {
+        "x": 879.796875,
+        "y": 819,
+        "width": 517.203125,
+        "height": 44,
+        "top": 819,
+        "right": 1397,
+        "bottom": 863,
+        "left": 879.796875
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "experiment": "eye",
+      "mode": "discover",
+      "theme": "dark",
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "knob": {
+        "x": 879.796875,
+        "y": 318.78125,
+        "width": 517.203125,
+        "height": 44,
+        "top": 318.78125,
+        "right": 1397,
+        "bottom": 362.78125,
+        "left": 879.796875
+      },
+      "physical": {
+        "x": 28,
+        "y": 207.78125,
+        "width": 820.796875,
+        "height": 394.09375,
+        "top": 207.78125,
+        "right": 848.796875,
+        "bottom": 601.875,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 617.875,
+        "width": 820.796875,
+        "height": 260.125,
+        "top": 617.875,
+        "right": 848.796875,
+        "bottom": 878,
+        "left": 28
+      },
+      "kpis": {
+        "x": 879.796875,
+        "y": 376.96875,
+        "width": 517.203125,
+        "height": 85.921875,
+        "top": 376.96875,
+        "right": 1397,
+        "bottom": 462.890625,
+        "left": 879.796875
+      },
+      "actions": {
+        "x": 879.796875,
+        "y": 819,
+        "width": 517.203125,
+        "height": 44,
+        "top": 819,
+        "right": 1397,
+        "bottom": 863,
+        "left": 879.796875
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "experiment": "eye",
+      "mode": "engineer",
+      "theme": "light",
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "knob": {
+        "x": 879.796875,
+        "y": 318.78125,
+        "width": 517.203125,
+        "height": 44,
+        "top": 318.78125,
+        "right": 1397,
+        "bottom": 362.78125,
+        "left": 879.796875
+      },
+      "physical": {
+        "x": 28,
+        "y": 207.78125,
+        "width": 820.796875,
+        "height": 394.09375,
+        "top": 207.78125,
+        "right": 848.796875,
+        "bottom": 601.875,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 617.875,
+        "width": 820.796875,
+        "height": 260.125,
+        "top": 617.875,
+        "right": 848.796875,
+        "bottom": 878,
+        "left": 28
+      },
+      "kpis": {
+        "x": 879.796875,
+        "y": 376.96875,
+        "width": 517.203125,
+        "height": 85.921875,
+        "top": 376.96875,
+        "right": 1397,
+        "bottom": 462.890625,
+        "left": 879.796875
+      },
+      "actions": {
+        "x": 879.796875,
+        "y": 819,
+        "width": 517.203125,
+        "height": 44,
+        "top": 819,
+        "right": 1397,
+        "bottom": 863,
+        "left": 879.796875
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "experiment": "eye",
+      "mode": "engineer",
+      "theme": "dark",
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "knob": {
+        "x": 879.796875,
+        "y": 318.78125,
+        "width": 517.203125,
+        "height": 44,
+        "top": 318.78125,
+        "right": 1397,
+        "bottom": 362.78125,
+        "left": 879.796875
+      },
+      "physical": {
+        "x": 28,
+        "y": 207.78125,
+        "width": 820.796875,
+        "height": 394.09375,
+        "top": 207.78125,
+        "right": 848.796875,
+        "bottom": 601.875,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 617.875,
+        "width": 820.796875,
+        "height": 260.125,
+        "top": 617.875,
+        "right": 848.796875,
+        "bottom": 878,
+        "left": 28
+      },
+      "kpis": {
+        "x": 879.796875,
+        "y": 376.96875,
+        "width": 517.203125,
+        "height": 85.921875,
+        "top": 376.96875,
+        "right": 1397,
+        "bottom": 462.890625,
+        "left": 879.796875
+      },
+      "actions": {
+        "x": 879.796875,
+        "y": 819,
+        "width": 517.203125,
+        "height": 44,
+        "top": 819,
+        "right": 1397,
+        "bottom": 863,
+        "left": 879.796875
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "experiment": "length",
+      "mode": "discover",
+      "theme": "light",
+      "scrollWidth": 1366,
+      "scrollHeight": 768,
+      "knob": {
+        "x": 835.390625,
+        "y": 305,
+        "width": 487.59375,
+        "height": 44,
+        "top": 305,
+        "right": 1322.984375,
+        "bottom": 349,
+        "left": 835.390625
+      },
+      "physical": {
+        "x": 28,
+        "y": 194,
+        "width": 776.390625,
+        "height": 322.890625,
+        "top": 194,
+        "right": 804.390625,
+        "bottom": 516.890625,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 532.890625,
+        "width": 776.390625,
+        "height": 213.09375,
+        "top": 532.890625,
+        "right": 804.390625,
+        "bottom": 745.984375,
+        "left": 28
+      },
+      "kpis": {
+        "x": 835.390625,
+        "y": 363.1875,
+        "width": 487.59375,
+        "height": 85.921875,
+        "top": 363.1875,
+        "right": 1322.984375,
+        "bottom": 449.109375,
+        "left": 835.390625
+      },
+      "actions": {
+        "x": 835.390625,
+        "y": 686.984375,
+        "width": 487.59375,
+        "height": 44,
+        "top": 686.984375,
+        "right": 1322.984375,
+        "bottom": 730.984375,
+        "left": 835.390625
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "experiment": "length",
+      "mode": "discover",
+      "theme": "dark",
+      "scrollWidth": 1366,
+      "scrollHeight": 768,
+      "knob": {
+        "x": 835.390625,
+        "y": 305,
+        "width": 487.59375,
+        "height": 44,
+        "top": 305,
+        "right": 1322.984375,
+        "bottom": 349,
+        "left": 835.390625
+      },
+      "physical": {
+        "x": 28,
+        "y": 194,
+        "width": 776.390625,
+        "height": 322.890625,
+        "top": 194,
+        "right": 804.390625,
+        "bottom": 516.890625,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 532.890625,
+        "width": 776.390625,
+        "height": 213.09375,
+        "top": 532.890625,
+        "right": 804.390625,
+        "bottom": 745.984375,
+        "left": 28
+      },
+      "kpis": {
+        "x": 835.390625,
+        "y": 363.1875,
+        "width": 487.59375,
+        "height": 85.921875,
+        "top": 363.1875,
+        "right": 1322.984375,
+        "bottom": 449.109375,
+        "left": 835.390625
+      },
+      "actions": {
+        "x": 835.390625,
+        "y": 686.984375,
+        "width": 487.59375,
+        "height": 44,
+        "top": 686.984375,
+        "right": 1322.984375,
+        "bottom": 730.984375,
+        "left": 835.390625
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "experiment": "length",
+      "mode": "engineer",
+      "theme": "light",
+      "scrollWidth": 1366,
+      "scrollHeight": 768,
+      "knob": {
+        "x": 835.390625,
+        "y": 305,
+        "width": 487.59375,
+        "height": 44,
+        "top": 305,
+        "right": 1322.984375,
+        "bottom": 349,
+        "left": 835.390625
+      },
+      "physical": {
+        "x": 28,
+        "y": 194,
+        "width": 776.390625,
+        "height": 322.890625,
+        "top": 194,
+        "right": 804.390625,
+        "bottom": 516.890625,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 532.890625,
+        "width": 776.390625,
+        "height": 213.09375,
+        "top": 532.890625,
+        "right": 804.390625,
+        "bottom": 745.984375,
+        "left": 28
+      },
+      "kpis": {
+        "x": 835.390625,
+        "y": 363.1875,
+        "width": 487.59375,
+        "height": 85.921875,
+        "top": 363.1875,
+        "right": 1322.984375,
+        "bottom": 449.109375,
+        "left": 835.390625
+      },
+      "actions": {
+        "x": 835.390625,
+        "y": 694.96875,
+        "width": 487.59375,
+        "height": 44,
+        "top": 694.96875,
+        "right": 1322.984375,
+        "bottom": 738.96875,
+        "left": 835.390625
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "experiment": "length",
+      "mode": "engineer",
+      "theme": "dark",
+      "scrollWidth": 1366,
+      "scrollHeight": 768,
+      "knob": {
+        "x": 835.390625,
+        "y": 305,
+        "width": 487.59375,
+        "height": 44,
+        "top": 305,
+        "right": 1322.984375,
+        "bottom": 349,
+        "left": 835.390625
+      },
+      "physical": {
+        "x": 28,
+        "y": 194,
+        "width": 776.390625,
+        "height": 322.890625,
+        "top": 194,
+        "right": 804.390625,
+        "bottom": 516.890625,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 532.890625,
+        "width": 776.390625,
+        "height": 213.09375,
+        "top": 532.890625,
+        "right": 804.390625,
+        "bottom": 745.984375,
+        "left": 28
+      },
+      "kpis": {
+        "x": 835.390625,
+        "y": 363.1875,
+        "width": 487.59375,
+        "height": 85.921875,
+        "top": 363.1875,
+        "right": 1322.984375,
+        "bottom": 449.109375,
+        "left": 835.390625
+      },
+      "actions": {
+        "x": 835.390625,
+        "y": 694.96875,
+        "width": 487.59375,
+        "height": 44,
+        "top": 694.96875,
+        "right": 1322.984375,
+        "bottom": 738.96875,
+        "left": 835.390625
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "experiment": "voltage",
+      "mode": "discover",
+      "theme": "light",
+      "scrollWidth": 1366,
+      "scrollHeight": 768,
+      "knob": {
+        "x": 835.390625,
+        "y": 305,
+        "width": 487.59375,
+        "height": 44,
+        "top": 305,
+        "right": 1322.984375,
+        "bottom": 349,
+        "left": 835.390625
+      },
+      "physical": {
+        "x": 28,
+        "y": 194,
+        "width": 776.390625,
+        "height": 322.890625,
+        "top": 194,
+        "right": 804.390625,
+        "bottom": 516.890625,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 532.890625,
+        "width": 776.390625,
+        "height": 213.09375,
+        "top": 532.890625,
+        "right": 804.390625,
+        "bottom": 745.984375,
+        "left": 28
+      },
+      "kpis": {
+        "x": 835.390625,
+        "y": 363.1875,
+        "width": 487.59375,
+        "height": 85.921875,
+        "top": 363.1875,
+        "right": 1322.984375,
+        "bottom": 449.109375,
+        "left": 835.390625
+      },
+      "actions": {
+        "x": 835.390625,
+        "y": 686.984375,
+        "width": 487.59375,
+        "height": 44,
+        "top": 686.984375,
+        "right": 1322.984375,
+        "bottom": 730.984375,
+        "left": 835.390625
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "experiment": "voltage",
+      "mode": "discover",
+      "theme": "dark",
+      "scrollWidth": 1366,
+      "scrollHeight": 768,
+      "knob": {
+        "x": 835.390625,
+        "y": 305,
+        "width": 487.59375,
+        "height": 44,
+        "top": 305,
+        "right": 1322.984375,
+        "bottom": 349,
+        "left": 835.390625
+      },
+      "physical": {
+        "x": 28,
+        "y": 194,
+        "width": 776.390625,
+        "height": 322.890625,
+        "top": 194,
+        "right": 804.390625,
+        "bottom": 516.890625,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 532.890625,
+        "width": 776.390625,
+        "height": 213.09375,
+        "top": 532.890625,
+        "right": 804.390625,
+        "bottom": 745.984375,
+        "left": 28
+      },
+      "kpis": {
+        "x": 835.390625,
+        "y": 363.1875,
+        "width": 487.59375,
+        "height": 85.921875,
+        "top": 363.1875,
+        "right": 1322.984375,
+        "bottom": 449.109375,
+        "left": 835.390625
+      },
+      "actions": {
+        "x": 835.390625,
+        "y": 686.984375,
+        "width": 487.59375,
+        "height": 44,
+        "top": 686.984375,
+        "right": 1322.984375,
+        "bottom": 730.984375,
+        "left": 835.390625
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "experiment": "voltage",
+      "mode": "engineer",
+      "theme": "light",
+      "scrollWidth": 1366,
+      "scrollHeight": 768,
+      "knob": {
+        "x": 835.390625,
+        "y": 305,
+        "width": 487.59375,
+        "height": 44,
+        "top": 305,
+        "right": 1322.984375,
+        "bottom": 349,
+        "left": 835.390625
+      },
+      "physical": {
+        "x": 28,
+        "y": 194,
+        "width": 776.390625,
+        "height": 322.890625,
+        "top": 194,
+        "right": 804.390625,
+        "bottom": 516.890625,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 532.890625,
+        "width": 776.390625,
+        "height": 213.09375,
+        "top": 532.890625,
+        "right": 804.390625,
+        "bottom": 745.984375,
+        "left": 28
+      },
+      "kpis": {
+        "x": 835.390625,
+        "y": 363.1875,
+        "width": 487.59375,
+        "height": 85.921875,
+        "top": 363.1875,
+        "right": 1322.984375,
+        "bottom": 449.109375,
+        "left": 835.390625
+      },
+      "actions": {
+        "x": 835.390625,
+        "y": 694.96875,
+        "width": 487.59375,
+        "height": 44,
+        "top": 694.96875,
+        "right": 1322.984375,
+        "bottom": 738.96875,
+        "left": 835.390625
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "experiment": "voltage",
+      "mode": "engineer",
+      "theme": "dark",
+      "scrollWidth": 1366,
+      "scrollHeight": 768,
+      "knob": {
+        "x": 835.390625,
+        "y": 305,
+        "width": 487.59375,
+        "height": 44,
+        "top": 305,
+        "right": 1322.984375,
+        "bottom": 349,
+        "left": 835.390625
+      },
+      "physical": {
+        "x": 28,
+        "y": 194,
+        "width": 776.390625,
+        "height": 322.890625,
+        "top": 194,
+        "right": 804.390625,
+        "bottom": 516.890625,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 532.890625,
+        "width": 776.390625,
+        "height": 213.09375,
+        "top": 532.890625,
+        "right": 804.390625,
+        "bottom": 745.984375,
+        "left": 28
+      },
+      "kpis": {
+        "x": 835.390625,
+        "y": 363.1875,
+        "width": 487.59375,
+        "height": 85.921875,
+        "top": 363.1875,
+        "right": 1322.984375,
+        "bottom": 449.109375,
+        "left": 835.390625
+      },
+      "actions": {
+        "x": 835.390625,
+        "y": 694.96875,
+        "width": 487.59375,
+        "height": 44,
+        "top": 694.96875,
+        "right": 1322.984375,
+        "bottom": 738.96875,
+        "left": 835.390625
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "experiment": "eye",
+      "mode": "discover",
+      "theme": "light",
+      "scrollWidth": 1366,
+      "scrollHeight": 768,
+      "knob": {
+        "x": 835.390625,
+        "y": 305,
+        "width": 487.59375,
+        "height": 44,
+        "top": 305,
+        "right": 1322.984375,
+        "bottom": 349,
+        "left": 835.390625
+      },
+      "physical": {
+        "x": 28,
+        "y": 194,
+        "width": 776.390625,
+        "height": 322.890625,
+        "top": 194,
+        "right": 804.390625,
+        "bottom": 516.890625,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 532.890625,
+        "width": 776.390625,
+        "height": 213.09375,
+        "top": 532.890625,
+        "right": 804.390625,
+        "bottom": 745.984375,
+        "left": 28
+      },
+      "kpis": {
+        "x": 835.390625,
+        "y": 363.1875,
+        "width": 487.59375,
+        "height": 85.921875,
+        "top": 363.1875,
+        "right": 1322.984375,
+        "bottom": 449.109375,
+        "left": 835.390625
+      },
+      "actions": {
+        "x": 835.390625,
+        "y": 686.984375,
+        "width": 487.59375,
+        "height": 44,
+        "top": 686.984375,
+        "right": 1322.984375,
+        "bottom": 730.984375,
+        "left": 835.390625
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "experiment": "eye",
+      "mode": "discover",
+      "theme": "dark",
+      "scrollWidth": 1366,
+      "scrollHeight": 768,
+      "knob": {
+        "x": 835.390625,
+        "y": 305,
+        "width": 487.59375,
+        "height": 44,
+        "top": 305,
+        "right": 1322.984375,
+        "bottom": 349,
+        "left": 835.390625
+      },
+      "physical": {
+        "x": 28,
+        "y": 194,
+        "width": 776.390625,
+        "height": 322.890625,
+        "top": 194,
+        "right": 804.390625,
+        "bottom": 516.890625,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 532.890625,
+        "width": 776.390625,
+        "height": 213.09375,
+        "top": 532.890625,
+        "right": 804.390625,
+        "bottom": 745.984375,
+        "left": 28
+      },
+      "kpis": {
+        "x": 835.390625,
+        "y": 363.1875,
+        "width": 487.59375,
+        "height": 85.921875,
+        "top": 363.1875,
+        "right": 1322.984375,
+        "bottom": 449.109375,
+        "left": 835.390625
+      },
+      "actions": {
+        "x": 835.390625,
+        "y": 686.984375,
+        "width": 487.59375,
+        "height": 44,
+        "top": 686.984375,
+        "right": 1322.984375,
+        "bottom": 730.984375,
+        "left": 835.390625
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "experiment": "eye",
+      "mode": "engineer",
+      "theme": "light",
+      "scrollWidth": 1366,
+      "scrollHeight": 768,
+      "knob": {
+        "x": 835.390625,
+        "y": 305,
+        "width": 487.59375,
+        "height": 44,
+        "top": 305,
+        "right": 1322.984375,
+        "bottom": 349,
+        "left": 835.390625
+      },
+      "physical": {
+        "x": 28,
+        "y": 194,
+        "width": 776.390625,
+        "height": 322.890625,
+        "top": 194,
+        "right": 804.390625,
+        "bottom": 516.890625,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 532.890625,
+        "width": 776.390625,
+        "height": 213.09375,
+        "top": 532.890625,
+        "right": 804.390625,
+        "bottom": 745.984375,
+        "left": 28
+      },
+      "kpis": {
+        "x": 835.390625,
+        "y": 363.1875,
+        "width": 487.59375,
+        "height": 85.921875,
+        "top": 363.1875,
+        "right": 1322.984375,
+        "bottom": 449.109375,
+        "left": 835.390625
+      },
+      "actions": {
+        "x": 835.390625,
+        "y": 694.96875,
+        "width": 487.59375,
+        "height": 44,
+        "top": 694.96875,
+        "right": 1322.984375,
+        "bottom": 738.96875,
+        "left": 835.390625
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "experiment": "eye",
+      "mode": "engineer",
+      "theme": "dark",
+      "scrollWidth": 1366,
+      "scrollHeight": 768,
+      "knob": {
+        "x": 835.390625,
+        "y": 305,
+        "width": 487.59375,
+        "height": 44,
+        "top": 305,
+        "right": 1322.984375,
+        "bottom": 349,
+        "left": 835.390625
+      },
+      "physical": {
+        "x": 28,
+        "y": 194,
+        "width": 776.390625,
+        "height": 322.890625,
+        "top": 194,
+        "right": 804.390625,
+        "bottom": 516.890625,
+        "left": 28
+      },
+      "plot": {
+        "x": 28,
+        "y": 532.890625,
+        "width": 776.390625,
+        "height": 213.09375,
+        "top": 532.890625,
+        "right": 804.390625,
+        "bottom": 745.984375,
+        "left": 28
+      },
+      "kpis": {
+        "x": 835.390625,
+        "y": 363.1875,
+        "width": 487.59375,
+        "height": 85.921875,
+        "top": 363.1875,
+        "right": 1322.984375,
+        "bottom": 449.109375,
+        "left": 835.390625
+      },
+      "actions": {
+        "x": 835.390625,
+        "y": 694.96875,
+        "width": 487.59375,
+        "height": 44,
+        "top": 694.96875,
+        "right": 1322.984375,
+        "bottom": 738.96875,
+        "left": 835.390625
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "experiment": "length",
+      "mode": "discover",
+      "theme": "light",
+      "scrollWidth": 390,
+      "scrollHeight": 1095,
+      "knob": {
+        "x": 27,
+        "y": 568.125,
+        "width": 336,
+        "height": 44,
+        "top": 568.125,
+        "right": 363,
+        "bottom": 612.125,
+        "left": 27
+      },
+      "physical": {
+        "x": 14,
+        "y": 236,
+        "width": 362,
+        "height": 180,
+        "top": 236,
+        "right": 376,
+        "bottom": 416,
+        "left": 14
+      },
+      "plot": {
+        "x": 14,
+        "y": 744.890625,
+        "width": 362,
+        "height": 210,
+        "top": 744.890625,
+        "right": 376,
+        "bottom": 954.890625,
+        "left": 14
+      },
+      "kpis": {
+        "x": 14,
+        "y": 428,
+        "width": 362,
+        "height": 79.4375,
+        "top": 428,
+        "right": 376,
+        "bottom": 507.4375,
+        "left": 14
+      },
+      "actions": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "experiment": "length",
+      "mode": "discover",
+      "theme": "dark",
+      "scrollWidth": 390,
+      "scrollHeight": 1095,
+      "knob": {
+        "x": 27,
+        "y": 568.125,
+        "width": 336,
+        "height": 44,
+        "top": 568.125,
+        "right": 363,
+        "bottom": 612.125,
+        "left": 27
+      },
+      "physical": {
+        "x": 14,
+        "y": 236,
+        "width": 362,
+        "height": 180,
+        "top": 236,
+        "right": 376,
+        "bottom": 416,
+        "left": 14
+      },
+      "plot": {
+        "x": 14,
+        "y": 744.890625,
+        "width": 362,
+        "height": 210,
+        "top": 744.890625,
+        "right": 376,
+        "bottom": 954.890625,
+        "left": 14
+      },
+      "kpis": {
+        "x": 14,
+        "y": 428,
+        "width": 362,
+        "height": 79.4375,
+        "top": 428,
+        "right": 376,
+        "bottom": 507.4375,
+        "left": 14
+      },
+      "actions": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "experiment": "length",
+      "mode": "engineer",
+      "theme": "light",
+      "scrollWidth": 390,
+      "scrollHeight": 1315,
+      "knob": {
+        "x": 27,
+        "y": 568.125,
+        "width": 336,
+        "height": 44,
+        "top": 568.125,
+        "right": 363,
+        "bottom": 612.125,
+        "left": 27
+      },
+      "physical": {
+        "x": 14,
+        "y": 236,
+        "width": 362,
+        "height": 180,
+        "top": 236,
+        "right": 376,
+        "bottom": 416,
+        "left": 14
+      },
+      "plot": {
+        "x": 14,
+        "y": 914.640625,
+        "width": 362,
+        "height": 210,
+        "top": 914.640625,
+        "right": 376,
+        "bottom": 1124.640625,
+        "left": 14
+      },
+      "kpis": {
+        "x": 14,
+        "y": 428,
+        "width": 362,
+        "height": 79.4375,
+        "top": 428,
+        "right": 376,
+        "bottom": 507.4375,
+        "left": 14
+      },
+      "actions": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "experiment": "length",
+      "mode": "engineer",
+      "theme": "dark",
+      "scrollWidth": 390,
+      "scrollHeight": 1315,
+      "knob": {
+        "x": 27,
+        "y": 568.125,
+        "width": 336,
+        "height": 44,
+        "top": 568.125,
+        "right": 363,
+        "bottom": 612.125,
+        "left": 27
+      },
+      "physical": {
+        "x": 14,
+        "y": 236,
+        "width": 362,
+        "height": 180,
+        "top": 236,
+        "right": 376,
+        "bottom": 416,
+        "left": 14
+      },
+      "plot": {
+        "x": 14,
+        "y": 914.640625,
+        "width": 362,
+        "height": 210,
+        "top": 914.640625,
+        "right": 376,
+        "bottom": 1124.640625,
+        "left": 14
+      },
+      "kpis": {
+        "x": 14,
+        "y": 428,
+        "width": 362,
+        "height": 79.4375,
+        "top": 428,
+        "right": 376,
+        "bottom": 507.4375,
+        "left": 14
+      },
+      "actions": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "experiment": "voltage",
+      "mode": "discover",
+      "theme": "light",
+      "scrollWidth": 390,
+      "scrollHeight": 1118,
+      "knob": {
+        "x": 27,
+        "y": 572.15625,
+        "width": 336,
+        "height": 44,
+        "top": 572.15625,
+        "right": 363,
+        "bottom": 616.15625,
+        "left": 27
+      },
+      "physical": {
+        "x": 14,
+        "y": 240.03125,
+        "width": 362,
+        "height": 180,
+        "top": 240.03125,
+        "right": 376,
+        "bottom": 420.03125,
+        "left": 14
+      },
+      "plot": {
+        "x": 14,
+        "y": 767.765625,
+        "width": 362,
+        "height": 210,
+        "top": 767.765625,
+        "right": 376,
+        "bottom": 977.765625,
+        "left": 14
+      },
+      "kpis": {
+        "x": 14,
+        "y": 432.03125,
+        "width": 362,
+        "height": 79.4375,
+        "top": 432.03125,
+        "right": 376,
+        "bottom": 511.46875,
+        "left": 14
+      },
+      "actions": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "experiment": "voltage",
+      "mode": "discover",
+      "theme": "dark",
+      "scrollWidth": 390,
+      "scrollHeight": 1118,
+      "knob": {
+        "x": 27,
+        "y": 572.15625,
+        "width": 336,
+        "height": 44,
+        "top": 572.15625,
+        "right": 363,
+        "bottom": 616.15625,
+        "left": 27
+      },
+      "physical": {
+        "x": 14,
+        "y": 240.03125,
+        "width": 362,
+        "height": 180,
+        "top": 240.03125,
+        "right": 376,
+        "bottom": 420.03125,
+        "left": 14
+      },
+      "plot": {
+        "x": 14,
+        "y": 767.765625,
+        "width": 362,
+        "height": 210,
+        "top": 767.765625,
+        "right": 376,
+        "bottom": 977.765625,
+        "left": 14
+      },
+      "kpis": {
+        "x": 14,
+        "y": 432.03125,
+        "width": 362,
+        "height": 79.4375,
+        "top": 432.03125,
+        "right": 376,
+        "bottom": 511.46875,
+        "left": 14
+      },
+      "actions": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "experiment": "voltage",
+      "mode": "engineer",
+      "theme": "light",
+      "scrollWidth": 390,
+      "scrollHeight": 1338,
+      "knob": {
+        "x": 27,
+        "y": 572.15625,
+        "width": 336,
+        "height": 44,
+        "top": 572.15625,
+        "right": 363,
+        "bottom": 616.15625,
+        "left": 27
+      },
+      "physical": {
+        "x": 14,
+        "y": 240.03125,
+        "width": 362,
+        "height": 180,
+        "top": 240.03125,
+        "right": 376,
+        "bottom": 420.03125,
+        "left": 14
+      },
+      "plot": {
+        "x": 14,
+        "y": 937.515625,
+        "width": 362,
+        "height": 210,
+        "top": 937.515625,
+        "right": 376,
+        "bottom": 1147.515625,
+        "left": 14
+      },
+      "kpis": {
+        "x": 14,
+        "y": 432.03125,
+        "width": 362,
+        "height": 79.4375,
+        "top": 432.03125,
+        "right": 376,
+        "bottom": 511.46875,
+        "left": 14
+      },
+      "actions": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "experiment": "voltage",
+      "mode": "engineer",
+      "theme": "dark",
+      "scrollWidth": 390,
+      "scrollHeight": 1338,
+      "knob": {
+        "x": 27,
+        "y": 572.15625,
+        "width": 336,
+        "height": 44,
+        "top": 572.15625,
+        "right": 363,
+        "bottom": 616.15625,
+        "left": 27
+      },
+      "physical": {
+        "x": 14,
+        "y": 240.03125,
+        "width": 362,
+        "height": 180,
+        "top": 240.03125,
+        "right": 376,
+        "bottom": 420.03125,
+        "left": 14
+      },
+      "plot": {
+        "x": 14,
+        "y": 937.515625,
+        "width": 362,
+        "height": 210,
+        "top": 937.515625,
+        "right": 376,
+        "bottom": 1147.515625,
+        "left": 14
+      },
+      "kpis": {
+        "x": 14,
+        "y": 432.03125,
+        "width": 362,
+        "height": 79.4375,
+        "top": 432.03125,
+        "right": 376,
+        "bottom": 511.46875,
+        "left": 14
+      },
+      "actions": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "experiment": "eye",
+      "mode": "discover",
+      "theme": "light",
+      "scrollWidth": 390,
+      "scrollHeight": 1095,
+      "knob": {
+        "x": 27,
+        "y": 568.125,
+        "width": 336,
+        "height": 44,
+        "top": 568.125,
+        "right": 363,
+        "bottom": 612.125,
+        "left": 27
+      },
+      "physical": {
+        "x": 14,
+        "y": 236,
+        "width": 362,
+        "height": 180,
+        "top": 236,
+        "right": 376,
+        "bottom": 416,
+        "left": 14
+      },
+      "plot": {
+        "x": 14,
+        "y": 744.890625,
+        "width": 362,
+        "height": 210,
+        "top": 744.890625,
+        "right": 376,
+        "bottom": 954.890625,
+        "left": 14
+      },
+      "kpis": {
+        "x": 14,
+        "y": 428,
+        "width": 362,
+        "height": 79.4375,
+        "top": 428,
+        "right": 376,
+        "bottom": 507.4375,
+        "left": 14
+      },
+      "actions": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "experiment": "eye",
+      "mode": "discover",
+      "theme": "dark",
+      "scrollWidth": 390,
+      "scrollHeight": 1095,
+      "knob": {
+        "x": 27,
+        "y": 568.125,
+        "width": 336,
+        "height": 44,
+        "top": 568.125,
+        "right": 363,
+        "bottom": 612.125,
+        "left": 27
+      },
+      "physical": {
+        "x": 14,
+        "y": 236,
+        "width": 362,
+        "height": 180,
+        "top": 236,
+        "right": 376,
+        "bottom": 416,
+        "left": 14
+      },
+      "plot": {
+        "x": 14,
+        "y": 744.890625,
+        "width": 362,
+        "height": 210,
+        "top": 744.890625,
+        "right": 376,
+        "bottom": 954.890625,
+        "left": 14
+      },
+      "kpis": {
+        "x": 14,
+        "y": 428,
+        "width": 362,
+        "height": 79.4375,
+        "top": 428,
+        "right": 376,
+        "bottom": 507.4375,
+        "left": 14
+      },
+      "actions": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "experiment": "eye",
+      "mode": "engineer",
+      "theme": "light",
+      "scrollWidth": 390,
+      "scrollHeight": 1383,
+      "knob": {
+        "x": 27,
+        "y": 568.125,
+        "width": 336,
+        "height": 44,
+        "top": 568.125,
+        "right": 363,
+        "bottom": 612.125,
+        "left": 27
+      },
+      "physical": {
+        "x": 14,
+        "y": 236,
+        "width": 362,
+        "height": 180,
+        "top": 236,
+        "right": 376,
+        "bottom": 416,
+        "left": 14
+      },
+      "plot": {
+        "x": 14,
+        "y": 982.578125,
+        "width": 362,
+        "height": 210,
+        "top": 982.578125,
+        "right": 376,
+        "bottom": 1192.578125,
+        "left": 14
+      },
+      "kpis": {
+        "x": 14,
+        "y": 428,
+        "width": 362,
+        "height": 79.4375,
+        "top": 428,
+        "right": 376,
+        "bottom": 507.4375,
+        "left": 14
+      },
+      "actions": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "experiment": "eye",
+      "mode": "engineer",
+      "theme": "dark",
+      "scrollWidth": 390,
+      "scrollHeight": 1383,
+      "knob": {
+        "x": 27,
+        "y": 568.125,
+        "width": 336,
+        "height": 44,
+        "top": 568.125,
+        "right": 363,
+        "bottom": 612.125,
+        "left": 27
+      },
+      "physical": {
+        "x": 14,
+        "y": 236,
+        "width": 362,
+        "height": 180,
+        "top": 236,
+        "right": 376,
+        "bottom": 416,
+        "left": 14
+      },
+      "plot": {
+        "x": 14,
+        "y": 982.578125,
+        "width": 362,
+        "height": 210,
+        "top": 982.578125,
+        "right": 376,
+        "bottom": 1192.578125,
+        "left": 14
+      },
+      "kpis": {
+        "x": 14,
+        "y": 428,
+        "width": 362,
+        "height": 79.4375,
+        "top": 428,
+        "right": 376,
+        "bottom": 507.4375,
+        "left": 14
+      },
+      "actions": {
+        "x": 0,
+        "y": 779,
+        "width": 390,
+        "height": 65,
+        "top": 779,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "experiment": "length",
+      "mode": "discover",
+      "theme": "light",
+      "scrollWidth": 320,
+      "scrollHeight": 906,
+      "knob": {
+        "x": 21,
+        "y": 417.828125,
+        "width": 278,
+        "height": 44,
+        "top": 417.828125,
+        "right": 299,
+        "bottom": 461.828125,
+        "left": 21
+      },
+      "physical": {
+        "x": 10,
+        "y": 194,
+        "width": 300,
+        "height": 108,
+        "top": 194,
+        "right": 310,
+        "bottom": 302,
+        "left": 10
+      },
+      "plot": {
+        "x": 10,
+        "y": 567.65625,
+        "width": 300,
+        "height": 210,
+        "top": 567.65625,
+        "right": 310,
+        "bottom": 777.65625,
+        "left": 10
+      },
+      "kpis": {
+        "x": 10,
+        "y": 310,
+        "width": 300,
+        "height": 71.53125,
+        "top": 310,
+        "right": 310,
+        "bottom": 381.53125,
+        "left": 10
+      },
+      "actions": {
+        "x": 0,
+        "y": 509,
+        "width": 320,
+        "height": 59,
+        "top": 509,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "experiment": "length",
+      "mode": "discover",
+      "theme": "dark",
+      "scrollWidth": 320,
+      "scrollHeight": 906,
+      "knob": {
+        "x": 21,
+        "y": 417.828125,
+        "width": 278,
+        "height": 44,
+        "top": 417.828125,
+        "right": 299,
+        "bottom": 461.828125,
+        "left": 21
+      },
+      "physical": {
+        "x": 10,
+        "y": 194,
+        "width": 300,
+        "height": 108,
+        "top": 194,
+        "right": 310,
+        "bottom": 302,
+        "left": 10
+      },
+      "plot": {
+        "x": 10,
+        "y": 567.65625,
+        "width": 300,
+        "height": 210,
+        "top": 567.65625,
+        "right": 310,
+        "bottom": 777.65625,
+        "left": 10
+      },
+      "kpis": {
+        "x": 10,
+        "y": 310,
+        "width": 300,
+        "height": 71.53125,
+        "top": 310,
+        "right": 310,
+        "bottom": 381.53125,
+        "left": 10
+      },
+      "actions": {
+        "x": 0,
+        "y": 509,
+        "width": 320,
+        "height": 59,
+        "top": 509,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "experiment": "length",
+      "mode": "engineer",
+      "theme": "light",
+      "scrollWidth": 320,
+      "scrollHeight": 1117,
+      "knob": {
+        "x": 21,
+        "y": 417.828125,
+        "width": 278,
+        "height": 44,
+        "top": 417.828125,
+        "right": 299,
+        "bottom": 461.828125,
+        "left": 21
+      },
+      "physical": {
+        "x": 10,
+        "y": 194,
+        "width": 300,
+        "height": 108,
+        "top": 194,
+        "right": 310,
+        "bottom": 302,
+        "left": 10
+      },
+      "plot": {
+        "x": 10,
+        "y": 729.40625,
+        "width": 300,
+        "height": 210,
+        "top": 729.40625,
+        "right": 310,
+        "bottom": 939.40625,
+        "left": 10
+      },
+      "kpis": {
+        "x": 10,
+        "y": 310,
+        "width": 300,
+        "height": 71.53125,
+        "top": 310,
+        "right": 310,
+        "bottom": 381.53125,
+        "left": 10
+      },
+      "actions": {
+        "x": 0,
+        "y": 509,
+        "width": 320,
+        "height": 59,
+        "top": 509,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "experiment": "length",
+      "mode": "engineer",
+      "theme": "dark",
+      "scrollWidth": 320,
+      "scrollHeight": 1117,
+      "knob": {
+        "x": 21,
+        "y": 417.828125,
+        "width": 278,
+        "height": 44,
+        "top": 417.828125,
+        "right": 299,
+        "bottom": 461.828125,
+        "left": 21
+      },
+      "physical": {
+        "x": 10,
+        "y": 194,
+        "width": 300,
+        "height": 108,
+        "top": 194,
+        "right": 310,
+        "bottom": 302,
+        "left": 10
+      },
+      "plot": {
+        "x": 10,
+        "y": 729.40625,
+        "width": 300,
+        "height": 210,
+        "top": 729.40625,
+        "right": 310,
+        "bottom": 939.40625,
+        "left": 10
+      },
+      "kpis": {
+        "x": 10,
+        "y": 310,
+        "width": 300,
+        "height": 71.53125,
+        "top": 310,
+        "right": 310,
+        "bottom": 381.53125,
+        "left": 10
+      },
+      "actions": {
+        "x": 0,
+        "y": 509,
+        "width": 320,
+        "height": 59,
+        "top": 509,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "experiment": "voltage",
+      "mode": "discover",
+      "theme": "light",
+      "scrollWidth": 320,
+      "scrollHeight": 934,
+      "knob": {
+        "x": 21,
+        "y": 427.34375,
+        "width": 278,
+        "height": 44,
+        "top": 427.34375,
+        "right": 299,
+        "bottom": 471.34375,
+        "left": 21
+      },
+      "physical": {
+        "x": 10,
+        "y": 203.515625,
+        "width": 300,
+        "height": 108,
+        "top": 203.515625,
+        "right": 310,
+        "bottom": 311.515625,
+        "left": 10
+      },
+      "plot": {
+        "x": 10,
+        "y": 596.015625,
+        "width": 300,
+        "height": 210,
+        "top": 596.015625,
+        "right": 310,
+        "bottom": 806.015625,
+        "left": 10
+      },
+      "kpis": {
+        "x": 10,
+        "y": 319.515625,
+        "width": 300,
+        "height": 71.53125,
+        "top": 319.515625,
+        "right": 310,
+        "bottom": 391.046875,
+        "left": 10
+      },
+      "actions": {
+        "x": 0,
+        "y": 509,
+        "width": 320,
+        "height": 59,
+        "top": 509,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "experiment": "voltage",
+      "mode": "discover",
+      "theme": "dark",
+      "scrollWidth": 320,
+      "scrollHeight": 934,
+      "knob": {
+        "x": 21,
+        "y": 427.34375,
+        "width": 278,
+        "height": 44,
+        "top": 427.34375,
+        "right": 299,
+        "bottom": 471.34375,
+        "left": 21
+      },
+      "physical": {
+        "x": 10,
+        "y": 203.515625,
+        "width": 300,
+        "height": 108,
+        "top": 203.515625,
+        "right": 310,
+        "bottom": 311.515625,
+        "left": 10
+      },
+      "plot": {
+        "x": 10,
+        "y": 596.015625,
+        "width": 300,
+        "height": 210,
+        "top": 596.015625,
+        "right": 310,
+        "bottom": 806.015625,
+        "left": 10
+      },
+      "kpis": {
+        "x": 10,
+        "y": 319.515625,
+        "width": 300,
+        "height": 71.53125,
+        "top": 319.515625,
+        "right": 310,
+        "bottom": 391.046875,
+        "left": 10
+      },
+      "actions": {
+        "x": 0,
+        "y": 509,
+        "width": 320,
+        "height": 59,
+        "top": 509,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "experiment": "voltage",
+      "mode": "engineer",
+      "theme": "light",
+      "scrollWidth": 320,
+      "scrollHeight": 1146,
+      "knob": {
+        "x": 21,
+        "y": 427.34375,
+        "width": 278,
+        "height": 44,
+        "top": 427.34375,
+        "right": 299,
+        "bottom": 471.34375,
+        "left": 21
+      },
+      "physical": {
+        "x": 10,
+        "y": 203.515625,
+        "width": 300,
+        "height": 108,
+        "top": 203.515625,
+        "right": 310,
+        "bottom": 311.515625,
+        "left": 10
+      },
+      "plot": {
+        "x": 10,
+        "y": 757.765625,
+        "width": 300,
+        "height": 210,
+        "top": 757.765625,
+        "right": 310,
+        "bottom": 967.765625,
+        "left": 10
+      },
+      "kpis": {
+        "x": 10,
+        "y": 319.515625,
+        "width": 300,
+        "height": 71.53125,
+        "top": 319.515625,
+        "right": 310,
+        "bottom": 391.046875,
+        "left": 10
+      },
+      "actions": {
+        "x": 0,
+        "y": 509,
+        "width": 320,
+        "height": 59,
+        "top": 509,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "experiment": "voltage",
+      "mode": "engineer",
+      "theme": "dark",
+      "scrollWidth": 320,
+      "scrollHeight": 1146,
+      "knob": {
+        "x": 21,
+        "y": 427.34375,
+        "width": 278,
+        "height": 44,
+        "top": 427.34375,
+        "right": 299,
+        "bottom": 471.34375,
+        "left": 21
+      },
+      "physical": {
+        "x": 10,
+        "y": 203.515625,
+        "width": 300,
+        "height": 108,
+        "top": 203.515625,
+        "right": 310,
+        "bottom": 311.515625,
+        "left": 10
+      },
+      "plot": {
+        "x": 10,
+        "y": 757.765625,
+        "width": 300,
+        "height": 210,
+        "top": 757.765625,
+        "right": 310,
+        "bottom": 967.765625,
+        "left": 10
+      },
+      "kpis": {
+        "x": 10,
+        "y": 319.515625,
+        "width": 300,
+        "height": 71.53125,
+        "top": 319.515625,
+        "right": 310,
+        "bottom": 391.046875,
+        "left": 10
+      },
+      "actions": {
+        "x": 0,
+        "y": 509,
+        "width": 320,
+        "height": 59,
+        "top": 509,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "experiment": "eye",
+      "mode": "discover",
+      "theme": "light",
+      "scrollWidth": 320,
+      "scrollHeight": 938,
+      "knob": {
+        "x": 21,
+        "y": 430.828125,
+        "width": 278,
+        "height": 44,
+        "top": 430.828125,
+        "right": 299,
+        "bottom": 474.828125,
+        "left": 21
+      },
+      "physical": {
+        "x": 10,
+        "y": 194,
+        "width": 300,
+        "height": 108,
+        "top": 194,
+        "right": 310,
+        "bottom": 302,
+        "left": 10
+      },
+      "plot": {
+        "x": 10,
+        "y": 599.5,
+        "width": 300,
+        "height": 210,
+        "top": 599.5,
+        "right": 310,
+        "bottom": 809.5,
+        "left": 10
+      },
+      "kpis": {
+        "x": 10,
+        "y": 310,
+        "width": 300,
+        "height": 84.53125,
+        "top": 310,
+        "right": 310,
+        "bottom": 394.53125,
+        "left": 10
+      },
+      "actions": {
+        "x": 0,
+        "y": 509,
+        "width": 320,
+        "height": 59,
+        "top": 509,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "experiment": "eye",
+      "mode": "discover",
+      "theme": "dark",
+      "scrollWidth": 320,
+      "scrollHeight": 938,
+      "knob": {
+        "x": 21,
+        "y": 430.828125,
+        "width": 278,
+        "height": 44,
+        "top": 430.828125,
+        "right": 299,
+        "bottom": 474.828125,
+        "left": 21
+      },
+      "physical": {
+        "x": 10,
+        "y": 194,
+        "width": 300,
+        "height": 108,
+        "top": 194,
+        "right": 310,
+        "bottom": 302,
+        "left": 10
+      },
+      "plot": {
+        "x": 10,
+        "y": 599.5,
+        "width": 300,
+        "height": 210,
+        "top": 599.5,
+        "right": 310,
+        "bottom": 809.5,
+        "left": 10
+      },
+      "kpis": {
+        "x": 10,
+        "y": 310,
+        "width": 300,
+        "height": 84.53125,
+        "top": 310,
+        "right": 310,
+        "bottom": 394.53125,
+        "left": 10
+      },
+      "actions": {
+        "x": 0,
+        "y": 509,
+        "width": 320,
+        "height": 59,
+        "top": 509,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "experiment": "eye",
+      "mode": "engineer",
+      "theme": "light",
+      "scrollWidth": 320,
+      "scrollHeight": 1233,
+      "knob": {
+        "x": 21,
+        "y": 430.828125,
+        "width": 278,
+        "height": 44,
+        "top": 430.828125,
+        "right": 299,
+        "bottom": 474.828125,
+        "left": 21
+      },
+      "physical": {
+        "x": 10,
+        "y": 194,
+        "width": 300,
+        "height": 108,
+        "top": 194,
+        "right": 310,
+        "bottom": 302,
+        "left": 10
+      },
+      "plot": {
+        "x": 10,
+        "y": 845.125,
+        "width": 300,
+        "height": 210,
+        "top": 845.125,
+        "right": 310,
+        "bottom": 1055.125,
+        "left": 10
+      },
+      "kpis": {
+        "x": 10,
+        "y": 310,
+        "width": 300,
+        "height": 84.53125,
+        "top": 310,
+        "right": 310,
+        "bottom": 394.53125,
+        "left": 10
+      },
+      "actions": {
+        "x": 0,
+        "y": 509,
+        "width": 320,
+        "height": 59,
+        "top": 509,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "experiment": "eye",
+      "mode": "engineer",
+      "theme": "dark",
+      "scrollWidth": 320,
+      "scrollHeight": 1233,
+      "knob": {
+        "x": 21,
+        "y": 430.828125,
+        "width": 278,
+        "height": 44,
+        "top": 430.828125,
+        "right": 299,
+        "bottom": 474.828125,
+        "left": 21
+      },
+      "physical": {
+        "x": 10,
+        "y": 194,
+        "width": 300,
+        "height": 108,
+        "top": 194,
+        "right": 310,
+        "bottom": 302,
+        "left": 10
+      },
+      "plot": {
+        "x": 10,
+        "y": 845.125,
+        "width": 300,
+        "height": 210,
+        "top": 845.125,
+        "right": 310,
+        "bottom": 1055.125,
+        "left": 10
+      },
+      "kpis": {
+        "x": 10,
+        "y": 310,
+        "width": 300,
+        "height": 84.53125,
+        "top": 310,
+        "right": 310,
+        "bottom": 394.53125,
+        "left": 10
+      },
+      "actions": {
+        "x": 0,
+        "y": 509,
+        "width": 320,
+        "height": 59,
+        "top": 509,
+        "right": 320,
+        "bottom": 568,
+        "left": 0
+      },
+      "asideOverflow": 0,
+      "buttons": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    }
+  ],
+  "errors": [],
+  "requests": [],
+  "scope": "Actual P2 adapter / unchanged Bench; external accuracy and human learning NOT VERIFIED"
+}

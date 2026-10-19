@@ -1,3 +1,27 @@
+# v2.0.0-alpha.4 — P2.2 Physics Fidelity & Scientific Visualization
+
+[Offline 실행 HTML](dist/spec-to-mask-v2.0.0-alpha.4-p22-physics.html) · [Physics / Visualization Specification](docs/V2_P22_SCIENTIFIC_SPECIFICATION.md) · [Material Domain Matrix](docs/V2_P22_MATERIAL_DOMAIN_MATRIX.md) · [Mode Provenance](docs/V2_P22_MODE_PROVENANCE.md) · [QA / Acceptance](artifacts/v2-p22/QA.md) · [Handoff](docs/HANDOFF_V2_P22.md)
+
+Home / Session / 종료, TE0–TE3 / TM0–TM2 Signed Numeric Field와 n_eff Curve, Radius에 연동한 Bend Geometry, 실제 DC / MMI Topology와 기존 EIM Field, MZI 두 Complex Output, PN Carrier / Depletion / Optical Overlap을 제공합니다. 기존 Physics Kernel·계수·Save·Lab·GDS·4 Platform을 보존합니다.
+
+Mode Field는 정확한 Dataset Width에서만 표시합니다. Arbitrary Width는 Unsupported이며 Sample 적용을 제공합니다. SiN Table mismatch / Si TM Mesh sensitivity를 표시합니다. IOX / LDW / Polymer의 Full Parameter Set와 정량 Bend Curve, MMI의 완전한 Energy / Symmetry, Full-vector / 2D CHARGE 외부 정확도는 NOT VERIFIED입니다. UI 구현 통과와 물리 정확도 검증을 구분합니다.
+
+Draft PR #25 · 사용자 Play Review 전 main 병합 금지 · P3 미시작. 이전 실행 파일과 QA는 아래에 보존합니다.
+
+---
+
+# v2.0.0-alpha.3 — P2.1 추가 Learning Experience
+
+[Offline 실행 HTML](dist/spec-to-mask-v2.0.0-alpha.3-p21-learning.html) · [추가 Feedback / Checkpoint 계획](docs/V2_P21_ADDITIONAL_FEEDBACK.md) · [Learning Redesign](docs/V2_P21_LEARNING_REDESIGN.md) · [Passive Physics](docs/V2_P21_PASSIVE_PHYSICS.md) · [Active Physics](docs/V2_P21_ACTIVE_PHYSICS.md) · [Modulation Formats](docs/V2_P21_MODULATION_FORMATS.md) · [QA](artifacts/v2-p21-learning/QA.md) · [Checkpoint](docs/V2_CHECKPOINT_LOG.md)
+
+Waveguide Tutorial의 Summary에서 Passive Basics / MZM Introduction / Engine Overview를 선택합니다. More는 Learning Navigation 4개와 Workspace Settings를 분리합니다. Passive는 Width & Mode → Bend → Y-branch → DC / MMI, Active는 Passive MZI → PN → Single-arm / Push-pull → Transfer입니다. 기존 MZM Workbench의 Length / Voltage 다음에 Modulation Formats를 살펴보고 RF/EO / Dynamic Eye로 이어갑니다. 각 Chapter는 Take-home Summary로 마무리합니다.
+
+기존 Physics Kernel / 계수 / Level / 4 Platform / Lab / Advanced·Legacy / Save를 보존합니다. TE0/TE1 Profile과 Y-branch Optimization Comparison, NRZ/PAM4/PAM8 Waveform·Eye는 Conceptual Illustration입니다. Active의 정량 Phase 비교는 기존 PN Nonlinear Kernel을 사용합니다. 기술 용어는 English, 설명은 한글입니다.
+
+Draft PR #25에서 사용자 Play Review를 기다립니다. main 병합 / P3 진행은 하지 않습니다. 이전 P0/P1/P2 및 alpha.3-p2-ux 실행 파일은 보존합니다. 아래는 Historical Documentation입니다.
+
+---
+
 > **v2.0 Learning Experience Redesign — Draft plan (not released)**: [Master Plan](docs/V2_MASTER_PLAN.md) · [GPT-6.1 Sol P0 Work Order](docs/V2_P0_SOL_WORK_ORDER.md) · [Checkpoint / Handoff Log](docs/V2_CHECKPOINT_LOG.md). P0–P8 are proposed development checkpoints, **not implemented features**. This v2 branch must not be merged into main before user approval. Historical v1.2.0-beta.2 content below remains the stable baseline.
 
 ## v2 P1 — Waveguide Tutorial 검토
@@ -254,3 +278,15 @@ node test/e2e/bot.js std 2 B-1,B-2,B-3 si1550             # Track B 회귀
 ## 모델 범위
 
 모든 수치는 학습용 surrogate입니다. 2-3R 링 변조기의 단순화(3D 열 퍼짐 무시로 낙관적인 히터 효율, Si 리브 EIM, 결합 슬랩 κ, SiN 플랫폼은 이종 Si 가정, 주입·히터·패드는 GDS에서 주석 레이어)는 [docs/mrr_physics.md](docs/mrr_physics.md)의 "한계" 절에 정리했습니다. 직사각형 나선의 원호 코너 접합 모드 변환은 곡률 점프마다 가우시안 이동 a = convA/2를 비간섭으로 더한 공학적 추정이며, Euler 코너·U-turn은 곡률이 연속이라 접합 변환을 0으로 둡니다(방사 손실은 국소 반경으로 적분). 반사, 3D 방사, 벤드 구간 결합, 편광 혼합은 포함하지 않아 FDTD·벡터 솔버보다 낙관적입니다 (예: 500×220 nm Si @1550 TE0 n<sub>eff</sub> 2.49 vs 벡터 해 ≈ 2.44). 각 보스 레벨의 최종 검증은 Tidy3D FDTD, Ansys(CHARGE/HEAT/INTERCONNECT)로 넘기는 것을 전제로 합니다.
+
+## v2 P2 — MZM Physics Workbench (Play Review)
+
+P1 Waveguide는 사용자 승인 후 PR #24로 병합했습니다. P2는 별도 Branch / Draft PR에서 검토하며 main에는 병합하지 않습니다.
+
+- [Offline HTML](dist/spec-to-mask-v2.0.0-alpha.2-p2.html)을 다운로드해 Browser에서 엽니다. Engine Overview의 **MZM Workbench 열기** 또는 Waveguide Summary에서 시작합니다.
+- Interaction Length → Voltage & Interference → RF/EO & PAM4 Eye를 동일한 Platform별 MZM Design으로 살펴봅니다. Slider / KPI / Physical View / Plot을 함께 표시합니다.
+- Discover는 조작·관찰로 진행하고 Engineer는 Model Constraint를 추가합니다. Learn Physics는 선택이며 Comparison / Original / Full Backup을 제공합니다.
+- [Physics / UX / Save 설계](docs/V2_P2_MZM_WORKBENCH.md), [QA](artifacts/v2-p2/QA.md), [Checkpoint](docs/V2_CHECKPOINT_LOG.md)를 확인합니다. Screenshot은 `v2-p2-mzm-evidence` Actions Artifact로 제공합니다.
+- 기존 PN / MZM Bench / Eye를 재사용합니다. Eye Gap은 측정 BER이 아니며 112 GBd PAM4는 224 Gb/s raw입니다. Net 200G / FEC / Receiver / External Validation은 NOT VERIFIED입니다. P3는 자동 시작하지 않습니다.
+
+P2 Play Review / 최종 CI는 [Draft PR #25](https://github.com/legendnever-collab/Spec-to-Mask/pull/25)에서 확인합니다. 실행 HTML의 Artifact Commit은 `c2fea1a`이며 이후 Documentation Receipt는 Runtime Bytes를 변경하지 않습니다.

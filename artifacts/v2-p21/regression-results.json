@@ -1,0 +1,34 @@
+[
+  {
+    "name": "legacy-state",
+    "exitCode": 0
+  },
+  {
+    "name": "backup",
+    "exitCode": 0
+  },
+  {
+    "name": "lab",
+    "exitCode": 0
+  },
+  {
+    "name": "smoke",
+    "exitCode": 0
+  },
+  {
+    "name": "identity-upgrade",
+    "exitCode": 0
+  },
+  {
+    "name": "identity-mrr",
+    "exitCode": 0
+  },
+  {
+    "name": "identity-dr8",
+    "exitCode": 0
+  },
+  {
+    "name": "identity-wdm",
+    "exitCode": 0
+  }
+]

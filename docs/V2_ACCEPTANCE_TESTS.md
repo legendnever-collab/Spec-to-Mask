@@ -89,3 +89,12 @@ Record independently: time to first meaningful manipulation; ability to find cur
 ## 7. Authorized next scope
 
 P0 stops at reviewed blueprint. After **explicit user P1 authorization**, implement only the Waveguide lesson with the chosen existing model path, identity adapter, optional Learn, supported observation progression, additive save/backup and required viewport tests. P2 is a separate approval: length/voltage/RF-eye MZM experiments, actual engine-linked data. P3+ systems, EAM and400G remain out of scope.
+
+## P2 Checkpoint E — 실제 검증 기록
+
+[QA Snapshot](../artifacts/v2-p2/QA.md), [Verification](../artifacts/v2-p2/verification.json), [Model / State](../artifacts/v2-p2/state-model.log), [Browser](../artifacts/v2-p2/browser-report.json)를 확인합니다.
+
+- PH04–08 / ID01–06 / PR03 / LP01–02 / SV01–02는 기존 Bench 일치 / 수치 경계 / 실제 UI / Save 검사를 통해 PASS를 확인했습니다. Model / State는 154개입니다.
+- UX01–03 / UX06–07, PR01–02는 511 Browser Checks로 확인했습니다. 4 Viewport, 두 Theme, 두 Mode, Keyboard / Native Touch와 이전 결과 무효화를 포함합니다.
+- RG01의 Local P1 / Legacy / Studio / Lab / Backup은 PASS입니다. Four-Platform Release Matrix / GDS / 전체 CI는 최신 Draft PR Checks에서 별도로 확인하며 Local 미실행을 CI PASS로 대체하지 않습니다.
+- UX04 Human Trial / UX05 정식 Accessibility Audit / External Accuracy / BER / FEC는 NOT VERIFIED입니다. P2 Play Review를 자동 승인하지 않습니다.

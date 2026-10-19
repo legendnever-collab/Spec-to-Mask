@@ -1,0 +1,31 @@
+name: v2 P2.2 scientific visualization
+on:
+  push:
+    branches: [feature/v2-p2-mzm-workbench]
+    paths: ['src/**', 'tools/**', 'test/**', 'dist/**', 'package*.json', '.github/workflows/v2-p22.yml']
+  pull_request:
+    paths: ['src/**', 'tools/**', 'test/**', 'dist/**', 'package*.json', '.github/workflows/v2-p22.yml']
+permissions:
+  contents: read
+jobs:
+  physics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SMQ_HTML: dist/index.html
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci && npm run build
+      - run: git diff --exit-code -- dist/index.html && node tools/check_rc.js
+      - run: npm run test:v2:p22
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser:v2:p22
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v2-p22-scientific-evidence
+          path: artifacts/v2-p22/browser/

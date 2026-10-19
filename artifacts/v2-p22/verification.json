@@ -1,0 +1,352 @@
+{
+  "version": "2.0.0-alpha.4-p22-physics",
+  "baseline": "88ea82ec0ebf7cd083a573d86fb14763107f16eb",
+  "source_commit": "3e7f6f5827560f64fb4b52ffda9b7dd8a6867b0f",
+  "html_sha256": "b1f9bfa1b49abb9000b279f224dd80e0c66413f9511fd4f5bb9e45b030631351",
+  "source_manifest": {
+    "package-lock.json": "778799ab0776b0299073795129bbd3ca508d797fec97a5e8c21654ac949520c4",
+    "package.json": "372342738d2bfa9b600ab3dff09ab3f0bcceafa026bd895f891d6f02f7c08b41",
+    "src/bench/mzm.js": "a47489fc9da12d3ade2c966d21a68fb7fb5cfc22bd36551588b2cd41f3114c79",
+    "src/bench/mzm_ui.js": "614f53f365493e1e00e757c81a9adada4796628116e8d94e0069cf977dcf48b4",
+    "src/data/dc_si1310.json": "bae466fef26bfcdf02e7f1245bc5bc2ee7e6532308e9ccddcf38a624b7b48cd0",
+    "src/data/dc_si1550.json": "08f29c97f84011bd40b7d14cfffb493e6baef361a25c0b56621b9824fecb2eb3",
+    "src/data/dc_sin1310.json": "fb3ea01ab8e1cf9ba87ca181d92ad61cb4f0689fd87af54835f83fc92f58ed93",
+    "src/data/dc_sin1550.json": "afb39687df10100138a8f3615f83750ca569ab0ca5c5a03dac19c8bb38a82a07",
+    "src/data/p22/si1310.json": "dc65e4b8413af030b3a9fe5421da6c4d178dc096d235b93164be2fefd50c60d5",
+    "src/data/p22/si1550.json": "5457ea5c74bb4763b3ea24b8f0bbc8dcb616aff077586ce76b55f15a47049c5c",
+    "src/data/p22/sin1310.json": "c881a8d82d8316fea69239616ce2c7cc1f7ec3712cbe5c1294837fecce32865e",
+    "src/data/p22/sin1550.json": "45ac5fb252d89bfdf8b1dd7a953c81e172880e645e2516c81f8d4d3123b6cc3b",
+    "src/data/pspec.js": "1d22a42c891fb81a79ee6f466d5bc7715239dadfca481c018e693141cc9cba82",
+    "src/data/pspec.json": "ec8ef57801d41446719830c98e549e208ffeab0b4cb13c01f77a9163b2515bfd",
+    "src/data/ssc_si1550.json": "cb7bf25b7c5d3951e002961bd5512af6ede0cc64b2df175db945c84ca4e09683",
+    "src/data/ssc_sin1310.json": "63ef1763c8b392e1b69807363d9a91de6a0c891d567bf5d759f0923d460786f9",
+    "src/data/ssc_sin1550.json": "227ed557aaf2a12cdfd28e1f19416fd19ab5adb4c20f547c1dfb97758eaa598e",
+    "src/data/ssc_table.json": "335133a6597828680ffdf0e06e1d4287f7f33413cde7b7d938526339bb1697be",
+    "src/data/tables.js": "fae8baff3a878a89852231e6fb6f86858b75931b90b89adad890142907904504",
+    "src/data/thermal.json": "9d18011699e7777dc07aa70956b1e77719fa46dee6043a5f7ac6562baaf54145",
+    "src/data/validation.json": "1c0a811b133b073ac367be2bce903baec138b7109051679cc3143f0859616d1f",
+    "src/data/wg_si1310.json": "90a3df140ac41d5fe58b3024547e70b4476cb5eec9c595b6ac7416f6acdb872d",
+    "src/data/wg_si1550.json": "a7c1849544fa4b9c862701409a3c7cc11cdea64620346e87e0122bb332353741",
+    "src/data/wg_sin1310.json": "ac7d7e29c366a6f96e750ff49de5b57e27c5b325d26e460f78cefd899c502f91",
+    "src/data/wg_sin1550.json": "939a8a8ee02361edcc289d63261e565225af9c43e4b526e3d9dfd7eee55fd3a9",
+    "src/engine_mmi.js": "d7ffa2acefa15305d77e859803f4fa8af1ac75a4b617023618329b2dadef221b",
+    "src/guide.js": "91693b2f87427b73b3b6f342d136b62dcc75c43671e696afc3bfe743ff8d7808",
+    "src/head.html": "33ba2fb2cbf3d741b57c6c34e3f9780e9f157f7d22e46b044f194029ea4180d5",
+    "src/kinds/chirp.js": "713df2ab8ea7442558fef703eb701e5e7facb1795a8a7ce522b1159f835e872b",
+    "src/kinds/cwdm.js": "e287c49982a0bc7a37bbb360f3f9b88f3b4e381d251b3059c47b02e535493b4a",
+    "src/kinds/dc.js": "368989034258cf7f00a62d6ab66f43a31d5fc775c93ac8ddd8d879926840966c",
+    "src/kinds/els.js": "db01bf9dffec30d428c2daa6a9c03af5b8c752e41bbe4df1bd349ed3316fd414",
+    "src/kinds/fpsa.js": "d6e82cd8e164aac67104128e9ab4e2b6ff04848ee1717daad0a49be58257def7",
+    "src/kinds/lidar.js": "c5890b2b854f96e8f6c0a8c5cd36adc14460f7c5912becfbfa9bcd5b26146c77",
+    "src/kinds/mmi.js": "83d0f639109ca5cad91edac5ecc00cd318bf608d6bcec44a6ac926d4f9372a0f",
+    "src/kinds/mrr.js": "ed835306c86dceca23d9b34f3e2f8036a5865886b6d015d0186d8f7a4f7004a3",
+    "src/kinds/mzm.js": "cd9b948217abd012a4f28c4afb9400eb036b637f9cdeeb2f07cc886d3e7614d9",
+    "src/kinds/pd.js": "2550e1fbb1db05ae71333645b2d53c3a766489d8592ebccaf7f7387ff40fb38f",
+    "src/kinds/pn.js": "744bff3442040f59cec446775186042caea19687622eb4dee4a333a396d36736",
+    "src/kinds/spiral.js": "a3ffa2b009bbba905fba50e2931559898397548c67ab7ac27ebdbb3890bc6f19",
+    "src/kinds/ssc.js": "e4da2abcae29217262a44581c6823580290adcb5b4551abcd6e0bb5385eda8a0",
+    "src/kinds/to.js": "07aa7f18866221afd855d2dbc80dca7da391f6acda69261d51cbbc7603bb58b4",
+    "src/kinds/ttd.js": "e02843a288e26368220ca6bfbbd1c1459f35ef6014196302467c5743317b407b",
+    "src/kinds/wdm.js": "569cbd7a2ae7127b5132bd0e7e0e0b23b0ef0e234f03426a90383cc680a7c506",
+    "src/kinds/wg.js": "2b8a40c337e4fb8621d61cc87627538f85e92bff3558b2f123c68e34c412cc48",
+    "src/kinds/xcvr.js": "7ff3835e8b3971c5e5ee2f5380f58443a24058df692f75bea5a9bfb52655da37",
+    "src/lab/engine.js": "1eec086e8b6127a5fed340d9d1e349d1c0981bef0ea6da3faf20d0ed6cf4dab0",
+    "src/lab/ui.js": "17cd52c3260526b1d9930089c6e2f068c5eab0116cd009395bb55a425cc6cd79",
+    "src/learn.js": "1722010d7baa8059d42bd12f2201ed1e688d22d29a5590565f635c7339af40a8",
+    "src/levels.js": "70869c8fdb559f359fcb0fdd8c52c3b308cd684c820ffaa1f87e27bce590651c",
+    "src/palette.js": "3deff193aea18098d8931438499e955716e8c032baade7e198ed39fb7a083ed5",
+    "src/persist.js": "7f7f0c803fac161b7644f5adfbc088a237722a7d30b54d9e8207646d06beb4a6",
+    "src/platforms.js": "1d243886ea08d06fcffbea26a6558353d1f06b102f9ece3527dde76f5e4ad102",
+    "src/shell.js": "5abda2344119e4cd9b54f27b4d3ea47f88f226049aef70fd83bde7119b2776f9",
+    "src/studio.css": "6552bc47e6719c1998a20509892728117861ab56537476c449ea410c353603f8",
+    "src/studio.js": "7b8b8ddc3d3a73fb069a101e85ef699f8064a872c5c3f633bf1f82e4a28064fe",
+    "src/ui_util.js": "7b7ea84d062f414b82ac5b70cba6c3c1f81b80bf8786f7dc30efea304552cc37",
+    "src/util.js": "c94f6ac568135d35fd766466f7b2eb300e0f35ea8ca96a3072a16f2af2628c4a",
+    "src/v2/active.js": "38a635deb657d8892f50b295ed58ea98cee6bb12fdd8a32ed1f78a73d1f25817",
+    "src/v2/active_ui.js": "57ffa71fc21dea8dd78e56e5f714b3d9e8bd19a506f34c6386dee80c9d5ba084",
+    "src/v2/core.js": "cf906e391abbe3f95063c55048c18111fa3c01606cd8b501576fb4ca4783e721",
+    "src/v2/course.js": "0efb9bfda5e47f013ca3192fb7442ee3ad1134c14edfb0bae9d454ec23f1b6fe",
+    "src/v2/course_ui.js": "a86172974d6065c159ae655d3249d17a24ad06ee0c82e8a2a8af5773e439238a",
+    "src/v2/font.css": "775aa9796a5979af137455436136f8f22036fd7f3831ce00865de8a8299ff7c2",
+    "src/v2/formats.js": "18ffeabbf81fab7931097f0c07843a4b07b96d498f268389c53c21cde46fb806",
+    "src/v2/formats_ui.js": "bdd1b8863ad678fadd0a07502680ca483c9f0109536cb7df68e97a56e48d4a45",
+    "src/v2/foundations.css": "072cd08a9843872122abc75ec027d0b6bc847fff9a4e072b7924bb5825cac7da",
+    "src/v2/foundations.js": "310b22ff1d7f9cad4261220fb7bce44aff59e30fabaebf317c831139a14f4696",
+    "src/v2/foundations_ui.js": "1d6ae1b7df8fd586df720de5645159a96e4b50131838021540ae8bc2294ab3c7",
+    "src/v2/learning.js": "272f89a135ea10cbd2820b06c0fcaa39abe91d2bd5fde9afc7ec85f779c8d840",
+    "src/v2/materials.js": "093d62d8519d23498a8e89e7fbb71d0d7fc6cacfd8b7648c2e876cd7d0cef430",
+    "src/v2/mzm.css": "5767480e2d134c64faf3f6df7997e4cf78df58ba7500ce428f79e07f0bcc6fc8",
+    "src/v2/mzm.js": "6614c02e3c0bcd46094fe04144fa91f0cb0085c87e79a7f2a7f3cdad148cab88",
+    "src/v2/mzm_ui.js": "a49f5c5fd272fe965dd3df24bfb0305693751f6cbd5e2ee7ff97ac88f157b566",
+    "src/v2/passive_science.js": "6f66847768716bdd2aef4f4722a351e5259207cb5e65b85c3bb017b6a2037566",
+    "src/v2/pn_science.js": "c35416807f1f28d9dc7169f4bbdfdcf72d7427f0c0f1954321f95feeda0d0ebb",
+    "src/v2/schema.js": "2867a81085595b9c00a229046086483dcd8f66a015c2d89ae671b4d39bf3559c",
+    "src/v2/science.js": "694347326531713b254abb95458e6f97385b9eb1abab6cd7d73d7aaaf5875b3c",
+    "src/v2/science_ui.js": "0ecc20dfae3bd8e83f1b7d70ea04353ccbbc58513647d173b5b06f81bd145007",
+    "src/v2/ui.js": "cdafb187d24d7856a3d998229510b673f2566e33b64086be851fa51bce72eec3",
+    "src/v2/visual.js": "9f625cc9d7c49f16cee1f4128e2705c343b51e4f5850be4be1962e35b997f50e",
+    "src/v2/workbench.css": "dbf2b89fb9d5b67b6b70910e2135914f9b39b2154e27c538fa700950d2584593",
+    "tools/build.sh": "79d5138f52e3502353f438c773f1c492e8d4f3923dd5bffa65643cf2601ace49",
+    "tools/gen_p22_fields.py": "e29afbbae3040af9a592f3fe2af21029b053ccbc3d1d98b6c8c565523ff46468",
+    "tools/modes2.py": "f6fcd5e0905e8a3ecdcba6688a0c308583650272fc5ce0e4e6fc66329081361c"
+  },
+  "source_manifest_sha256": "c114de850d1459455216061a61e2b2ebd5d55e23ffab9cd0e1bf64fa4d505307",
+  "physics_checks": 4394,
+  "canonical_index_equal": true,
+  "kernel_diff": "",
+  "local_regression_initial": [
+    {
+      "test": "test:syntax",
+      "exit": 0
+    },
+    {
+      "test": "test:v2",
+      "exit": 0
+    },
+    {
+      "test": "test:v2:p2",
+      "exit": 0
+    },
+    {
+      "test": "test:v2:p21",
+      "exit": 0
+    },
+    {
+      "test": "test:v2:learning",
+      "exit": 0
+    },
+    {
+      "test": "test:v2:p22",
+      "exit": 0
+    },
+    {
+      "test": "test:mzm-bench",
+      "exit": 0
+    },
+    {
+      "test": "test:studio",
+      "exit": 0
+    },
+    {
+      "test": "test:lab",
+      "exit": 1
+    },
+    {
+      "test": "test:backup",
+      "exit": 1
+    },
+    {
+      "test": "test:smoke",
+      "exit": 1
+    },
+    {
+      "test": "test:migrate",
+      "exit": 1
+    },
+    {
+      "test": "test:upgrade",
+      "exit": 0
+    },
+    {
+      "test": "test:mrr",
+      "exit": 0
+    },
+    {
+      "test": "test:dr8",
+      "exit": 0
+    },
+    {
+      "test": "test:wdm",
+      "exit": 0
+    },
+    {
+      "test": "test:baseline",
+      "exit": 0
+    },
+    {
+      "test": "test:py",
+      "exit": 1
+    }
+  ],
+  "local_regression_recheck": [
+    {
+      "test": "test:lab",
+      "exit": 0
+    },
+    {
+      "test": "test:backup",
+      "exit": 0
+    },
+    {
+      "test": "test:smoke",
+      "exit": 0
+    },
+    {
+      "test": "test:migrate",
+      "exit": 0
+    },
+    {
+      "test": "test:v2:p22",
+      "exit": 0
+    }
+  ],
+  "browser_stable": [
+    {
+      "test": "v2_p2",
+      "exit": 0
+    },
+    {
+      "test": "v2_journey",
+      "exit": 0
+    },
+    {
+      "test": "v2_p21",
+      "exit": 0
+    },
+    {
+      "test": "studio",
+      "exit": 0
+    },
+    {
+      "test": "mzm_bench",
+      "exit": 0
+    },
+    {
+      "test": "v2_p22",
+      "exit": 0
+    }
+  ],
+  "CI": {
+    "workflow_status_receipt": [
+      {
+        "id": 39283034512,
+        "name": "CI",
+        "event": "pull_request",
+        "status": "queued",
+        "conclusion": null,
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034512"
+      },
+      {
+        "id": 39283034456,
+        "name": "v2 P1 Waveguide acceptance",
+        "event": "pull_request",
+        "status": "queued",
+        "conclusion": null,
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034456"
+      },
+      {
+        "id": 39283034417,
+        "name": "v2 P0 UX prototype",
+        "event": "pull_request",
+        "status": "in_progress",
+        "conclusion": null,
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034417"
+      },
+      {
+        "id": 39283034431,
+        "name": "v2 P2.2 scientific visualization",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034431"
+      },
+      {
+        "id": 39283034404,
+        "name": "v2 P2 MZM acceptance",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034404"
+      },
+      {
+        "id": 39283034428,
+        "name": "v2 P2.1 learning foundations",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283034428"
+      },
+      {
+        "id": 39283024679,
+        "name": "v2 P2 MZM acceptance",
+        "event": "push",
+        "status": "queued",
+        "conclusion": null,
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283024679"
+      },
+      {
+        "id": 39283024792,
+        "name": "v2 P2.2 scientific visualization",
+        "event": "push",
+        "status": "in_progress",
+        "conclusion": null,
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283024792"
+      },
+      {
+        "id": 39283024765,
+        "name": "v2 P1 Waveguide acceptance",
+        "event": "push",
+        "status": "in_progress",
+        "conclusion": null,
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283024765"
+      },
+      {
+        "id": 39283024824,
+        "name": "v2 P2.1 learning foundations",
+        "event": "push",
+        "status": "in_progress",
+        "conclusion": null,
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283024824"
+      },
+      {
+        "id": 39283024803,
+        "name": "CI",
+        "event": "push",
+        "status": "in_progress",
+        "conclusion": null,
+        "html_url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39283024803"
+      }
+    ],
+    "job_evidence": "ci-job-evidence.json",
+    "production_gds": "PASS in job 118161187242 logs; local klayout unavailable",
+    "release_artifact": {
+      "run": 39283034512,
+      "id": 12201874179,
+      "sha256": "a10afb5add5593c26453e1b5d30bd5acfac929d7205c85a5b329046774b59162"
+    },
+    "scientific_artifact": {
+      "run": 39283034431,
+      "id": 12202545939,
+      "sha256": "e7eb04d3fb1997da66321429941c55957a10b02fa1dc567ce52171fb61b5f53b"
+    },
+    "status_discrepancy": "P2 / P2.1 / P2.2 workflow conclusions SUCCESS. P0 job SUCCESS. P1 / Production completed passing logs and finalized artifacts exist, but some run/check API states still queued/in_progress. Aggregate conclusion NOT VERIFIED; do not rewrite remote state."
+  },
+  "human_play": "NOT VERIFIED",
+  "source_tree": "016045e787f7d585786a8ddc56c5a0e595751b81",
+  "local_browser_counts": {
+    "P1": 121,
+    "P2": 511,
+    "P21": 391,
+    "navigation": 50,
+    "course": 322,
+    "formats": 79,
+    "journey": 16,
+    "studio": 168,
+    "mzm_bench": 37,
+    "P22": 64
+  },
+  "local_model_counts": {
+    "P1": 93,
+    "P2": 154,
+    "P21": 135,
+    "learning_navigation": 11,
+    "course": 41,
+    "active": 107,
+    "formats": 49,
+    "MZM": 111,
+    "studio": 56,
+    "P22": 4394
+  },
+  "local_gds": "NOT RUN: klayout unavailable; remote pinned CI required",
+  "artifact_commit": "e826849c1d0b8b098019a29698b4539249cf1406"
+}
