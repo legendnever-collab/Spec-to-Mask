@@ -1,3 +1,11 @@
+# v2.0.0-alpha.6 — P3.2 Optical Link Budget
+
+[Offline HTML](dist/spec-to-mask-v2.0.0-alpha.6-p32-link-budget.html) · [QA](artifacts/v2-p32/QA.md) · [Play Review Handoff](docs/HANDOFF_V2_P32.md) · [Checkpoint Log](docs/V2_CHECKPOINT_LOG.md)
+
+**Session → 200G-class Lane · P3.1 / P3.2**에서 시작합니다. Length의 Stable Rendering과 Laser / Channel의 Scalar Power·OMA Ledger를 제공합니다. Tx Flow의 Laser 버튼 또는 P3.1 Summary에서 Optical Budget으로 이동합니다. CW Power / Settled Average / OMA_outer / Raw Eye를 구분하며 Receiver Sensitivity / Margin / BER / FEC / Net200G는 미검증입니다. 기존 P3.1 HTML과 과거 기록은 아래에 보존합니다. Draft PR #26 / 사용자 P3.2 Play Review 대기이며 P3.3 / main Merge / P4는 진행하지 않습니다.
+
+---
+
 # v2.0.0-alpha.5 — P3.1 Single Lane Assembly
 
 [Offline HTML](dist/spec-to-mask-v2.0.0-alpha.5-p31-lane.html) · [QA](artifacts/v2-p31/QA.md) · [Model Contract](docs/V2_P3_MODEL_CONTRACT.md) · [Checkpoint Log](docs/V2_CHECKPOINT_LOG.md)

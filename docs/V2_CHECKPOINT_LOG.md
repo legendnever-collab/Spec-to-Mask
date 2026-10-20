@@ -4,7 +4,7 @@
 > Original P0 execution order: [V2_P0_SOL_WORK_ORDER.md](V2_P0_SOL_WORK_ORDER.md)
 > Owner approval and playable review required after each checkpoint. Update this file **at every new Work** before stopping.
 
-Current handoff — **2026-10-20 KST: 사용자 P3.1 Play 후 Rendering 수정 + P3.2 Optical Ledger 개발을 승인했습니다.** 기존 Draft PR #26 / Branch를 유지하며 Checkpoint A → B → C → D로 진행합니다. P3.3 / main 병합 / P4는 승인되지 않았습니다. 아래 과거 기록과 SHA는 보존합니다.
+Current handoff — **2026-10-20 KST: 승인된 P3.1 Rendering Fix + P3.2 Scalar Optical Ledger 구현을 마무리하고 최종 Source / Artifact / CI를 게시합니다.** 기존 Draft PR #26을 유지합니다. [P3.2 Handoff](HANDOFF_V2_P32.md), [QA](../artifacts/v2-p32/QA.md)와 아래 Publication Receipt를 확인합니다. P3.3 / main 병합 / P4는 진행하지 않습니다. 과거 기록과 기존 P3.1 HTML은 보존합니다.
 
 ## Status as of 2026-10-18 (KST)
 
@@ -415,3 +415,12 @@ Optional source / passive, Optical Revision / Signature와 Snapshot / Old P3.1 M
 Checkpoint B Remote `8aa5f7799bc6f4dbd47c79f0d07473d6811faed6`를 먼저 저장했습니다. 같은 Mounted Lane의 Tx / Optical Budget을 Hidden View 전환으로 연결하고 SVG / Plot Root를 유지합니다. A–F Flow, MZM IL Owner, 별도 CW / Settled Average / OMA Plot, 실제 Before/After, Laser → Channel Discovery와 Summary를 구현했습니다. Flow의 Laser / Channel / MZM을 눌러 해당 관찰로 이동합니다. Coupling 3개와 mW 상세는 선택 창입니다. P3.3 Receiver는 미구현입니다.
 
 Local P3.2 Browser 74 checks PASS: 6 Viewport(1440×900 / 1366×768 / 390×844 / 320×568 / 1280×800 / 400×860) × Light/Dark, Flow Text·Tile Clipping / Control·KPI / Desktop Page / Save·Backup 실제 Restore·Exit·4 Platform·원본 Tx 재사용을 검사했습니다. 320 px의 Flow Clipping / KPI 가림을 실제 Screenshot으로 확인해 수정하고 Test에 Tile Bounds를 추가했습니다. 첫 ARIA Locator와 Pseudo-arrow ScrollWidth 검사는 대상 요소 / 실제 Text Range 기준으로 바로잡았습니다. 수치 Assertion은 유지했습니다. 새 문구의 Missing Glyph만 동일 Pretendard로 보완했으며 WOFF2 +1,220 bytes입니다. Render Trace / Screenshot은 최종 Actions Artifact를 우선합니다. Final Integration에서 Version / Canonical / Regression / CI를 동결합니다.
+
+
+### Checkpoint D — Final Source Freeze / Local QA
+
+C Remote `3f0d4f96fab2b38ec54a189ab9b02fd7468212a8` 이후 Version을 `2.0.0-alpha.6-p32-link-budget`으로 동결합니다. Optical Detail도 Current Revision으로 갱신하고 Previous Preview를 구분합니다. 같은 Tx Input의 Ledger Edit은 기존 수치를 재사용합니다. 기존 `src/kinds/`, `src/bench/`, `src/util.js`, Data / Levels / Persistence Kernel은 Verified Source `d499f4a`와 Byte 변경이 없습니다. P3.1 Canonical은 Recovery HEAD `b46a919`의 Byte / SHA256 그대로입니다.
+
+최종 Local Model/State P3.2 326 / P3.1 172, P3.2 Browser 74 / P3.1 Browser 142, Rendering Browser 11 PASS입니다. Rendering은 Length 50회 + Burst 80회 / 최종 Release와 Optical Loss 50회에서 Stable Node / 무공백 / 현재 Revision / Save / Tx 재사용을 검사하고 실제 Trace를 생성했습니다. FPS / Latency는 추정하지 않습니다. P1/P2/P2.1 State 93/154/135, Navigation/Course/Active/Formats 11/41/107/49, Backup / Smoke(errors 0) / Migration, Syntax 123 files + script PASS입니다. 동일 Build / 무영향 Source의 성공 검증은 재사용하며 최종 CI는 별도 확인합니다.
+
+Source / Test / Documentation을 먼저 Commit·Push합니다. `[p32-release]` Source HEAD가 맞는 경우에만 Actions가 새 Versioned HTML / index / Source Manifest / SHA256을 별도 Commit으로 게시합니다. 이 Source 시점은 Remote 최종 CI 성공으로 기록하지 않습니다. Production CI / P0–P3.2 Acceptance / 4 Platform / Legacy Browser / GDS 결과와 최종 Source·Artifact SHA는 후속 Publication Receipt에 기록합니다. main 병합 / P3.3 / P4는 하지 않습니다.

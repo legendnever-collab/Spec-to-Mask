@@ -67,7 +67,7 @@ jobs:
         if: hashFiles('src/v2/lane.js') != ''
         env:
           SMQ_HTML: dist/index.html
-        run: npm run test:v2:p3 && npm run test:v2 && npm run test:v2:p2 && npm run test:v2:p21 && npm run test:v2:learning && npm run test:v2:p22
+        run: npm run test:v2:p3 && npm run test:v2:p32 && npm run test:v2 && npm run test:v2:p2 && npm run test:v2:p21 && npm run test:v2:learning && npm run test:v2:p22
       - name: Missing-baseline regression (no history → fail, never a silent skip)
         run: npm run test:baseline
       - name: Design Lab (engine, e2e, state integrity)
