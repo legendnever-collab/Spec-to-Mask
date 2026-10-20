@@ -2,6 +2,18 @@
 
 기존 Physics / Save / Level 규칙은 `CLAUDE.md`를 함께 읽습니다. 사용자 지시가 문서보다 우선합니다.
 
+## P3.1 Rendering Fix + P3.2 현재 실행 범위 — 2026-10-20 KST
+
+사용자는 P3.1을 플레이했고 Rendering 깜빡임 수정 후 P3.2 Scalar Optical Power / OMA Ledger 구현·검증·Offline HTML·기존 PR #26 갱신을 승인했습니다. Checkpoint A를 먼저 저장합니다. Model Contract C01–C07과 기존 Solver를 재사용하며 P3.0 재설계는 하지 않습니다. P3.2 Play Review에서 중단합니다. P3.3 / main Merge / P4는 승인되지 않았습니다. 아래 승인은 과거 기록입니다.
+
+## P3.1 현재 실행 범위 — 2026-10-20 KST
+
+사용자가 P3.1 Single Lane Assembly 구현 / C01–C05 검증 / Playable HTML / QA / 기존 PR #26 갱신을 승인했습니다. P3.0 문서를 다시 설계하지 않고 `docs/V2_P3_NEXT_TASK.md` / Model Contract를 구현합니다. 사용자 Play Review에서 중단하며 P3.2 / main Merge / P4는 진행하지 않습니다. 아래 P3.0 승인은 당시 기록입니다.
+
+## 최신 승인 상태 — 2026-10-20 KST
+
+P2.2는 사용자 승인 후 PR #25 / `c98998c7d7586716a34cd8386180b6b76580a2c3`로 main에 병합됐습니다. 이번 승인은 `feature/v2-p3-200g-lane`의 **P3.0 Architecture Audit / Model Contract / 계획 문서 / Draft PR만**입니다. 정본은 `docs/V2_P3_ARCHITECTURE.md`, `docs/V2_P3_MODEL_CONTRACT.md`, `docs/V2_P3_CHECKPOINT_PLAN.md`, `docs/V2_P3_NEXT_TASK.md`와 Checkpoint Log의 최신 Receipt입니다. 아래 과거 P2 미병합 / P3 미승인 기록은 당시 범위이며 이 최신 승인 상태가 우선합니다. P3.1–P3.4 구현 / P3 main 병합 / P4 시작은 승인되지 않았습니다.
+
 ## Recovery와 Checkpoint
 
 - 작업 시작 시 Remote HEAD, PR/CI, Local Status, 미Commit 변경, 기존 Artifact와 마지막 성공 Checkpoint를 확인합니다.

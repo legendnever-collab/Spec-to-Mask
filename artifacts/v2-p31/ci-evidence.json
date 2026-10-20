@@ -1,0 +1,146 @@
+{
+  "schema": "smq-p31-ci/1",
+  "observedAtUTC": "2026-10-19T22:24:40.128Z",
+  "testedBranchHead": "d9fe2ece171fe59a8f0ade673dd229e33b979e6d",
+  "sourceCommit": "d499f4a45387b47f258e15155a6406b500d6f060",
+  "artifactCommit": "a55a53eedef9fd94f23ba0ec49fd37c0a73edc2c",
+  "runtimeUnchangedAfterTestedHead": true,
+  "note": "Final receipt only changes QA/log/CI evidence; full runtime/test/workflow tree is unchanged. CI is not claimed to have run again on the receipt commit.",
+  "runs": [
+    {
+      "id": 39332793526,
+      "name": "v2 P0 UX prototype",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332793526"
+    },
+    {
+      "id": 39332793582,
+      "name": "v2 P1 Waveguide acceptance",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332793582"
+    },
+    {
+      "id": 39332793535,
+      "name": "v2 P2.2 scientific visualization",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332793535"
+    },
+    {
+      "id": 39332793577,
+      "name": "v2 P2 MZM acceptance",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332793577"
+    },
+    {
+      "id": 39332793605,
+      "name": "v2 P3.1 Lane acceptance",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332793605"
+    },
+    {
+      "id": 39332793531,
+      "name": "v2 P2.1 learning foundations",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332793531"
+    },
+    {
+      "id": 39332793523,
+      "name": "CI",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332793523"
+    },
+    {
+      "id": 39332787712,
+      "name": "CI",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332787712"
+    }
+  ],
+  "productionJobs": [
+    {
+      "id": 118334830911,
+      "name": "Build + regression (si1310) + GDS",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332793523/job/118334830911"
+    },
+    {
+      "id": 118334831155,
+      "name": "Offline Studio browser acceptance",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332793523/job/118334831155"
+    },
+    {
+      "id": 118338693179,
+      "name": "Release regression (sin1550)",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332793523/job/118338693179"
+    },
+    {
+      "id": 118338693209,
+      "name": "Release regression (si1310)",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332793523/job/118338693209"
+    },
+    {
+      "id": 118338693283,
+      "name": "Release regression (si1550)",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332793523/job/118338693283"
+    },
+    {
+      "id": 118338693302,
+      "name": "Release regression (sin1310)",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332793523/job/118338693302"
+    },
+    {
+      "id": 118340980478,
+      "name": "Release artifacts",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332793523/job/118340980478"
+    }
+  ],
+  "productionArtifacts": [
+    {
+      "id": 12225456462,
+      "name": "studio-browser-evidence",
+      "digest": "sha256:2e38a3d4c672d0238ab2ee39b3bb0b1fcab5d7d8d0f4fc0c076af47d5cff492b",
+      "bytes": 4385857,
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332793523/artifacts/12225456462"
+    },
+    {
+      "id": 12225169755,
+      "name": "spec-to-mask-release",
+      "digest": "sha256:61ade5ad11b273bff85f6bcbd56cb6ef315d99d1f15c03a427d873fdeb284831",
+      "bytes": 36073281,
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332793523/artifacts/12225169755"
+    }
+  ],
+  "p31SourceEvidence": {
+    "run": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332515900",
+    "conclusion": "success",
+    "modelStateChecks": 172,
+    "browserChecks": 142,
+    "benchChecks": 111,
+    "screenshots": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332515900/artifacts/12224349388",
+    "playable": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332515900/artifacts/12224414126"
+  },
+  "humanPlayReview": "PENDING",
+  "nextCheckpointAuthorized": false
+}

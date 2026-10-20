@@ -4,7 +4,7 @@
 > Original P0 execution order: [V2_P0_SOL_WORK_ORDER.md](V2_P0_SOL_WORK_ORDER.md)
 > Owner approval and playable review required after each checkpoint. Update this file **at every new Work** before stopping.
 
-Current handoff: **2026-10-18 사용자 P1 Play / Merge 승인과 P2 개발 승인을 받았습니다. P2는 별도 Branch / Draft PR에서 Play Review까지만 진행합니다. P2 main Merge / P3는 승인되지 않았습니다.** 최신 기록은 문서 하단을 확인합니다.
+Current handoff — **2026-10-20 KST: P3.1 Flicker-Free Rendering + P3.2 Optical Power / OMA Ledger 구현·게시·전체 CI 검증을 완료했으며 사용자 Play Review를 기다립니다.** 기존 Draft PR #26을 유지합니다. [P3.2 Handoff](HANDOFF_V2_P32.md) / [QA](../artifacts/v2-p32/QA.md) / [최종 CI Evidence](../artifacts/v2-p32/ci-evidence.json)와 하단 Receipt를 확인합니다. P3.3 / main 병합 / P4는 진행하지 않습니다. 과거 기록과 P3.1 HTML은 보존합니다.
 
 ## Status as of 2026-10-18 (KST)
 
@@ -316,3 +316,141 @@ D Remote `3e4c9ac` 이후 기존 PN profile / fractional carrier cell / EIM mode
 E Remote `c319544` 이후 Scientific Browser / Source Parity / 기존 Regression을 통합합니다. Course / Active 재렌더링 직후 이전 결과가 유효하게 남는 문제를 무효화했습니다. PN 모바일 도표와 Scientific Plot의 스크롤을 보완했습니다. Build는 temporary output syntax check 후 atomic rename하며 Test는 immutable canonical을 사용합니다. 기존 Chrome single-process 실행 옵션을 제거하고 Restore의 새 문서 로드를 기다립니다. 기존 수치 Assertion은 보존합니다. Full calibrated material set / MMI physical conservation / 외부 Full-vector 정확도는 완료로 주장하지 않습니다. 최종 Counts·SHA·실제 CI는 artifacts/v2-p22/QA.md, verification.json 및 PR Receipt에 기록합니다.
 
 F Artifact `e826849`와 Source `3e7f6f5`를 게시했습니다. 신규 4394/64, 기존 P1/P2/P2.1 및 Legacy/GDS/4-Platform 실제 로그를 확인했습니다. P2/P2.1/P2.2 Workflow SUCCESS, P0 Job SUCCESS입니다. 일부 P1/Production 상태 API는 완료 로그/Artifact와 달리 queued로 남아 aggregate 결론은 NOT VERIFIED로 기록합니다. QA/CI receipt를 보존하고 사용자 Play Review에서 중단합니다. main/P3 변경 없음.
+
+
+## P3.0 — Architecture / Model Contract — 2026-10-20 KST
+
+### Recovery / 실제 확인
+
+- main과 PR #25 Merge Commit은 `c98998c7d7586716a34cd8386180b6b76580a2c3`이며 `merged=true`입니다. P2.2 병합 승인은 최신 사용자 지시와 실제 GitHub 상태를 따릅니다.
+- 이번 Scratch에 기존 Checkout이 없어 Clone했습니다. 최초 Local Status는 Clean, 이전 Session의 미저장 변경은 확인하지 못했습니다. Reset / 삭제 / Force Push는 하지 않았습니다. Remote에 없던 `feature/v2-p3-200g-lane`을 이 Baseline에서 만들었습니다.
+- main [CI 39326037439](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39326037439)는 completed/success입니다. Build + Regression + GDS / Offline Studio Browser가 SUCCESS이고 main push의 Release Matrix / Artifact는 SKIPPED입니다. 과거 Artifact HEAD 상태 불일치는 당시 QA에 보존합니다.
+- 기존 Canonical / index는 같은 Blob `ce30c94e4cafa89c18074e4eb8d7a6d0351c6a74`, HTML SHA256 `b1f9bfa1b49abb9000b279f224dd80e0c66413f9511fd4f5bb9e45b030631351`입니다.
+
+### Model Audit / Deliverables
+
+[Architecture](V2_P3_ARCHITECTURE.md), [Model Contract](V2_P3_MODEL_CONTRACT.md), [Checkpoint Plan](V2_P3_CHECKPOINT_PLAN.md), [P3.1 지시문](V2_P3_NEXT_TASK.md)을 작성했습니다. AGENTS / Master Plan / README에 최신 승인 상태를 추가하고 과거 기록을 보존합니다. 이 기록의 구현 계획 / Interface는 아직 Source에 없습니다.
+
+기존 PN / Loaded CPW / MZM Bench / Raw Eye를 재사용할 수 있습니다. ELS의 닫힌 WDM Budget / XCVR의 8-Lane 전력 / PD의 Worst-channel λ·112 GBd·FFE·Noise 조건을 Single Lane과 혼용하지 않습니다. 특히 Legacy Tx Penalty + Rx Sensitivity의 이중 FFE를 End-to-end 검증으로 승격하지 않습니다. P3.3 Receiver Reference와 별도 승인이 필요한 Cascaded Quality를 분리했습니다.
+
+P2.2 MMI Conservation / Symmetry FAIL / UI NOT VERIFIED, Mode Sample Domain / SiN Mismatch / TM Sensitivity, 새 Material Bend 미검증, PN / Raw Eye / BER-FEC 한계는 그대로입니다. 이를 해결했다고 기록하지 않습니다.
+
+### 이번 검증 / 미실행 항목
+
+- Local Node v24.19.0: `npm run test:mzm-bench` 111 checks PASS, `npm run build` PASS(6,715,746 bytes), `node tools/check_rc.js` PASS, `npm run test:syntax` 112 files + dist script PASS입니다. Build 후 tracked Source / Runtime / HTML 변경은 없습니다.
+- 4 Platform의 기존 Entry Point를 호출해 Legacy settled OMA와 Bench Normalized OMA의 정의를 대조하고 PD가 선택하는 lamW를 확인했습니다. 새 Model이나 Test를 구현하지 않았습니다. 구체 수치는 Contract §5–6입니다.
+- P3.0은 문서 전용입니다. 새 Browser / Screenshot / 전체 Regression / 외부 Physics 검증 / 새 Playable HTML은 수행·생성하지 않았습니다. 기존 P2.2 QA Counts를 신규 P3 결과로 재사용하지 않습니다.
+
+### 승인 / Stop
+
+P3.0 문서를 Commit·Push하고 Draft PR을 게시한 후 중단합니다. 문서의 P3.1 지시문은 저장된 다음 작업이며 실행 승인이 아닙니다. 사용자 P3.1 개발 승인을 기다립니다. P3.1 구현 / main 병합 / P4 자동 시작은 하지 않습니다. 실제 Source Commit / PR / Remote 상태는 아래 Publication Receipt에 이어 기록합니다.
+
+
+### P3.0 Publication Receipt — PR #26
+
+- Design / Contract Remote Commit: `b1e7c04771efd5bfb4fd20dabd57bdf0045c03c5`입니다. Parent는 확인한 main `c98998c7d7586716a34cd8386180b6b76580a2c3`, Tree는 `4557443ff49fffff3a3eb419e1c8772dbd2b9b81`입니다.
+- [Draft PR #26](https://github.com/legendnever-collab/Spec-to-Mask/pull/26)을 `feature/v2-p3-200g-lane` → `main`으로 생성했습니다. `draft=true`, `merged=false`를 실제 확인했습니다. P3.0 문서 8개만 변경합니다.
+- Terminal Push는 Credential이 없어 실패했습니다. AGENTS의 Text Tree / Commit / Ref 방식으로 게시했으며 Remote Tree는 Local Design Commit `6c1399789e9ebd1c36a5bd69ae07e3010148220e`의 Tree와 정확히 같습니다. 원래 Local Commit은 `recovery/p3-local-docs-6c13997`에 보존하고, P3 Local Branch는 Remote Commit에서 다시 연결했습니다. Reset / Force Push는 하지 않았습니다.
+- 게시 후 Remote Compare에서 문서 8개만 변경됐고 Parent / Branch HEAD를 확인했습니다. Local 문서 Link / Code Fence / 5 Checkpoint×7 필수 Field / Whitespace / Runtime Unchanged 검사가 통과했습니다.
+- Design Commit의 새 CI는 조회 시 [PR CI 39328895790](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39328895790), [P0 39328895982](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39328895982), [Push CI 39328867546](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39328867546)가 `in_progress`였습니다. **이 Snapshot을 CI SUCCESS로 기록하지 않습니다.** 이 Receipt Commit의 CI도 PR 최신 HEAD에서 별도 확인해야 합니다. P3.0의 문서 저장 Stop Condition을 지키며 전체 Runtime CI를 기다리면서 P3.1을 시작하지 않습니다.
+- 이번 Receipt는 Log / Next Task의 Publication Pointer만 추가합니다. Runtime / Test / HTML / 기존 Artifact Hash는 바꾸지 않습니다. P3.1–P3.4는 여전히 미구현 / 사용자 승인 대기이고, main Merge / P4도 하지 않았습니다.
+
+
+## P3.1 — Single Lane Assembly / Source Checkpoint — 2026-10-20 KST
+
+사용자가 P3.1만 구현하도록 승인했습니다. Recovery main `c98998c7d7586716a34cd8386180b6b76580a2c3`, Branch / PR #26 HEAD `f1a300626e82dcefa8ddc8d2fde8931240c5524b`, Local Clean을 확인했습니다. P3.0의 P0 39328998788 / PR CI 39328998718 / Push CI 39328993506은 completed/success입니다. P3.0 Audit / Model Contract를 재작성하지 않았습니다.
+
+`lane.js`는 기존 SMQ_V2_MZM.evaluate / MZM_BENCH를 호출하는 Composition Adapter입니다. Optional Lane Schema / 독립 4 Platform State / P2 Deep Copy와 Source Provenance / Original / Comparison / Restore / Backup / Resume, Length 중심 Assembly와 선택 Voltage / RF Control을 구현했습니다. 같은 Result Identity로 Physical / Plot / KPI를 그리며 Chapter Remount 뒤 Request ID도 재사용하지 않습니다. Legacy Physics / Data / Level / Persistence Kernel은 보존합니다. 후속 Laser / Channel / Receiver는 NOT EVALUATED입니다.
+
+신규 172 Model-State / 141 Browser, 기존 P1/P2/P2.1 93/154/135, Navigation/Course/Active/Formats 11/41/107/49, P2.2 4394, MZM Bench 111 PASS입니다. Browser는 P1/P2/P2.1/P2.2 121/511/391/64, Navigation/Course/Formats/Journey 50/322/79/16 PASS입니다. Studio State 56 / DR8 87 (identity 12/12), Backup / Smoke / Migration도 통과했습니다. 실제 Gate / Environment / 미실행 항목은 [QA](../artifacts/v2-p31/QA.md)를 확인합니다. Local Browser는 Chromium 133이며 CI 결과와 구분합니다.
+
+Source / Test / Documentation을 먼저 게시합니다. Terminal Credential 부재를 이미 확인했으므로 Text Tree / Commit / 비강제 Ref Update를 사용합니다. Source Commit의 Tree를 Local과 비교합니다. 대용량 HTML을 수동 Blob으로 반복 올리지 않고 Actions의 P3.1 Job이 해당 Source에서 Canonical / index / Source Manifest / SHA256을 별도 Artifact Commit으로 저장합니다. 기존 Production Workflow를 해당 Branch에서 실행해 Artifact SHA의 실제 Gate를 확인합니다. 이 Source Checkpoint 시점의 Remote P3.1 CI는 아직 NOT VERIFIED입니다.
+
+P2.2 MMI / Material / Field / PN / Raw Eye 한계를 보존하며 BER / FEC / Net200G / Receiver / Link Budget을 만들지 않았습니다. 사용자 Play Review가 다음 단계입니다. P3.2 개발은 별도 승인 후 Scalar Optical Budget으로 제한하며 지금 시작하지 않습니다. main Merge / P4도 하지 않습니다.
+
+
+### P3.1 — Keyboard / Dialog Source Follow-up
+
+첫 Source `13f2a38415853f299d3be49b42563da73e7d4d95` → Actions Artifact `2de1c037cbea0b0c669e118741e336e7e05ad566`를 실제 확인했습니다. 첫 HTML SHA256은 `9a6e9f4a9e5c8e9f7a62cda4ef5834b00c0c929803bd795b8819dedfdf9ce6d9`이며 기존 P2.2 HTML은 보존했습니다.
+
+Remote Run 39331789357은 Model / State / Parity를 통과했으나 Browser Home/End Wait에서 실패했습니다. 같은 Test를 무한 재시도하지 않고 실제 Range / Focus 상태를 조사했습니다. Dialog Close / Focus 대기와 Locator 대상 Key 입력으로 보강했으며 수치 Assertion은 유지합니다. Voltage / RF 제목도 Close 시 복원해 이후 P1 Learn에 남지 않도록 했습니다. 후속 Local Browser 142 checks PASS입니다. 후속 Source를 먼저 저장하고 Artifact를 재생성합니다. Physics Source / 기존 수치 기준은 변경하지 않았습니다.
+
+
+### P3.1 Publication / Source–Artifact Receipt
+
+- Source Freeze `d499f4a45387b47f258e15155a6406b500d6f060` / Artifact `a55a53eedef9fd94f23ba0ec49fd37c0a73edc2c`를 실제 Remote Branch에서 확인하고 Local로 Fast-forward했습니다. 최초 Source `13f2a38` / Artifact `2de1c03`도 Commit History에 보존합니다. Local 원래 Source Commit은 `recovery/p31-local-source-7d63dba`, Follow-up은 `recovery/p31-local-fix-abd0c85`에 보존했으며 Reset / Force Push하지 않았습니다.
+- 최종 HTML SHA256 `b927884eea8a7331df70bae5f35a77b57f20f85dfc6327cb7d1aba4dc7b10a89`, Source Manifest SHA256 `2b76fb28e23af844a56074d97cb58928b51e5af2fe85067e113ec9fbf3c27d82`입니다. Canonical / index / 독립 Local Source Rebuild가 Byte 일치하고 249개 Source Hash를 검증했습니다.
+- 최종 Local 신규 Browser 142 checks, 추가 1280×800 / 400×860 Light-Dark Screenshot도 통과했습니다. 기존 4 Viewport / Keyboard / Touch / Import / Backup / Restore / Scope Assertion을 유지합니다. Physics Kernel / Coefficient / 기존 Numerical Target 변경은 없습니다.
+- Run 39332515900은 조회 당시 Model / MZM / Parity 통과 후 기존 State Gate 실행 중, Dispatch 39332557834는 pending이었습니다. Bot Artifact Commit의 PR Checks는 action_required로 표시됐습니다. 이를 CI 성공으로 기록하지 않으며 이 문서 게시 후 최신 PR HEAD의 실제 Checks를 확인합니다. Remote CI 최종 결론은 별도 Receipt에 이어 기록합니다.
+- [QA](../artifacts/v2-p31/QA.md), [Build Receipt](../artifacts/v2-p31/verification.json), [Play Review / 짧은 Handoff](HANDOFF_V2_P31.md)를 제공합니다. P3.1 완료 / 사용자 Play Review 대기입니다. P3.2 / main Merge / P4는 진행하지 않습니다.
+
+
+### P3.1 Final CI / Stop Receipt — 2026-10-20 KST
+
+검증 HEAD `d9fe2ece171fe59a8f0ade673dd229e33b979e6d`의 P0 / P1 / P2 / P2.1 / P2.2 / P3.1 Acceptance, [PR Production CI 39332793523](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332793523), [Push CI 39332787712](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39332787712)가 모두 completed/success입니다. Production Build / Identity / Legacy Browser / Save·Backup·Migration / Python GDS / 4 Platform Regression·Bot / Release Artifact까지 통과했습니다. 신규 Model-State 172 / Browser 142, 기존 MZM Bench 111입니다. [최종 QA](../artifacts/v2-p31/QA.md#final-ci-receipt--2026-10-20-kst) / [실제 CI JSON](../artifacts/v2-p31/ci-evidence.json)에 Run / Job / Artifact URL과 SHA256을 보존합니다.
+
+Source Freeze `d499f4a45387b47f258e15155a6406b500d6f060`, Artifact `a55a53eedef9fd94f23ba0ec49fd37c0a73edc2c` 및 HTML / Source Manifest SHA256은 위 Receipt와 같습니다. 최종 문서 Commit은 Log 상단을 현재 P3.1 Play Review로 정리하고 QA / Handoff / CI Evidence만 저장합니다. 검증 HEAD 이후 Runtime / Test / Workflow / HTML Diff가 없음을 확인했으며 `[skip ci]`로 같은 CI의 반복 실행을 피합니다. 문서 Commit 자체의 CI를 성공으로 주장하지 않습니다.
+
+기존 Draft PR #26은 Open / Unmerged, main은 `c98998c7d7586716a34cd8386180b6b76580a2c3`입니다. P2.2와 PN / Raw Eye Known Limitations를 보존합니다. **사용자 P3.1 Play Review 대기에서 중단합니다. P3.2 개발 / main 병합 / P4 시작은 하지 않았습니다.**
+
+
+## P3.1 Rendering + P3.2 — Checkpoint A
+
+Recovery main `c98998c7d7586716a34cd8386180b6b76580a2c3`, Branch / PR #26 `b46a91906db8705de17f72b1a79ec0d9816806e4`, tracked Local Clean을 확인했습니다. 기존 Untracked QA 자료를 보존합니다. 해당 문서 HEAD는 [skip ci]이며 직전 Runtime의 성공 CI는 P3.1 Receipt에 있습니다. P3.1 Canonical SHA256 `b927884eea8a7331df70bae5f35a77b57f20f85dfc6327cb7d1aba4dc7b10a89`를 재확인하고 변경하지 않았습니다.
+
+입력마다 replaceChildren / SVG innerHTML로 그림을 삭제하던 경로를 Stable DOM Patch로 바꿨습니다. Physical / Plot / Eye의 Attribute·Text·Trace를 기존 Node에 반영합니다. Invalidation은 Previous Preview / Previous Revision을 표시하고 Current Identity와 Capture를 즉시 무효화합니다. rAF에서 최신 Snapshot만 계산하고 Release에서 마지막 값을 확정합니다. Persistence는 180 ms 묶음 저장하며 Release / Navigation / Pagehide / Exit / Backup은 마지막 Design을 저장합니다. Comparison Tx는 Snapshot이 같으면 재사용합니다. Physics / Model Signature / Identity 수식은 변경하지 않았습니다.
+
+Local C01–C05 172, 기존 P3.1 Browser 142, 새 Rendering Browser 8 checks PASS입니다. 50회 개별 rAF Update + 80회 Burst 후 Release에서 SVG / Path Reference 유지, Blank 0, Node / Listener 누적 0, 최종 Input / Revision / KPI / Save 일치와 Late Result 거절을 확인했습니다. 실제 Trace / Frame Screenshot을 생성했으며 FPS / Latency 수치는 주장하지 않습니다. Source / Test / Docs를 먼저 저장하고 P3.2로 진행합니다. 이 중간 Source Commit은 [skip ci]이며 Final Source 동결 뒤 새 HTML / 전체 CI를 수행합니다.
+
+
+### Checkpoint B — Scalar Optical Ledger Model
+
+Checkpoint A Remote `f52cdf9af5dcf729a4e367b835e6c10611b1176d`를 먼저 저장했습니다. `optical.js`는 기존 Bench의 정착 Symbol Level에 Plane B mW를 곱하고 A–F의 각 Passive Owner를 한 번씩 적용합니다. A/B CW, C–F Equal-probability Settled Average / OMA_outer, 별도 Raw Gap을 구분합니다. MZM IL은 Transfer에 이미 포함되며 다시 빼지 않습니다. PN Domain 밖 Modulated Evidence / Non-monotonic OMA는 N/A, Zero Log는 null입니다. Defaults 10 dBm Laser / Input 1 dB / TxOut 1 dB / Channel 3 dB / RxIn 1 dB는 교육용 가정이며 측정값이 아닙니다.
+
+Optional source / passive, Optical Revision / Signature와 Snapshot / Old P3.1 Migration을 확장했습니다. 같은 Tx Input은 수치 결과를 재사용하고 기존 MZM Identity API로 현재 Revision / Request를 다시 연결합니다. Optical Edit은 Tx Geometry / PN / CPW / FFT를 바꾸지 않습니다. 신규 C06–C07 Model-State 324 checks PASS입니다. Receiver Sensitivity / Margin / Dynamic OMA·Average / BER·FEC는 null입니다. 중간 Source-only Checkpoint이며 HTML / CI는 Final에서 게시합니다.
+
+
+### Checkpoint C — Optical Budget UI
+
+Checkpoint B Remote `8aa5f7799bc6f4dbd47c79f0d07473d6811faed6`를 먼저 저장했습니다. 같은 Mounted Lane의 Tx / Optical Budget을 Hidden View 전환으로 연결하고 SVG / Plot Root를 유지합니다. A–F Flow, MZM IL Owner, 별도 CW / Settled Average / OMA Plot, 실제 Before/After, Laser → Channel Discovery와 Summary를 구현했습니다. Flow의 Laser / Channel / MZM을 눌러 해당 관찰로 이동합니다. Coupling 3개와 mW 상세는 선택 창입니다. P3.3 Receiver는 미구현입니다.
+
+Local P3.2 Browser 74 checks PASS: 6 Viewport(1440×900 / 1366×768 / 390×844 / 320×568 / 1280×800 / 400×860) × Light/Dark, Flow Text·Tile Clipping / Control·KPI / Desktop Page / Save·Backup 실제 Restore·Exit·4 Platform·원본 Tx 재사용을 검사했습니다. 320 px의 Flow Clipping / KPI 가림을 실제 Screenshot으로 확인해 수정하고 Test에 Tile Bounds를 추가했습니다. 첫 ARIA Locator와 Pseudo-arrow ScrollWidth 검사는 대상 요소 / 실제 Text Range 기준으로 바로잡았습니다. 수치 Assertion은 유지했습니다. 새 문구의 Missing Glyph만 동일 Pretendard로 보완했으며 WOFF2 +1,220 bytes입니다. Render Trace / Screenshot은 최종 Actions Artifact를 우선합니다. Final Integration에서 Version / Canonical / Regression / CI를 동결합니다.
+
+
+### Checkpoint D — Final Source Freeze / Local QA
+
+C Remote `3f0d4f96fab2b38ec54a189ab9b02fd7468212a8` 이후 Version을 `2.0.0-alpha.6-p32-link-budget`으로 동결합니다. Optical Detail도 Current Revision으로 갱신하고 Previous Preview를 구분합니다. 같은 Tx Input의 Ledger Edit은 기존 수치를 재사용합니다. 기존 `src/kinds/`, `src/bench/`, `src/util.js`, Data / Levels / Persistence Kernel은 Verified Source `d499f4a`와 Byte 변경이 없습니다. P3.1 Canonical은 Recovery HEAD `b46a919`의 Byte / SHA256 그대로입니다.
+
+최종 Local Model/State P3.2 326 / P3.1 172, P3.2 Browser 74 / P3.1 Browser 142, Rendering Browser 11 PASS입니다. Rendering은 Length 50회 + Burst 80회 / 최종 Release와 Optical Loss 50회에서 Stable Node / 무공백 / 현재 Revision / Save / Tx 재사용을 검사하고 실제 Trace를 생성했습니다. FPS / Latency는 추정하지 않습니다. P1/P2/P2.1 State 93/154/135, Navigation/Course/Active/Formats 11/41/107/49, Backup / Smoke(errors 0) / Migration, Syntax 123 files + script PASS입니다. 동일 Build / 무영향 Source의 성공 검증은 재사용하며 최종 CI는 별도 확인합니다.
+
+Source / Test / Documentation을 먼저 Commit·Push합니다. `[p32-release]` Source HEAD가 맞는 경우에만 Actions가 새 Versioned HTML / index / Source Manifest / SHA256을 별도 Commit으로 게시합니다. 이 Source 시점은 Remote 최종 CI 성공으로 기록하지 않습니다. Production CI / P0–P3.2 Acceptance / 4 Platform / Legacy Browser / GDS 결과와 최종 Source·Artifact SHA는 후속 Publication Receipt에 기록합니다. main 병합 / P3.3 / P4는 하지 않습니다.
+
+
+### Final Build Metadata Follow-up
+
+Final Runtime Source `dc19ef31d9735db3cf18bd806aaf48d951a4b9c8` → Actions Artifact `17b9a7cee3f631a04e7a78d81bd21eed4e1279b4`를 확인했습니다. HTML SHA256 `451921b01b47775cbf0aec784e794518f2031cd8b5a41c2d00a3a4bb5c86dcd1`, 6,781,350 bytes이며 Local Build / Canonical / index가 일치합니다. Source Hash 255개도 일치합니다.
+
+Manifest Generator의 이전 `linkBudget:null` Field를 `opticalLedger: MODEL`과 `endToEndLinkClosure:null`로 구분합니다. Runtime / UI / Test / HTML은 변경하지 않습니다. Source를 먼저 저장한 뒤 Generator로 작은 JSON / SHA Text 3개만 별도 Artifact Commit에 갱신하고 기존 HTML Blob을 재사용합니다. 동일 Binary 업로드와 전체 Packaging 반복을 피합니다. 최종 실제 CI는 Publication Receipt에서 확인합니다.
+
+
+### P3.2 Publication Receipt / Runtime CI
+
+- Runtime Source `dc19ef31d9735db3cf18bd806aaf48d951a4b9c8`, Final Metadata Source `dadcc77c092af571072a1ebfade8957fad35231d`, Final Artifact `c1ee3281a83b810a9b9a5b784ec3c4d33bf57017`를 실제 Remote에서 확인했습니다. Source / Test / Docs를 먼저 저장한 뒤 HTML을 별도 Actions Commit으로 게시했고, Metadata Follow-up은 작은 Text 3개만 갱신해 동일 HTML Blob을 재사용했습니다. Local Source / Candidate Commit은 recovery Branch에 보존했으며 Reset / Force Push하지 않았습니다.
+- HTML SHA256 `451921b01b47775cbf0aec784e794518f2031cd8b5a41c2d00a3a4bb5c86dcd1`, Source Manifest SHA256 `7119a3f24ecefcc7004885f7b36c0d945c1dded0f77edbb188f11516f9ca5c1d`입니다. Canonical / index / Local Build가 Byte 일치하고 Source Hash 255개 / SHA256SUMS가 PASS입니다. P3.1 Canonical은 그대로 보존합니다.
+- [Runtime Source CI 39400966867](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39400966867)은 completed/success입니다. P3.2 326 / P3.1 172 / Bench 111, P3.2 Browser 74 / Rendering 11, 기존 P1–P2.2 State도 Remote Node 22 / CI Chromium에서 통과했습니다. [실제 Runtime Evidence](../artifacts/v2-p32/runtime-ci.json)에 Count / Trace 링크를 기록합니다. Metadata Follow-up 이후 Runtime / Test / Workflow / Package / HTML은 이 Run과 Byte 일치합니다.
+- Source 게시 직후 이전 HTML과의 Parity 차이로 실패한 PR Run은 성공으로 계산하지 않습니다. Artifact 생성 후 현재 문서 HEAD의 실제 Acceptance / Production / 4 Platform / Legacy / GDS CI를 다시 확인하고 최종 Receipt에 결론을 이어 기록합니다. 이 시점의 전체 Production CI는 Pending입니다.
+- [P3.2 Handoff](HANDOFF_V2_P32.md), [QA](../artifacts/v2-p32/QA.md)를 제공합니다. 사용자 P3.2 Play Review 대기이며 P3.3 / main Merge / P4는 진행하지 않습니다.
+
+
+### P2 Browser Handoff Assertion Follow-up
+
+Receipt HEAD `7bc17f0`에서 P0 / P1 / P2.1 / P2.2 / P3.2 Acceptance는 SUCCESS였으나 P2 Run `39401400824`는 과거 Summary의 특정 금지 문구를 찾는 마지막 Assertion에서 실패했습니다. 새 승인 범위는 P3.2까지이므로 해당 문구는 더 이상 현재 UI와 맞지 않습니다. 수치 검사를 바꾸지 않고, Summary 유지 / 직접 Next Button / Lane State 미생성 / Engineering NOT VERIFIED를 명시적으로 검사하도록 한 Assertion만 갱신했습니다. 실제 Canonical을 사용한 Local P2 Browser 511 checks PASS입니다. Runtime / HTML은 바꾸지 않습니다. Source Test를 먼저 저장하고 Manifest의 Test Hash / Source SHA만 작은 Text Artifact로 갱신한 뒤 최신 HEAD CI를 확인합니다. 실패 Run은 성공으로 계산하지 않습니다.
+
+
+### P3.2 Final CI / Play Review Stop Receipt — 2026-10-20 KST
+
+- 최종 Validation Source `abf1c74f7421b0f3bfc2d34ad8ee57a2beee978b`, Artifact / 검증 HEAD `8be6f978515d5c16ea2d40361703e440742e2420`입니다. HTML SHA256 `451921b01b47775cbf0aec784e794518f2031cd8b5a41c2d00a3a4bb5c86dcd1`, Source Manifest SHA256 `7602cccc97b6ca414e59fcd5fea5096186d5277c674cada9b1a21007cbbcce43`가 최종 정본입니다. Metadata / Test Follow-up에서 HTML Blob을 재사용했고 Source Hash 255개를 검증했습니다.
+- P0 / P1 / P2 / P2.1 / P2.2 / P3.2 Acceptance와 [PR Production CI 39402016193](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016193), [Push CI 39402010206](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402010206)이 모두 completed/success입니다. Legacy / GDS / Save·Backup·Migration / 4 Platform Regression·Bot / Release Artifact도 통과했습니다.
+- P3.2 Model-State 326 / Browser 74 / Rendering 11, P3.1 172 / 142, MZM Bench 111, P2 Browser 511과 기존 State Gate를 확인했습니다. Rendering의 실제 Node / Frame / Trace Evidence를 보관하며 FPS / Latency를 추정하지 않습니다. [최종 CI JSON](../artifacts/v2-p32/ci-evidence.json), [QA](../artifacts/v2-p32/QA.md), [Play Review Handoff](HANDOFF_V2_P32.md)를 확인합니다.
+- 최종 문서 Commit은 QA / Log / Handoff / CI JSON만 수정하며 검증 HEAD와 Runtime / Test / Workflow / Package / HTML이 일치합니다. `[skip ci]`로 동일 CI의 불필요한 반복을 피하고 이 문서 Commit 자체의 CI 성공을 주장하지 않습니다. Local Source / Candidate는 Recovery Branch에 보존했으며 Reset / Force Push는 하지 않았습니다.
+- 기존 Draft PR #26 / main 미병합을 유지합니다. **사용자 P3.2 Play Review에서 중단합니다. P3.3 개발 / main Merge / P4는 하지 않았습니다.**

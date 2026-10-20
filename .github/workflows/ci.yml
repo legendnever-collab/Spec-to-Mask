@@ -63,6 +63,11 @@ jobs:
           grep -E '^  (BASELINE|IDENTITY) ' identity.log | sed 's/^  /::notice title=identity evidence::/'
       - name: MZM bench analytical limits and legacy EO parity
         run: npm run test:mzm-bench
+      - name: P3 Lane contract and additive learning state
+        if: hashFiles('src/v2/lane.js') != ''
+        env:
+          SMQ_HTML: dist/index.html
+        run: npm run test:v2:p3 && npm run test:v2:p32 && npm run test:v2 && npm run test:v2:p2 && npm run test:v2:p21 && npm run test:v2:learning && npm run test:v2:p22
       - name: Missing-baseline regression (no history → fail, never a silent skip)
         run: npm run test:baseline
       - name: Design Lab (engine, e2e, state integrity)
@@ -167,6 +172,7 @@ jobs:
           if [ -f "$RC" ]; then node tools/check_rc.js; export SMQ_HTML="$RC"; else export SMQ_HTML=dist/index-offline.html; fi
           npm run test:browser
           SMQ_QA_OUT=artifacts/studio-ci-browser/mzm npm run test:browser:mzm
+          if [ -f src/v2/lane.js ]; then SMQ_QA_OUT=artifacts/studio-ci-browser/p31 npm run test:browser:v2:p3; fi
         env:
           SMQ_QA_OUT: artifacts/studio-ci-browser
       - uses: actions/upload-artifact@v4

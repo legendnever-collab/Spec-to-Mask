@@ -18,3 +18,11 @@ Nanum / Pretendard / Noto Sans KR를 같은 18 px Specimen으로 Light/Dark에�
 - Runtime: src/v2/font.css의 WOFF2 Data URL / weight 100–900을 사용하며 외부 Font 요청이 없습니다.
 - Specimen Subset 크기: Nanum 9,800 / Pretendard 16,332 / Noto 11,212 bytes입니다. 최종 UI Subset은 별도 Glyph Coverage / Byte 검사를 기록합니다.
 - Browser 비교 Screenshot과 JSON은 artifacts/v2-p21/ 및 최종 Actions Artifact에 보관합니다. 이 비교는 사용자 선호의 검증이 아닌 개발 시각 검토입니다.
+
+## P3.1 — 동일 Source의 Glyph 확장
+
+위와 동일한 Pretendard Variable Source SHA256을 NPM `pretendard@1.3.9`의 WOFF2에서 확인했습니다. 기존 Generator / Rename / OFL을 유지하고 Lane 문구의 Glyph만 확장했습니다. 현재 Hangul 352개 / 누락 0, Subset 111,148 bytes입니다. Font는 Runtime Data URL에 포함하며 외부 요청이 없습니다.
+
+## P3.2 Glyph Extension — 2026-10-20 KST
+
+동일 Pretendard Source SHA256 / Generator / Rename / OFL을 유지했습니다. 새 문구의 실제 Missing Glyph를 확인해 필요한 Glyph만 확장했습니다. WOFF2 112,368 bytes로 P3.1보다 1,220 bytes 증가했습니다. Font Family / Layout / 외부 요청 정책은 바꾸지 않았습니다.

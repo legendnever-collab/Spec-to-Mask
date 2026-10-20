@@ -1,0 +1,366 @@
+{
+  "htmlSHA256": "9a3ce68d5630888b51e0943806af85e79d23238e49cf7ade815b8a891863bfb6",
+  "browser": "133.0.6943.0",
+  "checks": [
+    {
+      "ok": true,
+      "message": "50 separate animation-frame edits adopt current results"
+    },
+    {
+      "ok": true,
+      "message": "no empty SVG frame; SVG and path node references remain stable"
+    },
+    {
+      "ok": true,
+      "message": "no DOM-node or Event Listener accumulation"
+    },
+    {
+      "ok": true,
+      "message": "rapid burst and release adopt exact latest input/revision/KPI"
+    },
+    {
+      "ok": true,
+      "message": "late prior result rejected"
+    },
+    {
+      "ok": true,
+      "message": "release persists final input without writing on every slider step"
+    },
+    {
+      "ok": true,
+      "message": "invalid input retains labelled preview without current evidence"
+    },
+    {
+      "ok": true,
+      "message": "zero runtime errors"
+    }
+  ],
+  "report": {
+    "blank": 0,
+    "replaced": 0,
+    "saves": 1,
+    "listenerAdds": 0,
+    "samples": [
+      {
+        "input": 1,
+        "revision": 1,
+        "current": true,
+        "vpi": "20.74"
+      },
+      {
+        "input": 1.05,
+        "revision": 2,
+        "current": true,
+        "vpi": "19.75"
+      },
+      {
+        "input": 1.15,
+        "revision": 3,
+        "current": true,
+        "vpi": "18.04"
+      },
+      {
+        "input": 1.2,
+        "revision": 4,
+        "current": true,
+        "vpi": "17.29"
+      },
+      {
+        "input": 1.3,
+        "revision": 5,
+        "current": true,
+        "vpi": "15.96"
+      },
+      {
+        "input": 1.35,
+        "revision": 6,
+        "current": true,
+        "vpi": "15.36"
+      },
+      {
+        "input": 1.4,
+        "revision": 7,
+        "current": true,
+        "vpi": "14.82"
+      },
+      {
+        "input": 1.5,
+        "revision": 8,
+        "current": true,
+        "vpi": "13.83"
+      },
+      {
+        "input": 1.55,
+        "revision": 9,
+        "current": true,
+        "vpi": "13.38"
+      },
+      {
+        "input": 1.65,
+        "revision": 10,
+        "current": true,
+        "vpi": "12.57"
+      },
+      {
+        "input": 1.7,
+        "revision": 11,
+        "current": true,
+        "vpi": "12.20"
+      },
+      {
+        "input": 1.75,
+        "revision": 12,
+        "current": true,
+        "vpi": "11.85"
+      },
+      {
+        "input": 1.85,
+        "revision": 13,
+        "current": true,
+        "vpi": "11.21"
+      },
+      {
+        "input": 1.9,
+        "revision": 14,
+        "current": true,
+        "vpi": "10.92"
+      },
+      {
+        "input": 2,
+        "revision": 15,
+        "current": true,
+        "vpi": "10.37"
+      },
+      {
+        "input": 2.05,
+        "revision": 16,
+        "current": true,
+        "vpi": "10.12"
+      },
+      {
+        "input": 2.1,
+        "revision": 17,
+        "current": true,
+        "vpi": "9.88"
+      },
+      {
+        "input": 2.2,
+        "revision": 18,
+        "current": true,
+        "vpi": "9.43"
+      },
+      {
+        "input": 2.25,
+        "revision": 19,
+        "current": true,
+        "vpi": "9.22"
+      },
+      {
+        "input": 2.35,
+        "revision": 20,
+        "current": true,
+        "vpi": "8.83"
+      },
+      {
+        "input": 2.4,
+        "revision": 21,
+        "current": true,
+        "vpi": "8.64"
+      },
+      {
+        "input": 2.45,
+        "revision": 22,
+        "current": true,
+        "vpi": "8.47"
+      },
+      {
+        "input": 2.55,
+        "revision": 23,
+        "current": true,
+        "vpi": "8.13"
+      },
+      {
+        "input": 2.6,
+        "revision": 24,
+        "current": true,
+        "vpi": "7.98"
+      },
+      {
+        "input": 2.7,
+        "revision": 25,
+        "current": true,
+        "vpi": "7.68"
+      },
+      {
+        "input": 2.75,
+        "revision": 26,
+        "current": true,
+        "vpi": "7.54"
+      },
+      {
+        "input": 2.8,
+        "revision": 27,
+        "current": true,
+        "vpi": "7.41"
+      },
+      {
+        "input": 2.9,
+        "revision": 28,
+        "current": true,
+        "vpi": "7.15"
+      },
+      {
+        "input": 2.95,
+        "revision": 29,
+        "current": true,
+        "vpi": "7.03"
+      },
+      {
+        "input": 3.05,
+        "revision": 30,
+        "current": true,
+        "vpi": "6.80"
+      },
+      {
+        "input": 3.1,
+        "revision": 31,
+        "current": true,
+        "vpi": "6.69"
+      },
+      {
+        "input": 3.15,
+        "revision": 32,
+        "current": true,
+        "vpi": "6.58"
+      },
+      {
+        "input": 3.25,
+        "revision": 33,
+        "current": true,
+        "vpi": "6.38"
+      },
+      {
+        "input": 3.3,
+        "revision": 34,
+        "current": true,
+        "vpi": "6.29"
+      },
+      {
+        "input": 3.4,
+        "revision": 35,
+        "current": true,
+        "vpi": "6.10"
+      },
+      {
+        "input": 3.45,
+        "revision": 36,
+        "current": true,
+        "vpi": "6.01"
+      },
+      {
+        "input": 3.5,
+        "revision": 37,
+        "current": true,
+        "vpi": "5.93"
+      },
+      {
+        "input": 3.6,
+        "revision": 38,
+        "current": true,
+        "vpi": "5.76"
+      },
+      {
+        "input": 3.65,
+        "revision": 39,
+        "current": true,
+        "vpi": "5.68"
+      },
+      {
+        "input": 3.75,
+        "revision": 40,
+        "current": true,
+        "vpi": "5.53"
+      },
+      {
+        "input": 3.8,
+        "revision": 41,
+        "current": true,
+        "vpi": "5.46"
+      },
+      {
+        "input": 3.85,
+        "revision": 42,
+        "current": true,
+        "vpi": "5.39"
+      },
+      {
+        "input": 3.95,
+        "revision": 43,
+        "current": true,
+        "vpi": "5.25"
+      },
+      {
+        "input": 4,
+        "revision": 44,
+        "current": true,
+        "vpi": "5.19"
+      },
+      {
+        "input": 4.1,
+        "revision": 45,
+        "current": true,
+        "vpi": "5.06"
+      },
+      {
+        "input": 4.15,
+        "revision": 46,
+        "current": true,
+        "vpi": "5.00"
+      },
+      {
+        "input": 4.2,
+        "revision": 47,
+        "current": true,
+        "vpi": "4.94"
+      },
+      {
+        "input": 4.3,
+        "revision": 48,
+        "current": true,
+        "vpi": "4.82"
+      },
+      {
+        "input": 4.35,
+        "revision": 49,
+        "current": true,
+        "vpi": "4.77"
+      },
+      {
+        "input": 4.45,
+        "revision": 50,
+        "current": true,
+        "vpi": "4.66"
+      }
+    ],
+    "initialNodes": [
+      18,
+      10,
+      72
+    ],
+    "finalNodes": [
+      18,
+      10,
+      72
+    ],
+    "finalInput": 3.75,
+    "resultInput": 3.75,
+    "revision": 131,
+    "stateRevision": 131,
+    "savedInput": 3.75,
+    "lateAccepted": false,
+    "kpi": "5.53",
+    "expectedKpi": "5.53"
+  },
+  "errors": [],
+  "note": "Observed node/frame stability only. No FPS or latency accuracy claim."
+}

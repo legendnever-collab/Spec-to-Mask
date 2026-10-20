@@ -1,3 +1,21 @@
+# v2.0.0-alpha.6 — P3.2 Optical Link Budget
+
+[Offline HTML](dist/spec-to-mask-v2.0.0-alpha.6-p32-link-budget.html) · [QA](artifacts/v2-p32/QA.md) · [Play Review Handoff](docs/HANDOFF_V2_P32.md) · [Checkpoint Log](docs/V2_CHECKPOINT_LOG.md)
+
+**Session → 200G-class Lane · P3.1 / P3.2**에서 시작합니다. Length의 Stable Rendering과 Laser / Channel의 Scalar Power·OMA Ledger를 제공합니다. Tx Flow의 Laser 버튼 또는 P3.1 Summary에서 Optical Budget으로 이동합니다. CW Power / Settled Average / OMA_outer / Raw Eye를 구분하며 Receiver Sensitivity / Margin / BER / FEC / Net200G는 미검증입니다. 기존 P3.1 HTML과 과거 기록은 아래에 보존합니다. Draft PR #26 / 사용자 P3.2 Play Review 대기이며 P3.3 / main Merge / P4는 진행하지 않습니다.
+
+---
+
+# v2.0.0-alpha.5 — P3.1 Single Lane Assembly
+
+[Offline HTML](dist/spec-to-mask-v2.0.0-alpha.5-p31-lane.html) · [QA](artifacts/v2-p31/QA.md) · [Model Contract](docs/V2_P3_MODEL_CONTRACT.md) · [Checkpoint Log](docs/V2_CHECKPOINT_LOG.md)
+
+**Session → 200G-class Lane · P3.1**에서 시작합니다. Length를 바꾸며 같은 Tx Model의 Phase / Vπ / Optical Loss / Raw Eye를 관찰합니다. P2 Import / Original / Comparison / Backup / Resume를 지원합니다. Laser / Channel / Receiver는 NOT EVALUATED이며 112 GBd PAM4는 224 Gb/s raw입니다. 사용자 Play Review에서 중단하며 P3.2 / main Merge / P4는 진행하지 않습니다. 아래 P3.0 / P2.2 기록과 기존 HTML은 보존합니다.
+
+---
+
+> **2026-10-20 KST / P3.0:** P2.2는 PR #25 / `c98998c7`로 main에 병합됐습니다. 현재 작업은 [P3 Architecture](docs/V2_P3_ARCHITECTURE.md) / [Model Contract](docs/V2_P3_MODEL_CONTRACT.md) / [Checkpoint Plan](docs/V2_P3_CHECKPOINT_PLAN.md) / [P3.1 Next Task](docs/V2_P3_NEXT_TASK.md)의 문서 설계만입니다. Runtime / 아래 P2.2 실행 HTML은 유지합니다. P3.1은 사용자 승인 대기이며 P3 Merge / P4 시작은 하지 않습니다. 아래 과거 Draft / 미병합 문구는 당시 기록입니다.
+
 # v2.0.0-alpha.4 — P2.2 Physics Fidelity & Scientific Visualization
 
 [Offline 실행 HTML](dist/spec-to-mask-v2.0.0-alpha.4-p22-physics.html) · [Physics / Visualization Specification](docs/V2_P22_SCIENTIFIC_SPECIFICATION.md) · [Material Domain Matrix](docs/V2_P22_MATERIAL_DOMAIN_MATRIX.md) · [Mode Provenance](docs/V2_P22_MODE_PROVENANCE.md) · [QA / Acceptance](artifacts/v2-p22/QA.md) · [Handoff](docs/HANDOFF_V2_P22.md)
