@@ -1,0 +1,201 @@
+{
+  "schema": "smq-p32-final-ci/1",
+  "observedAtUTC": "2026-10-20T09:54:26.886Z",
+  "testedHead": "8be6f978515d5c16ea2d40361703e440742e2420",
+  "runtimeSource": "dc19ef31d9735db3cf18bd806aaf48d951a4b9c8",
+  "finalValidationSource": "abf1c74f7421b0f3bfc2d34ad8ee57a2beee978b",
+  "artifactCommit": "8be6f978515d5c16ea2d40361703e440742e2420",
+  "htmlSHA256": "451921b01b47775cbf0aec784e794518f2031cd8b5a41c2d00a3a4bb5c86dcd1",
+  "sourceManifestSHA256": "7602cccc97b6ca414e59fcd5fea5096186d5277c674cada9b1a21007cbbcce43",
+  "runs": [
+    {
+      "id": 39402016094,
+      "name": "v2 P0 UX prototype",
+      "event": "pull_request",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016094"
+    },
+    {
+      "id": 39402016177,
+      "name": "v2 P1 Waveguide acceptance",
+      "event": "pull_request",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016177"
+    },
+    {
+      "id": 39402016323,
+      "name": "v2 P2.2 scientific visualization",
+      "event": "pull_request",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016323"
+    },
+    {
+      "id": 39402016021,
+      "name": "v2 P2 MZM acceptance",
+      "event": "pull_request",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016021"
+    },
+    {
+      "id": 39402016146,
+      "name": "v2 P2.1 learning foundations",
+      "event": "pull_request",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016146"
+    },
+    {
+      "id": 39402016014,
+      "name": "v2 P3.2 Optical ledger acceptance",
+      "event": "pull_request",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016014"
+    },
+    {
+      "id": 39402016193,
+      "name": "CI",
+      "event": "pull_request",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016193"
+    },
+    {
+      "id": 39402010206,
+      "name": "CI",
+      "event": "push",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402010206"
+    }
+  ],
+  "productionJobs": [
+    {
+      "id": 118558907980,
+      "name": "Offline Studio browser acceptance",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016193/job/118558907980"
+    },
+    {
+      "id": 118558908538,
+      "name": "Build + regression (si1310) + GDS",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016193/job/118558908538"
+    },
+    {
+      "id": 118562887120,
+      "name": "Release regression (si1550)",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016193/job/118562887120"
+    },
+    {
+      "id": 118562887162,
+      "name": "Release regression (sin1310)",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016193/job/118562887162"
+    },
+    {
+      "id": 118562887224,
+      "name": "Release regression (si1310)",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016193/job/118562887224"
+    },
+    {
+      "id": 118562887233,
+      "name": "Release regression (sin1550)",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016193/job/118562887233"
+    },
+    {
+      "id": 118565309258,
+      "name": "Release artifacts",
+      "conclusion": "success",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016193/job/118565309258"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 12256455225,
+      "name": "studio-browser-evidence",
+      "bytes": 4388111,
+      "digest": "sha256:c165ed52b03840aeeeb3c7ba5eea231576bab200620582953d207fb219ab133f",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016193/artifacts/12256455225"
+    },
+    {
+      "id": 12255653607,
+      "name": "spec-to-mask-release",
+      "bytes": 37299096,
+      "digest": "sha256:e386e6e407a0c83a5ab1fd70c4b78abab357be0b9b9dc26bddcea4ae2f83f1e4",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016193/artifacts/12255653607"
+    },
+    {
+      "id": 12255370624,
+      "name": "v2-p32-optical-evidence",
+      "bytes": 6845346,
+      "digest": "sha256:5c6cb3fa46e5e405204a470bf53402933a6c728a5c7483133c57c4e2a340fc2a",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016014/artifacts/12255370624"
+    },
+    {
+      "id": 12255255784,
+      "name": "v2-p32-playable-checkpoint",
+      "bytes": 1150048,
+      "digest": "sha256:cf40e1b84836507f38e587d58ee250b630cabade42de62db7fa1a5fdb4a084df",
+      "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016014/artifacts/12255255784"
+    }
+  ],
+  "checks": {
+    "p32ModelState": 326,
+    "p31ModelState": 172,
+    "p32Browser": 74,
+    "stableRendering": 11,
+    "p31Browser": 142,
+    "p2Browser": 511,
+    "studioState": 56,
+    "studioBrowser": 168,
+    "mzmBrowser": 37,
+    "mzmBench": 111,
+    "p22State": 4394
+  },
+  "logEvidence": {
+    "p2": [
+      "2026-10-20T09:37:26.3149225Z BUILD OK 6781350 bytes -> dist/index.html",
+      "2026-10-20T09:37:26.5688590Z RC source parity PASS 2.0.0-alpha.6-p32-link-budget 451921b01b47775cbf0aec784e794518f2031cd8b5a41c2d00a3a4bb5c86dcd1",
+      "2026-10-20T09:37:31.3684003Z 93 P1 state/model checks passed",
+      "2026-10-20T09:37:41.9330878Z 154 P2 model/state checks passed",
+      "2026-10-20T09:37:45.4988685Z 111 MZM bench model checks passed",
+      "2026-10-20T09:38:16.2058929Z 511 P2 browser checks passed"
+    ],
+    "p32": [
+      "2026-10-20T09:37:26.6304476Z BUILD OK 6781350 bytes -> dist/index.html",
+      "2026-10-20T09:37:27.0104389Z RC source parity PASS 2.0.0-alpha.6-p32-link-budget 451921b01b47775cbf0aec784e794518f2031cd8b5a41c2d00a3a4bb5c86dcd1",
+      "2026-10-20T09:37:41.5406846Z 172 P3.1 model/state checks passed",
+      "2026-10-20T09:37:48.2474695Z 326 P3.2 model/state checks passed",
+      "2026-10-20T09:37:55.3779669Z 111 MZM bench model checks passed",
+      "2026-10-20T09:38:03.0474835Z 93 P1 state/model checks passed",
+      "2026-10-20T09:38:20.8161430Z 154 P2 model/state checks passed",
+      "2026-10-20T09:38:29.6671550Z 135 P2.1 model/state checks passed",
+      "2026-10-20T09:38:32.7207745Z 11 learning navigation checks passed",
+      "2026-10-20T09:38:36.6207500Z 41 course model/state checks passed",
+      "2026-10-20T09:38:53.8689409Z 107 active checks passed",
+      "2026-10-20T09:38:56.4121962Z 49 format checks passed",
+      "2026-10-20T09:39:09.8950887Z 4394 P2.2 checks PASS",
+      "2026-10-20T09:39:36.8977879Z 74 P3.2 browser checks passed",
+      "2026-10-20T09:39:41.1608275Z 11 rendering checks passed"
+    ],
+    "legacy": [
+      "2026-10-20T09:38:09.8326918Z BUILD OK 6781350 bytes -> dist/index.html",
+      "2026-10-20T09:38:10.4597786Z BUILD OK 6781350 bytes -> dist/index-offline.html",
+      "2026-10-20T09:38:29.2666990Z 56 studio state checks passed",
+      "2026-10-20T09:38:29.5297820Z RC source parity PASS 2.0.0-alpha.6-p32-link-budget 451921b01b47775cbf0aec784e794518f2031cd8b5a41c2d00a3a4bb5c86dcd1",
+      "2026-10-20T09:39:20.6464528Z Browser checks: 168 PASS",
+      "2026-10-20T09:39:25.3314014Z 37 MZM bench browser checks passed",
+      "2026-10-20T09:39:33.2880144Z 142 P3.1 browser checks passed"
+    ]
+  },
+  "historicalFailures": [
+    {
+      "run": 39401400824,
+      "reason": "Obsolete P2 Summary wording assertion; replaced with explicit manual-next / no-Lane-state / NOT VERIFIED barrier; numeric assertions unchanged."
+    }
+  ],
+  "humanPlayAcceptance": "PENDING",
+  "externalPhysicsVerified": false,
+  "nextCheckpointAuthorized": false,
+  "note": "Final documentation receipt only changes QA, log, handoff and CI evidence; runtime/test/workflow/package/HTML are unchanged. Do not claim CI re-ran on a later documentation-only commit."
+}

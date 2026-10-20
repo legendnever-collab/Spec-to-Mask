@@ -52,12 +52,36 @@ Actions Artifact `17b9a7c`의 HTML / Local Candidate / index SHA256은 모두 `4
 
 ## Publication / Remote Runtime CI
 
-Final Runtime Source `dc19ef31d9735db3cf18bd806aaf48d951a4b9c8`, Final Metadata Source `dadcc77c092af571072a1ebfade8957fad35231d`, Artifact `c1ee3281a83b810a9b9a5b784ec3c4d33bf57017`です。HTML SHA256 `451921b01b47775cbf0aec784e794518f2031cd8b5a41c2d00a3a4bb5c86dcd1` / Source Manifest SHA256 `7119a3f24ecefcc7004885f7b36c0d945c1dded0f77edbb188f11516f9ca5c1d`、6,781,350 bytes、Source 255 Hash / Canonical-index-local parity PASSです。
+Final Runtime Source `dc19ef31d9735db3cf18bd806aaf48d951a4b9c8`, Final Metadata Source `dadcc77c092af571072a1ebfade8957fad35231d`, Artifact `c1ee3281a83b810a9b9a5b784ec3c4d33bf57017`です。HTML SHA256 `451921b01b47775cbf0aec784e794518f2031cd8b5a41c2d00a3a4bb5c86dcd1` / Source Manifest SHA256 `7119a3f24ecefcc7004885f7b36c0d945c1dded0f77edbb188f11516f9ca5c1d` / 6,781,350 bytes / Source 255 Hash / Canonical-index-local parity PASSです。
 
-[Source Run 39400966867](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39400966867) completed/successを実際に確認しました。P3.2 326 / P3.1 172 / Bench 111 / Browser 74 / Rendering 11、既存 State Gateも通過しました。[Runtime CI JSON](runtime-ci.json)と[Actions Screenshot / Trace](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39400966867/artifacts/12255003508)を保管します。RuntimeとHTMLはそのまま、Metadata Follow-up後の Manifestは上記 Final Artifactを正本にします。
+[Source Run 39400966867](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39400966867) completed/successを実際に確認しました。P3.2 326 / P3.1 172 / Bench 111 / Browser 74 / Rendering 11 / 既存 State Gateも通過しました。[Runtime CI JSON](runtime-ci.json)と[Actions Screenshot / Trace](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39400966867/artifacts/12255003508)を保管します。RuntimeとHTMLはそのまま / Metadata Follow-up後の Manifestは上記 Final Artifactを正本にします。
 
-Source-first直後の古いHTML Parity Failureはこの成功に含めません。最新文書HEADの全Acceptance / Production / Legacy / GDS / 4 Platform CIはまだPendingであり、最終Receiptで実際の結論を記録します。
+Source-first直後の古いHTML Parity Failureはこの成功に含めません。最新文書HEADの全Acceptance / Production / Legacy / GDS / 4 Platform CIはまだPendingであり / 最終Receiptで実際の結論を記録します。
 
 ## P2 Summary Regression Follow-up
 
 Run [39401400824](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39401400824)은 마지막 Summary 문구 Assertion에서 실패했습니다. P3.2 승인 전의 금지 문장을 찾던 부분을, Summary Scene / 직접 Next / Lane State 미생성 / Engineering NOT VERIFIED라는 실제 Barrier 검사로 갱신했습니다. 기존 물리 / Viewport / Save Assertion은 유지합니다. 변경한 Test와 현재 Canonical로 Local 511 P2 Browser checks PASS입니다. Runtime / HTML은 Byte 변경이 없습니다. Final Manifest / Source SHA와 최신 CI는 다음 Receipt를 정본으로 사용합니다.
+
+
+## Final CI Receipt — 2026-10-20 KST
+
+검증 HEAD는 `8be6f978515d5c16ea2d40361703e440742e2420`입니다. [실제 CI Evidence](ci-evidence.json)에 조회 시각 / Run / Job / Artifact / Log Count를 저장합니다. 위 Pending / 이전 Manifest Snapshot은 당시 기록이며 아래 최종 Receipt가 현재 결론입니다.
+
+| 최종 Remote Gate | 결과 |
+|---|---|
+| P0 / P1 / P2 / P2.1 / P2.2 / P3.2 Acceptance | 6개 모두 SUCCESS |
+| [PR Production CI 39402016193](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016193) / [Push CI 39402010206](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402010206) | 모두 SUCCESS |
+| Build / Canonical Parity / Syntax / Engine Identity / Save·Backup·Migration / Fab·Learning / Python GDS | SUCCESS |
+| Legacy Studio State / Browser / MZM Browser / P3.1 Browser | 56 / 168 / 37 / 142 PASS |
+| P3.1 / P3.2 Model-State / MZM Bench | 172 / 326 / 111 PASS |
+| P3.2 Browser / Rendering / P2 Browser | 74 / 11 / 511 PASS |
+| 4 Platform Regression / Bot Gate / Release Artifact | 모두 SUCCESS |
+
+[Playable + Final Manifest Artifact](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016014/artifacts/12255255784) · [Screenshot / Rendering Trace](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016014/artifacts/12255370624) · [Production Browser Evidence](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016193/artifacts/12256455225) · [Release Package](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016193/artifacts/12255653607)
+
+- Final Validation Source: `abf1c74f7421b0f3bfc2d34ad8ee57a2beee978b` / Runtime Freeze: `dc19ef31d9735db3cf18bd806aaf48d951a4b9c8`.
+- Final Artifact / Tested HEAD: `8be6f978515d5c16ea2d40361703e440742e2420`.
+- HTML SHA256: `451921b01b47775cbf0aec784e794518f2031cd8b5a41c2d00a3a4bb5c86dcd1` / 6,781,350 bytes.
+- Source Manifest SHA256: `7602cccc97b6ca414e59fcd5fea5096186d5277c674cada9b1a21007cbbcce43` / 255 Source Hash 일치.
+
+검증 후 최종 문서 Receipt는 QA / Log / Handoff / CI JSON만 수정합니다. Runtime / Test / Workflow / Package / HTML은 검증 HEAD와 Byte 일치하며 Source Manifest Hash도 그대로입니다. 동일 CI 반복을 피하기 위해 문서 Commit은 `[skip ci]`로 저장하고 그 Commit 자체의 CI 재실행을 주장하지 않습니다. 기존 P3.1 HTML / Known Limitations를 보존합니다. **사용자 P3.2 Play Acceptance는 PENDING이며 P3.3 / main Merge / P4는 진행하지 않습니다.**

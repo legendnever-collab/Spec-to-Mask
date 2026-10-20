@@ -4,7 +4,7 @@
 > Original P0 execution order: [V2_P0_SOL_WORK_ORDER.md](V2_P0_SOL_WORK_ORDER.md)
 > Owner approval and playable review required after each checkpoint. Update this file **at every new Work** before stopping.
 
-Current handoff — **2026-10-20 KST: 승인된 P3.1 Rendering Fix + P3.2 Scalar Optical Ledger 구현을 마무리하고 최종 Source / Artifact / CI를 게시합니다.** 기존 Draft PR #26을 유지합니다. [P3.2 Handoff](HANDOFF_V2_P32.md), [QA](../artifacts/v2-p32/QA.md)와 아래 Publication Receipt를 확인합니다. P3.3 / main 병합 / P4는 진행하지 않습니다. 과거 기록과 기존 P3.1 HTML은 보존합니다.
+Current handoff — **2026-10-20 KST: P3.1 Flicker-Free Rendering + P3.2 Optical Power / OMA Ledger 구현·게시·전체 CI 검증을 완료했으며 사용자 Play Review를 기다립니다.** 기존 Draft PR #26을 유지합니다. [P3.2 Handoff](HANDOFF_V2_P32.md) / [QA](../artifacts/v2-p32/QA.md) / [최종 CI Evidence](../artifacts/v2-p32/ci-evidence.json)와 하단 Receipt를 확인합니다. P3.3 / main 병합 / P4는 진행하지 않습니다. 과거 기록과 P3.1 HTML은 보존합니다.
 
 ## Status as of 2026-10-18 (KST)
 
@@ -445,3 +445,12 @@ Manifest Generator의 이전 `linkBudget:null` Field를 `opticalLedger: MODEL`�
 ### P2 Browser Handoff Assertion Follow-up
 
 Receipt HEAD `7bc17f0`에서 P0 / P1 / P2.1 / P2.2 / P3.2 Acceptance는 SUCCESS였으나 P2 Run `39401400824`는 과거 Summary의 특정 금지 문구를 찾는 마지막 Assertion에서 실패했습니다. 새 승인 범위는 P3.2까지이므로 해당 문구는 더 이상 현재 UI와 맞지 않습니다. 수치 검사를 바꾸지 않고, Summary 유지 / 직접 Next Button / Lane State 미생성 / Engineering NOT VERIFIED를 명시적으로 검사하도록 한 Assertion만 갱신했습니다. 실제 Canonical을 사용한 Local P2 Browser 511 checks PASS입니다. Runtime / HTML은 바꾸지 않습니다. Source Test를 먼저 저장하고 Manifest의 Test Hash / Source SHA만 작은 Text Artifact로 갱신한 뒤 최신 HEAD CI를 확인합니다. 실패 Run은 성공으로 계산하지 않습니다.
+
+
+### P3.2 Final CI / Play Review Stop Receipt — 2026-10-20 KST
+
+- 최종 Validation Source `abf1c74f7421b0f3bfc2d34ad8ee57a2beee978b`, Artifact / 검증 HEAD `8be6f978515d5c16ea2d40361703e440742e2420`입니다. HTML SHA256 `451921b01b47775cbf0aec784e794518f2031cd8b5a41c2d00a3a4bb5c86dcd1`, Source Manifest SHA256 `7602cccc97b6ca414e59fcd5fea5096186d5277c674cada9b1a21007cbbcce43`가 최종 정본입니다. Metadata / Test Follow-up에서 HTML Blob을 재사용했고 Source Hash 255개를 검증했습니다.
+- P0 / P1 / P2 / P2.1 / P2.2 / P3.2 Acceptance와 [PR Production CI 39402016193](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402016193), [Push CI 39402010206](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39402010206)이 모두 completed/success입니다. Legacy / GDS / Save·Backup·Migration / 4 Platform Regression·Bot / Release Artifact도 통과했습니다.
+- P3.2 Model-State 326 / Browser 74 / Rendering 11, P3.1 172 / 142, MZM Bench 111, P2 Browser 511과 기존 State Gate를 확인했습니다. Rendering의 실제 Node / Frame / Trace Evidence를 보관하며 FPS / Latency를 추정하지 않습니다. [최종 CI JSON](../artifacts/v2-p32/ci-evidence.json), [QA](../artifacts/v2-p32/QA.md), [Play Review Handoff](HANDOFF_V2_P32.md)를 확인합니다.
+- 최종 문서 Commit은 QA / Log / Handoff / CI JSON만 수정하며 검증 HEAD와 Runtime / Test / Workflow / Package / HTML이 일치합니다. `[skip ci]`로 동일 CI의 불필요한 반복을 피하고 이 문서 Commit 자체의 CI 성공을 주장하지 않습니다. Local Source / Candidate는 Recovery Branch에 보존했으며 Reset / Force Push는 하지 않았습니다.
+- 기존 Draft PR #26 / main 미병합을 유지합니다. **사용자 P3.2 Play Review에서 중단합니다. P3.3 개발 / main Merge / P4는 하지 않았습니다.**
