@@ -57,3 +57,7 @@ Final Runtime Source `dc19ef31d9735db3cf18bd806aaf48d951a4b9c8`, Final Metadata 
 [Source Run 39400966867](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39400966867) completed/successを実際に確認しました。P3.2 326 / P3.1 172 / Bench 111 / Browser 74 / Rendering 11、既存 State Gateも通過しました。[Runtime CI JSON](runtime-ci.json)と[Actions Screenshot / Trace](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39400966867/artifacts/12255003508)を保管します。RuntimeとHTMLはそのまま、Metadata Follow-up後の Manifestは上記 Final Artifactを正本にします。
 
 Source-first直後の古いHTML Parity Failureはこの成功に含めません。最新文書HEADの全Acceptance / Production / Legacy / GDS / 4 Platform CIはまだPendingであり、最終Receiptで実際の結論を記録します。
+
+## P2 Summary Regression Follow-up
+
+Run [39401400824](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39401400824)은 마지막 Summary 문구 Assertion에서 실패했습니다. P3.2 승인 전의 금지 문장을 찾던 부분을, Summary Scene / 직접 Next / Lane State 미생성 / Engineering NOT VERIFIED라는 실제 Barrier 검사로 갱신했습니다. 기존 물리 / Viewport / Save Assertion은 유지합니다. 변경한 Test와 현재 Canonical로 Local 511 P2 Browser checks PASS입니다. Runtime / HTML은 Byte 변경이 없습니다. Final Manifest / Source SHA와 최신 CI는 다음 Receipt를 정본으로 사용합니다.

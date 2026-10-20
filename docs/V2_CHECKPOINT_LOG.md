@@ -440,3 +440,8 @@ Manifest Generator의 이전 `linkBudget:null` Field를 `opticalLedger: MODEL`�
 - [Runtime Source CI 39400966867](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39400966867)은 completed/success입니다. P3.2 326 / P3.1 172 / Bench 111, P3.2 Browser 74 / Rendering 11, 기존 P1–P2.2 State도 Remote Node 22 / CI Chromium에서 통과했습니다. [실제 Runtime Evidence](../artifacts/v2-p32/runtime-ci.json)에 Count / Trace 링크를 기록합니다. Metadata Follow-up 이후 Runtime / Test / Workflow / Package / HTML은 이 Run과 Byte 일치합니다.
 - Source 게시 직후 이전 HTML과의 Parity 차이로 실패한 PR Run은 성공으로 계산하지 않습니다. Artifact 생성 후 현재 문서 HEAD의 실제 Acceptance / Production / 4 Platform / Legacy / GDS CI를 다시 확인하고 최종 Receipt에 결론을 이어 기록합니다. 이 시점의 전체 Production CI는 Pending입니다.
 - [P3.2 Handoff](HANDOFF_V2_P32.md), [QA](../artifacts/v2-p32/QA.md)를 제공합니다. 사용자 P3.2 Play Review 대기이며 P3.3 / main Merge / P4는 진행하지 않습니다.
+
+
+### P2 Browser Handoff Assertion Follow-up
+
+Receipt HEAD `7bc17f0`에서 P0 / P1 / P2.1 / P2.2 / P3.2 Acceptance는 SUCCESS였으나 P2 Run `39401400824`는 과거 Summary의 특정 금지 문구를 찾는 마지막 Assertion에서 실패했습니다. 새 승인 범위는 P3.2까지이므로 해당 문구는 더 이상 현재 UI와 맞지 않습니다. 수치 검사를 바꾸지 않고, Summary 유지 / 직접 Next Button / Lane State 미생성 / Engineering NOT VERIFIED를 명시적으로 검사하도록 한 Assertion만 갱신했습니다. 실제 Canonical을 사용한 Local P2 Browser 511 checks PASS입니다. Runtime / HTML은 바꾸지 않습니다. Source Test를 먼저 저장하고 Manifest의 Test Hash / Source SHA만 작은 Text Artifact로 갱신한 뒤 최신 HEAD CI를 확인합니다. 실패 Run은 성공으로 계산하지 않습니다.
