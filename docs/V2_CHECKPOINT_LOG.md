@@ -424,3 +424,10 @@ C Remote `3f0d4f96fab2b38ec54a189ab9b02fd7468212a8` 이후 Version을 `2.0.0-alp
 최종 Local Model/State P3.2 326 / P3.1 172, P3.2 Browser 74 / P3.1 Browser 142, Rendering Browser 11 PASS입니다. Rendering은 Length 50회 + Burst 80회 / 최종 Release와 Optical Loss 50회에서 Stable Node / 무공백 / 현재 Revision / Save / Tx 재사용을 검사하고 실제 Trace를 생성했습니다. FPS / Latency는 추정하지 않습니다. P1/P2/P2.1 State 93/154/135, Navigation/Course/Active/Formats 11/41/107/49, Backup / Smoke(errors 0) / Migration, Syntax 123 files + script PASS입니다. 동일 Build / 무영향 Source의 성공 검증은 재사용하며 최종 CI는 별도 확인합니다.
 
 Source / Test / Documentation을 먼저 Commit·Push합니다. `[p32-release]` Source HEAD가 맞는 경우에만 Actions가 새 Versioned HTML / index / Source Manifest / SHA256을 별도 Commit으로 게시합니다. 이 Source 시점은 Remote 최종 CI 성공으로 기록하지 않습니다. Production CI / P0–P3.2 Acceptance / 4 Platform / Legacy Browser / GDS 결과와 최종 Source·Artifact SHA는 후속 Publication Receipt에 기록합니다. main 병합 / P3.3 / P4는 하지 않습니다.
+
+
+### Final Build Metadata Follow-up
+
+Final Runtime Source `dc19ef31d9735db3cf18bd806aaf48d951a4b9c8` → Actions Artifact `17b9a7cee3f631a04e7a78d81bd21eed4e1279b4`를 확인했습니다. HTML SHA256 `451921b01b47775cbf0aec784e794518f2031cd8b5a41c2d00a3a4bb5c86dcd1`, 6,781,350 bytes이며 Local Build / Canonical / index가 일치합니다. Source Hash 255개도 일치합니다.
+
+Manifest Generator의 이전 `linkBudget:null` Field를 `opticalLedger: MODEL`과 `endToEndLinkClosure:null`로 구분합니다. Runtime / UI / Test / HTML은 변경하지 않습니다. Source를 먼저 저장한 뒤 Generator로 작은 JSON / SHA Text 3개만 별도 Artifact Commit에 갱신하고 기존 HTML Blob을 재사용합니다. 동일 Binary 업로드와 전체 Packaging 반복을 피합니다. 최종 실제 CI는 Publication Receipt에서 확인합니다.

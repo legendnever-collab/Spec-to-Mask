@@ -45,3 +45,7 @@ A/B CW는 dBm / mW, C–F는 등확률 Settled Average와 OMA_outer입니다. Ra
 Defaults 10 dBm / Input 1 dB / TxOut 1 dB / Channel 3 dB / RxIn 1 dB는 교육 가정이며 측정값이 아닙니다. Source Power별 Nonlinear 정확도, RIN / TPA / Self-heating / Feedback / Dispersion / Rx Noise / FFE / BER / FEC / Net200G / Link Closure는 NOT VERIFIED입니다. Dynamic Average / OMA, Receiver Sensitivity / Margin은 null입니다. 기존 Local Linearized PN / Equal Arm / Fixed Loss / Heterogeneous Si PN / periodic Raw Eye와 P2.2 MMI Conservation·Symmetry FAIL / UI NOT VERIFIED, Sample Domain / SiN mismatch / TM sensitivity / Material Bend 제한을 유지합니다. 이를 해결했다고 주장하지 않습니다.
 
 Source / HTML / Hash / CI 및 Play Review는 다음 Publication Receipt와 [Handoff](../../docs/HANDOFF_V2_P32.md)를 확인합니다. P3.3 / main Merge / P4는 진행하지 않습니다.
+
+## Manifest Scope Clarification
+
+Actions Artifact `17b9a7c`의 HTML / Local Candidate / index SHA256은 모두 `451921b01b47775cbf0aec784e794518f2031cd8b5a41c2d00a3a4bb5c86dcd1`입니다. Source 255개 Hash도 확인했습니다. Generator의 오래된 `linkBudget:null` 표기를 구현된 `opticalLedger: MODEL` / 미구현 `endToEndLinkClosure:null`로 구분합니다. Runtime / HTML / Test는 그대로이며, Source 저장 후 JSON / SHA Text만 재생성해 별도 저장합니다.
