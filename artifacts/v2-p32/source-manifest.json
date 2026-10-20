@@ -1,6 +1,6 @@
 {
   "schema": "smq-source-manifest/1",
-  "sourceCommit": "dc19ef31d9735db3cf18bd806aaf48d951a4b9c8",
+  "sourceCommit": "dadcc77c092af571072a1ebfade8957fad35231d",
   "algorithm": "SHA256",
   "files": {
     ".github/workflows/ci.yml": "7b6da0faec4f22ed80046988b7ab1611d1019828957473b2339bfe1fde1f9bdf",
@@ -174,7 +174,7 @@
     "tools/lattice.py": "85c4cd19f78e063b34a0b74b2d4b60e56200d71d3c3953434564a8e9df482036",
     "tools/modes2.py": "f6fcd5e0905e8a3ecdcba6688a0c308583650272fc5ce0e4e6fc66329081361c",
     "tools/modes2d.py": "7f1d70189f9e230fe1182aeb673b63905a3e413ee24b0044a1d98e9acfcde45f",
-    "tools/p3_manifest.js": "53b1b11ad37c4d7a2c0e57b1838b14e4b2949d2e40586b76c5c4a5bee11015d2",
+    "tools/p3_manifest.js": "4d44c4d59e2969e53876a717b36e95416dcc03a93e173b786e6a356eecfa6e52",
     "tools/release.sh": "1608cc5728073a085456036170e425e543ae78ebc980230d264fab780c0dbf2f",
     "tools/smq2gds/README.md": "3eb16c169243827273ce2a232215807217495ab4c7ccfabcd415c54b0228ebc8",
     "tools/smq2gds/__init__.py": "936b6fda0f4c87e4165385662c3669be0e22f8e1bae7c552a290dfbd73dacb35",

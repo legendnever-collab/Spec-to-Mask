@@ -1,8 +1,8 @@
 {
   "schema": "smq-p32-build/1",
   "version": "2.0.0-alpha.6-p32-link-budget",
-  "sourceCommit": "dc19ef31d9735db3cf18bd806aaf48d951a4b9c8",
-  "sourceManifestSHA256": "c24d5b30f3ed990a396160429b8bc0397530f5ffe2bb625020c9aa3c7d3aeb2e",
+  "sourceCommit": "dadcc77c092af571072a1ebfade8957fad35231d",
+  "sourceManifestSHA256": "7119a3f24ecefcc7004885f7b36c0d945c1dded0f77edbb188f11516f9ca5c1d",
   "canonical": "dist/spec-to-mask-v2.0.0-alpha.6-p32-link-budget.html",
   "htmlSHA256": "451921b01b47775cbf0aec784e794518f2031cd8b5a41c2d00a3a4bb5c86dcd1",
   "bytes": 6781350,
@@ -14,5 +14,6 @@
   "FEC": null,
   "net200G": null,
   "receiverSensitivity": null,
-  "linkBudget": null
+  "opticalLedger": "MODEL: constant-loss / linear-power A-F",
+  "endToEndLinkClosure": null
 }
