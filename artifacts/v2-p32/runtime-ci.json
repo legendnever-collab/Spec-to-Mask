@@ -1,0 +1,43 @@
+{
+  "schema": "smq-p32-runtime-ci/1",
+  "observedAtUTC": "2026-10-20T09:32:11.525Z",
+  "runtimeSource": "dc19ef31d9735db3cf18bd806aaf48d951a4b9c8",
+  "metadataSource": "dadcc77c092af571072a1ebfade8957fad35231d",
+  "artifactCommit": "c1ee3281a83b810a9b9a5b784ec3c4d33bf57017",
+  "htmlSHA256": "451921b01b47775cbf0aec784e794518f2031cd8b5a41c2d00a3a4bb5c86dcd1",
+  "sourceManifestSHA256": "7119a3f24ecefcc7004885f7b36c0d945c1dded0f77edbb188f11516f9ca5c1d",
+  "run": {
+    "id": 39400966867,
+    "url": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39400966867",
+    "conclusion": "success",
+    "jobId": 118555281002
+  },
+  "checks": {
+    "p31ModelState": 172,
+    "p32ModelState": 326,
+    "mzmBench": 111,
+    "p32Browser": 74,
+    "stableRendering": 11,
+    "p1": 93,
+    "p2": 154,
+    "p21": 135,
+    "navigation": 11,
+    "course": 41,
+    "active": 107,
+    "formats": 49,
+    "p22": 4394
+  },
+  "rendering": {
+    "lengthFrameUpdates": 50,
+    "lengthBurstUpdates": 80,
+    "opticalFrameUpdates": 50,
+    "blankFrames": 0,
+    "nodeReferences": "stable",
+    "FPS": null,
+    "latencyMs": null
+  },
+  "note": "Metadata follow-up changes the generator and text receipts only; src/test/workflows/package/dist are byte-identical to the successful runtime run. Its historical downloadable manifest is superseded by artifactCommit above.",
+  "screenshotsAndTrace": "https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39400966867/artifacts/12255003508",
+  "fullProductionCI": "PENDING",
+  "humanPlayAcceptance": "PENDING"
+}

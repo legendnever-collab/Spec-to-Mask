@@ -49,3 +49,11 @@ Source / HTML / Hash / CI 및 Play Review는 다음 Publication Receipt와 [Hand
 ## Manifest Scope Clarification
 
 Actions Artifact `17b9a7c`의 HTML / Local Candidate / index SHA256은 모두 `451921b01b47775cbf0aec784e794518f2031cd8b5a41c2d00a3a4bb5c86dcd1`입니다. Source 255개 Hash도 확인했습니다. Generator의 오래된 `linkBudget:null` 표기를 구현된 `opticalLedger: MODEL` / 미구현 `endToEndLinkClosure:null`로 구분합니다. Runtime / HTML / Test는 그대로이며, Source 저장 후 JSON / SHA Text만 재생성해 별도 저장합니다.
+
+## Publication / Remote Runtime CI
+
+Final Runtime Source `dc19ef31d9735db3cf18bd806aaf48d951a4b9c8`, Final Metadata Source `dadcc77c092af571072a1ebfade8957fad35231d`, Artifact `c1ee3281a83b810a9b9a5b784ec3c4d33bf57017`です。HTML SHA256 `451921b01b47775cbf0aec784e794518f2031cd8b5a41c2d00a3a4bb5c86dcd1` / Source Manifest SHA256 `7119a3f24ecefcc7004885f7b36c0d945c1dded0f77edbb188f11516f9ca5c1d`、6,781,350 bytes、Source 255 Hash / Canonical-index-local parity PASSです。
+
+[Source Run 39400966867](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39400966867) completed/successを実際に確認しました。P3.2 326 / P3.1 172 / Bench 111 / Browser 74 / Rendering 11、既存 State Gateも通過しました。[Runtime CI JSON](runtime-ci.json)と[Actions Screenshot / Trace](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39400966867/artifacts/12255003508)を保管します。RuntimeとHTMLはそのまま、Metadata Follow-up後の Manifestは上記 Final Artifactを正本にします。
+
+Source-first直後の古いHTML Parity Failureはこの成功に含めません。最新文書HEADの全Acceptance / Production / Legacy / GDS / 4 Platform CIはまだPendingであり、最終Receiptで実際の結論を記録します。

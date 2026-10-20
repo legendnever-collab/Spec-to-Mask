@@ -431,3 +431,12 @@ Source / Test / Documentation을 먼저 Commit·Push합니다. `[p32-release]` S
 Final Runtime Source `dc19ef31d9735db3cf18bd806aaf48d951a4b9c8` → Actions Artifact `17b9a7cee3f631a04e7a78d81bd21eed4e1279b4`를 확인했습니다. HTML SHA256 `451921b01b47775cbf0aec784e794518f2031cd8b5a41c2d00a3a4bb5c86dcd1`, 6,781,350 bytes이며 Local Build / Canonical / index가 일치합니다. Source Hash 255개도 일치합니다.
 
 Manifest Generator의 이전 `linkBudget:null` Field를 `opticalLedger: MODEL`과 `endToEndLinkClosure:null`로 구분합니다. Runtime / UI / Test / HTML은 변경하지 않습니다. Source를 먼저 저장한 뒤 Generator로 작은 JSON / SHA Text 3개만 별도 Artifact Commit에 갱신하고 기존 HTML Blob을 재사용합니다. 동일 Binary 업로드와 전체 Packaging 반복을 피합니다. 최종 실제 CI는 Publication Receipt에서 확인합니다.
+
+
+### P3.2 Publication Receipt / Runtime CI
+
+- Runtime Source `dc19ef31d9735db3cf18bd806aaf48d951a4b9c8`, Final Metadata Source `dadcc77c092af571072a1ebfade8957fad35231d`, Final Artifact `c1ee3281a83b810a9b9a5b784ec3c4d33bf57017`를 실제 Remote에서 확인했습니다. Source / Test / Docs를 먼저 저장한 뒤 HTML을 별도 Actions Commit으로 게시했고, Metadata Follow-up은 작은 Text 3개만 갱신해 동일 HTML Blob을 재사용했습니다. Local Source / Candidate Commit은 recovery Branch에 보존했으며 Reset / Force Push하지 않았습니다.
+- HTML SHA256 `451921b01b47775cbf0aec784e794518f2031cd8b5a41c2d00a3a4bb5c86dcd1`, Source Manifest SHA256 `7119a3f24ecefcc7004885f7b36c0d945c1dded0f77edbb188f11516f9ca5c1d`입니다. Canonical / index / Local Build가 Byte 일치하고 Source Hash 255개 / SHA256SUMS가 PASS입니다. P3.1 Canonical은 그대로 보존합니다.
+- [Runtime Source CI 39400966867](https://github.com/legendnever-collab/Spec-to-Mask/actions/runs/39400966867)은 completed/success입니다. P3.2 326 / P3.1 172 / Bench 111, P3.2 Browser 74 / Rendering 11, 기존 P1–P2.2 State도 Remote Node 22 / CI Chromium에서 통과했습니다. [실제 Runtime Evidence](../artifacts/v2-p32/runtime-ci.json)에 Count / Trace 링크를 기록합니다. Metadata Follow-up 이후 Runtime / Test / Workflow / Package / HTML은 이 Run과 Byte 일치합니다.
+- Source 게시 직후 이전 HTML과의 Parity 차이로 실패한 PR Run은 성공으로 계산하지 않습니다. Artifact 생성 후 현재 문서 HEAD의 실제 Acceptance / Production / 4 Platform / Legacy / GDS CI를 다시 확인하고 최종 Receipt에 결론을 이어 기록합니다. 이 시점의 전체 Production CI는 Pending입니다.
+- [P3.2 Handoff](HANDOFF_V2_P32.md), [QA](../artifacts/v2-p32/QA.md)를 제공합니다. 사용자 P3.2 Play Review 대기이며 P3.3 / main Merge / P4는 진행하지 않습니다.

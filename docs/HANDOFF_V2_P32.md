@@ -5,6 +5,11 @@
 - A Rendering: `f52cdf9af5dcf729a4e367b835e6c10611b1176d`
 - B Ledger Model: `8aa5f7799bc6f4dbd47c79f0d07473d6811faed6`
 - C Budget UI: `3f0d4f96fab2b38ec54a189ab9b02fd7468212a8`
+- Runtime Source: `dc19ef31d9735db3cf18bd806aaf48d951a4b9c8`
+- Final Metadata Source: `dadcc77c092af571072a1ebfade8957fad35231d`
+- Artifact: `c1ee3281a83b810a9b9a5b784ec3c4d33bf57017`
+- HTML SHA256: `451921b01b47775cbf0aec784e794518f2031cd8b5a41c2d00a3a4bb5c86dcd1`
+- Source Manifest SHA256: `7119a3f24ecefcc7004885f7b36c0d945c1dded0f77edbb188f11516f9ca5c1d`
 - Final Source / Artifact SHA와 CI: [Checkpoint Log](V2_CHECKPOINT_LOG.md), [QA](../artifacts/v2-p32/QA.md), [Build Receipt](../artifacts/v2-p32/verification.json)를 확인합니다. Source 저장 후 Actions에서 HTML을 별도 Commit으로 생성합니다.
 - [P3.2 Offline HTML](../dist/spec-to-mask-v2.0.0-alpha.6-p32-link-budget.html). 기존 P3.1 Canonical SHA256 `b927884eea8a7331df70bae5f35a77b57f20f85dfc6327cb7d1aba4dc7b10a89`는 그대로입니다.
 
@@ -21,3 +26,5 @@
 Laser 10 dBm / Tx Input 1 dB / Tx Output 1 dB / Channel 3 dB / Rx Input 1 dB는 교육용 시작 가정이며 측정값이 아닙니다. Constant-loss / Linear-power Scaling만 합니다. PN / MZM / Raw Eye / P2.2 MMI Conservation·Symmetry / Mode·Material 한계는 그대로입니다. Source Power별 실제 Nonlinear 정확도, RIN / TPA / Self-heating / Feedback / Dispersion / Receiver Noise / FFE / BER / FEC / Net200G는 미검증입니다. Dynamic Average / Dynamic OMA / Sensitivity / Link Margin은 null입니다.
 
 Feedback은 P3.1 Rendering / P3.2 범위에서 수정합니다. **P3.2 Play Acceptance와 P3.3 개발 승인이 모두 있어야 다음 Work를 시작합니다.** 그때 Contract A1의 기존 PD `6×Q×sigma/(R×ratio)`와 λ / 112 GBd / Noise / 5-tap FFE 조건만 좁게 검토합니다. 해결되지 않으면 Device Response-only Scope를 명시적으로 결정합니다. Cascaded Tx/Rx / 단일 FFE / BER는 별도 승인이 필요합니다. 지금 P3.3 / main Merge / P4를 시작하지 않습니다.
+
+[Runtime CI](../artifacts/v2-p32/runtime-ci.json)는 SUCCESS이며, Source / HTML / 255개 Hash가 일치합니다. 전체 Production CI와 최신 문서 HEAD의 Conclusion은 최종 QA / PR Receipt에서 별도로 확인합니다.
