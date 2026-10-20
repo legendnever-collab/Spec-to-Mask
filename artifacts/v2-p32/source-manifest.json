@@ -1,6 +1,6 @@
 {
   "schema": "smq-source-manifest/1",
-  "sourceCommit": "dadcc77c092af571072a1ebfade8957fad35231d",
+  "sourceCommit": "abf1c74f7421b0f3bfc2d34ad8ee57a2beee978b",
   "algorithm": "SHA256",
   "files": {
     ".github/workflows/ci.yml": "7b6da0faec4f22ed80046988b7ab1611d1019828957473b2339bfe1fde1f9bdf",
@@ -107,7 +107,7 @@
     "test/browser/v2_journey.js": "582c62ff0221d9a8e81bec8cf1310f581328474aae63d0ed61a9837c6759dd14",
     "test/browser/v2_lane_render.js": "10e730e5dda31371b4a634a8f76179f3365ebda7a08307e51d6765b4c08a64c3",
     "test/browser/v2_learning.js": "48fd4342d18ddccf04da4b102e833b7e1d80e4f5a196e8438e5e7815084a1ffc",
-    "test/browser/v2_p2.js": "f57d1fbf28039b02df0299f619bc48b80196a9b8c02cd44126b81d1d51bde4a5",
+    "test/browser/v2_p2.js": "dc71c903df40f42c0a8a8010eb578b57a7e6f1ca22a1a3ffcd6bca3d2142c868",
     "test/browser/v2_p21.js": "907ec9e10b7d34ed911e4607a902befe9a8474de4680554d6a3076b3de6359f9",
     "test/browser/v2_p22.js": "247da7c2d2d8c3c794862a9ce8904e2a0c819ab676069e3429a72509899733f0",
     "test/browser/v2_p3.js": "1f709255536ce318da54023a3aa68abc0700ad4927b4cf3cc4d09e566a4fa112",
